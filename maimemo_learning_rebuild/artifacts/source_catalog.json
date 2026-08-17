@@ -1,0 +1,376 @@
+{
+  "schema_version": 1,
+  "generated_from": "<LOCAL_SOURCE_ROOT>",
+  "sources": [
+    {
+      "source_id": "3e6a9cc7dd70eb1a",
+      "path": "../../../../../../Desktop/20260107 选词刷题4_文稿.docx",
+      "name": "20260107 选词刷题4_文稿.docx",
+      "batch": "20260107",
+      "carrier_type": "original_docx",
+      "source_group_id": "course-20260107",
+      "trust_role": "teacher_evidence",
+      "sha256": "20b1ab51aa45888842ff3ab5aea93f9e12fecf30a99e14ddbe6d0f04141c8899"
+    },
+    {
+      "source_id": "cee4d64e7efa1fc0",
+      "path": "../../../../../../Desktop/20260108 选词刷题5_文稿.docx",
+      "name": "20260108 选词刷题5_文稿.docx",
+      "batch": "20260108",
+      "carrier_type": "original_docx",
+      "source_group_id": "course-20260108",
+      "trust_role": "teacher_evidence",
+      "sha256": "32bb5ac6c9d02a853d0ebe236f07f71a7100c017849985f9386661dbf5d1b5cb"
+    },
+    {
+      "source_id": "a552698b73afb04e",
+      "path": "../../../../20260107_选词刷题4_成语实词完整整理_清晰指代修订版.docx",
+      "name": "20260107_选词刷题4_成语实词完整整理_清晰指代修订版.docx",
+      "batch": "20260107",
+      "carrier_type": "reviewed_guide_docx",
+      "source_group_id": "course-20260107",
+      "trust_role": "secondary_reference",
+      "sha256": "0be6cd78ee733a6f3e4f4dba630fe66d360ff62c1e9188429ec59754a2000a03"
+    },
+    {
+      "source_id": "956e180cb112f7b3",
+      "path": "../../../../20260108 选词刷题5_词汇与老师解释（待核）.docx",
+      "name": "20260108 选词刷题5_词汇与老师解释（待核）.docx",
+      "batch": "20260108",
+      "carrier_type": "reviewed_guide_docx",
+      "source_group_id": "course-20260108",
+      "trust_role": "secondary_reference",
+      "sha256": "f984b0513fb9c752eb95582ab9efb06587211c4631a943a47d8b1f99b6306e35"
+    },
+    {
+      "source_id": "cca3fd76fd908215",
+      "path": "../../../../20260108_选词刷题5_成语实词完整整理.docx",
+      "name": "20260108_选词刷题5_成语实词完整整理.docx",
+      "batch": "20260108",
+      "carrier_type": "reviewed_guide_docx",
+      "source_group_id": "course-20260108",
+      "trust_role": "secondary_reference",
+      "sha256": "dc0b6eedfc8b94b38fb3a13de40f18ac6014954c40dd50e6db01f0dbcca9f383"
+    },
+    {
+      "source_id": "16e12c056e33150f",
+      "path": "../../../../maimemo_20260108/registry.json",
+      "name": "registry.json",
+      "batch": "20260108",
+      "carrier_type": "derived_registry_json",
+      "source_group_id": "course-20260108",
+      "trust_role": "historical_only",
+      "sha256": "7a46b7b19da99a7dc2163af7e5ec8899613fdb32595c61fbec4891d613c7f872"
+    },
+    {
+      "source_id": "5638a1496e4f3da9",
+      "path": "../../../../maimemo_four_poems/extracted_registry.json",
+      "name": "extracted_registry.json",
+      "batch": "four-poems",
+      "carrier_type": "derived_registry_json",
+      "source_group_id": "course-four-poems",
+      "trust_role": "historical_only",
+      "sha256": "62f9fe9657053a19b102b2f653ffc43cceccaae438daea50f6631a775b0d08db"
+    },
+    {
+      "source_id": "b8818dadac8dd738",
+      "path": "../../../../maimemo_four_poems/audit_readonly/current_library_snapshot_2026-08-17.json",
+      "name": "current_library_snapshot_2026-08-17.json",
+      "batch": "live-snapshot",
+      "carrier_type": "api_snapshot_json",
+      "source_group_id": "live-library-20260817",
+      "trust_role": "historical_only",
+      "sha256": "2b47deb1f336ae9e7b0d997e31685d9c9ededa9b8c7e0af6d708dd49f74d602b"
+    },
+    {
+      "source_id": "8f035bcbd8482499",
+      "path": "../../../../../../Desktop/逻辑填空400词第一讲-四诗风雅颂_文稿.docx",
+      "name": "逻辑填空400词第一讲-四诗风雅颂_文稿.docx",
+      "batch": "four-poems",
+      "carrier_type": "original_docx",
+      "source_group_id": "course-four-poems-第一讲",
+      "trust_role": "teacher_evidence",
+      "sha256": "21820a43a419d7a5aa050ebd953d05458b73f8d7c4710afff0bf38aea11a5afe"
+    },
+    {
+      "source_id": "8742651be04d2df2",
+      "path": "../../../../four_poems_transcripts/逻辑填空400词第一讲-四诗风雅颂_文稿.txt",
+      "name": "逻辑填空400词第一讲-四诗风雅颂_文稿.txt",
+      "batch": "four-poems",
+      "carrier_type": "transcript_txt",
+      "source_group_id": "course-four-poems-第一讲",
+      "trust_role": "teacher_evidence",
+      "sha256": "e6beda434a50e654f87feed3c397d416b6bf4a9ff633f01569b7e53b324614b7"
+    },
+    {
+      "source_id": "c7a0d525fdb331d0",
+      "path": "../../../../../../Desktop/逻辑填空400词第二讲-四诗风雅颂_文稿.docx",
+      "name": "逻辑填空400词第二讲-四诗风雅颂_文稿.docx",
+      "batch": "four-poems",
+      "carrier_type": "original_docx",
+      "source_group_id": "course-four-poems-第二讲",
+      "trust_role": "teacher_evidence",
+      "sha256": "55571c499265de871402b7d8ac38c29a8baeeb8aeb788aa2287f5d1baafe1ab6"
+    },
+    {
+      "source_id": "5ebc735cf96449c0",
+      "path": "../../../../four_poems_transcripts/逻辑填空400词第二讲-四诗风雅颂_文稿.txt",
+      "name": "逻辑填空400词第二讲-四诗风雅颂_文稿.txt",
+      "batch": "four-poems",
+      "carrier_type": "transcript_txt",
+      "source_group_id": "course-four-poems-第二讲",
+      "trust_role": "teacher_evidence",
+      "sha256": "60f42ad021a3c29e990d83c44c20275f9df52106e64b2c73c3e1c38f95a3a7c9"
+    },
+    {
+      "source_id": "f327333bec1970c8",
+      "path": "../../../../../../Desktop/逻辑填空400词第三讲-四诗风雅颂_文稿.docx",
+      "name": "逻辑填空400词第三讲-四诗风雅颂_文稿.docx",
+      "batch": "four-poems",
+      "carrier_type": "original_docx",
+      "source_group_id": "course-four-poems-第三讲",
+      "trust_role": "teacher_evidence",
+      "sha256": "7f8cc869ca769a9e736528c8942b77898dd768620046c6a863a3b0d344cbaae2"
+    },
+    {
+      "source_id": "23ac763cfe5f7d5d",
+      "path": "../../../../four_poems_transcripts/逻辑填空400词第三讲-四诗风雅颂_文稿.txt",
+      "name": "逻辑填空400词第三讲-四诗风雅颂_文稿.txt",
+      "batch": "four-poems",
+      "carrier_type": "transcript_txt",
+      "source_group_id": "course-four-poems-第三讲",
+      "trust_role": "teacher_evidence",
+      "sha256": "480d8b63fa122747a7856bfee59aa01f52c4df8e72e5f28e27681fe5c9291d1a"
+    },
+    {
+      "source_id": "3bf3a620103ec3e6",
+      "path": "../../../../judgment_archive_v2/judgments_001_顾虑与错误调整.json",
+      "name": "judgments_001_顾虑与错误调整.json",
+      "batch": "20260107",
+      "carrier_type": "judgment_archive_json",
+      "source_group_id": "course-20260107",
+      "trust_role": "historical_only",
+      "sha256": "fa401feb1b9611724074ba33c5fecbae06324be5b64f640483e30718d11a6983"
+    },
+    {
+      "source_id": "07c5272a20d13a48",
+      "path": "../../../../judgment_archive_v2/judgments_002_范围坚固与类推.json",
+      "name": "judgments_002_范围坚固与类推.json",
+      "batch": "20260107",
+      "carrier_type": "judgment_archive_json",
+      "source_group_id": "course-20260107",
+      "trust_role": "historical_only",
+      "sha256": "2b1e49f03c4a367ad0fb53b1c2d0a54cdfb0f5f438c059298dc2a5fc473e8f89"
+    },
+    {
+      "source_id": "d47913347151710c",
+      "path": "../../../../judgment_archive_v2/judgments_003_提炼处境与角色.json",
+      "name": "judgments_003_提炼处境与角色.json",
+      "batch": "20260107",
+      "carrier_type": "judgment_archive_json",
+      "source_group_id": "course-20260107",
+      "trust_role": "historical_only",
+      "sha256": "99b8b3c5d99782d93d4a0ccac1153ed1f3625c4f50efdd257e253882233b72d7"
+    },
+    {
+      "source_id": "6d21fce86deed484",
+      "path": "../../../../judgment_archive_v2/judgments_004_发展声势与投入方式.json",
+      "name": "judgments_004_发展声势与投入方式.json",
+      "batch": "20260107",
+      "carrier_type": "judgment_archive_json",
+      "source_group_id": "course-20260107",
+      "trust_role": "historical_only",
+      "sha256": "3684a68ee4e6005f0144b639109adc8f6c2f880a5b69edf9ebb14f7b4a2c7b78"
+    },
+    {
+      "source_id": "1b2e296564b1bf5f",
+      "path": "../../../../judgment_archive_v2/judgments_005_独特性组织与评价反应.json",
+      "name": "judgments_005_独特性组织与评价反应.json",
+      "batch": "20260107",
+      "carrier_type": "judgment_archive_json",
+      "source_group_id": "course-20260107",
+      "trust_role": "historical_only",
+      "sha256": "a203a9fc327165b60741b2bbbad1e1afbd96ac9dc9bed8fa1ef675eb83316a26"
+    },
+    {
+      "source_id": "6eba9da255522fe8",
+      "path": "../../../../judgment_archive_v2/judgments_006_快门动作与判断标准.json",
+      "name": "judgments_006_快门动作与判断标准.json",
+      "batch": "20260107",
+      "carrier_type": "judgment_archive_json",
+      "source_group_id": "course-20260107",
+      "trust_role": "historical_only",
+      "sha256": "05ca3d502f2b4d8c8f1d4d859f748e506672c4d6e0b549f821bc1d8119d23bb4"
+    },
+    {
+      "source_id": "5ee4c734076131a7",
+      "path": "../../../../judgment_archive_v2/judgments_007_变化方向与程度.json",
+      "name": "judgments_007_变化方向与程度.json",
+      "batch": "20260107",
+      "carrier_type": "judgment_archive_json",
+      "source_group_id": "course-20260107",
+      "trust_role": "historical_only",
+      "sha256": "5a40dfe48abfce2fb38b6c76e56e2c6379278288043ae13d66ed5f1644d84d72"
+    },
+    {
+      "source_id": "397e8ee89c8593a6",
+      "path": "../../../../judgment_archive_v2/judgments_008_精细锤炼与求进.json",
+      "name": "judgments_008_精细锤炼与求进.json",
+      "batch": "20260107",
+      "carrier_type": "judgment_archive_json",
+      "source_group_id": "course-20260107",
+      "trust_role": "historical_only",
+      "sha256": "52191e1dc3fb1c055ad52ced9a17495f32aa53c2a69351ab32f49a70c76f017d"
+    },
+    {
+      "source_id": "56ac5a27041f02d6",
+      "path": "../../../../judgment_archive_v2/judgments_009_计较争执与谈判.json",
+      "name": "judgments_009_计较争执与谈判.json",
+      "batch": "20260107",
+      "carrier_type": "judgment_archive_json",
+      "source_group_id": "course-20260107",
+      "trust_role": "historical_only",
+      "sha256": "83a60f546d7a7aec908c5f2555c16b52012b86c7906c83390aa9c71e1f1bd598"
+    },
+    {
+      "source_id": "5b1c97655be19adb",
+      "path": "../../../../judgment_archive_v2/judgments_010_伪饰外观与内核.json",
+      "name": "judgments_010_伪饰外观与内核.json",
+      "batch": "20260107",
+      "carrier_type": "judgment_archive_json",
+      "source_group_id": "course-20260107",
+      "trust_role": "historical_only",
+      "sha256": "5c87a4a4970c974f83aa404428c1a65ed7b8aaf93f30f0b607a31faec59aa190"
+    },
+    {
+      "source_id": "6a4e824a0f1dd3e5",
+      "path": "../../../../judgment_archive_v2/judgments_011_信息量与发展位置.json",
+      "name": "judgments_011_信息量与发展位置.json",
+      "batch": "20260107",
+      "carrier_type": "judgment_archive_json",
+      "source_group_id": "course-20260107",
+      "trust_role": "historical_only",
+      "sha256": "840313e0390699ff35ec83da43e5101198aee46c0c015301d9ade1bb9d004062"
+    },
+    {
+      "source_id": "6ad36d564a891c49",
+      "path": "../../../../judgment_archive_v2/judgments_012_体验价值与取舍.json",
+      "name": "judgments_012_体验价值与取舍.json",
+      "batch": "20260107",
+      "carrier_type": "judgment_archive_json",
+      "source_group_id": "course-20260107",
+      "trust_role": "historical_only",
+      "sha256": "f3142cacf130bdb360364c6911e358ee3cd853ab8c4c7bb6d537f1a18a51bb1e"
+    },
+    {
+      "source_id": "0f74f4b8291a91e0",
+      "path": "../../../../judgment_archive_v2/judgments_013_数量增长与人群状态.json",
+      "name": "judgments_013_数量增长与人群状态.json",
+      "batch": "20260107",
+      "carrier_type": "judgment_archive_json",
+      "source_group_id": "course-20260107",
+      "trust_role": "historical_only",
+      "sha256": "086fb8be0e14ac327f57d59038f29f18dcdda89865090ef35ffbd63eb051bcbf"
+    },
+    {
+      "source_id": "71968eba2d820a61",
+      "path": "../../../../judgment_archive_v2/judgments_014_道路形态与陈列光彩.json",
+      "name": "judgments_014_道路形态与陈列光彩.json",
+      "batch": "20260107",
+      "carrier_type": "judgment_archive_json",
+      "source_group_id": "course-20260107",
+      "trust_role": "historical_only",
+      "sha256": "70f8ac651d232ccbc877d093f04c03f768ede636bcb24717f67f99709e9b7cef"
+    },
+    {
+      "source_id": "1f7356204c64044b",
+      "path": "../../../../judgment_archive_v2/judgments_015_格调复杂与表态.json",
+      "name": "judgments_015_格调复杂与表态.json",
+      "batch": "20260107",
+      "carrier_type": "judgment_archive_json",
+      "source_group_id": "course-20260107",
+      "trust_role": "historical_only",
+      "sha256": "41d8af057f2cb4801b4d8428359c5802669191b938d3878b045e9e9fb09d3eb3"
+    },
+    {
+      "source_id": "bbdb4b2c8ea6dc9a",
+      "path": "../../../../judgment_archive_v2/judgments_016_轻视与奇幻评价.json",
+      "name": "judgments_016_轻视与奇幻评价.json",
+      "batch": "20260107",
+      "carrier_type": "judgment_archive_json",
+      "source_group_id": "course-20260107",
+      "trust_role": "historical_only",
+      "sha256": "ede8d6b636fb7af61b0569fc27b4b8134afd76082cf1356f08eb7edd8dc7ab50"
+    },
+    {
+      "source_id": "6e5a91e0a6dec155",
+      "path": "../../../../judgment_archive_v2/judgments_017_珍视守旧与机会.json",
+      "name": "judgments_017_珍视守旧与机会.json",
+      "batch": "20260107",
+      "carrier_type": "judgment_archive_json",
+      "source_group_id": "course-20260107",
+      "trust_role": "historical_only",
+      "sha256": "5f28babd0f1b3b07b6f5fae4ab163b2397122ca6d5f48bc0c66e5c422e3043b3"
+    },
+    {
+      "source_id": "670b7f1c3d5eae64",
+      "path": "../../../../judgment_archive_v2/judgments_018_机会限制与阻断.json",
+      "name": "judgments_018_机会限制与阻断.json",
+      "batch": "20260107",
+      "carrier_type": "judgment_archive_json",
+      "source_group_id": "course-20260107",
+      "trust_role": "historical_only",
+      "sha256": "f7a269d9b342f0f87128442eb1afddcaad732edffb5c376393921d9543df2526"
+    },
+    {
+      "source_id": "6f650e044c4ea351",
+      "path": "../../../../judgment_archive_v2/judgments_019_通道程度与生活着落.json",
+      "name": "judgments_019_通道程度与生活着落.json",
+      "batch": "20260107",
+      "carrier_type": "judgment_archive_json",
+      "source_group_id": "course-20260107",
+      "trust_role": "historical_only",
+      "sha256": "3240dd842ffa668a0cadec304159f01c5057f9a7232cdd536b324a2003201c65"
+    },
+    {
+      "source_id": "1af70261b47cadee",
+      "path": "../../../../judgment_archive_v2/judgments_020_数量色彩与限制作用.json",
+      "name": "judgments_020_数量色彩与限制作用.json",
+      "batch": "20260107",
+      "carrier_type": "judgment_archive_json",
+      "source_group_id": "course-20260107",
+      "trust_role": "historical_only",
+      "sha256": "d28f9cde6da4612169335a996adfdd96ec0dd0cbc73e26885ab212943ecde4e2"
+    },
+    {
+      "source_id": "36b289260ad22844",
+      "path": "../../../../judgment_archive_v2/judgments_021_平台趋同与价值作用.json",
+      "name": "judgments_021_平台趋同与价值作用.json",
+      "batch": "20260107",
+      "carrier_type": "judgment_archive_json",
+      "source_group_id": "course-20260107",
+      "trust_role": "historical_only",
+      "sha256": "b541325dd2037e0556a632167d693f7a56dac61a673463fc5e20cbfe73bcae01"
+    },
+    {
+      "source_id": "60201d39e01ece9f",
+      "path": "../../../../judgment_archive_v2/judgments_022_熟悉自主福祉与思虑.json",
+      "name": "judgments_022_熟悉自主福祉与思虑.json",
+      "batch": "20260107",
+      "carrier_type": "judgment_archive_json",
+      "source_group_id": "course-20260107",
+      "trust_role": "historical_only",
+      "sha256": "48c318071e040a0459d19a21f46da739fdb7785a2cdddd096112d0cfa023532f"
+    },
+    {
+      "source_id": "0b9a4f8b302e936d",
+      "path": "../../../../judgment_archive_v2/judgments_023_剩余词条判断档案.json",
+      "name": "judgments_023_剩余词条判断档案.json",
+      "batch": "20260107",
+      "carrier_type": "judgment_archive_json",
+      "source_group_id": "course-20260107",
+      "trust_role": "historical_only",
+      "sha256": "e4530202b231838be3efe83e0a779fe8f9a1f043bec539a4a87b6d82e96d83d9"
+    }
+  ]
+}

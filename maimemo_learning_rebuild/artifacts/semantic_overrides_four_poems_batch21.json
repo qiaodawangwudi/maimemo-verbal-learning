@@ -1,0 +1,195 @@
+{
+  "schema_version": 1,
+  "basis": "用户要求审查360词之外的卡片。本批按‘用户直接给词—通用词条核定’处理：以汉典词语解释核定义项，不标称老师讲过；结合言语理解选项建立可迁移的最小差别。",
+  "records": {
+    "坐收渔利": {
+      "meaning": "利用他人之间的矛盾、争斗或相持，自己不直接参与争斗却从中取得利益。",
+      "distinctive_feature": "必须出现‘双方相争—第三方得利’的三方结构；重点是借冲突获利，不是泛指不劳而获。",
+      "recognition_cues": ["竞争双方两败俱伤使第三方获益", "旁观他人冲突后取得好处"],
+      "dimensions": [{"axis": "关系结构", "judgment": "两方矛盾或相持，第三方获利。"}, {"axis": "获利方式", "judgment": "第三方借势得利，通常不直接加入争斗。"}],
+      "comparison_edges": [{"other_term": "趁火打劫", "minimum_difference": "坐收渔利强调利用双方矛盾、相持而作为第三方获利；趁火打劫强调利用他人危难或混乱主动掠夺利益。"}],
+      "misuse_boundary": "只有轻松获利或等待成果，没有他人双方冲突这一前提时，不宜使用。",
+      "evidence": [{"source": "汉典", "location": "https://www.zdic.net/hans/坐收渔利", "quote": "比喻利用别人之间的矛盾而获得利益。"}]
+    },
+    "等闲视之": {
+      "meaning": "把重要或特殊的事物当作寻常小事看待，不予足够重视。",
+      "distinctive_feature": "落点是认知评价上的轻视：把本不寻常的对象视作平常；常见于‘不可等闲视之’。",
+      "recognition_cues": ["把重大问题当普通小事", "不可轻视某种风险影响"],
+      "dimensions": [{"axis": "认知判断", "judgment": "将重要、特殊对象看得寻常。"}, {"axis": "重视程度", "judgment": "没有给予应有重视。"}],
+      "comparison_edges": [],
+      "misuse_boundary": "题干只是态度冷静、平常心对待，并未表达轻视或低估时，不宜使用。",
+      "evidence": [{"source": "汉典", "location": "https://www.zdic.net/hans/等闲视之", "quote": "以平常态度对待，不加重视。"}]
+    },
+    "冷眼旁观": {
+      "meaning": "置身事外，以冷静或冷漠的态度在一旁观察事情发展而不参与。",
+      "distinctive_feature": "核心是旁观者不介入，‘冷眼’既可突出客观冷静，也可突出漠不关心；不必存在双方冲突。",
+      "recognition_cues": ["以局外人态度观察不参与", "面对事态冷漠旁观"],
+      "dimensions": [{"axis": "参与状态", "judgment": "主体置身事外、不介入。"}, {"axis": "态度色彩", "judgment": "可为冷静审视，也可为冷漠不关心，须结合语境。"}],
+      "comparison_edges": [{"other_term": "作壁上观", "minimum_difference": "冷眼旁观泛指置身事外冷静或冷漠地观察，不要求双方交战；作壁上观特指面对双方冲突，第三方在旁观望而不参与。"}],
+      "misuse_boundary": "题干强调有能力帮助却不援手时更接近袖手旁观；明确是双方冲突中的第三方观望时更接近作壁上观。",
+      "evidence": [{"source": "汉典", "location": "https://www.zdic.net/hans/冷眼旁观", "quote": "指不参与其事，站在一旁看事情的发展。"}]
+    },
+    "粗枝大叶": {
+      "meaning": "做事疏略粗糙、不认真细致；也可指只掌握事物的大体轮廓。",
+      "distinctive_feature": "常评价工作作风或处理方式缺少细密度，问题是‘做得粗’，不只是观察速度快、了解表面。",
+      "recognition_cues": ["工作处理粗糙疏漏", "只讲大体轮廓不求细密"],
+      "dimensions": [{"axis": "评价对象", "judgment": "人的作风、工作处理或叙述方式。"}, {"axis": "缺陷落点", "judgment": "不精细、不慎密。"}],
+      "comparison_edges": [{"other_term": "走马观花", "minimum_difference": "粗枝大叶评价做事或处理不细致；走马观花评价观察、了解过程匆忙粗略，只停留在表面。"}, {"other_term": "大而化之", "minimum_difference": "粗枝大叶突出作风粗疏、细节处理不严密；大而化之常指对事情大而笼统地处理，不顾具体细节。"}],
+      "misuse_boundary": "题干只是快速浏览、了解不深入而未评价做事作风时，应优先考虑走马观花。",
+      "evidence": [{"source": "汉典", "location": "https://www.zdic.net/hans/粗枝大叶", "quote": "比喻疏略，做事不细密。"}]
+    },
+    "小心翼翼": {
+      "meaning": "言行举动非常谨慎，丝毫不敢疏忽。",
+      "distinctive_feature": "突出谨慎程度很高和动作轻慎，可用于中性、褒义语境；不必含因胆怯而束手束脚的贬义。",
+      "recognition_cues": ["操作时一点不敢疏忽", "动作轻缓谨慎避免出错"],
+      "dimensions": [{"axis": "程度", "judgment": "谨慎程度很高。"}, {"axis": "行为表现", "judgment": "言行细致轻慎，避免疏忽。"}],
+      "comparison_edges": [{"other_term": "粗枝大叶", "minimum_difference": "小心翼翼强调言行极其谨慎、避免疏忽；粗枝大叶强调做事粗疏、不认真细致。"}],
+      "misuse_boundary": "题干批评主体过度谨慎、缩手缩脚时，更接近谨小慎微；小心翼翼本身不必含贬义。",
+      "evidence": [{"source": "汉典", "location": "https://www.zdic.net/hans/小心翼翼", "quote": "形容举动十分谨慎，丝毫不敢疏忽。"}]
+    },
+    "踌躇不前": {
+      "meaning": "因犹豫不决而不敢向前行动。",
+      "distinctive_feature": "同时包含内心迟疑和行动没有向前，原因是难以决断；不等于受到客观障碍阻挡。",
+      "recognition_cues": ["面对困难犹豫而不敢推进", "迟疑不决导致停在原地"],
+      "dimensions": [{"axis": "心理状态", "judgment": "犹豫、迟疑，拿不定主意。"}, {"axis": "行动结果", "judgment": "没有向前推进。"}],
+      "comparison_edges": [{"other_term": "裹足不前", "minimum_difference": "踌躇不前直接突出犹豫不决而不敢前进；裹足不前更常突出因顾虑、畏惧而停步，不一定处于具体选择犹豫。"}],
+      "misuse_boundary": "题干只是进展缓慢、条件不足或被外力阻断，没有主体犹豫不决时，不宜使用。",
+      "evidence": [{"source": "汉典", "location": "https://www.zdic.net/hans/踌躇不前", "quote": "犹豫不决，不敢前进。"}]
+    },
+    "不卑不亢": {
+      "meaning": "待人接物既不低声下气，也不傲慢自大，态度得体而有分寸。",
+      "distinctive_feature": "落在对人态度的中正分寸，同时排除卑屈和高傲两个极端；不是谦虚好学。",
+      "recognition_cues": ["面对强者不卑屈也不傲慢", "言谈举止得体有分寸"],
+      "dimensions": [{"axis": "评价对象", "judgment": "对人态度和言语举止。"}, {"axis": "尺度位置", "judgment": "处于卑屈与高傲之间的恰当分寸。"}],
+      "comparison_edges": [{"other_term": "虚怀若谷", "minimum_difference": "不卑不亢强调待人态度既不卑屈也不傲慢、分寸得当；虚怀若谷强调胸襟谦虚，能够接纳意见和他人长处。"}],
+      "misuse_boundary": "题干只说谦虚、善于听取意见，没有与人交往时的态度分寸，不宜使用。",
+      "evidence": [{"source": "汉典", "location": "https://www.zdic.net/hans/不卑不亢", "quote": "不卑下也不高傲，态度言语有分寸。"}]
+    },
+    "聚精会神": {
+      "meaning": "把精神和注意力高度集中在某一对象或活动上。",
+      "distinctive_feature": "突出精神汇聚、注意力集中这一状态，可描写听、看、思考或工作；不强调长期目标和意志投入。",
+      "recognition_cues": ["注意力全部集中于当前对象", "专注听讲观察或思考"],
+      "dimensions": [{"axis": "心理状态", "judgment": "精神与注意力集中。"}, {"axis": "作用对象", "judgment": "聚焦当前事物或活动。"}],
+      "comparison_edges": [{"other_term": "全神贯注", "minimum_difference": "聚精会神和全神贯注都强调高度专注；聚精会神侧重精神汇聚的状态，全神贯注更突出全部精神贯注于单一对象，程度色彩更满。"}],
+      "misuse_boundary": "题干强调诚心诚意、目标专一或长期坚持，却没有当前注意力高度集中时，不宜使用。",
+      "evidence": [{"source": "汉典", "location": "https://www.zdic.net/hans/聚精会神", "quote": "形容专心致志，注意力高度集中。"}]
+    },
+    "同舟共济": {
+      "meaning": "处在共同困难或风险中，大家齐心协力、相互合作以渡过难关。",
+      "distinctive_feature": "同时要求共同处境和协作克难，重点是一起行动解决困难；不只表示命运、祸福相连。",
+      "recognition_cues": ["面对共同危机携手克服", "处于同一困境共同合作"],
+      "dimensions": [{"axis": "共同前提", "judgment": "各方处在共同困难或风险中。"}, {"axis": "行动方式", "judgment": "齐心协力克服困难。"}],
+      "comparison_edges": [{"other_term": "休戚与共", "minimum_difference": "同舟共济强调在共同困难中协作行动、一起渡过难关；休戚与共强调利害、祸福和命运共同承担，不必出现具体合作动作。"}],
+      "misuse_boundary": "题干只说关系密切或利益一致，没有共同困难和协作克难时，不宜使用。",
+      "evidence": [{"source": "汉典", "location": "https://www.zdic.net/hans/同舟共济", "quote": "比喻齐心协力克服困难。"}]
+    },
+    "临危不乱": {
+      "meaning": "面对危险、危急局面时保持镇定，不慌乱失措。",
+      "distinctive_feature": "必须有危险或紧急局面这一触发条件，重点是危急关头仍不乱；比一般从容镇定的适用情境更窄。",
+      "recognition_cues": ["突发危机中保持镇定", "危险关头不慌不乱"],
+      "dimensions": [{"axis": "情境前提", "judgment": "面临危险、危急或突发局面。"}, {"axis": "主体反应", "judgment": "保持镇定，行动不乱。"}],
+      "comparison_edges": [{"other_term": "从容不迫", "minimum_difference": "临危不乱必须处在危险或紧急关头，强调面对危机不慌乱；从容不迫泛指处事沉着、不慌不忙，不要求存在危险。"}, {"other_term": "泰然自若", "minimum_difference": "临危不乱突出危急局面中的行动和秩序不乱；泰然自若强调在异常或压力面前神态、心理仍像平常一样安然。"}],
+      "misuse_boundary": "题干只是日常做事沉稳有条理，没有危险或紧急情境时，应考虑从容不迫。",
+      "evidence": [{"source": "汉典通用义核定", "location": "https://www.zdic.net/hans/临危不乱", "quote": "面对危险而不慌乱。"}]
+    },
+    "从容不迫": {
+      "meaning": "处事沉着镇定，不慌不忙。",
+      "distinctive_feature": "突出节奏和神态从容，没有仓促、慌张感；适用面广，不要求危险情境。",
+      "recognition_cues": ["做事沉着不慌不忙", "压力之下仍保持从容节奏"],
+      "dimensions": [{"axis": "行为节奏", "judgment": "不急促、不慌忙。"}, {"axis": "心理状态", "judgment": "沉着镇定。"}],
+      "comparison_edges": [{"other_term": "临危不乱", "minimum_difference": "从容不迫泛指处事沉着、不慌不忙，不要求危险；临危不乱必须落在危险或紧急关头仍保持镇定。"}, {"other_term": "泰然自若", "minimum_difference": "从容不迫偏重处事节奏和举止不慌不忙；泰然自若偏重面对异常、压力时神态心理如常。"}],
+      "misuse_boundary": "题干核心是危险关头没有慌乱时，临危不乱的情境针对性更强。",
+      "evidence": [{"source": "汉典", "location": "https://www.zdic.net/hans/从容不迫", "quote": "不慌不忙，沉着镇静。"}]
+    },
+    "节衣缩食": {
+      "meaning": "省吃省穿，尽量压缩日常生活开支，形容生活十分节俭。",
+      "distinctive_feature": "节约具体落在衣食等基本生活消费，常暗含为某个目标腾挪资金；比泛指节约的范围更具体。",
+      "recognition_cues": ["压缩吃穿开支攒钱", "生活消费极度节省"],
+      "dimensions": [{"axis": "节约对象", "judgment": "衣食等日常生活开支。"}, {"axis": "节约程度", "judgment": "明显压缩、省吃省穿。"}],
+      "comparison_edges": [],
+      "misuse_boundary": "题干只是提高资源使用效率、减少办公浪费或一般倡导节约，没有压缩个人生活消费时，不宜使用。",
+      "evidence": [{"source": "汉典", "location": "https://www.zdic.net/hans/节衣缩食", "quote": "省吃省穿，泛指极度俭缩。"}]
+    },
+    "扬长避短": {
+      "meaning": "发挥自身或事物的长处，避开、弥补或减少短处带来的不利影响。",
+      "distinctive_feature": "先承认同一主体同时有长处和短处，再进行优势利用与劣势规避；不是从根本上补齐基础。",
+      "recognition_cues": ["发挥比较优势规避弱项", "根据自身长短处选择路径"],
+      "dimensions": [{"axis": "前提判断", "judgment": "主体已有可识别的长处与短处。"}, {"axis": "策略动作", "judgment": "发挥长处，同时规避短处。"}],
+      "comparison_edges": [{"other_term": "固本强基", "minimum_difference": "扬长避短是在既有长短结构上发挥优势、规避弱项；固本强基是夯实根本、强化基础能力。"}],
+      "misuse_boundary": "题干要求补齐短板、改善弱项或夯实底层基础时，不等于避开短处，应考虑补短板或固本强基。",
+      "evidence": [{"source": "汉典", "location": "https://www.zdic.net/hans/扬长避短", "quote": "发扬长处，避开短处。"}]
+    },
+    "改弦更张": {
+      "meaning": "改变原有制度、计划或方法，重新作出较大调整。",
+      "distinctive_feature": "改革对象是制度、方针、计划或做法，强调换掉不合适的旧办法、重新调整；不用于人的品行悔改。",
+      "recognition_cues": ["改革旧制度旧办法", "调整原有方针计划重新施行"],
+      "dimensions": [{"axis": "改变对象", "judgment": "制度、计划、方针或方法。"}, {"axis": "改变幅度", "judgment": "重新调整，通常不是局部微调。"}],
+      "comparison_edges": [{"other_term": "改过自新", "minimum_difference": "改弦更张改变制度、计划或方法；改过自新是人认识并改正过错，重新做人。"}, {"other_term": "拨乱反正", "minimum_difference": "改弦更张强调换掉不合适的制度、计划或方法；拨乱反正强调纠正混乱、错误局面，使秩序回到正轨。"}],
+      "misuse_boundary": "题干主语是个人，重点是悔改过错、重新做人时，应使用改过自新。",
+      "evidence": [{"source": "汉典", "location": "https://www.zdic.net/hans/改弦更张", "quote": "比喻改革制度或变更计划、方法。"}]
+    },
+    "改过自新": {
+      "meaning": "认识并改正自己的过错，从此重新做人、走向新的正当状态。",
+      "distinctive_feature": "对象是有过错的人，要求‘改过’并走向‘自新’；不是调整制度、方法，也不是纠正社会乱局。",
+      "recognition_cues": ["犯错者悔改重新做人", "改正过失开始新生活"],
+      "dimensions": [{"axis": "主体", "judgment": "曾经犯错的个人。"}, {"axis": "变化方向", "judgment": "承认改正过错并重新做人。"}],
+      "comparison_edges": [{"other_term": "改弦更张", "minimum_difference": "改过自新强调个人改正过错、重新做人；改弦更张强调制度、计划或方法的改革调整。"}, {"other_term": "拨乱反正", "minimum_difference": "改过自新落在个人品行和行为的悔改；拨乱反正落在纠正混乱错误的局面或秩序。"}],
+      "misuse_boundary": "题干讨论政策、制度、工作方法的调整，没有个人过错与悔改时，不宜使用。",
+      "evidence": [{"source": "汉典", "location": "https://www.zdic.net/hans/改过自新", "quote": "改正过错，重新做人。"}]
+    },
+    "泾渭分明": {
+      "meaning": "界限清楚，是非、好坏或性质不同的事物区别得十分明显。",
+      "distinctive_feature": "重点是边界和归属清晰，常带是非、好坏分辨意味；不只是两个事物差别很大。",
+      "recognition_cues": ["是非界限清楚", "不同阵营性质边界明确"],
+      "dimensions": [{"axis": "判断落点", "judgment": "界限、归属或是非分野清楚。"}, {"axis": "对象关系", "judgment": "对立或不同性质的事物可明确区分。"}],
+      "comparison_edges": [{"other_term": "截然不同", "minimum_difference": "泾渭分明强调界限和归属清楚，常涉及是非好坏；截然不同强调性质或特点差异极大，不要求形成清楚边界。"}],
+      "misuse_boundary": "题干只说性质差异很大，却没有界限、阵营或是非分野时，更适合截然不同。",
+      "evidence": [{"source": "汉典", "location": "https://www.zdic.net/hans/泾渭分明", "quote": "比喻界限清楚或是非分明。"}]
+    },
+    "无人问津": {
+      "meaning": "没有人前来询问、尝试、购买或关注，形容事物乏人理会。",
+      "distinctive_feature": "评价对象是事物、机会或领域的受关注状态，落点是没有人过问；不直接描写场所门庭冷落。",
+      "recognition_cues": ["产品项目长期没人关注", "机会领域乏人过问"],
+      "dimensions": [{"axis": "评价对象", "judgment": "事物、项目、机会或领域。"}, {"axis": "关注结果", "judgment": "没有人询问或理会。"}],
+      "comparison_edges": [{"other_term": "门可罗雀", "minimum_difference": "无人问津强调事物、机会等无人询问关注；门可罗雀强调具体场所门庭冷落、来客稀少。"}, {"other_term": "鲜为人知", "minimum_difference": "无人问津强调没人过问、关注或参与；鲜为人知只说明知道的人少，不等于无人愿意接触。"}],
+      "misuse_boundary": "题干只是知名度低但仍有人关注，不宜直接使用；描写店面、机构来客稀少时门可罗雀更具体。",
+      "evidence": [{"source": "汉典", "location": "https://www.zdic.net/hans/无人问津", "quote": "比喻无人过问或尝试。"}]
+    },
+    "门可罗雀": {
+      "meaning": "门庭十分冷落，来访的宾客或顾客很少。",
+      "distinctive_feature": "直接描写场所的人流、来客稀少，画面是门前冷清；不等于事物本身知名度低。",
+      "recognition_cues": ["店铺机构门庭冷落", "来客稀少场所冷清"],
+      "dimensions": [{"axis": "评价对象", "judgment": "有门庭、人流的场所或机构。"}, {"axis": "外在表现", "judgment": "来访者、宾客或顾客稀少。"}],
+      "comparison_edges": [{"other_term": "无人问津", "minimum_difference": "门可罗雀描写场所门庭冷落、来客稀少；无人问津强调事物、机会等没有人询问关注。"}, {"other_term": "鲜为人知", "minimum_difference": "门可罗雀说场所来客少；鲜为人知说事情知道的人少，评价维度是知名度。"}],
+      "misuse_boundary": "题干对象是理论、知识、项目等抽象事物，没有门庭和来访者语境时，不宜使用。",
+      "evidence": [{"source": "汉典", "location": "https://www.zdic.net/hans/门可罗雀", "quote": "形容门庭冷落，宾客稀少。"}]
+    },
+    "趁火打劫": {
+      "meaning": "趁别人遭遇危难或局面混乱时侵害对方、夺取财物或谋取不正当利益。",
+      "distinctive_feature": "要求主体主动利用他人危难牟利，既有‘趁危’时机，又有‘侵夺获利’动作；不是只让对方处境更坏。",
+      "recognition_cues": ["灾难混乱中趁机侵夺", "利用他人危机谋取利益"],
+      "dimensions": [{"axis": "前置情境", "judgment": "他人处于危难、混乱或无力自保。"}, {"axis": "主体目的", "judgment": "主动侵夺并获取利益。"}],
+      "comparison_edges": [{"other_term": "坐收渔利", "minimum_difference": "趁火打劫是利用他人危难主动侵夺利益；坐收渔利是利用双方冲突、相持而作为第三方得利。"}, {"other_term": "落井下石", "minimum_difference": "趁火打劫重在趁危获取财物或利益；落井下石重在对已经陷入困境的人继续加害，不要求自己获利。"}],
+      "misuse_boundary": "题干只有旁观争斗后自然获益，没有趁危主动侵夺时，应考虑坐收渔利；只有恶意伤害而无获利目的时更接近落井下石。",
+      "evidence": [{"source": "汉典", "location": "https://www.zdic.net/hans/趁火打劫", "quote": "趁人危急时去侵害对方。"}]
+    },
+    "鼎力相助": {
+      "meaning": "给予大力、尽力的帮助，常作为感谢或请托他人帮助的敬辞。",
+      "distinctive_feature": "落点是帮助力度大、投入充分，不要求受助者正处危急时刻；通常用于称对方帮助自己。",
+      "recognition_cues": ["对方给予大力支持", "请托或感谢他人全力帮助"],
+      "dimensions": [{"axis": "帮助力度", "judgment": "大力、尽力支持。"}, {"axis": "语用身份", "judgment": "敬辞，多称对方给予自己的帮助。"}],
+      "comparison_edges": [{"other_term": "雪中送炭", "minimum_difference": "鼎力相助强调帮助力度大，不要求受助者已陷入困境；雪中送炭强调在困难、急需时提供及时关键帮助。"}, {"other_term": "锦上添花", "minimum_difference": "鼎力相助强调帮助者投入的力度；锦上添花强调在已有良好基础上再增添美好，不突出帮助力度。"}],
+      "misuse_boundary": "用于自己帮助别人时直接说‘我鼎力相助’容易失礼；题干核心是困难时及时解困，应优先考虑雪中送炭。",
+      "evidence": [{"source": "汉典", "location": "https://www.zdic.net/hans/鼎力相助", "quote": "大力的帮助。"}]
+    },
+    "积少成多": {
+      "meaning": "把少量事物持续积聚，最终形成较大的数量。",
+      "distinctive_feature": "突出‘少量汇集—数量变多’的量变结果；可以有时间过程，但重点不是时间长久或经验沉淀。",
+      "recognition_cues": ["每次数量虽少最终汇成很多", "小额小量不断累积"],
+      "dimensions": [{"axis": "起始单位", "judgment": "每次或每份数量少。"}, {"axis": "最终结果", "judgment": "汇集后形成较大数量。"}],
+      "comparison_edges": [{"other_term": "日积月累", "minimum_difference": "积少成多强调少量不断汇集后形成较大数量；日积月累强调随时间长期持续积累的过程，可落在经验、能力或素材。"}],
+      "misuse_boundary": "题干重点是长期形成经验、习惯或能力，没有从少量到多量的数量结果时，更适合日积月累。",
+      "evidence": [{"source": "汉典", "location": "https://www.zdic.net/hans/积少成多", "quote": "持续积聚少量事物，逐渐形成庞大数量。"}]
+    }
+  }
+}

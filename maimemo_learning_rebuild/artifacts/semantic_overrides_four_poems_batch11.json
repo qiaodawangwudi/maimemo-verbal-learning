@@ -1,0 +1,126 @@
+{
+  "schema_version": 1,
+  "basis": "逐词回到四诗风雅颂逐字稿，重建浅表处理、掩饰作态、自大固执、自卑自责和谦虚取长的判断边界。",
+  "records": {
+    "浅尝辄止": {
+      "meaning": "对某事只作初步、表面的尝试，很快停止，不肯继续深入。",
+      "distinctive_feature": "动作链是‘稍微尝试—立即停止’，适用范围比读书学习更广，可用于研究、调研等做事过程。",
+      "recognition_cues": ["只试一点便停止研究", "调研停在表面、不再深入"],
+      "dimensions": [{"axis": "投入程度", "judgment": "浅。"}, {"axis": "持续状态", "judgment": "刚尝试就停止。"}],
+      "comparison_edges": [{"other_term": "不求甚解", "minimum_difference": "浅尝辄止强调行动只作浅层尝试便停止；不求甚解强调读书、学习或研读时不追求深入理解。"}, {"other_term": "蜻蜓点水", "minimum_difference": "浅尝辄止突出浅试后停止；蜻蜓点水突出调研、整改等只轻触表面，没有触及核心。"}],
+      "misuse_boundary": "题干明确是读书理解不深或调研只浮在表面，却没有尝试后停止的动作时，应选更精确的词。"
+    },
+    "不求甚解": {
+      "meaning": "读书、学习或研读材料时，不追求深入、透彻地理解。",
+      "distinctive_feature": "课程强调常见对象是书籍、政策和知识内容，落点是理解深度不足，不是做事刚开始就停止。",
+      "recognition_cues": ["研读政策却不吃透逻辑", "读书只知大概、不作深入理解"],
+      "dimensions": [{"axis": "常见活动", "judgment": "读书、学习、研读。"}, {"axis": "认知结果", "judgment": "理解不深入。"}],
+      "comparison_edges": [{"other_term": "浅尝辄止", "minimum_difference": "不求甚解强调学习、研读时理解不深入；浅尝辄止强调对事情只稍作尝试便停止。"}],
+      "misuse_boundary": "题干批评调研、治理等行动只做一点就停下，而非理解内容不深时，不宜使用。"
+    },
+    "蜻蜓点水": {
+      "meaning": "做事只在表面轻轻接触一下，不深入、不触及问题核心。",
+      "distinctive_feature": "像蜻蜓轻点水面即离开，强调行动浮在表面；课程提示常见于调研、整改语境。",
+      "recognition_cues": ["调研只走过场、不下沉", "整改轻触表面、不碰核心"],
+      "dimensions": [{"axis": "触及层级", "judgment": "只到表面。"}, {"axis": "常见任务", "judgment": "调研、整改、检查。"}],
+      "comparison_edges": [{"other_term": "浅尝辄止", "minimum_difference": "蜻蜓点水强调行动浮在表面、未触及核心；浅尝辄止强调只稍作尝试便停止。"}, {"other_term": "隔靴搔痒", "minimum_difference": "蜻蜓点水强调调研、处理停留表面；隔靴搔痒强调措施隔着一层，没有触到问题实质。"}],
+      "misuse_boundary": "题干强调措施与问题实质隔离、完全不对症，而非行动浅表时，隔靴搔痒更精确。"
+    },
+    "文过饰非": {
+      "meaning": "明知自己有过错，却用漂亮话、理由或其他手段掩饰错误。",
+      "distinctive_feature": "主体知道存在错误，动作不是改正而是包装、遮掩；不能写成一般说套话。",
+      "recognition_cues": ["用理由掩盖自身问题", "面对错误只作漂亮解释"],
+      "dimensions": [{"axis": "前提", "judgment": "自身确有过错。"}, {"axis": "应对动作", "judgment": "掩饰而非改正。"}],
+      "comparison_edges": [{"other_term": "装腔作势", "minimum_difference": "文过饰非用言辞、手段掩盖已存在的过错；装腔作势故意摆出虚假姿态、拿捏腔调以引人注意。"}],
+      "misuse_boundary": "题干只是故意摆姿态、假装有派头，却没有掩饰自身错误时，不宜使用。"
+    },
+    "装腔作势": {
+      "meaning": "故意拿捏腔调、摆出虚假姿态，使自己显得与实际不同。",
+      "distinctive_feature": "核心是刻意‘作态’，常为博取关注、显示身份或制造效果；不要求背后有错误需要掩盖。",
+      "recognition_cues": ["故意摆架子、拿腔拿调", "刻意伪装姿态吸引注意"],
+      "dimensions": [{"axis": "行为真实性", "judgment": "姿态虚假、刻意。"}, {"axis": "表现方式", "judgment": "拿捏腔调、摆姿态。"}],
+      "comparison_edges": [{"other_term": "文过饰非", "minimum_difference": "装腔作势强调故意摆出虚假姿态；文过饰非强调掩饰自己的错误和缺点。"}],
+      "misuse_boundary": "主体只是为错误辩解、遮掩问题，没有故意拿腔作态时，应使用文过饰非。"
+    },
+    "刚愎自用": {
+      "meaning": "性格倔强、自负，坚持只按自己的想法办事，拒绝接受别人的意见。",
+      "distinctive_feature": "课程强调自大和固执程度重，根源在性格强硬、不纳谏；不仅是某一次决定不改。",
+      "recognition_cues": ["听不得不同意见、一错再错", "性格狂妄固执、拒绝纳谏"],
+      "dimensions": [{"axis": "性格特征", "judgment": "倔强、自负。"}, {"axis": "对待意见", "judgment": "拒绝接受。"}],
+      "comparison_edges": [{"other_term": "一意孤行", "minimum_difference": "刚愎自用强调性格自负、拒绝听取意见；一意孤行强调在行为上仍按自己的决定强行推进。"}, {"other_term": "目空一切", "minimum_difference": "刚愎自用突出不纳谏、固执自用；目空一切突出傲慢地不把任何人或事放在眼里。"}],
+      "misuse_boundary": "题干重点是藐视他人，或虽听到意见仍在行动上强推，而非性格不纳谏时，应选对应词。"
+    },
+    "目空一切": {
+      "meaning": "狂妄傲慢，把所有人或事都不放在眼里。",
+      "distinctive_feature": "除自大外还带有明显的藐视、看不起对象，不要求自大毫无根据。",
+      "recognition_cues": ["自认高人一等、鄙视他人", "把同行都不放在眼里"],
+      "dimensions": [{"axis": "主体态度", "judgment": "狂妄、傲慢。"}, {"axis": "对待他者", "judgment": "藐视、不放在眼里。"}],
+      "comparison_edges": [{"other_term": "妄自尊大", "minimum_difference": "目空一切突出对他人的藐视和不屑；妄自尊大突出没有事实根据却自以为了不起。"}, {"other_term": "刚愎自用", "minimum_difference": "目空一切突出看不起人和事；刚愎自用突出性格固执、自负而拒绝意见。"}],
+      "misuse_boundary": "题干只说评价自己过高却没有藐视他人，或只说不听意见时，应分别考虑妄自尊大、刚愎自用。"
+    },
+    "妄自尊大": {
+      "meaning": "没有充分事实和能力根据，却狂妄地认为自己很了不起。",
+      "distinctive_feature": "‘妄’是关键，错误在自我评价缺乏依据；不必表现为公开藐视所有人。",
+      "recognition_cues": ["能力平平却自认高明", "脱离实际地抬高自己"],
+      "dimensions": [{"axis": "事实基础", "judgment": "缺乏根据。"}, {"axis": "自我评价", "judgment": "过高、狂妄。"}],
+      "comparison_edges": [{"other_term": "目空一切", "minimum_difference": "妄自尊大强调自我评价过高且毫无根据；目空一切强调傲慢地藐视所有人和事。"}, {"other_term": "妄自菲薄", "minimum_difference": "妄自尊大无根据地抬高自己；妄自菲薄无根据地过分看轻自己。"}],
+      "misuse_boundary": "主体确有实力但态度傲慢、看不起别人时，目空一切更准确。"
+    },
+    "一意孤行": {
+      "meaning": "不听劝告，完全按照自己的意愿和决定独自行动、强行推进。",
+      "distinctive_feature": "落点在已经付诸的行为选择，即使知道可能有坏结果，仍坚持照做。",
+      "recognition_cues": ["重大事项拒绝劝告强行推进", "明知有风险仍按个人决定行动"],
+      "dimensions": [{"axis": "对待劝告", "judgment": "不采纳。"}, {"axis": "行为结果", "judgment": "按个人意愿强行实施。"}],
+      "comparison_edges": [{"other_term": "刚愎自用", "minimum_difference": "一意孤行强调行为上按个人决定强行推进；刚愎自用强调性格自负固执、拒绝接受意见。"}],
+      "misuse_boundary": "题干只评价性格倔强、不听意见，却没有坚持实施某项决定的行为时，刚愎自用更贴切。"
+    },
+    "妄自菲薄": {
+      "meaning": "没有充分根据地过分看轻自己，对自身能力和价值作出过低评价。",
+      "distinctive_feature": "核心是自卑、低估自己，不要求先经历失败，也不等于因过去错误反复责备。",
+      "recognition_cues": ["认为自己处处不如人", "没有依据地低估自身能力"],
+      "dimensions": [{"axis": "自我评价", "judgment": "过低。"}, {"axis": "事实基础", "judgment": "缺乏充分根据。"}],
+      "comparison_edges": [{"other_term": "自怨自艾", "minimum_difference": "妄自菲薄强调过分看轻自己；自怨自艾强调因过去错误、挫折一味责备自己并陷入消极情绪。"}, {"other_term": "妄自尊大", "minimum_difference": "妄自菲薄无根据地低估自己；妄自尊大无根据地抬高自己。"}],
+      "misuse_boundary": "题干有明确过去挫折、错误并强调反复自责、情绪无法自拔时，应使用自怨自艾。"
+    },
+    "自怨自艾": {
+      "meaning": "因过去的错误或挫折一味埋怨、责备自己，陷入消极情绪而不能自拔。",
+      "distinctive_feature": "课程要求按现代常用贬义掌握：重点是过去受挫后的自我责备和情绪沉陷，不是单纯自卑。",
+      "recognition_cues": ["揪着过去失败不断责备自己", "受挫后沉入消极情绪"],
+      "dimensions": [{"axis": "触发原因", "judgment": "过去错误或挫折。"}, {"axis": "心理结果", "judgment": "自责并陷入消极情绪。"}],
+      "comparison_edges": [{"other_term": "妄自菲薄", "minimum_difference": "自怨自艾强调因错误、挫折而反复自责；妄自菲薄强调没有根据地过分低估自己的能力和价值。"}],
+      "misuse_boundary": "题干只表现信心不足、自我评价低，没有过去挫折和自责结构时，不宜使用。"
+    },
+    "甘居人后": {
+      "meaning": "心甘情愿处在别人后面，不争先、不居首。",
+      "distinctive_feature": "课程明确有两种语境：可贬指缺乏上进心，也可表现不争名次、淡泊谦让；褒贬必须由上下文裁定。",
+      "recognition_cues": ["缺少进取心、甘愿落后", "不争先后、甘愿让位于人"],
+      "dimensions": [{"axis": "主体意愿", "judgment": "自愿居后。"}, {"axis": "感情色彩", "judgment": "随上进或淡泊语境变化。"}],
+      "comparison_edges": [{"other_term": "淡泊名利", "minimum_difference": "甘居人后描述愿意处在别人之后，可能被批评缺乏进取；淡泊名利强调不看重名声和利益，通常是正面品格。"}],
+      "misuse_boundary": "题干只说不追求名声利益，却没有与他人先后、排名关系时，淡泊名利更精确。"
+    },
+    "淡泊名利": {
+      "meaning": "不把名声、地位和利益看得重要，不热衷争夺。",
+      "distinctive_feature": "落点是不争名利的价值取向，通常具有正面评价，不等于能力不足或缺乏上进心。",
+      "recognition_cues": ["不争职位和个人得失", "看轻名声利益、专注事业本身"],
+      "dimensions": [{"axis": "看轻对象", "judgment": "名声、地位、利益。"}, {"axis": "行为倾向", "judgment": "不争夺。"}],
+      "comparison_edges": [{"other_term": "甘居人后", "minimum_difference": "淡泊名利强调不看重名声利益；甘居人后强调自愿处在别人之后，既可褒义谦让，也可贬义缺乏进取。"}],
+      "misuse_boundary": "题干批评没有进取心、甘愿落后，却没有名利取舍时，不宜使用。"
+    },
+    "虚怀若谷": {
+      "meaning": "胸怀像山谷一样宽广，态度谦虚，能够容纳、听取别人的意见。",
+      "distinctive_feature": "评价的是谦虚开放的性格和容量，不要求已经采纳他人具体优点。",
+      "recognition_cues": ["以谦虚姿态向群众学习", "能容纳不同意见"],
+      "dimensions": [{"axis": "性格态度", "judgment": "谦虚。"}, {"axis": "意见容量", "judgment": "能容纳别人意见。"}],
+      "comparison_edges": [{"other_term": "博采众长", "minimum_difference": "虚怀若谷强调谦虚、能容纳意见的态度；博采众长强调实际广泛吸收各方优点和长处。"}],
+      "misuse_boundary": "题干明确出现学习、吸收多方优秀成果的动作时，博采众长更具体。"
+    },
+    "博采众长": {
+      "meaning": "广泛吸收、采纳各方面的优点和长处，用来丰富、完善自己。",
+      "distinctive_feature": "必须同时有范围广和对象为长处、优秀成果两个判断点，不只是愿意听意见。",
+      "recognition_cues": ["吸收多种文明的优秀成果", "广泛学习各家所长"],
+      "dimensions": [{"axis": "采纳范围", "judgment": "广泛、多方。"}, {"axis": "采纳内容", "judgment": "优点、长处、优秀成果。"}],
+      "comparison_edges": [{"other_term": "虚怀若谷", "minimum_difference": "博采众长强调广泛吸收他人长处的行动；虚怀若谷强调谦虚、能容纳意见的性格态度。"}, {"other_term": "集思广益", "minimum_difference": "博采众长吸收各方已有优点、长处；集思广益汇集众人的意见和智慧来改进决策。"}],
+      "misuse_boundary": "题干只是广泛听取建议、集中智慧，没有学习各方长处时，集思广益更贴切。"
+    }
+  }
+}

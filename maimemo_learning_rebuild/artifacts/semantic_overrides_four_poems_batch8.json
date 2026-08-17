@@ -1,0 +1,118 @@
+{
+  "schema_version": 1,
+  "basis": "逐词回到四诗风雅颂逐字稿，重建素材调用、心口行为、线索追查、新颖风格、真假混杂和数量形态的最小辨析边界。",
+  "records": {
+    "信手拈来": {
+      "meaning": "由于积累丰富，需要时能随手取用素材、例证、诗句或语言。",
+      "distinctive_feature": "对象通常是可调用的知识或表达材料，轻松来自平时积累，而非对完成任务有把握。",
+      "recognition_cues": ["引用典故、诗句毫不费力", "素材储备丰富、随时调用"],
+      "dimensions": [{"axis": "取用对象", "judgment": "素材、例证、语言等。"}, {"axis": "能力基础", "judgment": "已有丰富积累。"}],
+      "comparison_edges": [{"other_term": "手到擒来", "minimum_difference": "信手拈来强调随手调取积累的素材；手到擒来强调对完成任务有把握，一出手就成功。"}],
+      "misuse_boundary": "题干描述轻松解决任务、取得结果，却没有素材调用关系时，不宜使用。"
+    },
+    "言不由衷": {
+      "meaning": "嘴上说出的话不是内心真实想法，言语与内心不一致。",
+      "distinctive_feature": "只要求心口不一，课程按中性词处理；不必出现表面服从、暗中对抗的行为。",
+      "recognition_cues": ["迫于情势说违心话", "口头表达与真实想法不同"],
+      "dimensions": [{"axis": "比较双方", "judgment": "口头言语与内心想法。"}, {"axis": "行为要求", "judgment": "不要求暗中采取相反行动。"}],
+      "comparison_edges": [{"other_term": "阳奉阴违", "minimum_difference": "言不由衷只说明说的话不符合内心；阳奉阴违还要求表面服从、背后以行动对抗或拒不落实。"}],
+      "misuse_boundary": "题干明确有当面答应、私下抵制的行为结构时，阳奉阴违更精确。"
+    },
+    "阳奉阴违": {
+      "meaning": "表面上表示服从、答应，暗地里却抵制、违背或拒不落实。",
+      "distinctive_feature": "必须有公开态度与私下行为的双层反差，重在行动上的暗中对抗。",
+      "recognition_cues": ["当面答应、背后抵制", "表面执行、实际消极对抗"],
+      "dimensions": [{"axis": "公开表现", "judgment": "顺从、答应。"}, {"axis": "私下行动", "judgment": "违背、抵制。"}],
+      "comparison_edges": [{"other_term": "言不由衷", "minimum_difference": "阳奉阴违要求表面服从与背后对抗的行为反差；言不由衷只说明言语不是内心真实想法。"}],
+      "misuse_boundary": "只有违心表达，没有背后违背、抵制或不落实的动作时，不宜使用。"
+    },
+    "按图索骥": {
+      "meaning": "依据图纸、线索、资料或既定标准去寻找目标。",
+      "distinctive_feature": "课程指出可褒可贬：线索提供方向时为正面，拘泥图样机械寻找时可显死板；共同核心是依图索寻。",
+      "recognition_cues": ["依据地图、资料寻找目标", "按照既有特征逐项查找"],
+      "dimensions": [{"axis": "行动依据", "judgment": "图纸、资料、线索或既定特征。"}, {"axis": "行动目标", "judgment": "找到具体对象。"}],
+      "comparison_edges": [{"other_term": "追根溯源", "minimum_difference": "按图索骥依据现成线索寻找目标，不必追查来源；追根溯源专门寻找事物的源头、根本原因。"}, {"other_term": "顺藤摸瓜", "minimum_difference": "按图索骥可依据静态图纸资料定位目标；顺藤摸瓜强调沿关联线索继续侦查，常用于案件调查。"}],
+      "misuse_boundary": "题干重点是探究起源、根本原因时，应使用追根溯源。"
+    },
+    "追根溯源": {
+      "meaning": "沿着线索追查事物的源头、起因或根本。",
+      "distinctive_feature": "寻找目标必须是来源和根本原因，不能把任何有线索的查找都称为追根溯源。",
+      "recognition_cues": ["追查历史起源", "探究问题产生的根本原因"],
+      "dimensions": [{"axis": "追查方向", "judgment": "向事物的源头回溯。"}, {"axis": "目标", "judgment": "起源、起因或根本。"}],
+      "comparison_edges": [{"other_term": "按图索骥", "minimum_difference": "追根溯源专门追查源头和根本；按图索骥只需依据资料、特征找到目标。"}, {"other_term": "顺藤摸瓜", "minimum_difference": "追根溯源的落点是来源、根因；顺藤摸瓜的落点是沿关联线索发现隐藏对象或案件网络。"}],
+      "misuse_boundary": "只是依照地图定位对象或沿案件线索抓到同伙，没有追查来源、根因时，不宜使用。"
+    },
+    "顺藤摸瓜": {
+      "meaning": "沿着已有线索逐步追查，找到隐藏的对象、关联人员或问题。",
+      "distinctive_feature": "强调线索之间连续牵引的侦查过程，课程提示常用于警方破案、调查案件。",
+      "recognition_cues": ["从一条案件线索查出犯罪团伙", "沿关联关系继续深挖"],
+      "dimensions": [{"axis": "起点", "judgment": "已有具体线索。"}, {"axis": "过程", "judgment": "顺着关联逐步追查。"}],
+      "comparison_edges": [{"other_term": "追根溯源", "minimum_difference": "顺藤摸瓜沿关联线索找出隐藏对象，常用于侦查；追根溯源专门寻找事物源头和根本原因。"}],
+      "misuse_boundary": "题干只是查明历史起源或理论根源，没有沿线索侦查的过程时，不宜使用。"
+    },
+    "标新立异": {
+      "meaning": "提出新奇独特、不同于常规的见解或做法；也可指刻意追求另类以博取注意。",
+      "distinctive_feature": "课程按中性词掌握，褒贬由语境决定：有价值的独特可肯定，脱离实际的刻意出格则贬义。",
+      "recognition_cues": ["观点新奇、不同寻常", "为博眼球刻意追求另类"],
+      "dimensions": [{"axis": "核心特征", "judgment": "新奇、与众不同。"}, {"axis": "感情色彩", "judgment": "随是否有价值、是否刻意而变化。"}],
+      "comparison_edges": [{"other_term": "别出心裁", "minimum_difference": "标新立异可褒可贬，贬义时强调刻意出格；别出心裁稳定褒义，强调巧妙独特的构思。"}, {"other_term": "独树一帜", "minimum_difference": "标新立异强调观点、做法新奇独特；独树一帜强调形成自成一派的风格或地位。"}],
+      "misuse_boundary": "题干明确赞扬构思巧妙且无刻意出格意味时，别出心裁更贴切。"
+    },
+    "别出心裁": {
+      "meaning": "另有一种巧妙、独特的构思或设计。",
+      "distinctive_feature": "稳定褒义，重点是用心构思得巧，而不仅是与别人不同。",
+      "recognition_cues": ["设计构思巧妙独特", "安排新颖且富有匠心"],
+      "dimensions": [{"axis": "独特来源", "judgment": "巧妙构思。"}, {"axis": "感情色彩", "judgment": "褒义。"}],
+      "comparison_edges": [{"other_term": "标新立异", "minimum_difference": "别出心裁褒义地赞扬构思巧妙；标新立异只说明新奇独特，还可能指刻意出格。"}, {"other_term": "独树一帜", "minimum_difference": "别出心裁落在某次构思、设计；独树一帜落在长期形成的独特风格、自成一派。"}],
+      "misuse_boundary": "题干强调在行业中形成独立风格、流派，而非某个巧妙构思时，应使用独树一帜。"
+    },
+    "独树一帜": {
+      "meaning": "形成独特风格、主张或地位，自成一家、自成一派。",
+      "distinctive_feature": "不是单个点子新颖，而是在某领域形成稳定、可识别的自有风格。",
+      "recognition_cues": ["在行业形成自成一派的风格", "创作主张具有鲜明独立性"],
+      "dimensions": [{"axis": "独特对象", "judgment": "风格、主张、流派。"}, {"axis": "领域位置", "judgment": "自成一家。"}],
+      "comparison_edges": [{"other_term": "别出心裁", "minimum_difference": "独树一帜强调稳定风格、自成一派；别出心裁强调某个构思或设计巧妙独特。"}, {"other_term": "标新立异", "minimum_difference": "独树一帜通常肯定独立风格；标新立异可指观点做法新奇，也可能贬斥刻意出格。"}],
+      "misuse_boundary": "只有一次做法新颖或一个点子巧妙，没有形成独特风格、地位时，不宜使用。"
+    },
+    "鱼目混珠": {
+      "meaning": "用假的东西冒充真的，或用劣质品冒充优质品，混入其中蒙骗。",
+      "distinctive_feature": "主观造假是必要条件，课程明确既可表示以假乱真，也可表示以次充好。",
+      "recognition_cues": ["假货混入真品出售", "劣质内容伪装成精品"],
+      "dimensions": [{"axis": "主体意图", "judgment": "主动伪装、蒙混。"}, {"axis": "替代关系", "judgment": "假充真或次充好。"}],
+      "comparison_edges": [{"other_term": "滥竽充数", "minimum_difference": "鱼目混珠强调物品、内容以假乱真或以次充好；滥竽充数强调没有真才实学的人混在队伍中凑数。"}],
+      "misuse_boundary": "只是不同质量对象客观混在一起，没有主观冒充、蒙骗时，不宜使用。"
+    },
+    "比比皆是": {
+      "meaning": "到处都是，数量很多而且十分常见。",
+      "distinctive_feature": "强调空间分布上的随处可见，是现有状态，不含不断新出现的动态感。",
+      "recognition_cues": ["放眼各处都能看到", "某类对象十分常见"],
+      "dimensions": [{"axis": "数量", "judgment": "很多。"}, {"axis": "分布", "judgment": "到处可见。"}],
+      "comparison_edges": [{"other_term": "层出不穷", "minimum_difference": "比比皆是强调现有对象到处都是；层出不穷强调新的对象连续不断地出现。"}, {"other_term": "形形色色", "minimum_difference": "比比皆是只强调多且常见；形形色色还强调种类、形态或身份差异很大。"}],
+      "misuse_boundary": "题干重点是新事物持续出现或种类多样，而非到处可见时，应选边界更精确的词。"
+    },
+    "层出不穷": {
+      "meaning": "新的事物或现象接连不断地出现，没有穷尽。",
+      "distinctive_feature": "课程强调动态‘出现感’和连续性，可形容好事物也可形容坏现象，不是固定贬义。",
+      "recognition_cues": ["新业态、新模式不断涌现", "问题一个接一个出现"],
+      "dimensions": [{"axis": "变化方式", "judgment": "连续不断出现。"}, {"axis": "感情色彩", "judgment": "中性，随对象而定。"}],
+      "comparison_edges": [{"other_term": "比比皆是", "minimum_difference": "层出不穷强调动态地不断出现；比比皆是强调现有对象数量多、到处都是。"}],
+      "misuse_boundary": "题干只静态描述数量很多，没有接连涌现、不断产生的过程时，不宜使用。"
+    },
+    "形形色色": {
+      "meaning": "对象种类、形态、身份或品质各不相同，呈现多种多样的状态。",
+      "distinctive_feature": "除数量多外，还必须有显著的不同性和多样性。",
+      "recognition_cues": ["骗局种类繁多、手法各异", "人群身份样貌多种多样"],
+      "dimensions": [{"axis": "数量", "judgment": "较多。"}, {"axis": "差异", "judgment": "形态、种类或身份各异。"}],
+      "comparison_edges": [{"other_term": "比比皆是", "minimum_difference": "形形色色强调对象多且种类、形态各异；比比皆是只强调到处都是、十分常见。"}],
+      "misuse_boundary": "题干只强调某一种对象数量很多，没有多样性对应点时，不宜使用。"
+    },
+    "吉光片羽": {
+      "meaning": "从古代遗留下来的少量、残存而珍贵的文物、书画或典籍片段。",
+      "distinctive_feature": "课程强调现代题目常落在古代文物、古籍领域，同时具备残存、稀少和珍贵三个判断点。",
+      "recognition_cues": ["古墓中残存的珍贵文物", "散佚典籍留下的珍贵片段"],
+      "dimensions": [{"axis": "来源时间", "judgment": "古代遗存。"}, {"axis": "保存状态", "judgment": "零散、残缺而珍贵。"}],
+      "comparison_edges": [{"other_term": "凤毛麟角", "minimum_difference": "吉光片羽特指古代残存的珍贵文物、典籍片段；凤毛麟角泛指珍贵而稀少的人或事物。"}],
+      "misuse_boundary": "对象只是一般的稀少人才、作品或现象，没有古代遗存、残片属性时，不宜使用。"
+    }
+  }
+}

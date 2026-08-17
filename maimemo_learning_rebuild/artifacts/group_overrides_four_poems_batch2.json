@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "basis": "三组均已形成双向比较边；只改造现有卡位，不扩张成员。",
+  "groups": {
+    "group::mkjr_Z6Wkpu_5X8rbbgBGPV7HjA": {
+      "status": "ready",
+      "title": "近义辨析｜瞻前顾后、优柔寡断、举棋不定",
+      "purpose": "区分顾虑结构、一般决断力和具体决策时点。",
+      "minimum_differences": [{"left": "瞻前顾后", "right": "举棋不定", "text": "瞻前顾后是考虑前后、顾虑太多；举棋不定是到了具体选择时刻仍拿不定主意。"}, {"left": "优柔寡断", "right": "举棋不定", "text": "优柔寡断可评价一般性格或处事倾向；举棋不定聚焦一次具体选择。"}],
+      "dimensions": [{"axis": "核心判断", "judgments": {"瞻前顾后": "顾虑来自前后影响", "优柔寡断": "一般性地缺少决断", "举棋不定": "临场面对具体选项无法取舍"}}],
+      "misuse_boundary": "不要只见“犹豫”就互换；继续找顾虑来源、是否评价长期倾向、是否已到具体决策点。"
+    },
+    "group::mkjr_5hgSr03FaIKuxV884HkStA": {
+      "status": "ready",
+      "title": "近义辨析｜因陋就简、简单易行",
+      "purpose": "区分外部条件简陋与方法本身容易实施。",
+      "minimum_differences": [{"left": "因陋就简", "right": "简单易行", "text": "因陋就简以简陋条件为前提，从简办理；简单易行评价方法自身不复杂、容易实行。"}],
+      "dimensions": [{"axis": "判断对象", "judgments": {"因陋就简": "客观条件及其应对方式", "简单易行": "方案或方法的实施难度"}}],
+      "misuse_boundary": "条件差但仍把事办下去是因陋就简；方案设计得不复杂、容易推广才是简单易行。"
+    },
+    "group::mkjr_DWlELXBKqjjNzBUlE4I54A": {
+      "status": "ready",
+      "title": "近义辨析｜未雨绸缪、杞人忧天",
+      "purpose": "区分有依据的事前行动与无依据的多余忧虑。",
+      "minimum_differences": [{"left": "未雨绸缪", "right": "杞人忧天", "text": "未雨绸缪对合理风险提前采取行动；杞人忧天对缺乏根据的事情空自忧虑。"}],
+      "dimensions": [{"axis": "风险与行动", "judgments": {"未雨绸缪": "风险可预见，而且已经准备", "杞人忧天": "风险无根据，停留在担忧"}}],
+      "misuse_boundary": "不能把所有提前担忧都叫未雨绸缪；必须同时有合理风险依据和实际准备动作。"
+    }
+  }
+}

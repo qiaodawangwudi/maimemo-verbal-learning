@@ -1,0 +1,126 @@
+{
+  "schema_version": 1,
+  "basis": "逐词回到四诗风雅颂逐字稿，重建有害方法、透支长远、无效劳动和负面结果的最小辨析边界。",
+  "records": {
+    "抱薪救火": {
+      "meaning": "采取错误方法处理问题，反而使问题或灾害越来越严重。",
+      "distinctive_feature": "方法不仅无效，还像抱柴救火一样持续给原问题增加条件，使事态升级。",
+      "recognition_cues": ["措施反而助长原有问题", "越治理越严重"],
+      "dimensions": [{"axis": "方法性质", "judgment": "处理方式本身错误。"}, {"axis": "后果", "judgment": "原问题被进一步加重。"}],
+      "comparison_edges": [{"other_term": "扬汤止沸", "minimum_difference": "抱薪救火会使问题加剧；扬汤止沸能暂时缓解表面现象，只是不能根治。"}],
+      "misuse_boundary": "措施只是没有效果、没有触及根源，却未使事态更严重时，不宜使用。"
+    },
+    "剜肉补疮": {
+      "meaning": "牺牲一处的利益或资源，去填补另一处眼前的缺口。",
+      "distinctive_feature": "必须能识别被牺牲的一处和被弥补的另一处，本质是拆东补西而非一般错误治理。",
+      "recognition_cues": ["变卖长期资产填补当前缺口", "损害一方以救另一方的急"],
+      "dimensions": [{"axis": "资源流向", "judgment": "从一处割取资源去补另一处。"}, {"axis": "时间取向", "judgment": "只顾眼前之急。"}],
+      "comparison_edges": [{"other_term": "寅吃卯粮", "minimum_difference": "剜肉补疮是牺牲一处补另一处；寅吃卯粮是提前耗用未来资源应付当前。"}],
+      "misuse_boundary": "题干没有一处被牺牲、另一处被填补的对应关系时，不能只因措施有害就使用。"
+    },
+    "杀鸡取卵": {
+      "meaning": "为取得眼前利益而毁掉能够持续产生利益的长远基础。",
+      "distinctive_feature": "短期所得明确存在，但代价是把未来收益来源直接破坏。",
+      "recognition_cues": ["为眼前收益毁掉长期基础", "一次获利后无法持续发展"],
+      "dimensions": [{"axis": "短期结果", "judgment": "取得眼前利益。"}, {"axis": "长期代价", "judgment": "持续收益能力被毁掉。"}],
+      "comparison_edges": [{"other_term": "竭泽而渔", "minimum_difference": "杀鸡取卵与竭泽而渔都只顾眼前、损害长远；涉及自然资源被一次性耗尽时，竭泽而渔更贴切，杀鸡取卵适用对象更宽。"}],
+      "misuse_boundary": "只有资源紧张或短期失败，没有以长远基础换眼前收益的结构时，不宜使用。"
+    },
+    "竭泽而渔": {
+      "meaning": "为获取眼前利益而把可持续利用的资源一次性耗尽，不顾长期发展。",
+      "distinctive_feature": "课程明确指出其与杀鸡取卵大多可通用，但在资源开发、使用语境中更精确。",
+      "recognition_cues": ["过度开发直至资源枯竭", "只顾当前产出、不留恢复空间"],
+      "dimensions": [{"axis": "对象", "judgment": "常为可持续利用的资源。"}, {"axis": "长期结果", "judgment": "资源基础被耗尽。"}],
+      "comparison_edges": [{"other_term": "杀鸡取卵", "minimum_difference": "竭泽而渔更常落在资源利用与耗竭；杀鸡取卵泛指毁掉长期收益来源以换取眼前利益。"}],
+      "misuse_boundary": "题干只说资源不足，或合理利用资源后获得收益，并无过度耗尽和损害长远时，不宜使用。"
+    },
+    "蚍蜉撼树": {
+      "meaning": "力量极其微小，却企图动摇远比自己强大的事物。",
+      "distinctive_feature": "必须同时出现悬殊的力量对比和不自量力的对抗目标，落点不是单纯‘没效果’。",
+      "recognition_cues": ["弱小个体挑战庞大力量", "力量悬殊却企图撼动强者"],
+      "dimensions": [{"axis": "力量对比", "judgment": "行动者远弱于对象。"}, {"axis": "行动目标", "judgment": "企图动摇强大事物。"}],
+      "comparison_edges": [{"other_term": "徒劳无功", "minimum_difference": "蚍蜉撼树要求弱小力量挑战强大对象；徒劳无功只要求付出没有结果。"}],
+      "misuse_boundary": "失败由方法错误、时机不当等原因造成，而非力量悬殊时，不能只因‘无用’就使用。"
+    },
+    "釜底抽薪": {
+      "meaning": "直接消除使问题持续存在的根源，从根本上解决问题。",
+      "distinctive_feature": "动作落在根源和支撑条件上；课程说明现代用法可褒可贬，不能机械限定感情色彩。",
+      "recognition_cues": ["切断问题赖以存在的条件", "从源头解除矛盾"],
+      "dimensions": [{"axis": "措施位置", "judgment": "直接作用于根源。"}, {"axis": "解决层级", "judgment": "使问题失去继续存在的条件。"}],
+      "comparison_edges": [{"other_term": "扬汤止沸", "minimum_difference": "釜底抽薪去除根源；扬汤止沸只缓解表面现象，根源仍在。"}],
+      "misuse_boundary": "措施只处理表面症状、暂时缓解或绕开核心时，不宜使用。"
+    },
+    "疏堵结合": {
+      "meaning": "把疏导与禁止、封堵两类措施配合起来治理问题。",
+      "distinctive_feature": "它描述的是两类互补治理动作，不是治理后的结果；题干应同时有‘疏’和‘堵’的对应点。",
+      "recognition_cues": ["一边提供合理出口、一边禁止违规行为", "疏导和封堵并用"],
+      "dimensions": [{"axis": "措施构成", "judgment": "疏导与封堵并行。"}, {"axis": "表达层级", "judgment": "属于治理做法。"}],
+      "comparison_edges": [{"other_term": "标本兼治", "minimum_difference": "疏堵结合描述具体做法的组合；标本兼治描述表面问题与根本原因都得到治理的结果或目标。"}],
+      "misuse_boundary": "题干只说兼顾根本与表面，却没有疏导、封堵两类动作时，不宜使用。"
+    },
+    "抽丝剥茧": {
+      "meaning": "把复杂事物逐层、逐步拆解梳理，以揭示其脉络或实质。",
+      "distinctive_feature": "重点是循层次展开的分析过程，而不是直接找到根源或一次解决问题。",
+      "recognition_cues": ["从复杂线索中逐层分析", "一步步拆开问题结构"],
+      "dimensions": [{"axis": "分析方式", "judgment": "逐层、逐步拆解。"}, {"axis": "对象状态", "judgment": "复杂、纠缠或层层包裹。"}],
+      "comparison_edges": [{"other_term": "釜底抽薪", "minimum_difference": "抽丝剥茧描述逐层分析和梳理的过程；釜底抽薪描述找到并去除根源的治理动作。"}],
+      "misuse_boundary": "题干只说追查来源、直接解决根源，没有逐层拆解分析过程时，不宜使用。"
+    },
+    "行之有效": {
+      "meaning": "某种办法或措施经过实际施行，已经证明能够产生效果。",
+      "distinctive_feature": "‘有效’必须有实践检验这一隐含前提，不能仅凭推测、模拟或理论判断。",
+      "recognition_cues": ["实践已经证明可用", "长期施行后取得效果"],
+      "dimensions": [{"axis": "验证方式", "judgment": "经过实际实行。"}, {"axis": "结果", "judgment": "已证明有效。"}],
+      "comparison_edges": [{"other_term": "简单易行", "minimum_difference": "行之有效强调实践证明有成效；简单易行强调方法不复杂、容易实行，并不保证效果。"}],
+      "misuse_boundary": "方案仍处在设想、模拟或理论推演阶段，尚未实践验证时，不宜使用。"
+    },
+    "一劳永逸": {
+      "meaning": "付出一次努力，把问题长期解决，此后不必反复处理。",
+      "distinctive_feature": "重点不是见效快，而是一次投入换来长期免除后续劳作；课程将其按中性词处理。",
+      "recognition_cues": ["一次建设长期受益", "解决后无需反复治理"],
+      "dimensions": [{"axis": "投入次数", "judgment": "集中或一次性付出。"}, {"axis": "持续结果", "judgment": "此后长期不再费力。"}],
+      "comparison_edges": [{"other_term": "行之有效", "minimum_difference": "一劳永逸强调一次努力后长期不必再做；行之有效只强调方法经实践证明有用，可能仍需持续实行。"}],
+      "misuse_boundary": "措施只是迅速见效、阶段有效或仍需长期反复执行时，不能使用。"
+    },
+    "事与愿违": {
+      "meaning": "事情的实际发展或结果没有符合主观愿望、预期。",
+      "distinctive_feature": "范围较宽，只要结果偏离愿望即可，不要求结果走向预期的正反面。",
+      "recognition_cues": ["结果没有达到原本愿望", "实际发展偏离主观预期"],
+      "dimensions": [{"axis": "比较双方", "judgment": "实际结果与主观愿望。"}, {"axis": "偏离程度", "judgment": "不符合即可，不必相反。"}],
+      "comparison_edges": [{"other_term": "适得其反", "minimum_difference": "事与愿违只要求未达预期；适得其反要求结果与目标相反，甚至越做越坏。"}],
+      "misuse_boundary": "题干明确强调产生与目标相反的结果时，适得其反的边界更精确。"
+    },
+    "得不偿失": {
+      "meaning": "得到的利益补偿不了付出的代价或遭受的损失。",
+      "distinctive_feature": "必须能在题干中指出‘得到什么’和‘失去什么’，并判断所得小于所失。",
+      "recognition_cues": ["微小收益换来巨大代价", "所得不足弥补损失"],
+      "dimensions": [{"axis": "权衡对象", "judgment": "所得与所失。"}, {"axis": "权衡结果", "judgment": "所得小于损失。"}],
+      "comparison_edges": [{"other_term": "徒劳无功", "minimum_difference": "得不偿失有所得，但小于损失；徒劳无功强调付出后没有取得成果。"}],
+      "misuse_boundary": "题干只有失败或无效，没有可辨认的所得与损失比较时，不宜使用。"
+    },
+    "徒劳无功": {
+      "meaning": "白白付出劳动或努力，却没有取得应有的成果。",
+      "distinctive_feature": "判断点是‘有付出、无结果’，不要求最后一步失败，也不要求所得小于损失。",
+      "recognition_cues": ["投入很多却毫无成效", "努力最终落空"],
+      "dimensions": [{"axis": "过程", "judgment": "已经付出努力。"}, {"axis": "结果", "judgment": "没有取得成果。"}],
+      "comparison_edges": [{"other_term": "功亏一篑", "minimum_difference": "徒劳无功强调努力整体没有结果；功亏一篑强调前期接近成功，却在最后一步失败。"}, {"other_term": "得不偿失", "minimum_difference": "徒劳无功是没有成果；得不偿失可能有所得，只是所得不足弥补损失。"}],
+      "misuse_boundary": "前期已经取得大量成果、仅最后一步失败时，应使用功亏一篑；存在明确得失权衡时应考虑得不偿失。"
+    },
+    "弄巧成拙": {
+      "meaning": "本想耍聪明把事情办好，结果反而把事情弄糟。",
+      "distinctive_feature": "必须出现卖弄技巧、投机取巧或耍小聪明的主观动作，不能等同于任何结果变坏。",
+      "recognition_cues": ["巧用规则反而留下隐患", "耍小聪明造成坏结果"],
+      "dimensions": [{"axis": "行为动机", "judgment": "有投机、耍聪明的意图。"}, {"axis": "结果", "judgment": "事情反而被弄糟。"}],
+      "comparison_edges": [{"other_term": "事与愿违", "minimum_difference": "弄巧成拙要求耍聪明的行为导致坏结果；事与愿违只要求结果不合愿望。"}],
+      "misuse_boundary": "结果虽不理想，但题干没有耍聪明、取巧或卖弄技巧的动作时，不宜使用。"
+    },
+    "大打折扣": {
+      "meaning": "质量、效果、价值或程度比原本应有、预期的水平明显降低。",
+      "distinctive_feature": "仍然可能有一定效果，只是效果缩水；不要求完全无功，也不要求与目标相反。",
+      "recognition_cues": ["体验或成效明显下降", "原有价值被削弱"],
+      "dimensions": [{"axis": "结果程度", "judgment": "低于预期但未必归零。"}, {"axis": "表达重点", "judgment": "效果、质量或价值缩水。"}],
+      "comparison_edges": [{"other_term": "徒劳无功", "minimum_difference": "大打折扣仍可能有部分效果，只是明显缩水；徒劳无功是努力没有取得成果。"}, {"other_term": "事与愿违", "minimum_difference": "大打折扣只说效果下降；事与愿违强调实际结果不符合主观愿望。"}],
+      "misuse_boundary": "题干明确完全没有成果或结果与目标相反时，应使用边界更强的词。"
+    }
+  }
+}

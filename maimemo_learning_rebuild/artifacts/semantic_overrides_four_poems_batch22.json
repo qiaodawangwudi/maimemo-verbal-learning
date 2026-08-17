@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "basis": "原课提及但没有给出可独立支持完整词义的讲解，按通用词条核定；不得标称老师讲过。",
+  "records": {
+    "见兔顾犬": {
+      "source_kind": "secondary_reference",
+      "meaning": "看到兔子后才回头召唤猎犬追捕，比喻情况虽已出现、行动稍迟，但立即采取补救措施仍来得及。",
+      "distinctive_feature": "重点不是提前预防，而是机会或问题已经出现后迅速补救，且当前仍未错过时机。",
+      "recognition_cues": ["事已出现但补救尚不算晚", "发现机会或问题后赶紧采取对策"],
+      "dimensions": [{"axis": "时间位置", "judgment": "事情已经发生或目标已经出现。"}, {"axis": "补救判断", "judgment": "立即行动仍能挽回或抓住机会。"}],
+      "comparison_edges": [{"other_term": "亡羊补牢", "minimum_difference": "见兔顾犬强调目标或机会已经出现后立即采取措施仍来得及；亡羊补牢强调已经遭受损失后修补漏洞，避免继续受损。"}],
+      "misuse_boundary": "题干强调事情尚未发生、提前防范时，应使用未雨绸缪等词；损失已经发生且重点是防止再犯时更接近亡羊补牢。",
+      "evidence": [{"source": "汉典", "location": "https://www.zdic.net/hans/见兔顾犬", "quote": "比喻及时补救，为时未晚。"}]
+    }
+  }
+}

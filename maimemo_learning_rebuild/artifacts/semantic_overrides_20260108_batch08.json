@@ -1,0 +1,50 @@
+{
+  "schema_version": 1,
+  "basis": "原课只出现词面而讲解不足，按用户要求转入通用词条核定；词义证据来自汉典或权威语料，不标称老师课程义。",
+  "records": {
+    "勇立潮头": {
+      "status": "ready",
+      "source_kind": "secondary_reference",
+      "meaning": "勇敢站在时代、改革或竞争浪潮的前沿，积极开拓并争当引领者。",
+      "distinctive_feature": "不只是勇敢面对困难，还要求处在发展潮流的前沿并发挥开拓、引领作用。",
+      "recognition_cues": ["走在时代或改革前列", "敢为人先并引领发展潮流"],
+      "dimensions": [{"axis": "位置", "judgment": "处在时代、改革或行业发展的前沿。"}, {"axis": "主体姿态", "judgment": "勇于开拓、敢于担当并争先引领。"}],
+      "comparison_edges": [],
+      "misuse_boundary": "题干只说迎难而上、坚持奋斗，却没有走在潮流前沿或引领创新的含义时，不宜使用。",
+      "evidence": [{"source": "人民日报语料", "location": "https://opinion.people.com.cn/n1/2018/1224/c1003-30482962.html", "quote": "继续勇立潮头、奋勇搏击。"}]
+    },
+    "空穴来风": {
+      "status": "ready",
+      "source_kind": "secondary_reference",
+      "meaning": "规范本义指消息、传说的出现并非完全没有原因或根据；也可指流言乘隙传播。",
+      "distinctive_feature": "这是高风险反转词：规范本义不是‘毫无根据’，但现代使用中常被误用为‘毫无根据’，做题必须依命题语境判断。",
+      "recognition_cues": ["传闻背后有一定原因根据", "流言利用条件或漏洞传播"],
+      "dimensions": [{"axis": "根据状态", "judgment": "规范义要求并非完全无因、无据。"}, {"axis": "使用风险", "judgment": "现实语用存在反向误用，需以题干和选项体系裁定。"}],
+      "comparison_edges": [],
+      "misuse_boundary": "在强调语言规范的言语题中，不可直接把空穴来风解释为毫无根据；若材料明确按现代误用表达，应结合其他选项和作者口径谨慎处理。",
+      "evidence": [{"source": "汉典", "location": "https://www.zdic.net/hans/空穴来风", "quote": "比喻消息或传说并非完全无根据。"}]
+    },
+    "大而化之": {
+      "status": "ready",
+      "source_kind": "secondary_reference",
+      "meaning": "现多形容做事大大咧咧、马虎，不谨慎、不细致。",
+      "distinctive_feature": "常评价人的处事方式不拘小节乃至忽略细节，语气侧重大而笼统；不是事物规模宏大或把问题化解。",
+      "recognition_cues": ["处理事情大而笼统忽略细节", "做事大大咧咧不够谨慎"],
+      "dimensions": [{"axis": "评价对象", "judgment": "人的性格、作风或处理方式。"}, {"axis": "缺陷落点", "judgment": "不拘细节、做事马虎。"}],
+      "comparison_edges": [{"other_term": "粗枝大叶", "minimum_difference": "大而化之常评价做事大大咧咧、不拘小节，处理得大而笼统；粗枝大叶突出工作或叙述粗疏、不认真细密。"}],
+      "misuse_boundary": "不能按字面理解为把重大问题化小，也不能用来形容规模由大变小。",
+      "evidence": [{"source": "汉典", "location": "https://www.zdic.net/hans/大而化之", "quote": "后用来形容做事大大咧咧，不谨慎，不细致。"}]
+    },
+    "具体而微": {
+      "status": "ready",
+      "source_kind": "secondary_reference",
+      "meaning": "事物的各个组成部分大体具备，只是形体或规模较小。",
+      "distinctive_feature": "‘具体’指整体构成已经具备，‘微’指规模小；不是内容具体、细节微小。",
+      "recognition_cues": ["小型系统五脏俱全", "构成完整但规模较小"],
+      "dimensions": [{"axis": "完整度", "judgment": "主要组成部分大体具备。"}, {"axis": "规模", "judgment": "形体、范围或规模较小。"}],
+      "comparison_edges": [],
+      "misuse_boundary": "题干只说描写具体细致、观察入微，或只是规模小但结构残缺时，不宜使用。",
+      "evidence": [{"source": "汉典", "location": "https://www.zdic.net/hans/具体而微", "quote": "各部分大体具备而规模较小。"}]
+    }
+  }
+}

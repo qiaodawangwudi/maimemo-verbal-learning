@@ -1,0 +1,229 @@
+{
+  "schema_version": 1,
+  "basis": "逐段复核20260108原始课程文稿P0148-P0179；对课程明确表示无需细分的词不强造边界，对方法效率、关键带动、发展阶段和竞争结果分别建模。",
+  "records": {
+    "聚沙成塔": {
+      "status": "ready",
+      "meaning": "把少量、细小的事物不断积累，最终形成较大的成果。",
+      "distinctive_feature": "强调由小到大的长期累积过程，沙粒与高塔构成数量和规模的反差。",
+      "recognition_cues": ["一点一滴积累成整体成果。", "小投入、小成果长期叠加。"],
+      "dimensions": [{"axis": "起点", "judgment": "细小、少量。"}, {"axis": "结果", "judgment": "积累形成较大整体。"}],
+      "comparison_edges": [],
+      "misuse_boundary": "本课明确认为聚沙成塔与集腋成裘都表示积少成多，没有提供稳定二选一边界；不能凭字面材料强行区分。"
+    },
+    "集腋成裘": {
+      "status": "ready",
+      "meaning": "把零碎、少量的事物汇集起来，最终形成有价值的整体。",
+      "distinctive_feature": "由许多微小部分汇成完整成果，课程以少量皮毛积成裘衣解释其积少成多结构。",
+      "recognition_cues": ["零碎小部分不断汇集。", "许多微小贡献形成完整成果。"],
+      "dimensions": [{"axis": "起点", "judgment": "零碎、少量的部分。"}, {"axis": "结果", "judgment": "汇成完整、有价值的整体。"}],
+      "comparison_edges": [],
+      "misuse_boundary": "本课没有给出集腋成裘与聚沙成塔的稳定最小差别；两词同现时不能只靠本课材料机械二选一。"
+    },
+    "卷帙浩繁": {
+      "status": "ready",
+      "meaning": "书籍卷册、篇章数量很多，内容规模宏大繁多。",
+      "distinctive_feature": "对象必须落在书籍、典籍及其卷册篇章，课程用厚重、卷目多的大部头书说明，不能泛指任何信息多。",
+      "recognition_cues": ["大部头书卷册、章节很多。", "四库全书、永乐大典等典籍规模宏大。"],
+      "dimensions": [{"axis": "对象", "judgment": "书籍、典籍、卷册篇章。"}, {"axis": "数量形态", "judgment": "卷目、册数、篇章繁多。"}],
+      "comparison_edges": [],
+      "misuse_boundary": "只是文章、信息或一般资料数量多，没有书籍卷册篇章这一对象边界时，不宜使用。"
+    },
+    "偏听偏信": {
+      "status": "ready",
+      "meaning": "只听一方或一部分人的说法，就片面地相信。",
+      "distinctive_feature": "错误首先发生在信息来源不全，主体只接触一边，随后又未经核对便相信；对应“兼听则明”。",
+      "recognition_cues": ["纠纷中只听一方陈述就下结论。", "信息来源单一且未经交叉核实。"],
+      "dimensions": [{"axis": "信息来源", "judgment": "只听一方、一部分。"}, {"axis": "判断动作", "judgment": "片面相信。"}],
+      "comparison_edges": [
+        {"other_term": "盲信", "minimum_difference": "偏听偏信突出只听一方导致片面相信；盲信不限定来源数量，只强调不辨真伪就相信。"},
+        {"other_term": "人云亦云", "minimum_difference": "偏听偏信停在片面听信；人云亦云还表现为别人怎么说，自己也跟着怎么说。"}
+      ],
+      "misuse_boundary": "已经听取多方信息，却仍不辨真伪地相信时，更接近盲信；只是模仿行动时更接近亦步亦趋。"
+    },
+    "亦步亦趋": {
+      "status": "ready",
+      "meaning": "别人怎样行动，自己就一步一步模仿、跟随，缺少独立主张。",
+      "distinctive_feature": "外在表现是行动和做法跟随，课程以国家跟着别国政策、改编亦步亦趋原作说明；不是只在口头附和。",
+      "recognition_cues": ["别人走一步，自己跟一步。", "政策、做法、行动机械模仿他人。"],
+      "dimensions": [{"axis": "跟随层面", "judgment": "行动、做法。"}, {"axis": "独立性", "judgment": "缺少自己的主张。"}],
+      "comparison_edges": [{"other_term": "人云亦云", "minimum_difference": "亦步亦趋突出行动和做法模仿跟随；人云亦云突出言论上别人怎么说，自己也怎么说。"}],
+      "misuse_boundary": "题干只说相信信息或复述他人观点，没有行动和做法上的跟随时，不宜使用。"
+    },
+    "人云亦云": {
+      "status": "ready",
+      "meaning": "别人怎么说，自己也跟着怎么说，没有独立见解。",
+      "distinctive_feature": "必须落到言论表达和观点复述，课程强调仅仅相信信息、尚未说给别人听时还未到这一步。",
+      "recognition_cues": ["照搬别人说法、口头附和。", "没有独立判断又把他人观点重复出来。"],
+      "dimensions": [{"axis": "跟随层面", "judgment": "言论、观点表达。"}, {"axis": "外显动作", "judgment": "跟着别人说。"}],
+      "comparison_edges": [
+        {"other_term": "亦步亦趋", "minimum_difference": "人云亦云是言论和观点跟随；亦步亦趋是行动、做法一步一步模仿。"},
+        {"other_term": "盲信", "minimum_difference": "人云亦云要求把他人说法复述出来；盲信停在不辨真伪便相信，不要求对外传播。"}
+      ],
+      "misuse_boundary": "主体只是不加辨别地相信信息，题干没有跟着说、传播或附和时，应考虑盲信。"
+    },
+    "盲从": {
+      "status": "ready",
+      "meaning": "不作独立判断就盲目听从、跟随他人的意见或行动。",
+      "distinctive_feature": "“从”落在服从和跟随，主体不仅相信，还据此跟着做或接受支配。",
+      "recognition_cues": ["不辨真伪便听从、跟随。", "缺少独立判断，行动受他人带动。"],
+      "dimensions": [{"axis": "结果动作", "judgment": "听从、跟随。"}, {"axis": "判断前提", "judgment": "没有独立辨别。"}],
+      "comparison_edges": [{"other_term": "盲信", "minimum_difference": "盲从强调不判断就听从、跟随；盲信强调不判断就相信，未必采取跟随行动。"}],
+      "misuse_boundary": "题干只说把信息当真，没有听从、追随或行动结果时，更准确的是盲信。"
+    },
+    "盲信": {
+      "status": "ready",
+      "meaning": "不辨别信息真伪、不作独立判断就轻率相信。",
+      "distinctive_feature": "错误停留在认知判断，课程强调看到网络信息就当真，尚不要求传播或跟随行动。",
+      "recognition_cues": ["看到未经核实的信息便相信。", "没有能力或意愿辨别真伪。"],
+      "dimensions": [{"axis": "结果动作", "judgment": "相信、认定为真。"}, {"axis": "判断前提", "judgment": "未经核验。"}],
+      "comparison_edges": [
+        {"other_term": "盲从", "minimum_difference": "盲信是未经判断便相信；盲从是在未经判断的基础上进一步听从、跟随。"},
+        {"other_term": "人云亦云", "minimum_difference": "盲信不要求把信息说给别人听；人云亦云要求在言论上跟着他人复述、附和。"},
+        {"other_term": "偏听偏信", "minimum_difference": "盲信不限定只听一方；偏听偏信的突出前提是信息来源片面，只听一边。"}
+      ],
+      "misuse_boundary": "主体已跟随行动、复述传播，或错误来自只听一方时，应分别考虑盲从、人云亦云、偏听偏信。"
+    },
+    "标本兼治": {
+      "status": "ready",
+      "meaning": "既处理表面症状和当前问题，也解决根本原因。",
+      "distinctive_feature": "必须同时出现“标”和“本”两个治理层次，缺少任何一端都不构成兼治；不评价见效速度。",
+      "recognition_cues": ["短期治理与根源治理同时进行。", "既解决症状，也处理原因。"],
+      "dimensions": [{"axis": "治理层次", "judgment": "表面问题与根本原因。"}, {"axis": "覆盖要求", "judgment": "两个层次同时处理。"}],
+      "comparison_edges": [{"other_term": "立竿见影", "minimum_difference": "标本兼治评价治理是否同时覆盖表象和根源；立竿见影评价措施见效是否迅速。"}],
+      "misuse_boundary": "只说明措施迅速有效，或只处理表面、只处理根源时，不宜使用标本兼治。"
+    },
+    "立竿见影": {
+      "status": "ready",
+      "meaning": "措施实施后很快见到效果。",
+      "distinctive_feature": "唯一核心轴是见效速度快，课程用立杆后影子立即出现说明；不自动表示方法全面、治本。",
+      "recognition_cues": ["政策、措施实施后立即或短期见效。", "题干突出效果出现很快。"],
+      "dimensions": [{"axis": "时间", "judgment": "效果迅速出现。"}, {"axis": "评价对象", "judgment": "政策、措施、办法的见效速度。"}],
+      "comparison_edges": [{"other_term": "标本兼治", "minimum_difference": "立竿见影评价见效速度快；标本兼治评价表面问题和根本原因是否同时治理。"}],
+      "misuse_boundary": "题干只说方法兼顾表象和根源，却没有迅速见效的时间信息时，不宜使用。"
+    },
+    "高屋建瓴": {
+      "status": "ready",
+      "meaning": "站在较高层次上把握全局、全面观察和分析问题。",
+      "distinctive_feature": "课程把现代常用义落在领导者的视野高度和全局能力，回答“站得多高、看得多全”，不等于抓住一个关键点。",
+      "recognition_cues": ["站在全局和战略高度分析。", "讲话有高度、视野全面。"],
+      "dimensions": [{"axis": "观察位置", "judgment": "较高层次、战略高度。"}, {"axis": "观察范围", "judgment": "全面把握全局。"}],
+      "comparison_edges": [{"other_term": "抓住牛鼻子", "minimum_difference": "高屋建瓴强调站位高、视野全；抓住牛鼻子强调识别并抓住事物的关键环节。"}],
+      "misuse_boundary": "题干只要求抓关键、找突破口，却没有战略高度和全局视野时，不宜使用。"
+    },
+    "纲举目张": {
+      "status": "ready",
+      "meaning": "抓住总纲或关键环节，就能带动其他部分有条理地展开。",
+      "distinctive_feature": "不仅是发现关键，还必须有“提纲带目”的带动关系：抓住总绳后，整个系统随之展开。",
+      "recognition_cues": ["抓住总纲，其他环节随之理顺。", "一个关键能够统领、带动全局。"],
+      "dimensions": [{"axis": "关键层级", "judgment": "总纲、统领性关键。"}, {"axis": "带动效果", "judgment": "其他部分随之展开。"}],
+      "comparison_edges": [{"other_term": "抓住牛鼻子", "minimum_difference": "纲举目张强调抓住总纲后带动全局展开；抓住牛鼻子泛指抓住关键环节，不必呈现总纲统领结构。"}],
+      "misuse_boundary": "只是找到了某个重要突破口，却没有带动其他环节和全局展开的关系时，更适合抓住牛鼻子。"
+    },
+    "抓住牛鼻子": {
+      "status": "ready",
+      "meaning": "抓住事物的关键、要害或能够牵动问题的核心环节。",
+      "distinctive_feature": "做题先找“哪个环节最关键”，强调突破口和控制点；不要求站在高位，也不必证明能像总纲一样展开所有部分。",
+      "recognition_cues": ["抓住关键环节、主要矛盾。", "找到能够牵动问题的突破口。"],
+      "dimensions": [{"axis": "判断对象", "judgment": "事物的关键环节。"}, {"axis": "作用", "judgment": "控制或牵动问题。"}],
+      "comparison_edges": [
+        {"other_term": "高屋建瓴", "minimum_difference": "抓住牛鼻子强调识别关键环节；高屋建瓴强调站在较高层次全面看问题。"},
+        {"other_term": "纲举目张", "minimum_difference": "抓住牛鼻子泛指抓住关键；纲举目张还要求总纲对其他部分产生带动、展开作用。"}
+      ],
+      "misuse_boundary": "题干只强调战略高度、全面视野，或强调总纲带动各部分时，应分别考虑高屋建瓴、纲举目张。"
+    },
+    "游刃有余": {
+      "status": "ready",
+      "meaning": "因技术熟练、能力高超，处理事情从容顺畅，还有余地。",
+      "distinctive_feature": "前提是熟练能力，表现是从容不迫、余裕充足；不能只凭地位重要或未来空间大推出。",
+      "recognition_cues": ["技术熟练，复杂任务处理得从容。", "做事顺畅且仍有余力。"],
+      "dimensions": [{"axis": "能力基础", "judgment": "技术熟练、经验丰富。"}, {"axis": "行动状态", "judgment": "从容顺畅、尚有余力。"}],
+      "comparison_edges": [{"other_term": "大有可为", "minimum_difference": "游刃有余评价当前处理事情的熟练从容；大有可为判断未来有广阔发展空间和作为机会。"}],
+      "misuse_boundary": "题干谈未来发展空间、地位作用或方法效率，而没有当前技术熟练和从容状态时，不宜使用。"
+    },
+    "举足轻重": {
+      "status": "ready",
+      "meaning": "所处地位重要，行动或作用能够影响全局。",
+      "distinctive_feature": "评价的是当前地位和影响力，课程特别用国有大企业的支柱作用说明；不是技术熟练，也不是未来机会。",
+      "recognition_cues": ["主体当前具有支柱性、关键性作用。", "一举一动能够影响全局。"],
+      "dimensions": [{"axis": "时间", "judgment": "当前地位与作用。"}, {"axis": "影响范围", "judgment": "能够影响全局。"}],
+      "comparison_edges": [{"other_term": "大有可为", "minimum_difference": "举足轻重评价当前地位高、作用能影响全局；大有可为评价未来空间大、能够有所作为。"}],
+      "misuse_boundary": "题干只是说某类主体未来机会很多，却没有当前支柱地位和全局影响时，应使用大有可为。"
+    },
+    "大有可为": {
+      "status": "ready",
+      "meaning": "未来发展空间很大，有条件、有机会作出显著成绩。",
+      "distinctive_feature": "课程把判断落在未来潜力和施展空间，强调“接下来能做什么”，而不是当前已经处于重要地位。",
+      "recognition_cues": ["新领域未来发展空间广阔。", "主体拥有优势，今后有机会作出贡献。"],
+      "dimensions": [{"axis": "时间", "judgment": "面向未来。"}, {"axis": "判断内容", "judgment": "发展空间和作为机会。"}],
+      "comparison_edges": [
+        {"other_term": "举足轻重", "minimum_difference": "大有可为判断未来有发展空间和作为机会；举足轻重判断当前地位重要、作用影响全局。"},
+        {"other_term": "游刃有余", "minimum_difference": "大有可为评价未来潜力；游刃有余评价当前凭熟练技术处理事情从容。"}
+      ],
+      "misuse_boundary": "题干强调当前支柱作用、技术熟练或方法效率，而不是未来发展机会时，不宜使用。"
+    },
+    "崭露头角": {
+      "status": "ready",
+      "meaning": "刚刚显露出才能或优势，开始被人认识。",
+      "distinctive_feature": "必须处在显露的早期阶段，核心是“从未被注意到开始被看见”；“再次”或长期成名通常不合适。",
+      "recognition_cues": ["新人刚开始显露才能。", "进入单位后逐渐被认识。"],
+      "dimensions": [{"axis": "发展阶段", "judgment": "初次显露、刚被认识。"}, {"axis": "显露内容", "judgment": "才能、优势或成绩。"}],
+      "comparison_edges": [{"other_term": "脱颖而出", "minimum_difference": "崭露头角强调刚显露才能、开始被认识；脱颖而出强调在竞争或筛选中胜出。"}],
+      "misuse_boundary": "已经有名后再次出彩，或重点是竞争胜出时，应分别考虑大放异彩、脱颖而出。"
+    },
+    "粉墨登场": {
+      "status": "ready",
+      "meaning": "演员化妆后登台演出；也比喻坏人经过装扮登上政治、历史舞台。",
+      "distinctive_feature": "必须保留双义项和色彩边界：舞台表演义可中性，政治历史语境中的坏人登场义明显贬义。",
+      "recognition_cues": ["演员化妆、画脸谱后登台。", "贬义语境中坏人登上政治或历史舞台。"],
+      "dimensions": [{"axis": "义项一", "judgment": "演员装扮后登台。"}, {"axis": "义项二", "judgment": "坏人登上政治、历史舞台，含贬义。"}],
+      "comparison_edges": [],
+      "misuse_boundary": "一般行业、企业开始出现或重新出彩，没有演员登台或坏人登上政治历史舞台的条件时，不宜使用。"
+    },
+    "大放异彩": {
+      "status": "ready",
+      "meaning": "表现十分突出，显现出耀眼光彩，取得引人注目的成绩。",
+      "distinctive_feature": "落点是已经“出彩”的表现结果，可用于原本已有表现后再次取得突出成绩；不要求初次被认识。",
+      "recognition_cues": ["某行业、人物再次取得耀眼表现。", "成绩突出、引人注目。"],
+      "dimensions": [{"axis": "结果", "judgment": "表现耀眼、成绩突出。"}, {"axis": "发展阶段", "judgment": "可初次，也可再次出彩。"}],
+      "comparison_edges": [{"other_term": "崭露头角", "minimum_difference": "大放异彩强调已经取得耀眼突出表现，可再次发生；崭露头角强调刚开始显露才能、被人认识。"}],
+      "misuse_boundary": "题干只说新人刚显露才能，尚未形成耀眼成绩时，应使用崭露头角。"
+    },
+    "独占鳌头": {
+      "status": "ready",
+      "meaning": "在竞赛、排名或评比中居于第一位。",
+      "distinctive_feature": "必须有可比较的名次结构，且结果是唯一第一；一般表现突出或年初开始发展不能直接推出第一。",
+      "recognition_cues": ["竞赛、榜单、评比排名第一。", "题干明确领先所有对手。"],
+      "dimensions": [{"axis": "比较结构", "judgment": "存在竞赛、排名或评比。"}, {"axis": "结果", "judgment": "位居第一。"}],
+      "comparison_edges": [],
+      "misuse_boundary": "只有突出表现、迅速发展或抢占市场，没有排名第一的证据时，不宜使用。"
+    },
+    "跑马圈地": {
+      "status": "ready",
+      "meaning": "抢占地盘、市场、用户或流量，以扩大自己的势力范围。",
+      "distinctive_feature": "课程把实体经济的抢市场延伸到互联网抢用户和流量，核心是竞争性占领资源空间。",
+      "recognition_cues": ["企业争抢市场份额、用户、流量。", "先占地盘以扩大势力范围。"],
+      "dimensions": [{"axis": "竞争对象", "judgment": "市场、地盘、用户、流量。"}, {"axis": "动作", "judgment": "抢占并划入自己的范围。"}],
+      "comparison_edges": [{"other_term": "养精蓄锐", "minimum_difference": "跑马圈地是主动出击抢占市场、用户或地盘；养精蓄锐是暂时积蓄力量、等待合适时机。"}],
+      "misuse_boundary": "题干只是积蓄力量等待爆发，或只是表现突出，没有抢占市场资源的竞争动作时，不宜使用。"
+    },
+    "养精蓄锐": {
+      "status": "ready",
+      "meaning": "保养精神、积蓄力量，等待以后行动或爆发。",
+      "distinctive_feature": "处于行动前的储备阶段，当前重点是保存、积累实力，而不是立即争抢或已经取得成绩。",
+      "recognition_cues": ["暂缓出击，积蓄力量等待时机。", "为后续爆发做准备。"],
+      "dimensions": [{"axis": "时间阶段", "judgment": "正式行动之前。"}, {"axis": "动作", "judgment": "保存、积累精力和实力。"}],
+      "comparison_edges": [{"other_term": "跑马圈地", "minimum_difference": "养精蓄锐处于积蓄力量、等待时机阶段；跑马圈地已经主动出击抢占市场、用户或地盘。"}],
+      "misuse_boundary": "题干已经进入市场争夺、竞争胜出或突出表现阶段，没有储备等待过程时，不宜使用。"
+    },
+    "脱颖而出": {
+      "status": "ready",
+      "meaning": "在竞争、选拔或众多同类中显露出来并胜出。",
+      "distinctive_feature": "必须有同类竞争或筛选背景，结果是从群体中被选出、胜出；不仅是开始被人认识。",
+      "recognition_cues": ["考试、选拔、同批新人中胜出。", "从众多竞争者中显现优势。"],
+      "dimensions": [{"axis": "场景", "judgment": "竞争、选拔或同类比较。"}, {"axis": "结果", "judgment": "显现并胜出。"}],
+      "comparison_edges": [{"other_term": "崭露头角", "minimum_difference": "脱颖而出强调在竞争或筛选中胜出；崭露头角强调刚开始显露才能、被人认识，不要求竞争。"}],
+      "misuse_boundary": "只是进入新环境后开始展现才能，没有竞争筛选和胜出结果时，应使用崭露头角。"
+    }
+  }
+}

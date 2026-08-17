@@ -1,0 +1,142 @@
+{
+  "schema_version": 1,
+  "basis": "逐词回到四诗风雅颂逐字稿，重建创新与时间价值、坚持方式、守旧僵化、观察能力和轻松完成的辨析边界。",
+  "records": {
+    "推陈出新": {
+      "meaning": "在去除、改造陈旧内容的基础上创造新的内容、形式或成果。",
+      "distinctive_feature": "创新强度低于强调改革的革故鼎新；课程说明题干只有创新对应点时也可保留，不必机械要求‘推陈’‘出新’同时明说。",
+      "recognition_cues": ["改造传统并产生新形式", "旧基础上创造新内容"],
+      "dimensions": [{"axis": "新旧关系", "judgment": "处理旧内容并产生新内容。"}, {"axis": "变革强度", "judgment": "可为渐进创新，不必达到全面改革。"}],
+      "comparison_edges": [{"other_term": "革故鼎新", "minimum_difference": "推陈出新侧重去旧出新的一般创新；革故鼎新含改革旧制度、建立新局面的更强变革意味。"}, {"other_term": "历久弥新", "minimum_difference": "推陈出新描述主动创新；历久弥新描述事物经历很久仍鲜活、有价值。"}],
+      "misuse_boundary": "题干只强调经久仍有价值、没有主动创新动作时，应使用历久弥新。"
+    },
+    "历久弥新": {
+      "meaning": "事物经历很长时间后仍然新鲜、鲜活，并持续显现价值。",
+      "distinctive_feature": "必须有时间沉淀，落点是‘久而仍新’；不是主体主动推陈出新，也不只是没有衰退。",
+      "recognition_cues": ["古老文化今天仍有鲜活价值", "经岁月沉淀仍显新意"],
+      "dimensions": [{"axis": "时间前提", "judgment": "已经经历较长时间。"}, {"axis": "持续状态", "judgment": "仍鲜活、新颖、有价值。"}],
+      "comparison_edges": [{"other_term": "经久不衰", "minimum_difference": "历久弥新强调久而仍新、价值常新；经久不衰只强调长期不衰退，不必具有新鲜感。"}, {"other_term": "历久弥坚", "minimum_difference": "历久弥新保持的是鲜活与价值；历久弥坚保持或增强的是关系、信念等的坚定牢固。"}],
+      "misuse_boundary": "题干只说关系更加牢固或事物长期存在，没有鲜活、常新对应点时，不宜使用。"
+    },
+    "历久弥坚": {
+      "meaning": "关系、信念、精神等经历时间考验后仍然坚定牢固，甚至更加坚实。",
+      "distinctive_feature": "时间沉淀后的核心状态是‘坚’，常搭配友谊、信念、精神、互信，而不是内容保持新鲜。",
+      "recognition_cues": ["友谊经岁月考验更加牢固", "信念长期不动摇"],
+      "dimensions": [{"axis": "常见对象", "judgment": "关系、信念、精神。"}, {"axis": "持续状态", "judgment": "坚定、牢固、不动摇。"}],
+      "comparison_edges": [{"other_term": "历久弥新", "minimum_difference": "历久弥坚突出坚定牢固；历久弥新突出鲜活、新鲜和持续价值。"}, {"other_term": "持之以恒", "minimum_difference": "历久弥坚描述经久后的稳固状态；持之以恒描述做事长期坚持的行动。"}],
+      "misuse_boundary": "题干强调持续行动而非关系、信念的牢固状态时，应考虑持之以恒。"
+    },
+    "经久不衰": {
+      "meaning": "事物经过很长时间仍然保持影响、生命力或存在状态，没有衰退。",
+      "distinctive_feature": "只要求‘久而不衰’，不要求越来越新，也不要求始终处于兴盛繁荣状态。",
+      "recognition_cues": ["作品长期仍受欢迎", "传统多年保持生命力"],
+      "dimensions": [{"axis": "时间", "judgment": "延续很久。"}, {"axis": "变化", "judgment": "影响或生命力未衰退。"}],
+      "comparison_edges": [{"other_term": "历久弥新", "minimum_difference": "经久不衰只说明长期不衰退；历久弥新还强调历时愈久仍显鲜活、新意或价值。"}],
+      "misuse_boundary": "题干突出内容随时间仍然新鲜、不断产生新价值时，历久弥新更精确。"
+    },
+    "持之以恒": {
+      "meaning": "做一件事长期坚持，保持恒心和毅力，不半途而废。",
+      "distinctive_feature": "落点是行为持续性，必须有长期做事的过程；不同于志向不变或理念贯穿。",
+      "recognition_cues": ["长期坚持训练或建设", "持续行动、不半途而废"],
+      "dimensions": [{"axis": "表达对象", "judgment": "行动、事业、习惯。"}, {"axis": "时间状态", "judgment": "长期持续。"}],
+      "comparison_edges": [{"other_term": "一以贯之", "minimum_difference": "持之以恒强调行动长期坚持；一以贯之强调同一种思想、方针、原则从始至终贯穿。"}],
+      "misuse_boundary": "题干只说立场、原则始终一致，没有持续行动时，一以贯之更合适。"
+    },
+    "一以贯之": {
+      "meaning": "用同一种思想、原则、方针或精神从头到尾贯穿始终。",
+      "distinctive_feature": "不是泛泛坚持，而是同一核心标准贯穿不同阶段、各项工作。",
+      "recognition_cues": ["一种理念贯穿全过程", "始终按同一原则推进"],
+      "dimensions": [{"axis": "贯穿内容", "judgment": "思想、原则、方针或精神。"}, {"axis": "范围", "judgment": "从始至终或覆盖各环节。"}],
+      "comparison_edges": [{"other_term": "持之以恒", "minimum_difference": "一以贯之强调同一原则贯穿始终；持之以恒强调行为长期坚持、不间断。"}],
+      "misuse_boundary": "题干只有持续努力，没有同一理念、标准贯穿各阶段的对应点时，不宜使用。"
+    },
+    "郑人买履": {
+      "meaning": "迷信预先制定的尺度、规则或教条，不相信实际情况，不懂灵活变通。",
+      "distinctive_feature": "像买鞋时宁信尺码不信自己的脚，矛盾点是抽象依据压倒直接事实。",
+      "recognition_cues": ["只信书面指标、不看真实情况", "宁守预设尺度也不现场验证"],
+      "dimensions": [{"axis": "迷信对象", "judgment": "预设尺度、规则或教条。"}, {"axis": "被忽视内容", "judgment": "直接经验和现实事实。"}],
+      "comparison_edges": [{"other_term": "胶柱鼓瑟", "minimum_difference": "郑人买履突出宁信预设尺度、不信现实；胶柱鼓瑟突出方法固定，环境变化后也不会调整。"}],
+      "misuse_boundary": "题干只是遵守合理规则，或没有现实事实与预设尺度的冲突时，不宜使用。"
+    },
+    "胶柱鼓瑟": {
+      "meaning": "把做法固定死，不能根据现实条件和变化调整策略。",
+      "distinctive_feature": "重点是策略缺乏可调节性，像粘死调音柱后无法调弦；比一般循规蹈矩更突出环境变化下不会变通。",
+      "recognition_cues": ["条件变化仍沿用固定办法", "策略僵化、无法调整"],
+      "dimensions": [{"axis": "方法状态", "judgment": "被固定、僵化。"}, {"axis": "适应能力", "judgment": "不能随现实变化调整。"}],
+      "comparison_edges": [{"other_term": "郑人买履", "minimum_difference": "胶柱鼓瑟强调策略固定、不会随变化调整；郑人买履强调迷信预设尺度而无视直接现实。"}, {"other_term": "循规蹈矩", "minimum_difference": "胶柱鼓瑟突出方法不能适应变化；循规蹈矩突出按旧规矩行事、缺乏突破创新。"}],
+      "misuse_boundary": "按程序有条理地办事，规则仍适应现实且允许调整时，不宜使用。"
+    },
+    "有条不紊": {
+      "meaning": "做事安排有条理、有次序，一点也不混乱。",
+      "distinctive_feature": "评价的是组织秩序和执行状态，与思想守旧、是否创新无关。",
+      "recognition_cues": ["分工清晰、调度井然", "多项工作按次序推进"],
+      "dimensions": [{"axis": "组织状态", "judgment": "条理清楚。"}, {"axis": "混乱程度", "judgment": "不紊乱。"}],
+      "comparison_edges": [{"other_term": "循规蹈矩", "minimum_difference": "有条不紊褒义地说明做事有条理；循规蹈矩说明按规矩办事，常含守旧、缺乏创新意味。"}],
+      "misuse_boundary": "题干强调按旧规则、不敢突破，而不是执行有序时，不宜使用。"
+    },
+    "循规蹈矩": {
+      "meaning": "按既有规矩、规范行事，不轻易越出范围；现代语境常含拘泥旧规、缺乏创新。",
+      "distinctive_feature": "课程要求按中性词掌握但注意偏贬用法；落点是守规矩，不是做事有条理或循序推进。",
+      "recognition_cues": ["严格沿用旧规则", "创作拘泥规范、不敢突破"],
+      "dimensions": [{"axis": "行为依据", "judgment": "既有规则和规范。"}, {"axis": "常见评价", "judgment": "中性，现代使用常偏贬。"}],
+      "comparison_edges": [{"other_term": "有条不紊", "minimum_difference": "循规蹈矩强调按规则、不越界；有条不紊强调安排有条理、不混乱。"}, {"other_term": "胶柱鼓瑟", "minimum_difference": "循规蹈矩侧重守旧规矩、缺少突破；胶柱鼓瑟侧重现实变化后策略仍固定不调。"}],
+      "misuse_boundary": "题干只说工作组织清晰、按步骤推进，没有守规或拘泥意味时，不宜使用。"
+    },
+    "明察秋毫": {
+      "meaning": "观察极其细致，连非常细微的变化、问题或隐患也能发现。",
+      "distinctive_feature": "课程用‘看得细’概括，强调微小细节的察觉能力，不等于看透本质或辨别真假。",
+      "recognition_cues": ["察觉极细微的隐患", "观察细致、不漏微小变化"],
+      "dimensions": [{"axis": "观察尺度", "judgment": "细微处。"}, {"axis": "能力结果", "judgment": "能够准确发现细节。"}],
+      "comparison_edges": [{"other_term": "火眼金睛", "minimum_difference": "明察秋毫强调看得细、能发现微小问题；火眼金睛强调识破虚假、辨清真伪。"}],
+      "misuse_boundary": "题干重点是识破骗局、假货或伪装，而非观察细节时，应使用火眼金睛。"
+    },
+    "火眼金睛": {
+      "meaning": "具有很强的识别能力，能够看穿伪装、虚假和骗局，辨别真伪。",
+      "distinctive_feature": "课程用‘看得真’概括，判断对象必须含真假、伪装或欺骗，不是一般观察细致。",
+      "recognition_cues": ["识破虚假宣传和假冒伪劣", "看穿伪装、辨出真伪"],
+      "dimensions": [{"axis": "识别对象", "judgment": "虚假、伪装、骗局。"}, {"axis": "能力结果", "judgment": "辨清真伪。"}],
+      "comparison_edges": [{"other_term": "明察秋毫", "minimum_difference": "火眼金睛强调识别真假、看穿伪装；明察秋毫强调观察细致、发现微小问题。"}],
+      "misuse_boundary": "题干只强调细心发现微小隐患，没有真假辨识结构时，不宜使用。"
+    },
+    "一叶知秋": {
+      "meaning": "从当前出现的细微迹象，推知事物整体状况或未来发展趋势。",
+      "distinctive_feature": "推理方向是由小见大、由当前迹象预判全局或走向，不能只停在发现细节。",
+      "recognition_cues": ["从企业裁员预判经营走势", "由局部变化推知全局趋势"],
+      "dimensions": [{"axis": "起点", "judgment": "当前的细小迹象。"}, {"axis": "推知对象", "judgment": "整体状态或未来走向。"}],
+      "comparison_edges": [{"other_term": "明察秋毫", "minimum_difference": "一叶知秋由细节进一步推知整体或未来趋势；明察秋毫只强调能观察到细微内容。"}],
+      "misuse_boundary": "题干只说发现细节，却没有从细节推断全局、趋势的过程时，不宜使用。"
+    },
+    "等量齐观": {
+      "meaning": "对性质、情况不同的事物采用同一标准，同等看待。",
+      "distinctive_feature": "像用同一把尺子客观衡量不同对象，课程说明虽为中性词却多见于否定语境，常批评忽视差异。",
+      "recognition_cues": ["把不同情况用同一尺度衡量", "忽视差异而同等处理"],
+      "dimensions": [{"axis": "衡量方式", "judgment": "采用同一标准。"}, {"axis": "对象关系", "judgment": "对象本有差异。"}],
+      "comparison_edges": [{"other_term": "一视同仁", "minimum_difference": "等量齐观偏客观尺度，常批评忽略不同事物的差异；一视同仁偏主体态度，强调公平、不区别对待。"}],
+      "misuse_boundary": "题干赞扬对人公平、不歧视，而非用同一标准衡量不同事物时，一视同仁更贴切。"
+    },
+    "如雷贯耳": {
+      "meaning": "名声很大，听到名字就像雷声传入耳中一样为人熟知。",
+      "distinctive_feature": "只说明名气大、知名度高，不说明人人都知道具体内容，也不评价名声好坏。",
+      "recognition_cues": ["人物或企业名气极大", "名字广为听闻"],
+      "dimensions": [{"axis": "评价对象", "judgment": "人物、机构、事物的名声。"}, {"axis": "知名程度", "judgment": "很高。"}],
+      "comparison_edges": [{"other_term": "家喻户晓", "minimum_difference": "如雷贯耳强调名声大、听来震动；家喻户晓强调传播范围广，家家户户都知道。"}],
+      "misuse_boundary": "题干重点是知识或事件普及到每家每户，而非名声显赫时，家喻户晓更合适。"
+    },
+    "轻而易举": {
+      "meaning": "完成某事非常轻松、容易，不费多大力气。",
+      "distinctive_feature": "只表达难度低、做起来轻松，不附加成功把握、经验调用等特殊条件。",
+      "recognition_cues": ["不费力就完成任务", "事情做起来很轻松"],
+      "dimensions": [{"axis": "难度", "judgment": "低。"}, {"axis": "付出感受", "judgment": "轻松、不费力。"}],
+      "comparison_edges": [{"other_term": "手到擒来", "minimum_difference": "轻而易举只说明容易；手到擒来还强调凭能力或经验有把握一出手就成功。"}],
+      "misuse_boundary": "题干重点是经验充分、胜券在握，而非一般容易时，手到擒来更精确。"
+    },
+    "手到擒来": {
+      "meaning": "凭借能力、经验或条件，对完成事情很有把握，一出手就能成功。",
+      "distinctive_feature": "兼有轻松和把握两个判断点，落在完成任务、解决问题，不用于随手调取素材。",
+      "recognition_cues": ["经验丰富，对任务胜券在握", "一出手就能解决问题"],
+      "dimensions": [{"axis": "主观把握", "judgment": "成功把握很高。"}, {"axis": "完成状态", "judgment": "轻松取得结果。"}],
+      "comparison_edges": [{"other_term": "轻而易举", "minimum_difference": "手到擒来除轻松外还强调有把握取得成功；轻而易举只说明事情容易。"}, {"other_term": "信手拈来", "minimum_difference": "手到擒来用于有把握完成任务；信手拈来用于积累丰富，能够随手取用素材、例证或语言。"}],
+      "misuse_boundary": "题干是引用诗句、例证、素材十分熟练，而非完成一项任务时，应使用信手拈来。"
+    }
+  }
+}

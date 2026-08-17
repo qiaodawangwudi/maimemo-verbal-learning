@@ -1,0 +1,291 @@
+{
+  "schema_version": 1,
+  "basis": "逐段复核20260108原始课程文稿P0180-P0217；按关系类型、证据对象、表层深层、发展阶段、积累过程和数据动作建立最小差别。",
+  "records": {
+    "脱节": {
+      "status": "ready",
+      "meaning": "原本应当衔接的事物失去联系、配合或同步。",
+      "distinctive_feature": "常见于理论与实际、思想与时代、环节之间跟不上或有距离，联系变差但不必彻底断绝。",
+      "recognition_cues": ["理论与现实不相符合。", "某环节跟不上时代或整体进程。"],
+      "dimensions": [{"axis": "关系状态", "judgment": "联系、衔接失灵。"}, {"axis": "断开程度", "judgment": "可有距离、不同步，不必彻底中断。"}],
+      "comparison_edges": [{"other_term": "脱钩", "minimum_difference": "脱节强调应衔接的内容失去配合、不同步；脱钩强调原有政治、经贸等关系被切断或解除。"}],
+      "misuse_boundary": "题干明确表示国家、经济体或贸易关系被切断、解除时，应使用脱钩。"
+    },
+    "脱钩": {
+      "status": "ready",
+      "meaning": "使原来相互联系、挂钩的双方解除或切断关系。",
+      "distinctive_feature": "课程强调政治、国际关系和国际贸易等正式关系的断开，程度通常强于一般不同步、脱离实际。",
+      "recognition_cues": ["国家或经济体切断贸易、产业联系。", "原有挂钩关系被解除。"],
+      "dimensions": [{"axis": "常见领域", "judgment": "政治、国际关系、经贸。"}, {"axis": "断开程度", "judgment": "关系被切断或解除。"}],
+      "comparison_edges": [{"other_term": "脱节", "minimum_difference": "脱钩强调原有正式关系被切断；脱节强调理论实际、环节进程之间失去衔接或不同步。"}],
+      "misuse_boundary": "只是理论、思想与现实有距离，或工作环节配合不畅，没有切断关系时，应使用脱节。"
+    },
+    "天罗地网": {
+      "status": "ready",
+      "meaning": "上下四方布置得极其严密的包围、搜查或监管网络。",
+      "distinctive_feature": "在课程题中比喻数字技术构成的严密环境监测办法，判断对象是覆盖网络本身，不是被网络发现的痕迹。",
+      "recognition_cues": ["监控、追捕、监管网络覆盖严密。", "摄像头、数字技术形成无死角网络。"],
+      "dimensions": [{"axis": "对象", "judgment": "包围、搜查或监管网络。"}, {"axis": "覆盖程度", "judgment": "严密、广泛、难以逃脱。"}],
+      "comparison_edges": [{"other_term": "蛛丝马迹", "minimum_difference": "天罗地网指发现目标的严密网络和办法；蛛丝马迹指被发现的细微线索、痕迹。"}],
+      "misuse_boundary": "题干指违法行为留下的细微线索，而不是监测、追捕网络本身时，应使用蛛丝马迹。"
+    },
+    "风吹草动": {
+      "status": "ready",
+      "meaning": "轻微的动静、变化或扰动，常用来指事态出现的一点迹象。",
+      "distinctive_feature": "偏向动态事件和动静，课程题中指环境破坏行为的任何细微发生；不是专指留下的线索痕迹。",
+      "recognition_cues": ["任何轻微动静都能被监测。", "局势刚出现一点变化。"],
+      "dimensions": [{"axis": "形态", "judgment": "动态的动静、变化。"}, {"axis": "程度", "judgment": "轻微、初始。"}],
+      "comparison_edges": [{"other_term": "蛛丝马迹", "minimum_difference": "风吹草动强调正在发生的轻微动静或变化；蛛丝马迹强调事情留下、可供追查的细微线索和痕迹。"}],
+      "misuse_boundary": "题干强调追查已有线索、残留痕迹时，更适合蛛丝马迹；强调监管网络本身时应使用天罗地网。"
+    },
+    "蛛丝马迹": {
+      "status": "ready",
+      "meaning": "事情留下的极细微线索和痕迹。",
+      "distinctive_feature": "核心是静态、可追查的证据痕迹，课程提醒不能因题干出现“网”就把蛛丝误当成监管网络。",
+      "recognition_cues": ["从细微残留中追查真相。", "发现不易察觉的线索、痕迹。"],
+      "dimensions": [{"axis": "形态", "judgment": "线索、痕迹。"}, {"axis": "用途", "judgment": "用于发现、追查事情。"}],
+      "comparison_edges": [
+        {"other_term": "风吹草动", "minimum_difference": "蛛丝马迹是事情留下的细微线索、痕迹；风吹草动是正在发生的轻微动静或变化。"},
+        {"other_term": "天罗地网", "minimum_difference": "蛛丝马迹是被发现的证据线索；天罗地网是用来监测、包围或搜查的严密网络。"}
+      ],
+      "misuse_boundary": "题干需要指监测办法本身时，应使用天罗地网；只说轻微动态变化时更接近风吹草动。"
+    },
+    "精细": {
+      "status": "ready",
+      "meaning": "做得细致、周密，覆盖到细小环节。",
+      "distinctive_feature": "课程题中由原来有死角、盲点、粗略，变为细节也能监测，评价的是治理颗粒度和全面细致程度。",
+      "recognition_cues": ["减少死角、盲点，覆盖细小环节。", "治理、监测由粗略变细致。"],
+      "dimensions": [{"axis": "细致程度", "judgment": "深入细小环节。"}, {"axis": "覆盖状态", "judgment": "死角、遗漏减少。"}],
+      "comparison_edges": [{"other_term": "直观", "minimum_difference": "精细评价工作是否细致、覆盖微小环节；直观评价信息是否一眼可见、便于直接理解。"}],
+      "misuse_boundary": "题干只强调图表清楚、一眼能懂，没有细化治理和减少盲点时，应使用直观。"
+    },
+    "直观": {
+      "status": "ready",
+      "meaning": "能够直接感知、观察，一眼就容易看明白。",
+      "distinctive_feature": "评价的是呈现和理解方式，课程以图表比文字更容易看懂说明；不等于工作做得细致或全面。",
+      "recognition_cues": ["图表一眼可见、容易理解。", "信息无需复杂推理就能直接感知。"],
+      "dimensions": [{"axis": "感知方式", "judgment": "直接观察。"}, {"axis": "理解成本", "judgment": "一眼易懂。"}],
+      "comparison_edges": [{"other_term": "精细", "minimum_difference": "直观评价呈现是否直接、易懂；精细评价工作是否细致、覆盖到微小环节。"}],
+      "misuse_boundary": "题干强调治理更细致、盲点更少，却没有信息一眼可见的呈现特点时，不宜使用。"
+    },
+    "背道而驰": {
+      "status": "ready",
+      "meaning": "两个主体或两种做法彼此方向相反，背离而行。",
+      "distinctive_feature": "课程用两个父亲的不同做法说明，比较的是不同主体之间的方向相反；区别于一个主体的做法偏离自身目的。",
+      "recognition_cues": ["两个主体采取相反做法。", "两种理念或方向彼此背离。"],
+      "dimensions": [{"axis": "主体数量", "judgment": "两个或多方主体、做法。"}, {"axis": "关系", "judgment": "彼此方向相反。"}],
+      "comparison_edges": [{"other_term": "南辕北辙", "minimum_difference": "背道而驰比较两个主体或两种做法彼此方向相反；南辕北辙比较一个主体的行动方向与自身目的相反。"}],
+      "misuse_boundary": "题干只有一个主体，重点是其做法与自己的目的相反时，应使用南辕北辙。"
+    },
+    "映射": {
+      "status": "ready",
+      "meaning": "一个表象、数据或对象直接对应、体现出另一个现象或状态。",
+      "distinctive_feature": "课程强调直接、直白的对应，表面信息本身就能体现结论，不需要从表象深入推导隐藏本质。",
+      "recognition_cues": ["销量数据直接体现消费意识变化。", "画面直接反映时代风貌。"],
+      "dimensions": [{"axis": "对应层级", "judgment": "较直接、表层对应。"}, {"axis": "推理距离", "judgment": "无需深入揭示隐藏本质。"}],
+      "comparison_edges": [{"other_term": "折射", "minimum_difference": "映射是表象、数据与另一现象的直接对应；折射是从表面现象揭示背后的本质、深层问题。"}],
+      "misuse_boundary": "题干明确由表面现象揭示深层原因、制度问题或本质时，应使用折射。"
+    },
+    "折射": {
+      "status": "ready",
+      "meaning": "通过表面现象显露、反映出背后的本质、深层问题或内在意义。",
+      "distinctive_feature": "必须有“表—里”推导，前项是可见现象，后项是隐藏在背后的深层原因、本质或哲理。",
+      "recognition_cues": ["表面现象折射深层问题。", "具体用词显出背后的价值转变。"],
+      "dimensions": [{"axis": "对应层级", "judgment": "由表及里。"}, {"axis": "后项性质", "judgment": "本质、原因、深层问题或意义。"}],
+      "comparison_edges": [{"other_term": "映射", "minimum_difference": "折射由表面现象揭示背后的本质、深层问题；映射强调表象、数据与另一现象直接对应。"}],
+      "misuse_boundary": "后项只是与前项直接对应的表层状态，没有由表及里的推理时，更适合映射。"
+    },
+    "声名鹊起": {
+      "status": "ready",
+      "meaning": "原来默默无闻或名气很小，短时间内开始出名。",
+      "distinctive_feature": "课程用“从0到1”概括成名阶段，关键是名声从无到有；不是已有名气后进一步轰动。",
+      "recognition_cues": ["原本默默无闻，因某事迅速出名。", "从没有名气到开始被广泛知道。"],
+      "dimensions": [{"axis": "起点", "judgment": "无名或几乎无名。"}, {"axis": "变化", "judgment": "短时间内开始出名。"}],
+      "comparison_edges": [{"other_term": "声名大噪", "minimum_difference": "声名鹊起是名声从无到有；声名大噪是原本已有一定名气，后来名声一下变得很大。"}],
+      "misuse_boundary": "主体原本已有稳定名气，只是后来更加轰动时，应考虑声名大噪。"
+    },
+    "声名大噪": {
+      "status": "ready",
+      "meaning": "原本已有一定名气，后来名声突然变得很大、广为人知。",
+      "distinctive_feature": "课程用“从1到10”概括，起点不是默默无闻，而是已有基础知名度后发生跃升。",
+      "recognition_cues": ["已有一定名气，因热门作品成为顶流。", "知名度在原有基础上突然大幅上升。"],
+      "dimensions": [{"axis": "起点", "judgment": "已有一定名气。"}, {"axis": "变化", "judgment": "名气突然大幅扩大。"}],
+      "comparison_edges": [{"other_term": "声名鹊起", "minimum_difference": "声名大噪是已有名气后进一步大幅成名；声名鹊起是从默默无闻到开始出名。"}],
+      "misuse_boundary": "主体原本无人知晓，题干强调第一次出名时，应使用声名鹊起。"
+    },
+    "十年磨一剑": {
+      "status": "ready",
+      "meaning": "为完成一件重要事情长期准备、反复打磨。",
+      "distinctive_feature": "必须有长时间沉淀和磨炼过程，课程将其对应耐心、定力；仅有一次下决心不够。",
+      "recognition_cues": ["多年等待、准备和打磨。", "重要成果前有长期磨炼。"],
+      "dimensions": [{"axis": "时间", "judgment": "长期、多年。"}, {"axis": "过程", "judgment": "持续准备、反复打磨。"}],
+      "comparison_edges": [
+        {"other_term": "决心", "minimum_difference": "十年磨一剑强调长期准备和打磨；决心强调在某一时点下定要做成事情的意志。"},
+        {"other_term": "厚积薄发", "minimum_difference": "十年磨一剑突出围绕一件成果长期打磨；厚积薄发突出前期广泛持续积累，后来集中释放、取得突破。"}
+      ],
+      "misuse_boundary": "只出现坚定意愿，没有多年准备打磨过程时，应使用决心而非十年磨一剑。"
+    },
+    "决心": {
+      "status": "ready",
+      "meaning": "下定主意要完成某事的坚定意志。",
+      "distinctive_feature": "形成于作出决定的时点，回答“是否坚定要做”，不自动包含长期等待、持续积累和实际坚持过程。",
+      "recognition_cues": ["下定主意一定要做成。", "主体作出坚定选择。"],
+      "dimensions": [{"axis": "时间位置", "judgment": "作出决定的时点。"}, {"axis": "内容", "judgment": "坚定意志。"}],
+      "comparison_edges": [{"other_term": "十年磨一剑", "minimum_difference": "决心是下定主意的坚定意志；十年磨一剑要求多年准备、等待和打磨。"}],
+      "misuse_boundary": "题干强调多年坚持所需的耐心、定力和积累时，决心不能替代过程性词语。"
+    },
+    "厚积薄发": {
+      "status": "ready",
+      "meaning": "前期长期、充分积累，之后在适当时机集中发挥并取得突破。",
+      "distinctive_feature": "结构必须完整：厚积在前，薄发在后；课程用持续投入对应积累、迈上新台阶对应释放成果。",
+      "recognition_cues": ["前期持续投入，后来取得突破。", "长期积累后集中释放能力。"],
+      "dimensions": [{"axis": "前期", "judgment": "长期、充分积累。"}, {"axis": "后期", "judgment": "集中发挥、实现突破。"}],
+      "comparison_edges": [{"other_term": "筚路蓝缕", "minimum_difference": "厚积薄发强调积累后释放、突破；筚路蓝缕强调创业开辟过程条件艰苦。"}],
+      "misuse_boundary": "题干只描写创业条件艰苦，却没有积累后释放和突破的过程时，应使用筚路蓝缕。"
+    },
+    "筚路蓝缕": {
+      "status": "ready",
+      "meaning": "在条件艰苦、资源匮乏的情况下开创事业。",
+      "distinctive_feature": "评价创业和开辟阶段的艰辛，课程以航空、航海、开店等从无到有的创业过程说明；不表示积累后爆发。",
+      "recognition_cues": ["创业初期条件简陋、困难重重。", "从无到有开辟事业。"],
+      "dimensions": [{"axis": "发展阶段", "judgment": "创业、开辟初期。"}, {"axis": "条件", "judgment": "艰苦、资源不足。"}],
+      "comparison_edges": [{"other_term": "厚积薄发", "minimum_difference": "筚路蓝缕突出艰苦创业、开辟事业；厚积薄发突出长期积累后集中释放并取得突破。"}],
+      "misuse_boundary": "题干重点是前期持续积累、后来迈上新台阶，没有创业艰辛时，应使用厚积薄发。"
+    },
+    "自强不息": {
+      "status": "ready",
+      "meaning": "依靠自身不断努力进取，永不停止。",
+      "distinctive_feature": "同时包含自我驱动和持续性，课程解释为自己努力、不断努力、不停止；不是一次下定决心。",
+      "recognition_cues": ["自主创新道路上持续奋斗。", "依靠自身长期进取、不停息。"],
+      "dimensions": [{"axis": "动力来源", "judgment": "主体自身。"}, {"axis": "时间", "judgment": "持续不断。"}],
+      "comparison_edges": [{"other_term": "决心", "minimum_difference": "自强不息强调自我驱动的持续努力；决心强调某一时点下定要做成事情的坚定意志。"}],
+      "misuse_boundary": "只有一次坚定表态或短期奋发，没有持续自我努力的过程时，不宜使用。"
+    },
+    "稳扎稳打": {
+      "status": "ready",
+      "meaning": "做事按步骤稳妥推进，不冒进、不急躁。",
+      "distinctive_feature": "课程把判断落在“每一步走稳”，强调节奏稳健和风险控制；不只是时间长。",
+      "recognition_cues": ["一步一步稳妥推进。", "不急于求成、不冒进。"],
+      "dimensions": [{"axis": "推进节奏", "judgment": "稳妥、不过急。"}, {"axis": "步骤", "judgment": "每一步都站稳。"}],
+      "comparison_edges": [],
+      "misuse_boundary": "只强调长期坚持，没有稳妥步骤和不冒进要求时，不宜使用；本课未给出与步步为营的稳定二选一边界。"
+    },
+    "步步为营": {
+      "status": "ready",
+      "meaning": "每前进一步都建立稳固基础，形容行动谨慎、周密、扎实。",
+      "distinctive_feature": "每一步都要巩固和周密安排，课程概括为走得扎实；比一般坚持更强调步骤控制。",
+      "recognition_cues": ["每推进一步都先巩固。", "计划周密、行动谨慎扎实。"],
+      "dimensions": [{"axis": "步骤", "judgment": "逐步推进并巩固。"}, {"axis": "行动方式", "judgment": "谨慎、周密、扎实。"}],
+      "comparison_edges": [],
+      "misuse_boundary": "只说明持续时间长或一次下定决心，没有逐步巩固和周密推进时，不宜使用；本课未给出与稳扎稳打的稳定二选一边界。"
+    },
+    "混合": {
+      "status": "ready",
+      "meaning": "把不同成分掺合在一起，使其共同存在或形成混合状态。",
+      "distinctive_feature": "课程强调成分本身被掺到一起，容易出现合为一体的理解；不突出某个对象借其他内容遮蔽身份。",
+      "recognition_cues": ["不同物质、数据或成分掺在一起。", "多个成分形成共同混合状态。"],
+      "dimensions": [{"axis": "动作", "judgment": "不同成分相互掺合。"}, {"axis": "结果", "judgment": "共同存在或形成混合体。"}],
+      "comparison_edges": [
+        {"other_term": "隐藏", "minimum_difference": "混合强调不同成分掺合；隐藏强调把目标放在其他内容中，使其不易被发现。"},
+        {"other_term": "淹没", "minimum_difference": "混合只要求成分掺在一起；淹没要求少量目标被大量同类或噪声覆盖，难以分辨。"}
+      ],
+      "misuse_boundary": "题干核心是保护某个真实数据，使其在大量噪声中难以被识别时，隐藏或淹没更准确。"
+    },
+    "隐藏": {
+      "status": "ready",
+      "meaning": "把对象放在不显眼的位置或其他内容之中，使其不易被发现。",
+      "distinctive_feature": "存在明确的目标对象和遮蔽意图，重点是降低可发现性；不要求目标被大量内容完全压住。",
+      "recognition_cues": ["把真实数据藏在噪声数据中。", "主体有意使目标不易被发现。"],
+      "dimensions": [{"axis": "意图", "judgment": "主动遮蔽目标。"}, {"axis": "结果", "judgment": "目标不易被发现。"}],
+      "comparison_edges": [{"other_term": "淹没", "minimum_difference": "隐藏强调主动把目标藏起来；淹没强调目标因置于大量内容中而被覆盖、难以分辨。"}],
+      "misuse_boundary": "题干突出少量信息被大量噪声覆盖、压住时，淹没更能体现数量关系。"
+    },
+    "淹没": {
+      "status": "ready",
+      "meaning": "使少量、弱小的对象被大量事物覆盖、压住，难以显现或分辨。",
+      "distinctive_feature": "课程用一滴水进入大海解释，必须有数量或强度悬殊：目标被大量噪声包围后失去可辨性。",
+      "recognition_cues": ["一滴水放入大海后难以辨认。", "少量真实数据被大量噪声覆盖。"],
+      "dimensions": [{"axis": "数量关系", "judgment": "少量目标对大量背景。"}, {"axis": "结果", "judgment": "目标被覆盖、难以分辨。"}],
+      "comparison_edges": [
+        {"other_term": "隐藏", "minimum_difference": "淹没突出少量目标被大量内容覆盖；隐藏突出主动把目标藏到不显眼的位置或其他内容中。"},
+        {"other_term": "混合", "minimum_difference": "淹没要求目标因数量悬殊而难以分辨；混合只表示不同成分掺在一起。"}
+      ],
+      "misuse_boundary": "只是把成分掺合或保存数据，没有大量内容覆盖少量目标的结构时，不宜使用。"
+    },
+    "存储": {
+      "status": "ready",
+      "meaning": "把信息、数据或物品保存起来，以备以后使用。",
+      "distinctive_feature": "核心功能是保留，不承担遮蔽、混淆或降低可识别性的任务；课程明确噪声数据题不是保存问题。",
+      "recognition_cues": ["数据被保存到介质或系统。", "目的在以后读取、使用。"],
+      "dimensions": [{"axis": "动作目的", "judgment": "保存、保留。"}, {"axis": "后续用途", "judgment": "供以后读取或使用。"}],
+      "comparison_edges": [{"other_term": "隐藏", "minimum_difference": "存储的目的是保存信息；隐藏的目的是降低目标的可发现性。"}],
+      "misuse_boundary": "题干用噪声遮蔽真实数据、使个体难以识别，不是把数据保存起来，不能使用存储。"
+    },
+    "图谋不轨": {
+      "status": "ready",
+      "meaning": "暗中谋划违法、叛逆或其他不正当行为。",
+      "distinctive_feature": "必须有具体的不正当谋划，语义重于一般别有用心；课程指出普通商业数据推测未必达到违法程度。",
+      "recognition_cues": ["暗中策划违法或不正当行动。", "题干出现明确坏计划、非法目的。"],
+      "dimensions": [{"axis": "行为阶段", "judgment": "正在谋划。"}, {"axis": "行为性质", "judgment": "违法或严重不正当。"}],
+      "comparison_edges": [
+        {"other_term": "心术不正", "minimum_difference": "图谋不轨指出正在谋划具体违法或不正当行为；心术不正只是概括评价人的品性、用心不正。"},
+        {"other_term": "处心积虑", "minimum_difference": "图谋不轨突出谋划内容违法、不正当；处心积虑突出长期蓄意、费尽心思的谋划过程。"}
+      ],
+      "misuse_boundary": "题干只有追逐利益、品性不佳或别有用心，没有具体违法、不正当计划时，语气可能过重。"
+    },
+    "唯利是图": {
+      "status": "ready",
+      "meaning": "只把利益作为追求目标，不顾其他原则和价值。",
+      "distinctive_feature": "课程把它定位为人的品性评价，核心是利益至上；不等于已经实施违法计划，也不突出谋划时间。",
+      "recognition_cues": ["只顾利益，不顾道义、责任。", "题干直接评价某人利益至上的品性。"],
+      "dimensions": [{"axis": "价值取向", "judgment": "利益是唯一或首要目标。"}, {"axis": "评价对象", "judgment": "人的品性和行为动机。"}],
+      "comparison_edges": [{"other_term": "图谋不轨", "minimum_difference": "唯利是图评价利益至上的品性；图谋不轨指出正在谋划违法或严重不正当行为。"}],
+      "misuse_boundary": "题干只说明某次行为有其他企图，未体现长期或明显的利益至上品性时，不宜使用。"
+    },
+    "处心积虑": {
+      "status": "ready",
+      "meaning": "长期蓄意谋划，费尽心思地打算做某事，多含贬义。",
+      "distinctive_feature": "突出谋划过程持续、用心深，课程解释为有坏心思并用尽心思；强于一般别有用心。",
+      "recognition_cues": ["长期盘算、费尽心机。", "坏意图经过持续谋划。"],
+      "dimensions": [{"axis": "时间", "judgment": "长期、持续。"}, {"axis": "用心程度", "judgment": "费尽心思，通常含贬义。"}],
+      "comparison_edges": [{"other_term": "图谋不轨", "minimum_difference": "处心积虑突出长期蓄意、费尽心思；图谋不轨突出谋划内容违法或严重不正当。"}],
+      "misuse_boundary": "只是品性不正、只顾利益或一次临时企图，没有长期费尽心思的过程时，不宜使用。"
+    },
+    "识别": {
+      "status": "ready",
+      "meaning": "从多个对象中辨认、区分出目标对象或判断其身份。",
+      "distinctive_feature": "课程的数据题把任务锁定为“从众多数据中找出需要的那个”，重点是辨认和区分，不是还原变化前状态。",
+      "recognition_cues": ["从大量数据中辨认单个个体。", "判断哪个对象是目标。"],
+      "dimensions": [{"axis": "输入状态", "judgment": "多个候选对象并存。"}, {"axis": "任务", "judgment": "辨认、区分目标身份。"}],
+      "comparison_edges": [{"other_term": "复原", "minimum_difference": "识别是在多个对象中辨认目标；复原是把被改变、编码或损坏的内容还原成原来的状态。"}],
+      "misuse_boundary": "任务是把编码、变形或损坏内容恢复原状，而不是从多个对象中辨认目标时，应使用复原。"
+    },
+    "复原": {
+      "status": "ready",
+      "meaning": "把被改变、编码、拆解或损坏的事物恢复到原来的状态。",
+      "distinctive_feature": "必须有可指认的原始状态，动作方向是从变化后回到变化前；不等于从多个候选中挑出目标。",
+      "recognition_cues": ["编码内容还原为原始代码。", "被破坏、改变的对象恢复原貌。"],
+      "dimensions": [{"axis": "前提", "judgment": "对象曾被改变、编码或损坏。"}, {"axis": "结果", "judgment": "回到原始状态。"}],
+      "comparison_edges": [{"other_term": "识别", "minimum_difference": "复原把变化后的内容恢复原状；识别从多个对象中辨认出目标或身份。"}],
+      "misuse_boundary": "题干只是从大量数据中找出某个个体，没有恢复原始状态的任务时，应使用识别。"
+    },
+    "当头棒喝": {
+      "status": "ready",
+      "meaning": "使人突然清醒、猛醒的严厉警告；也比喻突如其来的沉重打击。",
+      "distinctive_feature": "必须保留两个义项：一是警告造成瞬间醒悟，二是意外打击突然到来；共同点是突然、强烈。",
+      "recognition_cues": ["严厉警告使人一下猛醒。", "突如其来的重大打击。"],
+      "dimensions": [{"axis": "时间", "judgment": "突然发生。"}, {"axis": "作用", "judgment": "瞬间警醒或遭受强烈打击。"}],
+      "comparison_edges": [{"other_term": "警钟长鸣", "minimum_difference": "当头棒喝强调突然的警告使人猛醒，或突如其来的打击；警钟长鸣强调长期持续提醒、保持警惕。"}],
+      "misuse_boundary": "题干只强调长期、反复警示，没有突然性和瞬间猛醒时，应使用警钟长鸣。"
+    },
+    "缘木求鱼": {
+      "status": "ready",
+      "meaning": "方法、方向与目标不相符合，照此行动不可能达到目的。",
+      "distinctive_feature": "失败来自路径本身错误，像爬到树上找鱼；不要求对方是既得利益者，也不要求沟通对象听不懂。",
+      "recognition_cues": ["想实现目标，却使用根本不可能奏效的方法。", "方向、手段与目标对象不匹配。"],
+      "dimensions": [{"axis": "错误位置", "judgment": "方法、路径或方向。"}, {"axis": "可行性", "judgment": "按此办法无法实现目标。"}],
+      "comparison_edges": [{"other_term": "与虎谋皮", "minimum_difference": "缘木求鱼泛指方法、方向与目标不相合；与虎谋皮特指要求既得利益者放弃已有利益，因利益冲突而难以实现。"}],
+      "misuse_boundary": "题干明确是劝既得利益者主动让利时，与虎谋皮比一般的方法错误更准确。"
+    }
+  }
+}

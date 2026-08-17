@@ -1,0 +1,134 @@
+{
+  "schema_version": 1,
+  "basis": "逐词回到四诗风雅颂逐字稿，重建看透与看细、由小见大、公平衡量、听而不理、新方法与独特风格、混杂造假、数量多少和真理稳固的判断边界。",
+  "records": {
+    "洞若观火": {
+      "meaning": "对事情看得非常清楚、透彻，能够把握深层本质和发展情况。",
+      "distinctive_feature": "课程用‘看得透’概括，核心是理解深度和本质清晰，不是观察到极微小细节。",
+      "recognition_cues": ["把问题本质看得清清楚楚", "对事态发展十分明白"],
+      "dimensions": [{"axis": "认识深度", "judgment": "透彻、到达本质。"}, {"axis": "清晰程度", "judgment": "十分清楚。"}],
+      "comparison_edges": [{"other_term": "明察秋毫", "minimum_difference": "洞若观火强调看得透、看清本质；明察秋毫强调看得细，能发现极微小的细节、隐患。"}, {"other_term": "入木三分", "minimum_difference": "洞若观火强调观察、认识事物清楚透彻；入木三分强调分析、观点或刻画具有向内的深度和穿透力。"}],
+      "misuse_boundary": "题干只强调发现细微问题或表达、刻画深刻，而非看清事物本质时，不宜使用。"
+    },
+    "见微知著": {
+      "meaning": "从微小细节或早期征兆推知事物的整体、本质或发展走向。",
+      "distinctive_feature": "由小见大的推知范围较宽，既可认识静态全局、本质，也可预判趋势；课程认为一叶知秋更稳定地指向发展走向。",
+      "recognition_cues": ["从细小征兆判断整体状态", "由局部细节看出本质或趋势"],
+      "dimensions": [{"axis": "推理起点", "judgment": "微小细节、早期征兆。"}, {"axis": "推知终点", "judgment": "整体、本质或发展。"}],
+      "comparison_edges": [{"other_term": "一叶知秋", "minimum_difference": "见微知著可由细节推知静态全局、本质或发展；一叶知秋更强调由当前迹象预判未来发展走向。"}, {"other_term": "明察秋毫", "minimum_difference": "见微知著还要从细节推知更大结论；明察秋毫只强调能观察到极细微内容。"}],
+      "misuse_boundary": "题干只说发现细节，没有由小推大的判断过程时，不宜使用。"
+    },
+    "一视同仁": {
+      "meaning": "以平等、公平的态度对待不同的人或对象，不因身份、优劣而区别。",
+      "distinctive_feature": "课程强调主体的平等态度，通常用于肯定语境；不同于用同一客观尺度机械衡量不同事物。",
+      "recognition_cues": ["老师平等对待不同学生", "不因身份差异而区别对待"],
+      "dimensions": [{"axis": "行为主体", "judgment": "有态度和选择的人。"}, {"axis": "评价方向", "judgment": "公平、平等，常偏褒义。"}],
+      "comparison_edges": [{"other_term": "等量齐观", "minimum_difference": "一视同仁强调主体态度公平、不歧视；等量齐观强调对不同事物采用同一尺度，常在否定语境中批评忽视差异。"}, {"other_term": "不分彼此", "minimum_difference": "一视同仁强调公平对待不同对象；不分彼此强调关系亲密或使用、分享时不区分你我。"}],
+      "misuse_boundary": "题干批评用同一标准处理性质不同的事物，或强调亲密到不分你我时，不宜使用。"
+    },
+    "置若罔闻": {
+      "meaning": "明明听到了意见、提醒或声音，却像没有听见一样，不理睬、不重视。",
+      "distinctive_feature": "必须有听觉信息已经传入却被故意忽略的结构，不是泛指不处理事情。",
+      "recognition_cues": ["对警告听见却不理会", "把群众呼声当作没听见"],
+      "dimensions": [{"axis": "信息渠道", "judgment": "听觉、言语。"}, {"axis": "主体反应", "judgment": "不理睬、不重视。"}],
+      "comparison_edges": [{"other_term": "置之不理", "minimum_difference": "置若罔闻专指听到言语、意见却像没听见；置之不理泛指把人、事、意见放在一边不回应、不处理。"}, {"other_term": "不以为意", "minimum_difference": "置若罔闻强调外在听而不理；不以为意强调内心不在意、不放在心上。"}],
+      "misuse_boundary": "题干没有听到信息这一前提，只说事情未处理或内心不在乎时，不宜使用。"
+    },
+    "独辟蹊径": {
+      "meaning": "独自开辟一种与众不同的新方法、新途径。",
+      "distinctive_feature": "创新点落在做事方法和路径，不是形成整体风格、自成一派。",
+      "recognition_cues": ["开创不同于传统的新办法", "另找一条新路径解决问题"],
+      "dimensions": [{"axis": "独特对象", "judgment": "方法、途径。"}, {"axis": "创新动作", "judgment": "独自开辟。"}],
+      "comparison_edges": [{"other_term": "独树一帜", "minimum_difference": "独辟蹊径强调方法、途径与众不同；独树一帜强调形成独特风格、主张或流派。"}, {"other_term": "别出心裁", "minimum_difference": "独辟蹊径强调另开新方法、新路径；别出心裁强调某个设计、安排的构思巧妙独特。"}],
+      "misuse_boundary": "题干只说行业风格自成一派或某个设计构思巧妙，没有新方法、新路径时，不宜使用。"
+    },
+    "良莠不齐": {
+      "meaning": "同一群体或一批对象中，好的和坏的、优的和劣的混杂在一起。",
+      "distinctive_feature": "课程明确不主张脱离题干强行区分良莠不齐、鱼龙混杂、泥沙俱下；可稳定把握的只有客观好坏混杂。",
+      "recognition_cues": ["同一市场中优劣对象并存", "成员质量有好有坏"],
+      "dimensions": [{"axis": "混合内容", "judgment": "好坏、优劣并存。"}, {"axis": "证据边界", "judgment": "课程未给出可单独机械套用的细分规则。"}],
+      "comparison_edges": [{"other_term": "鱼龙混杂", "minimum_difference": "课程把良莠不齐与鱼龙混杂都归为客观好坏混杂，未提供稳定最小差别；做题须依题干搭配，不能自行编造边界。"}, {"other_term": "泥沙俱下", "minimum_difference": "课程把良莠不齐与泥沙俱下都归为客观好坏混杂，未提供稳定最小差别；单独出现时不硬分。"}],
+      "misuse_boundary": "题干是主体故意用假冒真、以次充好，或趁混乱获利时，应使用主观造假、获利类词。"
+    },
+    "鱼龙混杂": {
+      "meaning": "同一环境或群体中，好坏、优劣对象混杂在一起。",
+      "distinctive_feature": "课程将其与良莠不齐、泥沙俱下视为同属客观好坏混杂，明确反对在没有对应点时硬造细微差别。",
+      "recognition_cues": ["群体成员优劣混在一起", "市场中好坏对象并存"],
+      "dimensions": [{"axis": "混合内容", "judgment": "好坏、优劣并存。"}, {"axis": "主观造假", "judgment": "不以故意冒充为必要条件。"}],
+      "comparison_edges": [{"other_term": "良莠不齐", "minimum_difference": "课程未提供鱼龙混杂与良莠不齐的稳定最小差别，单独出现时都按客观好坏混杂理解。"}, {"other_term": "鱼目混珠", "minimum_difference": "鱼龙混杂描述好坏对象客观混在一起；鱼目混珠要求主体故意以假乱真或以次充好。"}],
+      "misuse_boundary": "题干明确有人主动把假货、劣品混入真品精品进行蒙骗时，应使用鱼目混珠。"
+    },
+    "泥沙俱下": {
+      "meaning": "好的坏的、优的劣的对象一同出现或混杂。",
+      "distinctive_feature": "课程只确认其为客观好坏混杂，并明确单独出现时不必与良莠不齐、鱼龙混杂硬分。",
+      "recognition_cues": ["发展过程中优劣内容一同涌入", "好坏对象混在同一批次"],
+      "dimensions": [{"axis": "混合内容", "judgment": "好坏、优劣并存。"}, {"axis": "证据边界", "judgment": "课程没有提供稳定的专属使用规则。"}],
+      "comparison_edges": [{"other_term": "良莠不齐", "minimum_difference": "课程未给出泥沙俱下与良莠不齐可脱离题干套用的稳定差别，均先判断为客观好坏混杂。"}, {"other_term": "浑水摸鱼", "minimum_difference": "泥沙俱下描述好坏对象一同混杂；浑水摸鱼要求主体趁局面混乱从中获取好处。"}],
+      "misuse_boundary": "题干重点是有人利用混乱牟利，而非描述内容质量混杂时，应使用浑水摸鱼。"
+    },
+    "滥竽充数": {
+      "meaning": "没有真才实学的人混在有能力者中凑数，也可指以次充好。",
+      "distinctive_feature": "课程在与鱼目混珠同现时，优先抓‘混子、水平不行、以次充好’，而非假货冒充真品。",
+      "recognition_cues": ["无能力者混入专业队伍凑数", "低水平对象混入优质对象"],
+      "dimensions": [{"axis": "主体能力", "judgment": "没有真才实学、质量低。"}, {"axis": "混入目的", "judgment": "凑数或充好。"}],
+      "comparison_edges": [{"other_term": "鱼目混珠", "minimum_difference": "滥竽充数更侧重无真才实学者混入队伍或以次充好；鱼目混珠更侧重假货冒充真品，也可兼指以次充好。"}, {"other_term": "浑水摸鱼", "minimum_difference": "滥竽充数强调无能力者混入凑数；浑水摸鱼强调趁局面混乱捞取好处。"}],
+      "misuse_boundary": "题干明确是造假冒充真品，或只是趁乱获利，没有无能力者混入凑数时，不宜使用。"
+    },
+    "浑水摸鱼": {
+      "meaning": "趁局面混乱、规则不清或监管失序，从中捞取好处。",
+      "distinctive_feature": "最完整语境包含‘水浑’的混乱条件和‘摸鱼’的获利动作；课程也记录了考试中有时只突出混入获利。",
+      "recognition_cues": ["趁市场混乱牟利", "利用监管空档混入并获益"],
+      "dimensions": [{"axis": "外部条件", "judgment": "局面混乱或规则不清。"}, {"axis": "主体目的", "judgment": "获取好处。"}],
+      "comparison_edges": [{"other_term": "滥竽充数", "minimum_difference": "浑水摸鱼强调利用混乱环境获利；滥竽充数强调没有真才实学者混在队伍中凑数。"}, {"other_term": "趁火打劫", "minimum_difference": "浑水摸鱼利用混乱暗中获利；趁火打劫利用他人遭遇灾祸、困境公开侵害获利，恶意更强。"}],
+      "misuse_boundary": "题干只说无能力者混入队伍，没有局面混乱、牟利结构时，滥竽充数更准确。"
+    },
+    "不胜枚举": {
+      "meaning": "同类事例、例子多得无法一一列举完。",
+      "distinctive_feature": "数量多的对象重点是可列举的事例，不是空间上到处都有，也不是一般物品数量多。",
+      "recognition_cues": ["类似案例多到举不完", "可供列举的例证极多"],
+      "dimensions": [{"axis": "常见对象", "judgment": "事例、例子。"}, {"axis": "数量结果", "judgment": "无法逐一列举。"}],
+      "comparison_edges": [{"other_term": "比比皆是", "minimum_difference": "不胜枚举强调事例多得列举不完；比比皆是强调某类对象到处可见、十分常见。"}, {"other_term": "车载斗量", "minimum_difference": "不胜枚举更常形容事例多到列举不完；车载斗量泛指普通事物数量极多，课程提示常见于诗词。"}],
+      "misuse_boundary": "题干只说到处可见或物品数量巨大，没有列举事例的语义时，不宜使用。"
+    },
+    "车载斗量": {
+      "meaning": "数量非常多，需要用车装、用斗量。",
+      "distinctive_feature": "适用对象较广，课程提示常用于诗词等作品数量多；不含到处可见或容易获得。",
+      "recognition_cues": ["历代相关诗词数量极多", "普通事物多得可用车装斗量"],
+      "dimensions": [{"axis": "数量", "judgment": "极多。"}, {"axis": "常见搭配", "judgment": "诗词、作品，也可泛指普通事物。"}],
+      "comparison_edges": [{"other_term": "不胜枚举", "minimum_difference": "车载斗量泛指事物数量多，常见于诗词作品；不胜枚举强调事例多得无法一一列举。"}, {"other_term": "俯拾皆是", "minimum_difference": "车载斗量只强调数量极多；俯拾皆是还可强调随处可见、俯身即可得到。"}],
+      "misuse_boundary": "题干重点是例子列举不完或对象到处可得时，应使用对应更精确的词。"
+    },
+    "俯拾皆是": {
+      "meaning": "数量很多，随处都能找到或很容易获得。",
+      "distinctive_feature": "除多之外还可带有易得、随手可取，课程也提醒部分题目只出现数量多对应点。",
+      "recognition_cues": ["走到各处都能看到", "低头就可获得、数量众多"],
+      "dimensions": [{"axis": "数量", "judgment": "多。"}, {"axis": "获取难度", "judgment": "容易、随处可得。"}],
+      "comparison_edges": [{"other_term": "比比皆是", "minimum_difference": "俯拾皆是除到处存在外还可强调容易取得；比比皆是强调对象到处都是、十分常见。"}, {"other_term": "车载斗量", "minimum_difference": "俯拾皆是可强调随处可得；车载斗量只强调数量极多。"}],
+      "misuse_boundary": "题干只说例子多得列举不完，或数量巨大但并不容易获得时，应选对应词。"
+    },
+    "凤毛麟角": {
+      "meaning": "珍贵、优秀而难得的人或事物数量非常少。",
+      "distinctive_feature": "必须同时有少和珍贵优秀两个判断点，不是客观数量少即可。",
+      "recognition_cues": ["顶尖人才极为少见", "优秀经典作品难得"],
+      "dimensions": [{"axis": "数量", "judgment": "极少。"}, {"axis": "质量", "judgment": "珍贵、优秀、难得。"}],
+      "comparison_edges": [{"other_term": "屈指可数", "minimum_difference": "凤毛麟角强调珍贵优秀的对象极少；屈指可数只客观说明数量少，不评价质量。"}, {"other_term": "吉光片羽", "minimum_difference": "凤毛麟角泛指珍贵优秀的人或事物极少；吉光片羽特指古代残存的珍贵文物、书画或典籍片段。"}],
+      "misuse_boundary": "对象虽少但并不优秀、珍贵，或专指古代残存片段时，不宜使用。"
+    },
+    "屈指可数": {
+      "meaning": "数量很少，掰着手指就能数清。",
+      "distinctive_feature": "只作客观数量判断，不附加珍贵、优秀或古代遗存属性。",
+      "recognition_cues": ["相关研究只有少数几项", "对象少到可以直接数清"],
+      "dimensions": [{"axis": "数量", "judgment": "少。"}, {"axis": "质量评价", "judgment": "没有必然评价。"}],
+      "comparison_edges": [{"other_term": "凤毛麟角", "minimum_difference": "屈指可数只说明客观数量少；凤毛麟角还要求对象珍贵、优秀、难得。"}, {"other_term": "吉光片羽", "minimum_difference": "屈指可数可形容任何数量少的对象；吉光片羽专指古代残存的珍贵文物、典籍片段。"}],
+      "misuse_boundary": "题干强调少而珍贵优秀，或特指古代残存片段时，应使用边界更具体的词。"
+    },
+    "颠扑不破": {
+      "meaning": "理论、真理或观点经受各种检验、驳难仍不能被推翻，十分牢固可靠。",
+      "distinctive_feature": "课程提示最适合搭配真理、理论，牢固来自反复检验仍成立，不是观念在人心中根基深。",
+      "recognition_cues": ["真理经实践检验仍成立", "理论无法被驳倒推翻"],
+      "dimensions": [{"axis": "常见对象", "judgment": "真理、理论、正确观点。"}, {"axis": "稳固方式", "judgment": "经检验、驳难仍不破。"}],
+      "comparison_edges": [{"other_term": "根深蒂固", "minimum_difference": "颠扑不破常褒义地形容真理、理论经检验不可推翻；根深蒂固形容思想、观念等根基深、难以改变，常可含贬义。"}],
+      "misuse_boundary": "题干只说某种旧观念深入人心、很难改变，没有真理检验和可靠性评价时，不宜使用。"
+    }
+  }
+}

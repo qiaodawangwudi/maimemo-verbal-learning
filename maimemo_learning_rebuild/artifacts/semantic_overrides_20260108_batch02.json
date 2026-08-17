@@ -1,0 +1,253 @@
+{
+  "schema_version": 1,
+  "basis": "逐段复核20260108原始课程文稿P0055-P0084；保留老师明确讲出的适用对象、过程结果和对比轴，勇立潮头因证据只有一句概括继续pending。",
+  "records": {
+    "并行不悖": {
+      "status": "ready",
+      "meaning": "看似矛盾的两件事实际上并不冲突，可以同时存在或同时实行。",
+      "distinctive_feature": "先承认两件事表面上容易被理解为二选一，再判断两件事能够兼容并用；重点不是各自优秀，而是不矛盾。",
+      "recognition_cues": ["题干先呈现两种相反方式，后文说明可以同时使用。", "经济发展与环境保护等关系被误认为只能二选一。"],
+      "dimensions": [{"axis": "关系结构", "judgment": "表面相反，实质兼容。"}, {"axis": "选择要求", "judgment": "可以并存并用，无须二选一。"}],
+      "comparison_edges": [
+        {"other_term": "如影随形", "minimum_difference": "并行不悖判断两件事看似冲突却可兼容；如影随形描述一个对象始终紧随另一个对象。"},
+        {"other_term": "各有所长", "minimum_difference": "并行不悖回答能否同时存在；各有所长回答不同对象分别有什么优势。"},
+        {"other_term": "不可或缺", "minimum_difference": "并行不悖只说明互不冲突、可以并存；不可或缺还要求缺少该对象就无法成立。"}
+      ],
+      "misuse_boundary": "题干只说关系密切、各有优点或都很重要，却没有“看似矛盾但能兼容”的结构时，不宜使用。"
+    },
+    "如影随形": {
+      "status": "ready",
+      "meaning": "像影子总跟着身体一样，形容两个对象关系紧密、始终相伴。",
+      "distinctive_feature": "必须有伴随结构：一个对象出现或移动到哪里，另一个对象就紧随到哪里。",
+      "recognition_cues": ["A出现时B总伴随出现。", "题干突出长期紧跟、难以分离。"],
+      "dimensions": [{"axis": "关系类型", "judgment": "紧密伴随。"}, {"axis": "动态结构", "judgment": "一个对象跟随另一个对象。"}],
+      "comparison_edges": [{"other_term": "并行不悖", "minimum_difference": "如影随形强调持续伴随；并行不悖强调看似冲突的两件事实际上能够兼容。"}],
+      "misuse_boundary": "只说明两种方式可以同时采用，却没有一方始终跟随另一方时，应考虑并行不悖。"
+    },
+    "各有所长": {
+      "status": "ready",
+      "meaning": "不同的人或事物各自具有自己的长处。",
+      "distinctive_feature": "评价轴是优势分布：每个对象都有不同优点；不回答对象之间是否冲突或是否缺一不可。",
+      "recognition_cues": ["题干分别列出不同对象的优势。", "比较结果不是高下，而是各有擅长。"],
+      "dimensions": [{"axis": "评价对象", "judgment": "两个或多个对象的长处。"}, {"axis": "比较结论", "judgment": "优势不同，各有可取。"}],
+      "comparison_edges": [{"other_term": "并行不悖", "minimum_difference": "各有所长强调每个对象分别有优点；并行不悖强调看似矛盾的对象可以同时存在或采用。"}],
+      "misuse_boundary": "题干强调两种相反方式可以兼容，而不是分别说明优点时，不宜使用各有所长。"
+    },
+    "不可或缺": {
+      "status": "ready",
+      "meaning": "非常必要，不能缺少。",
+      "distinctive_feature": "带有必要条件判断：一旦缺少该对象，整体功能、目标或结构就无法正常成立。",
+      "recognition_cues": ["题干说明缺少某项就无法完成目标。", "对象不是一般重要，而是构成必要条件。"],
+      "dimensions": [{"axis": "必要性", "judgment": "缺少后整体无法成立。"}, {"axis": "程度", "judgment": "强于一般重要或有益。"}],
+      "comparison_edges": [{"other_term": "并行不悖", "minimum_difference": "不可或缺要求某对象是必要条件；并行不悖只判断两个对象互不冲突、可以并存。"}],
+      "misuse_boundary": "只说明两种方法都能用或各有优点，不能推出任何一方都不可缺少。"
+    },
+    "传承": {
+      "status": "ready",
+      "meaning": "把文化、精神、技艺等从前代传给后代，使其延续。",
+      "distinctive_feature": "老师概括为纵向传递，核心方向是沿时间和代际向后延续。",
+      "recognition_cues": ["前辈传给后辈、上一代传给下一代。", "传统、精神或技艺跨代延续。"],
+      "dimensions": [{"axis": "传播方向", "judgment": "沿时间和代际纵向传递。"}, {"axis": "动作结果", "judgment": "既有内容被后代接续。"}],
+      "comparison_edges": [{"other_term": "弘扬", "minimum_difference": "传承沿代际向后传递，使内容延续；弘扬面向更广范围传播，使精神或文化得到推广。"}],
+      "misuse_boundary": "题干只强调向社会扩大影响、广泛宣传，而没有代际接续时，更适合弘扬。"
+    },
+    "弘扬": {
+      "status": "ready",
+      "meaning": "广泛传播并发扬文化、精神或优良传统，使其影响扩大。",
+      "distinctive_feature": "老师概括为横向向外传播，核心是扩大社会覆盖和影响，而不是代际交接。",
+      "recognition_cues": ["弘扬某种精神、文化或传统。", "题干要求向更广人群传播推广。"],
+      "dimensions": [{"axis": "传播方向", "judgment": "面向社会横向扩展。"}, {"axis": "动作结果", "judgment": "影响范围扩大。"}],
+      "comparison_edges": [{"other_term": "传承", "minimum_difference": "弘扬向更广范围传播并扩大影响；传承沿时间和代际把内容接续下去。"}],
+      "misuse_boundary": "题干只强调前代向后代延续、接棒，没有扩大传播范围时，应考虑传承。"
+    },
+    "踔厉奋发": {
+      "status": "ready",
+      "meaning": "精神振奋、意气昂扬地努力进取。",
+      "distinctive_feature": "落点首先是精神面貌昂扬，再由这种状态带动奋发行动；不单指坚持、前进或竞争。",
+      "recognition_cues": ["精神振奋、意气风发。", "题干描写昂扬状态和进取姿态。"],
+      "dimensions": [{"axis": "核心落点", "judgment": "精神状态昂扬振奋。"}, {"axis": "行动方向", "judgment": "由昂扬状态走向努力进取。"}],
+      "comparison_edges": [
+        {"other_term": "勇毅前行", "minimum_difference": "踔厉奋发突出精神振奋、意气昂扬；勇毅前行突出勇敢坚定地向前推进。"},
+        {"other_term": "笃行不怠", "minimum_difference": "踔厉奋发突出昂扬奋发的精神状态；笃行不怠突出持续行动且不懈怠。"},
+        {"other_term": "奋勇争先", "minimum_difference": "踔厉奋发不要求竞争对象；奋勇争先要求在竞争中奋力领先。"}
+      ],
+      "misuse_boundary": "只强调长期坚持、勇敢前进或竞争争先，却没有精神振奋、意气昂扬的语义时，不宜使用。"
+    },
+    "勇毅前行": {
+      "status": "ready",
+      "meaning": "勇敢而坚定地向前推进。",
+      "distinctive_feature": "同时包含面对困难的勇气与保持方向的坚毅，落点是继续前行，不要求与别人竞争。",
+      "recognition_cues": ["克服困难挑战，仍坚定向前。", "题干强调勇敢、坚毅和前进。"],
+      "dimensions": [{"axis": "行动方向", "judgment": "持续向前推进。"}, {"axis": "行动品质", "judgment": "勇敢且坚定。"}],
+      "comparison_edges": [
+        {"other_term": "踔厉奋发", "minimum_difference": "勇毅前行突出勇敢坚定地推进；踔厉奋发突出精神振奋、意气昂扬。"},
+        {"other_term": "奋勇争先", "minimum_difference": "勇毅前行不要求超越他人；奋勇争先带有竞争和争取领先的目标。"}
+      ],
+      "misuse_boundary": "题干只有精神昂扬而没有向前推进，或明确强调竞争领先时，应分别考虑踔厉奋发、奋勇争先。"
+    },
+    "笃行不怠": {
+      "status": "ready",
+      "meaning": "坚定地付诸行动，并持续努力、毫不懈怠。",
+      "distinctive_feature": "“笃行”把态度落实为行动，“不怠”强调行动连续不断；核心不是口号或一时振奋。",
+      "recognition_cues": ["长期付诸实践、不懈怠。", "题干把坚定信念落实为连续行动。"],
+      "dimensions": [{"axis": "实践性", "judgment": "必须有实际行动。"}, {"axis": "持续性", "judgment": "行动不中断、不松懈。"}],
+      "comparison_edges": [
+        {"other_term": "踔厉奋发", "minimum_difference": "笃行不怠突出持续实践、不懈怠；踔厉奋发突出精神振奋、意气昂扬。"},
+        {"other_term": "久久为功", "minimum_difference": "笃行不怠评价行动者坚定实践、毫不懈怠；久久为功强调一项事业长期持续用力才能见功。"}
+      ],
+      "misuse_boundary": "只表明精神振奋或敢于前进，却没有持续行动且不懈怠的语义时，不宜使用。"
+    },
+    "奋勇争先": {
+      "status": "ready",
+      "meaning": "鼓起勇气奋力进取，争取走在前面。",
+      "distinctive_feature": "老师明确指出其竞争性，必须存在争先、领先或与其他主体竞进的意味。",
+      "recognition_cues": ["百舸争流、竞相领先。", "题干出现争先、排名、走在前列。"],
+      "dimensions": [{"axis": "竞争性", "judgment": "有与其他主体竞进的关系。"}, {"axis": "目标", "judgment": "争取领先。"}],
+      "comparison_edges": [
+        {"other_term": "勇毅前行", "minimum_difference": "奋勇争先要求竞争并争取领先；勇毅前行只要求勇敢坚定地向前，不必超越他人。"},
+        {"other_term": "踔厉奋发", "minimum_difference": "奋勇争先突出竞争目标；踔厉奋发突出昂扬振奋的精神状态。"}
+      ],
+      "misuse_boundary": "题干只说服务事业、克服困难并向前走，没有竞争对象和领先目标时，不宜使用。"
+    },
+    "奋起争先": {
+      "status": "ready",
+      "meaning": "振作起来、积极行动，争取走在前面。",
+      "distinctive_feature": "既有从原状态中奋起的启动意味，又有争先的竞争目标；课程未提供与奋勇争先的稳定细分标准。",
+      "recognition_cues": ["百舸争流、奋起领先。", "主体由静转动并加入争先。"],
+      "dimensions": [{"axis": "启动状态", "judgment": "振作并行动起来。"}, {"axis": "目标", "judgment": "争取领先。"}],
+      "comparison_edges": [],
+      "misuse_boundary": "没有竞争和领先目标时，不宜使用；本课未给出奋起争先与奋勇争先的稳定二选一边界。"
+    },
+    "久久为功": {
+      "status": "ready",
+      "meaning": "对一项事业长期坚持、持续用力，经过时间积累取得成效。",
+      "distinctive_feature": "功夫分散在长时间内绵绵用力，不是一时把力气用尽，也不要求在竞争中领先。",
+      "recognition_cues": ["绵绵用力、长期坚持。", "创新既要只争朝夕，也要久久为功。"],
+      "dimensions": [{"axis": "时间跨度", "judgment": "长期持续。"}, {"axis": "用力方式", "judgment": "一点一点积累，不靠一次爆发。"}],
+      "comparison_edges": [{"other_term": "笃行不怠", "minimum_difference": "久久为功强调事业需要长期持续用力才能见效；笃行不怠强调行动者坚定实践、始终不懈怠。"}],
+      "misuse_boundary": "只强调一时奋发、迅速见效或竞争争先时，不宜使用；必须有持续用力和时间积累。"
+    },
+    "履行": {
+      "status": "ready",
+      "meaning": "实践自己应尽的责任、职责、义务或约定。",
+      "distinctive_feature": "搭配对象通常是已经确定的责任、职责、义务，强调把应做事项实际做到。",
+      "recognition_cues": ["履行责任、职责、义务。", "题干强调落实既定责任。"],
+      "dimensions": [{"axis": "搭配对象", "judgment": "责任、职责、义务、约定。"}, {"axis": "动作落点", "judgment": "把应尽事项付诸实行。"}],
+      "comparison_edges": [{"other_term": "堪当", "minimum_difference": "履行强调实际践行已确定的责任或义务；堪当强调具备承担重任的能力和资格。"}],
+      "misuse_boundary": "“重任”前需要表达有能力承担时，更适合堪当；不能把履行责任的搭配机械换成履行重任。"
+    },
+    "堪当": {
+      "status": "ready",
+      "meaning": "能够担当、足以承担某项重任。",
+      "distinctive_feature": "“堪”表示能，重点不是已经承担，而是主体具备承担重任的能力和资格。",
+      "recognition_cues": ["堪当大任、堪当民族复兴重任。", "培养能够承担重任的人。"],
+      "dimensions": [{"axis": "能力条件", "judgment": "具备承担资格和能力。"}, {"axis": "常见对象", "judgment": "大任、重任。"}],
+      "comparison_edges": [
+        {"other_term": "履行", "minimum_difference": "堪当判断是否有能力承担重任；履行强调把既定责任、职责或义务实际做到。"},
+        {"other_term": "担负", "minimum_difference": "堪当突出能够承担的资格；担负直接表示承受、承担任务或责任。"},
+        {"other_term": "担当", "minimum_difference": "堪当突出足以担当重任；担当表示承担责任，也可评价敢于负责的精神。"}
+      ],
+      "misuse_boundary": "题干只是说明已经承担责任，没有评价主体是否有能力胜任时，不必使用堪当。"
+    },
+    "担负": {
+      "status": "ready",
+      "meaning": "承受、承担任务、责任或重任。",
+      "distinctive_feature": "直接描述责任或任务落到主体身上，重点是承担关系，不额外判断主体是否足以胜任。",
+      "recognition_cues": ["担负任务、责任、重任。", "某项责任由特定主体承担。"],
+      "dimensions": [{"axis": "动作关系", "judgment": "任务或责任由主体承受。"}, {"axis": "能力判断", "judgment": "词本身不表示足以胜任。"}],
+      "comparison_edges": [{"other_term": "堪当", "minimum_difference": "担负直接表示承担任务或责任；堪当还强调主体有能力、有资格承担重任。"}],
+      "misuse_boundary": "题干强调培养“能够承担重任”的人才时，堪当比担负多出能力判断。"
+    },
+    "担当": {
+      "status": "ready",
+      "meaning": "承担并负起责任，也可指敢于负责的精神。",
+      "distinctive_feature": "既可作动词表示承担，也可评价主体面对责任不推诿的精神品质。",
+      "recognition_cues": ["担当责任、担当重任。", "题干评价敢于负责、有担当。"],
+      "dimensions": [{"axis": "动作含义", "judgment": "承担责任。"}, {"axis": "品质含义", "judgment": "敢于负责、不推诿。"}],
+      "comparison_edges": [{"other_term": "堪当", "minimum_difference": "担当可表示承担责任或敢于负责；堪当专门突出主体有能力、有资格承担重任。"}],
+      "misuse_boundary": "题干专门判断主体能否胜任重任时，优先考虑含有能力判断的堪当。"
+    },
+    "淡化": {
+      "status": "ready",
+      "meaning": "使某种印象、矛盾、色彩或影响逐渐变淡、减弱。",
+      "distinctive_feature": "变化是程度逐步降低，对象仍可能存在；不是主动不看，也不是因尺度原因根本看不清。",
+      "recognition_cues": ["矛盾、色彩、印象随时间减弱。", "题干表达逐渐冲淡。"],
+      "dimensions": [{"axis": "变化方式", "judgment": "程度逐渐减弱。"}, {"axis": "对象状态", "judgment": "对象仍在，只是不再突出。"}],
+      "comparison_edges": [
+        {"other_term": "忽视", "minimum_difference": "淡化是对象影响或突出程度逐渐减弱；忽视是主体本可注意却没有重视。"},
+        {"other_term": "模糊", "minimum_difference": "淡化表示程度变弱；模糊表示边界、形象或细节不清楚。"}
+      ],
+      "misuse_boundary": "题干强调细节因尺度太大而看不清时，应使用模糊；强调主体主动不重视时应考虑忽视、无视。"
+    },
+    "忽视": {
+      "status": "ready",
+      "meaning": "没有注意到或没有给予应有的重视。",
+      "distinctive_feature": "前提是对象本可被看到、被关注，问题在主体注意或重视不足，而非对象客观不可见。",
+      "recognition_cues": ["本应关注，却没有重视。", "题干能看到对象但注意不足。"],
+      "dimensions": [{"axis": "责任位置", "judgment": "问题主要在主体注意不足。"}, {"axis": "可见性", "judgment": "对象原则上能够被看到或认识。"}],
+      "comparison_edges": [{"other_term": "模糊", "minimum_difference": "忽视是对象可见但主体没有重视；模糊是对象的细节、边界或形象本身不清楚。"}],
+      "misuse_boundary": "因比例、距离、信息精度等客观原因根本看不清时，应使用模糊，不能归因于忽视。"
+    },
+    "无视": {
+      "status": "ready",
+      "meaning": "不把某人某事放在眼里，不予理会或注意。",
+      "distinctive_feature": "主观拒绝注意的色彩比忽视更强，常表现为明知存在仍不理会；课程将忽视、无视共同归入主动忽略。",
+      "recognition_cues": ["明知存在仍不予理会。", "题干带有主观漠视意味。"],
+      "dimensions": [{"axis": "主观性", "judgment": "主动不理会。"}, {"axis": "程度", "judgment": "通常强于一般注意不足。"}],
+      "comparison_edges": [{"other_term": "模糊", "minimum_difference": "无视是主体明知或可知却不理会；模糊是细节、边界或形象客观不清楚。"}],
+      "misuse_boundary": "对象因尺度、距离或信息不足而无法看清时，不宜使用无视；本课未把忽视与无视细分为稳定二选一规则。"
+    },
+    "模糊": {
+      "status": "ready",
+      "meaning": "不清楚、不分明，使细节、边界或形象难以辨认。",
+      "distinctive_feature": "问题落在对象呈现的清晰度；课程题中比例尺度过大，细节客观上无法清楚显示。",
+      "recognition_cues": ["比例过大导致细节看不见。", "边界、形象或认识由清楚变得不清。"],
+      "dimensions": [{"axis": "清晰度", "judgment": "细节或边界不分明。"}, {"axis": "原因", "judgment": "可由尺度、距离或信息精度造成。"}],
+      "comparison_edges": [
+        {"other_term": "忽视", "minimum_difference": "模糊是对象本身呈现不清；忽视是对象可以被注意但主体没有重视。"},
+        {"other_term": "淡化", "minimum_difference": "模糊改变清晰程度；淡化改变影响、印象或色彩的强弱程度。"}
+      ],
+      "misuse_boundary": "对象清楚可见，只是主体没有注意或重视时，应考虑忽视、无视。"
+    },
+    "约定俗成": {
+      "status": "ready",
+      "meaning": "某种名称、做法或规则由社会长期共同使用而自然形成，得到普遍认可。",
+      "distinctive_feature": "没有正式强制制定者，规范来自群体反复实践和共同认可；老师用“自己形成”与法律规定相对。",
+      "recognition_cues": ["不是法律强制，而是群体自然形成。", "长期共同使用后成为通行惯例。"],
+      "dimensions": [{"axis": "形成方式", "judgment": "群体长期实践自然形成。"}, {"axis": "认可范围", "judgment": "得到社会或群体普遍认可。"}],
+      "comparison_edges": [
+        {"other_term": "未成风气", "minimum_difference": "约定俗成说明惯例已经自然形成并获认可；未成风气说明某种做法尚未普遍化。"},
+        {"other_term": "习以为常", "minimum_difference": "约定俗成评价群体规则或惯例的形成；习以为常评价主体因反复接触而觉得平常。"},
+        {"other_term": "心照不宣", "minimum_difference": "约定俗成强调长期实践形成共同惯例；心照不宣强调彼此心里明白、无需说破的默契。"}
+      ],
+      "misuse_boundary": "只有个体习惯、双方默契或尚未普遍形成的做法，不能直接判断为约定俗成。"
+    },
+    "未成风气": {
+      "status": "ready",
+      "meaning": "某种做法、现象尚未普遍流行，尚未形成共同风气。",
+      "distinctive_feature": "落点是普及程度不足，只判断“还没有形成”，不说明这种做法未来如何形成或是否应被认可。",
+      "recognition_cues": ["只有少数人这样做。", "某种现象尚未普遍化。"],
+      "dimensions": [{"axis": "普及程度", "judgment": "尚未形成群体性风气。"}, {"axis": "时间状态", "judgment": "处于形成之前或形成不足阶段。"}],
+      "comparison_edges": [{"other_term": "约定俗成", "minimum_difference": "未成风气判断某种做法尚未普遍形成；约定俗成判断群体惯例已经长期自然形成。"}],
+      "misuse_boundary": "已经由群体长期实践形成共同惯例时，应考虑约定俗成，不能再说未成风气。"
+    },
+    "习以为常": {
+      "status": "ready",
+      "meaning": "因经常接触、反复经历某事而逐渐习惯，觉得平常。",
+      "distinctive_feature": "主体发生心理适应，变化路径是“反复出现—不再觉得特殊”，不是群体规则的形成。",
+      "recognition_cues": ["看得多、做得多以后不觉得奇怪。", "主体对反复出现的现象产生习惯。"],
+      "dimensions": [{"axis": "变化主体", "judgment": "人的感受和心理。"}, {"axis": "形成原因", "judgment": "反复接触或经历。"}],
+      "comparison_edges": [{"other_term": "约定俗成", "minimum_difference": "习以为常是主体因反复接触而觉得平常；约定俗成是群体长期实践形成通行惯例。"}],
+      "misuse_boundary": "题干只说社会形成共同规则或惯例，没有主体因反复接触而习惯时，不宜使用。"
+    },
+    "心照不宣": {
+      "status": "ready",
+      "meaning": "彼此心里都明白，却不需要公开说出来。",
+      "distinctive_feature": "核心是共享理解和默契，信息在相关主体之间已经共同知晓；不要求长期形成社会惯例。",
+      "recognition_cues": ["大家不用说都明白。", "暗号、默契或共同知晓但不说破。"],
+      "dimensions": [{"axis": "认知关系", "judgment": "相关主体共同知晓。"}, {"axis": "表达状态", "judgment": "无需或没有公开说破。"}],
+      "comparison_edges": [{"other_term": "约定俗成", "minimum_difference": "心照不宣强调彼此心里明白、无需说破；约定俗成强调群体长期实践形成共同惯例。"}],
+      "misuse_boundary": "只说明一种做法由群体自然形成，却没有共同知晓且无需说破的默契时，更适合约定俗成。"
+    }
+  }
+}

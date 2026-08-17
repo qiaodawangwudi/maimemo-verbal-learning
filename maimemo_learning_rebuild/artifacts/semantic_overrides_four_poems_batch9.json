@@ -1,0 +1,118 @@
+{
+  "schema_version": 1,
+  "basis": "逐词回到四诗风雅颂逐字稿，重建接受传播、温和处理、生动描写、时间短暂、同异距离和脱离现实的判断边界；党同伐异因现有引文截断，继续隔离。",
+  "records": {
+    "深入人心": {
+      "meaning": "思想、观点、政策或形象被人们真正理解、接受，并在内心产生稳定影响。",
+      "distinctive_feature": "重点是接受程度深，不等于表达本身高深，也不等于传播范围达到人人知晓。",
+      "recognition_cues": ["理念被群众理解接受", "形象或精神在心中留下深刻影响"],
+      "dimensions": [{"axis": "作用位置", "judgment": "人的认知、情感和内心。"}, {"axis": "作用结果", "judgment": "理解、接受并形成影响。"}],
+      "comparison_edges": [{"other_term": "高屋建瓴", "minimum_difference": "深入人心强调受众能理解、接受并产生内心认同；高屋建瓴强调观察或讲话有高度、广度和统摄性。"}, {"other_term": "家喻户晓", "minimum_difference": "深入人心强调接受和影响的深度；家喻户晓强调传播范围广，家家户户都知道。"}],
+      "misuse_boundary": "题干只说明知名度高或观点站位高，没有群众接受、内心影响时，不宜使用。"
+    },
+    "和风细雨": {
+      "meaning": "以温和、缓和的态度进行批评、劝说，或处理矛盾和问题。",
+      "distinctive_feature": "描述的是沟通、处理方式柔和，不是接受者感到舒适，也不保证措施触及问题实质。",
+      "recognition_cues": ["温和劝说而非激烈指责", "以缓和方式化解矛盾"],
+      "dimensions": [{"axis": "行为方式", "judgment": "温和、缓和。"}, {"axis": "常见任务", "judgment": "批评、劝说、处理矛盾。"}],
+      "comparison_edges": [{"other_term": "如沐春风", "minimum_difference": "和风细雨描述说服、批评或处理问题的方式温和；如沐春风描述接触者主观上感到舒适、受到教益。"}, {"other_term": "隔靴搔痒", "minimum_difference": "和风细雨只说明方式柔和；隔靴搔痒说明措施没有触及实质，柔和不等于无效。"}],
+      "misuse_boundary": "题干只说听者感觉舒服，或明确批评措施没有触及实质时，应分别考虑如沐春风、隔靴搔痒。"
+    },
+    "惟妙惟肖": {
+      "meaning": "模仿、描写或表现得非常逼真，与被表现对象十分相像。",
+      "distinctive_feature": "课程将核心压缩为‘模仿得像’，相似度是必要判断点；不只是作品自身生动。",
+      "recognition_cues": ["演员模仿人物神态非常相像", "复制、描摹与原对象高度相似"],
+      "dimensions": [{"axis": "关系结构", "judgment": "表现物与被模仿对象之间存在相似关系。"}, {"axis": "突出效果", "judgment": "逼真、相像。"}],
+      "comparison_edges": [{"other_term": "活灵活现", "minimum_difference": "惟妙惟肖强调模仿或描写与原对象相像；活灵活现强调神态、动作表现得生动，像活的一样。"}, {"other_term": "跃然纸上", "minimum_difference": "惟妙惟肖要求与被表现对象相像；跃然纸上强调文字或绘画中的形象具有仿佛跳出纸面的生命力。"}],
+      "misuse_boundary": "题干只说文学、绘画形象生动有生命力，却没有模仿相似关系时，不宜使用。"
+    },
+    "活灵活现": {
+      "meaning": "描写、表演或模仿的人物、动物神态动作生动逼真，像真的活着一样。",
+      "distinctive_feature": "重点是神态动作具有动态生命感，适合可表现喜怒哀乐的对象；不专门要求与原对象高度相似。",
+      "recognition_cues": ["神态动作被演绎得生动", "人物或动物仿佛活起来"],
+      "dimensions": [{"axis": "生动来源", "judgment": "神态、动作富有动态感。"}, {"axis": "常见对象", "judgment": "人物、动物或可人格化形象。"}],
+      "comparison_edges": [{"other_term": "惟妙惟肖", "minimum_difference": "活灵活现突出神态动作的生命感；惟妙惟肖突出模仿、描写与原对象高度相像。"}, {"other_term": "跃然纸上", "minimum_difference": "活灵活现可用于描写、表演或模仿；跃然纸上通常限定在文字、绘画等纸面作品。"}],
+      "misuse_boundary": "对象是抽象信念、观点深度，或题干只强调与原作相似时，不宜使用。"
+    },
+    "跃然纸上": {
+      "meaning": "文学作品或绘画中的形象生动鲜明，仿佛从纸面跳出来。",
+      "distinctive_feature": "课程强调‘纸面’载体和向外呈现的生命力，使用对象通常是文字塑造或绘画呈现的形象。",
+      "recognition_cues": ["文字中的人物形象鲜明如在眼前", "画面形象富有动态生命力"],
+      "dimensions": [{"axis": "载体", "judgment": "文学文字、绘画等纸面作品。"}, {"axis": "表现方向", "judgment": "形象仿佛向外显现。"}],
+      "comparison_edges": [{"other_term": "活灵活现", "minimum_difference": "跃然纸上限定文学、绘画等纸面形象；活灵活现还可用于现场表演、口头描绘和模仿。"}, {"other_term": "入木三分", "minimum_difference": "跃然纸上强调形象向外显得生动；入木三分强调分析、刻画向内达到深刻透彻。"}],
+      "misuse_boundary": "题干强调分析思想、信仰或问题深刻透彻，而非纸面形象生动时，应使用入木三分。"
+    },
+    "入木三分": {
+      "meaning": "分析问题、表达观点或刻画人物深刻透彻，具有很强的穿透力。",
+      "distinctive_feature": "课程用‘向内的深度’概括，落点是深刻而非形象生动、神态逼真。",
+      "recognition_cues": ["剖析问题直达深层本质", "人物精神、信仰被刻画得深刻"],
+      "dimensions": [{"axis": "表达层级", "judgment": "深入内部、本质。"}, {"axis": "效果", "judgment": "深刻、透彻、有穿透力。"}],
+      "comparison_edges": [{"other_term": "跃然纸上", "minimum_difference": "入木三分强调分析、刻画的深度；跃然纸上强调纸面形象的生动和向外生命力。"}, {"other_term": "明察秋毫", "minimum_difference": "入木三分强调分析或描写深入；明察秋毫强调观察细致，能发现极微小问题。"}],
+      "misuse_boundary": "题干只说形象生动、模仿逼真或观察细致，没有深刻透彻对应点时，不宜使用。"
+    },
+    "绘声绘色": {
+      "meaning": "叙述、讲故事或表演时声音、神态兼备，表现得生动具体。",
+      "distinctive_feature": "课程强调‘说得生动’，需要声音和神态等叙述表现，不用于泛指事业办得有成效。",
+      "recognition_cues": ["故事讲得声音神态俱全", "口头叙述生动具体"],
+      "dimensions": [{"axis": "常见行为", "judgment": "讲述、叙述、相声等语言表演。"}, {"axis": "生动手段", "judgment": "声音和神态表现。"}],
+      "comparison_edges": [{"other_term": "活灵活现", "minimum_difference": "绘声绘色突出讲述中的声音和神态；活灵活现突出被描绘或表演对象像活的一样。"}],
+      "misuse_boundary": "题干评价工作、活动开展得出色，而不是叙述、讲演生动时，应使用有声有色。"
+    },
+    "转瞬即逝": {
+      "meaning": "存在时间极短，一瞬间就消失。",
+      "distinctive_feature": "落点是对象存续短、迅速消失，不能只因多年时光主观感觉过得快就使用。",
+      "recognition_cues": ["机会、景象或灵感片刻即消失", "出现后很快不见"],
+      "dimensions": [{"axis": "存续时间", "judgment": "极短。"}, {"axis": "结果", "judgment": "迅速消失。"}],
+      "comparison_edges": [],
+      "misuse_boundary": "题干感慨几年、几十年时光飞逝，而非某物短暂存在后消失时，不宜使用。"
+    },
+    "毫无二致": {
+      "meaning": "两个或多个对象完全一样，没有任何区别。",
+      "distinctive_feature": "比较的是对象自身特征达到完全一致，不只是路径不同但效果相同。",
+      "recognition_cues": ["外观、内容完全一致", "比较后找不到差别"],
+      "dimensions": [{"axis": "比较对象", "judgment": "事物自身特征。"}, {"axis": "相同程度", "judgment": "完全一致。"}],
+      "comparison_edges": [{"other_term": "异曲同工", "minimum_difference": "毫无二致说明对象本身完全相同；异曲同工说明方法、表现不同，却取得同样好的效果。"}, {"other_term": "截然不同", "minimum_difference": "毫无二致是完全一致；截然不同是性质、表现完全不同甚至相反。"}],
+      "misuse_boundary": "题干明确说明做法不同、只在效果上相同，或只是大体相似时，不宜使用。"
+    },
+    "截然不同": {
+      "meaning": "两个对象在性质、状态或表现上完全不同，甚至彼此相反。",
+      "distinctive_feature": "课程将判断点放在‘不同本身’，比一般差距大更强调性质分明、界限清楚。",
+      "recognition_cues": ["性质完全不同", "两种状态形成鲜明反差"],
+      "dimensions": [{"axis": "比较焦点", "judgment": "性质、表现是否相同。"}, {"axis": "不同程度", "judgment": "完全不同或相反。"}],
+      "comparison_edges": [{"other_term": "大相径庭", "minimum_difference": "截然不同强调性质、表现完全不同；大相径庭强调看法、做法或结果偏离很大。"}, {"other_term": "相去甚远", "minimum_difference": "截然不同强调类别或性质不同；相去甚远强调水平、程度、预期与现实之间距离很大。"}],
+      "misuse_boundary": "题干只是水平高低、预期与现实落差较大，但对象性质仍相同时，相去甚远更精确。"
+    },
+    "相去甚远": {
+      "meaning": "两个对象在水平、程度上差距很大，或现实与预期之间落差很大。",
+      "distinctive_feature": "像距离相隔很远，强调同一可比较尺度上的程度落差，不必达到性质完全不同。",
+      "recognition_cues": ["现实效果与预期差距很大", "两个地区发展水平相差很远"],
+      "dimensions": [{"axis": "常见尺度", "judgment": "水平、程度、预期与现实。"}, {"axis": "差距", "judgment": "很大。"}],
+      "comparison_edges": [{"other_term": "截然不同", "minimum_difference": "相去甚远强调水平、程度或现实与预期的距离大；截然不同强调性质、表现完全不同。"}, {"other_term": "相形见绌", "minimum_difference": "相去甚远只说明差距大；相形见绌要求放在比较中，其中一方显出不足。"}],
+      "misuse_boundary": "题干重点是对比后某一方显得逊色，而非只陈述差距时，应使用相形见绌。"
+    },
+    "相形见绌": {
+      "meaning": "两个对象相互比较后，其中一方显得不足、逊色或暴露短板。",
+      "distinctive_feature": "不足是比较产生或凸显的结果，不一定说明该对象单独看就差。",
+      "recognition_cues": ["旧设施与新设施相比显得落后", "同台比较后某一方短板突出"],
+      "dimensions": [{"axis": "必要结构", "judgment": "存在明确比较对象。"}, {"axis": "比较结果", "judgment": "一方显得逊色。"}],
+      "comparison_edges": [{"other_term": "相去甚远", "minimum_difference": "相形见绌必须有对比后某一方显出不足；相去甚远只说明水平、程度或预期与现实差距很大。"}],
+      "misuse_boundary": "题干没有明确比较关系，或只说双方差距很大而未指出一方不足时，不宜使用。"
+    },
+    "家喻户晓": {
+      "meaning": "传播范围很广，家家户户都知道。",
+      "distinctive_feature": "核心是知晓范围广，课程常以人物事迹、民间故事为例；不保证人们已经认同或受到深层影响。",
+      "recognition_cues": ["人物事迹人人知晓", "故事传播到千家万户"],
+      "dimensions": [{"axis": "传播范围", "judgment": "覆盖家家户户。"}, {"axis": "认知层级", "judgment": "知道、熟悉。"}],
+      "comparison_edges": [{"other_term": "深入人心", "minimum_difference": "家喻户晓强调知道的人多、传播范围广；深入人心强调被理解接受并在内心形成影响。"}, {"other_term": "如雷贯耳", "minimum_difference": "家喻户晓强调家家户户都知道；如雷贯耳强调名声很大、名字听来响亮。"}],
+      "misuse_boundary": "题干只说少数业内人士非常敬仰，或强调观点被认同而非广泛知晓时，不宜使用。"
+    },
+    "闭门造车": {
+      "meaning": "脱离客观实际和外部情况，只凭主观设想办事、制定方案。",
+      "distinctive_feature": "问题在决策、做法不接触现实，而不是安于现状拒绝新事物。",
+      "recognition_cues": ["不调研实际就制定政策", "关起门来凭想象设计方案"],
+      "dimensions": [{"axis": "信息来源", "judgment": "缺乏现实调查和外部反馈。"}, {"axis": "行动方式", "judgment": "凭主观设想办事。"}],
+      "comparison_edges": [{"other_term": "固步自封", "minimum_difference": "闭门造车强调做事脱离客观实际；固步自封强调安于现状、自我封闭，拒绝进步和接受新事物。"}, {"other_term": "向壁虚构", "minimum_difference": "闭门造车是脱离实际地办事、制定方案；向壁虚构多指没有依据地编造文字、言论或历史事实。"}],
+      "misuse_boundary": "题干只是保守不前，或专门批评捏造数据、事实，而非脱离实际办事时，应使用边界更准确的词。"
+    }
+  }
+}

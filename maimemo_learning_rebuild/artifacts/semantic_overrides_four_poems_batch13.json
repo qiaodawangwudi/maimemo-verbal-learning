@@ -1,0 +1,134 @@
+{
+  "schema_version": 1,
+  "basis": "逐词回到四诗风雅颂逐字稿，重建领先与第一、出众方式、资源收支、纠偏层级、发展趋势、传承中断和消失程度的判断边界。",
+  "records": {
+    "一马当先": {
+      "meaning": "行动开始时带头冲在最前面，率先行动。",
+      "distinctive_feature": "重点是起步、冲锋阶段的位置领先，不保证最终取得第一名。",
+      "recognition_cues": ["任务开始便带头冲锋", "起跑或行动初期领先"],
+      "dimensions": [{"axis": "时间阶段", "judgment": "行动起步阶段。"}, {"axis": "位置", "judgment": "冲在最前。"}],
+      "comparison_edges": [{"other_term": "拔得头筹", "minimum_difference": "一马当先强调行动开始时冲在前面；拔得头筹强调竞争结束或评比结果取得第一。"}],
+      "misuse_boundary": "题干只给出最终排名第一，没有带头、起步领先动作时，应使用拔得头筹。"
+    },
+    "一鸣惊人": {
+      "meaning": "平时表现普通或默默无闻，突然作出突出表现，使人震惊。",
+      "distinctive_feature": "必须有‘平时普通—当下惊艳’的强烈反差，不等于单纯取得第一。",
+      "recognition_cues": ["长期默默无闻后首次亮相惊艳", "平时普通、一出手震惊众人"],
+      "dimensions": [{"axis": "前期状态", "judgment": "普通、沉默或未显露。"}, {"axis": "当前表现", "judgment": "突然突出、令人惊讶。"}],
+      "comparison_edges": [{"other_term": "拔得头筹", "minimum_difference": "一鸣惊人强调前后反差和突然惊艳；拔得头筹只说明取得第一名。"}, {"other_term": "脱颖而出", "minimum_difference": "一鸣惊人要求平时普通、突然惊艳；脱颖而出强调在竞争、群体比较中显露才能。"}],
+      "misuse_boundary": "题干只有比赛第一或持续优秀，没有平时与当下的反差时，不宜使用。"
+    },
+    "拔得头筹": {
+      "meaning": "在竞赛、评比或争夺中取得第一名、占据首位。",
+      "distinctive_feature": "只判断最终名次第一，不附加起步领先、突然惊艳或长期无人超越。",
+      "recognition_cues": ["比赛取得第一名", "评比中名列首位"],
+      "dimensions": [{"axis": "语境", "judgment": "竞争、评比、排名。"}, {"axis": "结果", "judgment": "第一名。"}],
+      "comparison_edges": [{"other_term": "一马当先", "minimum_difference": "拔得头筹是最终取得第一；一马当先是行动起步时率先冲在前面。"}, {"other_term": "无出其右", "minimum_difference": "拔得头筹说明某次竞争获得第一；无出其右说明在某范围内无人能匹敌、超越。"}],
+      "misuse_boundary": "题干只说带头行动或实力无人能超越，没有明确第一名结果时，不宜使用。"
+    },
+    "脱胎换骨": {
+      "meaning": "从根本上彻底改变原有状态，并朝好的方向完成重塑。",
+      "distinctive_feature": "课程强调根本性、颠覆性和向好三个判断点，不是一般改善或外表变化。",
+      "recognition_cues": ["价值观和行为得到彻底重塑", "由坏到好发生根本变化"],
+      "dimensions": [{"axis": "变化层级", "judgment": "根本、彻底。"}, {"axis": "变化方向", "judgment": "向好。"}],
+      "comparison_edges": [{"other_term": "今非昔比", "minimum_difference": "脱胎换骨强调主动或经历改造后发生根本性向好变化；今非昔比只说明现在与过去不同，褒贬和变化层级由语境决定。"}],
+      "misuse_boundary": "题干只说今昔不同或局部改善，没有根本重塑、向好结果时，不宜使用。"
+    },
+    "无出其右": {
+      "meaning": "在一定范围内没有人或事物能够与之匹敌、超过，是其中最突出者。",
+      "distinctive_feature": "判断的是比较上限和无人超越，不只是视觉上一眼出众，也不局限某次排名。",
+      "recognition_cues": ["规模在当地无人能超过", "专业水平业内无人匹敌"],
+      "dimensions": [{"axis": "比较范围", "judgment": "一定领域或群体。"}, {"axis": "比较结论", "judgment": "无人匹敌、超越。"}],
+      "comparison_edges": [{"other_term": "拔得头筹", "minimum_difference": "无出其右强调在一定范围内无人能超越；拔得头筹强调某次竞赛、评比取得第一。"}, {"other_term": "鹤立鸡群", "minimum_difference": "无出其右强调实力或水平达到最高；鹤立鸡群强调与周围同类形成直观差距、一眼显得出众。"}],
+      "misuse_boundary": "题干只说外观、身高等与群体差别显眼，却没有最高、无人超越结论时，应使用鹤立鸡群。"
+    },
+    "锋芒毕露": {
+      "meaning": "才华、锐气或攻击性完全显露在外。",
+      "distinctive_feature": "课程明确可褒可贬：展示实力、形成震慑时可肯定；过度张扬、咄咄逼人时为贬义。",
+      "recognition_cues": ["充分展示才华和锐气", "过度张扬、咄咄逼人"],
+      "dimensions": [{"axis": "显露内容", "judgment": "才华、锐气、攻击性。"}, {"axis": "感情色彩", "judgment": "随是否必要、是否过度而变化。"}],
+      "comparison_edges": [{"other_term": "鹤立鸡群", "minimum_difference": "锋芒毕露强调主动或明显显露才华、锐气，可含张扬；鹤立鸡群强调与群体形成直观差距而自然出众。"}],
+      "misuse_boundary": "题干只写客观上比同类突出，没有展示锐气、张扬或攻击性时，不宜使用。"
+    },
+    "鹤立鸡群": {
+      "meaning": "在同类群体中因差距明显而显得格外突出，一眼就能看出不同。",
+      "distinctive_feature": "必须有同类比较和直观反差，突出可以来自外形、能力、表现，不要求主动显露。",
+      "recognition_cues": ["同类中一眼可见的突出者", "与周围对象形成明显反差"],
+      "dimensions": [{"axis": "比较对象", "judgment": "同类群体。"}, {"axis": "差距表现", "judgment": "直观、明显。"}],
+      "comparison_edges": [{"other_term": "无出其右", "minimum_difference": "鹤立鸡群强调同类比较中一眼出众；无出其右强调水平、实力无人能够匹敌或超过。"}, {"other_term": "锋芒毕露", "minimum_difference": "鹤立鸡群可以是自然形成的客观突出；锋芒毕露强调才华、锐气或攻击性显露在外。"}],
+      "misuse_boundary": "题干明确作出无人能超越的最高评价，或强调主体张扬锐气时，应选边界更强的词。"
+    },
+    "量入为出": {
+      "meaning": "根据收入、资源总量决定支出，使花费不超过可承受范围。",
+      "distinctive_feature": "判断结构是收入约束支出，不是单纯省钱，也不要求同时增加收入来源。",
+      "recognition_cues": ["按财政收入安排预算", "消费不超过实际收入"],
+      "dimensions": [{"axis": "决策依据", "judgment": "收入或资源总量。"}, {"axis": "支出边界", "judgment": "不超出承受能力。"}],
+      "comparison_edges": [{"other_term": "开源节流", "minimum_difference": "量入为出根据现有收入控制支出；开源节流同时增加收入来源、减少支出消耗。"}, {"other_term": "寅吃卯粮", "minimum_difference": "量入为出把支出限制在当前收入内；寅吃卯粮提前耗用未来收入或资源。"}],
+      "misuse_boundary": "题干要求增收与节支两端同时发力，或已经预支未来资源时，不宜使用。"
+    },
+    "开源节流": {
+      "meaning": "一方面开辟、增加收入来源，另一方面节约、减少支出和消耗。",
+      "distinctive_feature": "必须有‘增收+节支’两端发力，只有省钱或只有增收都不完整。",
+      "recognition_cues": ["财政增收与节支并举", "拓展收益渠道同时压减成本"],
+      "dimensions": [{"axis": "收入端", "judgment": "开辟或增加来源。"}, {"axis": "支出端", "judgment": "节约、减少消耗。"}],
+      "comparison_edges": [{"other_term": "量入为出", "minimum_difference": "开源节流同时扩大收入、压减支出；量入为出只要求根据已有收入决定支出上限。"}],
+      "misuse_boundary": "题干只说按预算合理花钱，没有增收措施，或只开拓收入渠道没有节支时，不宜使用。"
+    },
+    "正本清源": {
+      "meaning": "从根本和源头清理、纠正不良事物，使问题得到根源性整治。",
+      "distinctive_feature": "动作是清理、纠正源头上的错误或污浊，不是强化已有基础。",
+      "recognition_cues": ["从源头清理不良风气", "纠正根本性错误、肃清源头"],
+      "dimensions": [{"axis": "治理位置", "judgment": "根本、源头。"}, {"axis": "治理动作", "judgment": "清理、纠正。"}],
+      "comparison_edges": [{"other_term": "釜底抽薪", "minimum_difference": "正本清源强调清理、纠正源头上的不良事物；釜底抽薪强调直接移除问题赖以持续的根本条件。"}, {"other_term": "拨乱反正", "minimum_difference": "正本清源从根源清理错误和污浊；拨乱反正纠正错误路线、混乱局面，恢复正常秩序。"}],
+      "misuse_boundary": "题干只说恢复正确路线和秩序，没有源头清理对应点时，拨乱反正更精确。"
+    },
+    "返璞归真": {
+      "meaning": "去掉外在修饰、繁复和人为包装，回到简单、质朴、真实的状态。",
+      "distinctive_feature": "变化方向是由繁饰、商业化回归朴素本真，不是纠正错误路线或清理问题源头。",
+      "recognition_cues": ["去掉过度商业包装、恢复质朴", "从繁复装饰回归简单本真"],
+      "dimensions": [{"axis": "去除对象", "judgment": "外在修饰、繁复包装。"}, {"axis": "回归状态", "judgment": "简单、质朴、真实。"}],
+      "comparison_edges": [{"other_term": "拨乱反正", "minimum_difference": "返璞归真去除繁饰、回到质朴本真；拨乱反正纠正错误、混乱并恢复正确秩序。"}, {"other_term": "正本清源", "minimum_difference": "返璞归真回归朴素真实；正本清源从根源清理、纠正不良事物。"}],
+      "misuse_boundary": "题干是治理错误、肃清源头或恢复制度秩序，而非去繁归朴时，不宜使用。"
+    },
+    "拨乱反正": {
+      "meaning": "纠正错误、混乱的路线或局面，使其恢复正确方向和正常秩序。",
+      "distinctive_feature": "必须有‘乱或错—纠正—恢复正’的方向转换，课程常用于路线、政治和组织错误的修正。",
+      "recognition_cues": ["纠正错误路线、恢复正确方向", "结束混乱、重建正常秩序"],
+      "dimensions": [{"axis": "前期状态", "judgment": "错误、混乱。"}, {"axis": "纠正结果", "judgment": "恢复正确、正常。"}],
+      "comparison_edges": [{"other_term": "正本清源", "minimum_difference": "拨乱反正强调把错误路线、混乱局面纠回正确秩序；正本清源强调从根源清理不良事物。"}, {"other_term": "返璞归真", "minimum_difference": "拨乱反正恢复正确秩序；返璞归真去掉繁饰、回到质朴本真。"}],
+      "misuse_boundary": "题干只是从源头治理问题或回归朴素状态，没有错误路线、混乱秩序时，不宜使用。"
+    },
+    "蒸蒸日上": {
+      "meaning": "事业、生活或局面一天比一天发展得更好，持续向上。",
+      "distinctive_feature": "只要求持续变好，不要求处于刚刚起步阶段。",
+      "recognition_cues": ["事业持续改善、一天比一天好", "发展态势不断向上"],
+      "dimensions": [{"axis": "变化方向", "judgment": "向好、向上。"}, {"axis": "时间状态", "judgment": "持续发展。"}],
+      "comparison_edges": [{"other_term": "方兴未艾", "minimum_difference": "蒸蒸日上强调持续一天比一天好，不要求处于起步；方兴未艾强调新事物正在兴起、尚未达到鼎盛。"}],
+      "misuse_boundary": "题干突出新事物刚兴起、发展势头正盛但尚未成熟时，方兴未艾更精确。"
+    },
+    "后继无人": {
+      "meaning": "没有后来的人继续继承事业、技艺或传统，导致传承可能中断。",
+      "distinctive_feature": "问题明确落在缺少继承人、接班者，不是企业经营条件不足而继续不下去。",
+      "recognition_cues": ["传统技艺没有年轻传承人", "事业缺少接班者"],
+      "dimensions": [{"axis": "缺失对象", "judgment": "继承人、接班者。"}, {"axis": "直接风险", "judgment": "传承中断。"}],
+      "comparison_edges": [{"other_term": "难以为继", "minimum_difference": "后继无人因缺少继承者而传承中断；难以为继因经营、资源或条件不足而无法继续维持。"}],
+      "misuse_boundary": "题干是资金、资源或经营条件不足导致项目无法持续，却不缺继承人时，应使用难以为继。"
+    },
+    "烟消云散": {
+      "meaning": "像烟云散去一样完全消失，课程更常用于疲惫、疑虑、情绪等抽象事物。",
+      "distinctive_feature": "与无影无踪都可表示完全消失，但对象偏抽象状态，不强调实体踪迹。",
+      "recognition_cues": ["疲惫、疑虑彻底消失", "抽象情绪像烟云一样散去"],
+      "dimensions": [{"axis": "常见对象", "judgment": "情绪、疑虑、疲惫等抽象状态。"}, {"axis": "消失程度", "judgment": "完全。"}],
+      "comparison_edges": [{"other_term": "无影无踪", "minimum_difference": "烟消云散更常形容抽象状态完全消失；无影无踪更常形容可留下影子、踪迹的实体对象彻底不见。"}, {"other_term": "消失殆尽", "minimum_difference": "烟消云散强调完全散去；消失殆尽强调几乎全部消失，可能还剩极少残余。"}],
+      "misuse_boundary": "题干明确是实体对象毫无踪迹，或仍有极少残余时，应分别使用无影无踪、消失殆尽。"
+    },
+    "消失殆尽": {
+      "meaning": "事物几乎全部消失、耗尽，只可能剩下极少残余。",
+      "distinctive_feature": "课程给出的微小边界是‘几乎完全’而非绝对零，残余量可以接近于无。",
+      "recognition_cues": ["资源、耐心几乎耗尽", "绝大部分已经消失、仅余一点"],
+      "dimensions": [{"axis": "消失程度", "judgment": "几乎全部。"}, {"axis": "残余", "judgment": "可能有极少量。"}],
+      "comparison_edges": [{"other_term": "无影无踪", "minimum_difference": "消失殆尽表示几乎全部消失、可能略有残余；无影无踪表示毫无踪影、完全不见。"}, {"other_term": "烟消云散", "minimum_difference": "消失殆尽强调程度接近耗尽；烟消云散更常描述抽象状态完全散去。"}],
+      "misuse_boundary": "题干明确一点踪迹也没有、完全消失时，无影无踪或烟消云散的程度更准确。"
+    }
+  }
+}
