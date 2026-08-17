@@ -1,0 +1,46 @@
+{
+  "id": "deck",
+  "name": "deck",
+  "chapters": [
+    {
+      "id": "chapter-comparison",
+      "name": "comparison",
+      "card_ids": [
+        "shadow1",
+        "shadow2"
+      ]
+    },
+    {
+      "id": "chapter-base",
+      "name": "base",
+      "card_ids": [
+        "shadow3"
+      ]
+    },
+    {
+      "id": "chapter-application",
+      "name": "application",
+      "card_ids": []
+    }
+  ],
+  "cards": [
+    {
+      "id": "shadow1",
+      "root_id": "mkjr_shadow1",
+      "grammar_version": 3,
+      "content": "[P#H1#近义辨析｜甲、乙]\n---\n甲与乙的差异"
+    },
+    {
+      "id": "shadow2",
+      "root_id": "mkjr_shadow2",
+      "grammar_version": 3,
+      "content": "[P#H1#近义辨析｜丙、丁]\n---\n丙与丁的差异"
+    },
+    {
+      "id": "shadow3",
+      "root_id": "mkjr_shadow3",
+      "grammar_version": 3,
+      "content": "[P#H1#基础词义｜甲]\n---\n[Card#ID/mkjr_shadow1#近义辨析｜甲、乙]"
+    }
+  ]
+}

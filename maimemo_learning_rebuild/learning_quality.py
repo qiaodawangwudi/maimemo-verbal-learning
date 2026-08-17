@@ -152,6 +152,11 @@ def evaluate_learning_quality(
             continue
         errors.append(f"{NEAR_DUPLICATE_ISSUE}: {_text(record.get('term'))}")
 
+    records_by_term = {
+        _text(record.get("term")): record
+        for record in records
+        if _text(record.get("term"))
+    }
     for group in groups:
         if group.get("status") != "ready":
             continue
@@ -161,5 +166,20 @@ def evaluate_learning_quality(
                 continue
             if not comparison_edge_subject_id(group, edge):
                 errors.append("comparison edge lacks reviewed contrast contract")
+                continue
+            edge_text = _normalize_for_flagging(edge.get("text"))
+            definitions = {
+                _normalize_for_flagging(record.get(field))
+                for term in (edge.get("left"), edge.get("right"))
+                for record in (records_by_term.get(_text(term)),)
+                if record is not None
+                for field in ("meaning", "distinctive_feature")
+            }
+            if edge_text and edge_text in definitions:
+                errors.append(
+                    "minimum difference copies definition: "
+                    f"{_text(group.get('group_id'))} "
+                    f"{_text(edge.get('left'))} {_text(edge.get('right'))}"
+                )
 
     return list(dict.fromkeys(errors))
