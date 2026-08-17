@@ -680,12 +680,17 @@ def _write_action(
 
 
 def _record_card(journal, manifest, card, content, outcome, live):
+    card_type = card["card_type"]
+    chapter = manifest["chapter_routes"][card_type]
     _record(
         journal,
         manifest,
         title=card["title"],
         action=card["action"],
         stable_card_key=card["stable_card_key"],
+        card_type=card_type,
+        chapter_id=chapter["id"],
+        chapter_name=chapter["name"],
         card_id=live.get("id") if live else card.get("card_id"),
         root_id=live.get("root_id") if live else None,
         content_hash=hashlib.sha256(content.encode("utf-8")).hexdigest(),

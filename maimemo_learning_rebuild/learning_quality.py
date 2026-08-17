@@ -76,6 +76,41 @@ def _near_duplicate(left: object, right: object) -> bool:
     return SequenceMatcher(None, normalized_left, normalized_right).ratio() >= 0.8
 
 
+def _copies_definition(edge_text: object, definition: object) -> bool:
+    """Detect a definition copied whole or with only a small local rewrite."""
+
+    normalized_edge = _normalize_for_flagging(edge_text)
+    normalized_definition = _normalize_for_flagging(definition)
+    if len(normalized_definition) < 6 or not normalized_edge:
+        return False
+    if normalized_definition in normalized_edge:
+        return True
+
+    matcher = SequenceMatcher(None, normalized_definition, normalized_edge)
+    longest = max((block.size for block in matcher.get_matching_blocks()), default=0)
+    if longest >= max(8, (len(normalized_definition) * 2 + 2) // 3):
+        return True
+
+    minimum_window = max(6, len(normalized_definition) - 4)
+    maximum_window = min(len(normalized_edge), len(normalized_definition) + 6)
+    for width in range(minimum_window, maximum_window + 1):
+        for start in range(0, len(normalized_edge) - width + 1):
+            candidate = normalized_edge[start : start + width]
+            candidate_matcher = SequenceMatcher(
+                None, normalized_definition, candidate
+            )
+            candidate_longest = max(
+                (block.size for block in candidate_matcher.get_matching_blocks()),
+                default=0,
+            )
+            if (
+                candidate_matcher.ratio() >= 0.88
+                and candidate_longest >= max(6, len(normalized_definition) // 2)
+            ):
+                return True
+    return False
+
+
 def _is_repeated_text(value: str) -> bool:
     for width in range(1, len(value) // 2 + 1):
         if len(value) % width == 0 and value == value[:width] * (len(value) // width):
@@ -167,15 +202,17 @@ def evaluate_learning_quality(
             if not comparison_edge_subject_id(group, edge):
                 errors.append("comparison edge lacks reviewed contrast contract")
                 continue
-            edge_text = _normalize_for_flagging(edge.get("text"))
-            definitions = {
-                _normalize_for_flagging(record.get(field))
+            definitions = tuple(
+                record.get(field)
                 for term in (edge.get("left"), edge.get("right"))
                 for record in (records_by_term.get(_text(term)),)
                 if record is not None
                 for field in ("meaning", "distinctive_feature")
-            }
-            if edge_text and edge_text in definitions:
+            )
+            if any(
+                _copies_definition(edge.get("text"), definition)
+                for definition in definitions
+            ):
                 errors.append(
                     "minimum difference copies definition: "
                     f"{_text(group.get('group_id'))} "

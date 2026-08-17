@@ -114,7 +114,7 @@ def _duplicate_base() -> list[str]:
     return validate_release_manifest(current, current_artifacts)
 
 
-def _copied_minimum_difference() -> list[str]:
+def _comparison_quality(text: str) -> list[str]:
     left = ready_record(
         term="因噎废食",
         meaning="因害怕出问题而停止本来应该继续的行动。",
@@ -126,8 +126,12 @@ def _copied_minimum_difference() -> list[str]:
         distinctive_feature="顾忌点落在行动可能牵连的对象。",
     )
     group = ready_group()
-    group["minimum_differences"][0]["text"] = left["meaning"]
+    group["minimum_differences"][0]["text"] = text
     return evaluate_learning_quality([left, right], [group], empty_review())
+
+
+def _copied_minimum_difference() -> list[str]:
+    return _comparison_quality("因害怕出问题而停止本来应该继续的行动。")
 
 
 def _manifest_mutation(mutator) -> list[str]:
@@ -190,6 +194,44 @@ def _forged_local_approval() -> list[str]:
 
 
 class ReleaseMutationTests(unittest.TestCase):
+    def test_copied_definition_wrappers_and_concatenations_fail_without_blocking_real_contrast(self):
+        copied_error = (
+            "minimum difference copies definition: g-risk 因噎废食 投鼠忌器"
+        )
+        copied_cases = (
+            (
+                "concatenated meanings",
+                "因害怕出问题而停止本来应该继续的行动。"
+                "因顾忌伤及关联对象而不敢采取行动。",
+            ),
+            (
+                "difference wrapper",
+                "二者差异在于：因害怕出问题而停止本来应该继续的行动。",
+            ),
+            (
+                "paraphrase wrapper",
+                "也就是说，因害怕出问题而停止本来应该继续的行动。",
+            ),
+            (
+                "near copy with short rewrite",
+                "二者差异在于：因害怕问题而停止本来应该继续的行动。",
+            ),
+            (
+                "concatenated features",
+                "结果是把必要行动整体停止；顾忌点落在行动可能牵连的对象。",
+            ),
+        )
+        for label, text in copied_cases:
+            with self.subTest(copied_form=label):
+                errors = _comparison_quality(text)
+                self.assertIn(copied_error, errors, errors)
+
+        genuine = _comparison_quality(
+            "因噎废食的决定性结果是放弃必要行动；"
+            "投鼠忌器的决定性顾虑是行动会牵连特定对象。"
+        )
+        self.assertNotIn(copied_error, genuine, genuine)
+
     def test_every_protected_mutation_has_a_named_gate_failure(self):
         cases = (
             (
