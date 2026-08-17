@@ -1,6 +1,15 @@
 import unittest
+import urllib.error
+from email.message import Message
+from unittest.mock import patch
 
-from maimemo_learning_rebuild.api import MaimemoClient
+from maimemo_learning_rebuild.api import (
+    AmbiguousMutationError,
+    MaimemoClient,
+    PermanentApiError,
+    RateLimitError,
+    UrllibTransport,
+)
 from maimemo_learning_rebuild.guard import GuardResult
 from maimemo_learning_rebuild.planning import content_hash
 from maimemo_learning_rebuild.sync import apply_plan, apply_plan_to_chapters
@@ -15,11 +24,107 @@ class FakeTransport:
     def request(self, method, url, headers, payload=None):
         self.calls.append((method, url, headers, payload))
         if self.error:
+            if isinstance(self.error, Exception):
+                raise self.error
             raise RuntimeError(self.error)
         return self.responses.pop(0) if self.responses else {"data": {}}
 
 
 class ApiIsolationTests(unittest.TestCase):
+    def test_urllib_transport_classifies_retry_after_and_ambiguous_timeout(self):
+        headers = Message()
+        headers["Retry-After"] = "7"
+        rate_limit = urllib.error.HTTPError(
+            "https://example.invalid", 429, "limited", headers, None
+        )
+        with patch("urllib.request.urlopen", side_effect=rate_limit):
+            with self.assertRaises(RateLimitError) as caught:
+                UrllibTransport().request("POST", "https://example.invalid", {})
+        self.assertEqual(7, caught.exception.retry_after_seconds)
+
+        for method, expected in (
+            ("POST", AmbiguousMutationError),
+            ("GET", PermanentApiError),
+        ):
+            with self.subTest(method=method):
+                with patch("urllib.request.urlopen", side_effect=TimeoutError()):
+                    with self.assertRaises(expected):
+                        UrllibTransport().request(
+                            method, "https://example.invalid", {}
+                        )
+
+    def test_routed_sync_rejects_bare_comparison_root_id(self):
+        content = "[P#H1#近义辨析｜甲、乙]\n---\n辨析"
+        live = {
+            "data": {
+                "chapters": [
+                    {"id": "comparison", "card_ids": ["g1"]},
+                    {"id": "base", "card_ids": []},
+                    {"id": "application", "card_ids": []},
+                ],
+                "cards": [{"id": "g1", "root_id": "mkjr_", "content": content}],
+            }
+        }
+        client = MaimemoClient(
+            FakeTransport([live, live]), token="secret", deck_id="deck"
+        )
+        guard = GuardResult(True, (), "hash", "learning-review-hash")
+        plan = {
+            "actions": [
+                {
+                    "title": "近义辨析｜甲、乙",
+                    "action": "create",
+                    "content_hash": content_hash(content),
+                }
+            ]
+        }
+        cards = [
+            {
+                "title": "近义辨析｜甲、乙",
+                "card_type": "comparison",
+                "content": content,
+            }
+        ]
+
+        with self.assertRaisesRegex(RuntimeError, "invalid comparison root_id"):
+            apply_plan_to_chapters(
+                client,
+                guard,
+                plan,
+                cards,
+                {
+                    "comparison": "comparison",
+                    "base": "base",
+                    "application": "application",
+                },
+                pause=lambda: None,
+            )
+
+    def test_client_has_no_generic_environment_constructor(self):
+        self.assertFalse(hasattr(MaimemoClient, "from_environment"))
+
+    def test_api_preserves_safe_exception_types_and_redacts_token(self):
+        cases = (
+            (AmbiguousMutationError("timeout secret-token"), AmbiguousMutationError),
+            (RateLimitError(9, "rate secret-token"), RateLimitError),
+            (PermanentApiError("bad secret-token"), PermanentApiError),
+        )
+        for error, expected_type in cases:
+            with self.subTest(expected_type=expected_type):
+                transport = FakeTransport(error=error)
+                client = MaimemoClient(
+                    transport, token="secret-token", deck_id="deck"
+                )
+                with self.assertRaises(expected_type) as caught:
+                    client.create_card(
+                        "chapter",
+                        "content",
+                        GuardResult(True, (), "hash", "learning-review-hash"),
+                    )
+                self.assertNotIn("secret-token", str(caught.exception))
+                if expected_type is RateLimitError:
+                    self.assertEqual(9, caught.exception.retry_after_seconds)
+
     def test_legacy_guard_without_learning_review_hash_cannot_call_write_api(self):
         transport = FakeTransport()
         client = MaimemoClient(transport, token="secret", deck_id="deck")

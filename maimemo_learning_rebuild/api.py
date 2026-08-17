@@ -3,7 +3,9 @@
 from __future__ import annotations
 
 import json
-import os
+import email.utils
+import socket
+from datetime import datetime, timezone
 import urllib.error
 import urllib.request
 from typing import Protocol
@@ -12,6 +14,37 @@ from .guard import GuardResult
 
 
 BASE_URL = "https://open.maimemo.com/open/api/v1/markji"
+
+
+class AmbiguousMutationError(RuntimeError):
+    """A mutation may have reached the server, so callers must read before retrying."""
+
+
+class RateLimitError(RuntimeError):
+    """A definitive 429 response with the server-provided retry delay."""
+
+    def __init__(self, retry_after_seconds: float, message: str = "HTTP 429"):
+        super().__init__(message)
+        self.retry_after_seconds = max(0.0, float(retry_after_seconds))
+
+
+class PermanentApiError(RuntimeError):
+    """A definitive API rejection that must not be retried as a mutation."""
+
+
+def _retry_after_seconds(value: str | None) -> float:
+    if not value:
+        return 0.0
+    try:
+        return max(0.0, float(value.strip()))
+    except ValueError:
+        try:
+            parsed = email.utils.parsedate_to_datetime(value)
+        except (TypeError, ValueError, OverflowError):
+            return 0.0
+        if parsed.tzinfo is None:
+            parsed = parsed.replace(tzinfo=timezone.utc)
+        return max(0.0, (parsed - datetime.now(timezone.utc)).total_seconds())
 
 
 class Transport(Protocol):
@@ -26,7 +59,17 @@ class UrllibTransport:
             with urllib.request.urlopen(request, timeout=60) as response:
                 return json.load(response)
         except urllib.error.HTTPError as error:
-            raise RuntimeError(f"HTTP {error.code}") from error
+            if error.code == 429:
+                raise RateLimitError(
+                    _retry_after_seconds(error.headers.get("Retry-After"))
+                ) from error
+            if method == "POST" and error.code >= 500:
+                raise AmbiguousMutationError(f"HTTP {error.code}") from error
+            raise PermanentApiError(f"HTTP {error.code}") from error
+        except (TimeoutError, socket.timeout, urllib.error.URLError) as error:
+            if method == "POST":
+                raise AmbiguousMutationError("mutation response was not received") from error
+            raise PermanentApiError("API response was not received") from error
 
 
 class MaimemoClient:
@@ -38,10 +81,6 @@ class MaimemoClient:
         self.deck_id = deck_id
         self.base_url = base_url.rstrip("/")
 
-    @classmethod
-    def from_environment(cls, *, deck_id: str) -> "MaimemoClient":
-        return cls(UrllibTransport(), token=os.environ.get("MAIMEMO_TOKEN", ""), deck_id=deck_id)
-
     def _request(self, method: str, path: str, payload: dict | None = None) -> dict:
         headers = {
             "Authorization": f"Bearer {self._token}",
@@ -50,11 +89,20 @@ class MaimemoClient:
         try:
             response = self._transport.request(method, self.base_url + path, headers, payload)
             if response.get("errors"):
-                raise RuntimeError(str(response["errors"]))
+                raise PermanentApiError(str(response["errors"]))
             return response.get("data", {})
         except Exception as error:
             message = str(error).replace(self._token, "[REDACTED]")
-            raise RuntimeError(message) from error
+            message = message.replace(f"Bearer {self._token}", "Bearer [REDACTED]")
+            if isinstance(error, RateLimitError):
+                raise RateLimitError(error.retry_after_seconds, message) from error
+            if isinstance(error, AmbiguousMutationError):
+                raise AmbiguousMutationError(message) from error
+            if isinstance(error, PermanentApiError):
+                raise PermanentApiError(message) from error
+            if method == "POST":
+                raise AmbiguousMutationError(message) from error
+            raise PermanentApiError(message) from error
 
     def read_deck(self) -> dict:
         return self._request("GET", f"/decks/{self.deck_id}/chapters?with_cards=true")

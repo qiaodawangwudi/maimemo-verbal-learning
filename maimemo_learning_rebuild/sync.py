@@ -13,6 +13,7 @@ from .planning import content_hash
 
 ROOT_PLACEHOLDER = re.compile(r"\{\{root:([^}]+)\}\}")
 TITLE_PREFIX = re.compile(r"^\[P#H1#([^\]]+)\]")
+ROOT_ID = re.compile(r"mkjr_\S+")
 
 
 def _chapter_cards(data: dict, chapter_id: str) -> list[dict]:
@@ -125,7 +126,7 @@ def apply_plan(
         if content.startswith("[P#H1#近义辨析｜"):
             title = content.split("]", 1)[0].removeprefix("[P#H1#")
             root_id = str(card.get("root_id") or "")
-            if not root_id.startswith("mkjr_"):
+            if not ROOT_ID.fullmatch(root_id):
                 raise RuntimeError(f"invalid comparison root_id after write: {title}")
             roots[title] = root_id
 
@@ -237,7 +238,7 @@ def apply_plan_to_chapters(
         if content.startswith("[P#H1#近义辨析｜"):
             title = content.split("]", 1)[0].removeprefix("[P#H1#")
             root_id = str(card.get("root_id") or "")
-            if not root_id.startswith("mkjr_"):
+            if not ROOT_ID.fullmatch(root_id):
                 raise RuntimeError(f"invalid comparison root_id after write: {title}")
             roots[title] = root_id
 
