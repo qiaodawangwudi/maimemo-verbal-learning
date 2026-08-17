@@ -449,6 +449,9 @@ class _ProtectedQualityClient:
             raise TypeError("protected quality client cannot be constructed")
         return super().__new__(cls)
 
+    def __init_subclass__(cls, **kwargs):
+        raise TypeError("protected quality client cannot be subclassed")
+
     def __copy__(self):
         raise TypeError("protected quality client cannot be copied")
 
@@ -461,28 +464,24 @@ class _ProtectedQualityClient:
     def __reduce_ex__(self, protocol):
         raise TypeError("protected quality client cannot be serialized")
 
-    def _binding(self):
-        binding = _QUALITY_CLIENTS.get(self)
-        if binding is None:
-            raise RuntimeError("protected quality client is no longer valid")
-        return binding
+    def __repr__(self):
+        return "<protected-quality-client>"
+
+    def __dir__(self):
+        return ["create_card", "deck_id", "read_deck", "update_card"]
 
     @property
     def deck_id(self):
-        return self._binding().client.deck_id
+        return _protected_quality_deck_id(self)
 
     def read_deck(self):
-        return self._binding().client.read_deck()
+        return _protected_quality_read(self)
 
     def update_card(self, card_id, content, guard):
-        binding = self._binding()
-        binding.pre_write()
-        return binding.client.update_card(card_id, content, guard)
+        return _protected_quality_update(self, card_id, content, guard)
 
     def create_card(self, chapter_id, content, guard):
-        binding = self._binding()
-        binding.pre_write()
-        return binding.client.create_card(chapter_id, content, guard)
+        return _protected_quality_create(self, chapter_id, content, guard)
 
 
 class _ProtectedQualityClientBinding(NamedTuple):
@@ -491,6 +490,44 @@ class _ProtectedQualityClientBinding(NamedTuple):
 
 
 _QUALITY_CLIENTS: weakref.WeakKeyDictionary = weakref.WeakKeyDictionary()
+
+
+def _protected_quality_deck_id(wrapper):
+    if type(wrapper) is not _ProtectedQualityClient:
+        raise RuntimeError("protected quality client is invalid")
+    binding = _QUALITY_CLIENTS.get(wrapper)
+    if binding is None:
+        raise RuntimeError("protected quality client is no longer valid")
+    return binding.client.deck_id
+
+
+def _protected_quality_read(wrapper):
+    if type(wrapper) is not _ProtectedQualityClient:
+        raise RuntimeError("protected quality client is invalid")
+    binding = _QUALITY_CLIENTS.get(wrapper)
+    if binding is None:
+        raise RuntimeError("protected quality client is no longer valid")
+    return binding.client.read_deck()
+
+
+def _protected_quality_update(wrapper, card_id, content, guard):
+    if type(wrapper) is not _ProtectedQualityClient:
+        raise RuntimeError("protected quality client is invalid")
+    binding = _QUALITY_CLIENTS.get(wrapper)
+    if binding is None:
+        raise RuntimeError("protected quality client is no longer valid")
+    binding.pre_write()
+    return binding.client.update_card(card_id, content, guard)
+
+
+def _protected_quality_create(wrapper, chapter_id, content, guard):
+    if type(wrapper) is not _ProtectedQualityClient:
+        raise RuntimeError("protected quality client is invalid")
+    binding = _QUALITY_CLIENTS.get(wrapper)
+    if binding is None:
+        raise RuntimeError("protected quality client is no longer valid")
+    binding.pre_write()
+    return binding.client.create_card(chapter_id, content, guard)
 
 
 def open_protected_quality_client(

@@ -1,6 +1,7 @@
 import copy
 import dataclasses
 import json
+from multiprocessing.reduction import ForkingPickler
 import os
 import pickle
 import tempfile
@@ -490,6 +491,111 @@ class ProtectedQualityAuthorizationTests(unittest.TestCase):
                     )
 
             self.assertEqual(1, env.reads.count("MAIMEMO_API_TOKEN"))
+
+    def test_protected_wrapper_never_exposes_unguarded_raw_client(self):
+        posts = []
+
+        class OfflineRawClient:
+            def __init__(self, transport, *, token, deck_id):
+                self._transport = transport
+                self._token = token
+                self.deck_id = deck_id
+
+            def read_deck(self):
+                return {"cards": [], "chapters": []}
+
+            def create_card(self, chapter_id, content, guard):
+                posts.append(("create", chapter_id, content))
+                return {"ok": True}
+
+            def update_card(self, card_id, content, guard):
+                posts.append(("update", card_id, content))
+                return {"ok": True}
+
+        with tempfile.TemporaryDirectory() as temporary:
+            release_dir = Path(temporary) / "release"
+            write_release(release_dir)
+            manifest = authorize_release(release_dir)
+            env = TrackingEnvironment(protected_environment(release_dir))
+            with patch.object(os, "environ", env), patch(
+                "maimemo_learning_rebuild.api.MaimemoClient", OfflineRawClient
+            ):
+                quality_capability = (
+                    release_quality_gate.open_protected_quality_capability(release_dir)
+                )
+                validation = release_environment.validate_release_environment(
+                    manifest, protected_receipt(manifest)
+                )
+                wrapper = _create_protected_client(
+                    manifest,
+                    validation,
+                    quality_capability,
+                    release_dir,
+                )
+                engine_path = release_dir / "engine_tree.bin"
+                engine_path.write_bytes(engine_path.read_bytes() + b"drift")
+                guard = GuardResult(True, (), "plan", "review")
+                with self.assertRaisesRegex(RuntimeError, "path changed"):
+                    wrapper.create_card("chapter", "content", guard)
+                with self.assertRaisesRegex(RuntimeError, "path changed"):
+                    wrapper.update_card("card", "content", guard)
+
+                exposed_binding = getattr(wrapper, "_binding", lambda: None)()
+                raw = getattr(exposed_binding, "client", None)
+                leaked_token = getattr(raw, "_token", None)
+                if raw is not None:
+                    raw.create_card("chapter", "content", guard)
+
+                public_values = {
+                    name: getattr(wrapper, name) for name in dir(wrapper)
+                }
+                self.assertEqual(
+                    {"create_card", "deck_id", "read_deck", "update_card"},
+                    set(public_values),
+                )
+                self.assertIsInstance(public_values["deck_id"], str)
+                self.assertEqual(
+                    {"cards": [], "chapters": []}, public_values["read_deck"]()
+                )
+                for name in ("create_card", "read_deck", "update_card"):
+                    self.assertIs(wrapper, public_values[name].__self__)
+                self.assertNotIn("tracking-only-test-token", repr(wrapper))
+                self.assertNotIn("tracking-only-test-token", repr(public_values))
+                for forbidden in (
+                    "_binding",
+                    "binding",
+                    "client",
+                    "_client",
+                    "token",
+                    "_token",
+                    "transport",
+                    "_transport",
+                    "registry",
+                    "_registry",
+                    "registry_key",
+                ):
+                    self.assertFalse(hasattr(wrapper, forbidden), forbidden)
+                    self.assertNotIn(forbidden, vars(type(wrapper)))
+                with self.assertRaises(TypeError):
+                    vars(wrapper)
+                for operation in (
+                    lambda: copy.copy(wrapper),
+                    lambda: copy.deepcopy(wrapper),
+                    lambda: pickle.dumps(wrapper),
+                    lambda: ForkingPickler.dumps(wrapper),
+                    lambda: dataclasses.replace(wrapper),
+                ):
+                    with self.assertRaises((TypeError, pickle.PicklingError)):
+                        operation()
+                with self.assertRaises(TypeError):
+                    type("ForgedProtectedClient", (type(wrapper),), {})
+                forged = object.__new__(type(wrapper))
+                with self.assertRaisesRegex(RuntimeError, "no longer valid"):
+                    forged.create_card("chapter", "content", guard)
+
+            self.assertEqual([], posts)
+            self.assertIsNone(raw)
+            self.assertNotEqual("tracking-only-test-token", leaked_token)
 
 
 if __name__ == "__main__":
