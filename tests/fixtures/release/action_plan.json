@@ -1,0 +1,49 @@
+{
+  "schema_version": 2,
+  "deck": {
+    "id": "deck-release",
+    "name": "公考成语积累辨析"
+  },
+  "chapter_routes": {
+    "comparison": {
+      "id": "chapter-comparison",
+      "name": "近义辨析"
+    },
+    "base": {
+      "id": "chapter-base",
+      "name": "基础词义"
+    },
+    "application": {
+      "id": "chapter-application",
+      "name": "语境应用"
+    }
+  },
+  "before_counts": {
+    "comparison": 0,
+    "base": 2,
+    "application": 0
+  },
+  "action_counts": {
+    "create": 2,
+    "update": 1,
+    "unchanged": 1
+  },
+  "actions": [
+    {
+      "title": "近义辨析｜甲、乙",
+      "action": "create"
+    },
+    {
+      "title": "基础词义｜甲",
+      "action": "update"
+    },
+    {
+      "title": "基础词义｜乙",
+      "action": "unchanged"
+    },
+    {
+      "title": "语境应用｜甲、乙｜差别",
+      "action": "create"
+    }
+  ]
+}

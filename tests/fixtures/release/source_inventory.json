@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "sources": [],
+  "segments": [],
+  "candidates": [],
+  "frozen_cards": [],
+  "coverage": {
+    "source_count": 0,
+    "segment_count": 0,
+    "candidate_count": 0,
+    "frozen_card_count": 0
+  }
+}
