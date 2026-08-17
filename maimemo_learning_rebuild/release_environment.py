@@ -34,6 +34,7 @@ VALIDATION_FIELDS = {
     "github_run_id",
 }
 _CAPABILITY_KEY = object()
+_QUALITY_CLIENT_KEY = object()
 
 
 def _digest(value: object, length: int) -> bool:
@@ -356,9 +357,7 @@ def validate_release_environment(manifest: object, receipt: object) -> dict:
     return result
 
 
-def open_protected_client(capability: object):
-    """Revalidate live non-secret state, then read the token exactly once."""
-
+def _revalidate_release_capability(capability: object):
     if type(capability) is not _ReleaseCapability:
         raise RuntimeError("validated GitHub receipt required")
     binding = _CAPABILITIES.get(capability)
@@ -386,6 +385,19 @@ def open_protected_client(capability: object):
         or receipt["release_hash"] != current.release_hash
     ):
         raise RuntimeError("validated GitHub receipt required")
+    return binding, current_mapping
+
+
+def _discard_client_secret(client) -> None:
+    if client is not None:
+        try:
+            client._token = ""
+        except Exception:
+            pass
+
+
+def _construct_protected_client(binding, current_mapping, post_token_check):
+    """Read the secret once; any later drift yields only one redacted failure."""
 
     from .api import MaimemoClient, UrllibTransport
 
@@ -403,12 +415,160 @@ def open_protected_client(capability: object):
             token=token,
             deck_id=binding.deck_id,
         )
+        post_token_check()
     except Exception:
         failed = True
     token = None
     if failed:
+        _discard_client_secret(client)
+        client = None
         _raise_protected_client_failure()
     return client
+
+
+def open_protected_client(capability: object):
+    """Revalidate live non-secret state, then read the token exactly once."""
+
+    binding, current_mapping = _revalidate_release_capability(capability)
+
+    def post_token_check():
+        checked, checked_mapping = _revalidate_release_capability(capability)
+        if checked is not binding or checked_mapping is not current_mapping:
+            raise RuntimeError("protected release environment changed")
+
+    return _construct_protected_client(binding, current_mapping, post_token_check)
+
+
+class _ProtectedQualityClient:
+    """Delegate reads, but revalidate both authorities before every POST."""
+
+    __slots__ = ("__weakref__",)
+
+    def __new__(cls, key=None):
+        if key is not _QUALITY_CLIENT_KEY:
+            raise TypeError("protected quality client cannot be constructed")
+        return super().__new__(cls)
+
+    def __copy__(self):
+        raise TypeError("protected quality client cannot be copied")
+
+    def __deepcopy__(self, memo):
+        raise TypeError("protected quality client cannot be copied")
+
+    def __reduce__(self):
+        raise TypeError("protected quality client cannot be serialized")
+
+    def __reduce_ex__(self, protocol):
+        raise TypeError("protected quality client cannot be serialized")
+
+    def _binding(self):
+        binding = _QUALITY_CLIENTS.get(self)
+        if binding is None:
+            raise RuntimeError("protected quality client is no longer valid")
+        return binding
+
+    @property
+    def deck_id(self):
+        return self._binding().client.deck_id
+
+    def read_deck(self):
+        return self._binding().client.read_deck()
+
+    def update_card(self, card_id, content, guard):
+        binding = self._binding()
+        binding.pre_write()
+        return binding.client.update_card(card_id, content, guard)
+
+    def create_card(self, chapter_id, content, guard):
+        binding = self._binding()
+        binding.pre_write()
+        return binding.client.create_card(chapter_id, content, guard)
+
+
+class _ProtectedQualityClientBinding(NamedTuple):
+    client: object
+    pre_write: object
+
+
+_QUALITY_CLIENTS: weakref.WeakKeyDictionary = weakref.WeakKeyDictionary()
+
+
+def open_protected_quality_client(
+    capability: object,
+    quality_capability: object,
+    release_dir=None,
+):
+    """Atomically consume Task 8 + sealed Task 11 authority before token access."""
+
+    binding, current_mapping = _revalidate_release_capability(capability)
+    from . import release_quality_gate
+
+    consume = release_quality_gate._consume_protected_quality_release
+    sealed_snapshot, manifest, cards = consume(
+        quality_capability, release_dir, verify_paths=True
+    )
+    release_quality_gate._verify_stable_release_snapshot(sealed_snapshot)
+    try:
+        exact_manifest = _canonical(manifest) == binding.manifest_bytes
+    except (TypeError, ValueError, OverflowError, RecursionError):
+        exact_manifest = False
+    if not exact_manifest:
+        raise RuntimeError("protected review and release manifest differ")
+    try:
+        execution_bytes = _canonical(
+            {
+                "manifest": manifest,
+                "cards": list(cards),
+                "snapshot": cards.snapshot,
+            }
+        )
+    except (AttributeError, TypeError, ValueError, OverflowError, RecursionError):
+        raise RuntimeError("sealed protected execution payload is invalid") from None
+    checked, checked_mapping = _revalidate_release_capability(capability)
+    if checked is not binding or checked_mapping is not current_mapping:
+        raise RuntimeError("protected release environment changed before token access")
+    release_quality_gate._assert_quality_environment(
+        release_quality_gate._binding_for_quality_capability(quality_capability)
+    )
+
+    def revalidate_both(*, verify_paths):
+        checked_binding, checked_environment = _revalidate_release_capability(capability)
+        if checked_binding is not binding or checked_environment is not current_mapping:
+            raise RuntimeError("protected release environment changed")
+        current_snapshot, current_manifest, _current_cards = consume(
+            quality_capability,
+            release_dir,
+            verify_paths=verify_paths,
+        )
+        if (
+            current_snapshot is not sealed_snapshot
+            or _canonical(current_manifest) != binding.manifest_bytes
+        ):
+            raise RuntimeError("sealed protected release changed")
+        try:
+            execution_unchanged = _canonical(
+                {
+                    "manifest": manifest,
+                    "cards": list(cards),
+                    "snapshot": cards.snapshot,
+                }
+            ) == execution_bytes
+        except (AttributeError, TypeError, ValueError, OverflowError, RecursionError):
+            execution_unchanged = False
+        if not execution_unchanged:
+            raise RuntimeError("sealed protected execution payload changed")
+
+    client = _construct_protected_client(
+        binding,
+        current_mapping,
+        lambda: revalidate_both(verify_paths=False),
+    )
+    protected_client = _ProtectedQualityClient(_QUALITY_CLIENT_KEY)
+    _QUALITY_CLIENTS[protected_client] = _ProtectedQualityClientBinding(
+        client,
+        lambda: revalidate_both(verify_paths=True),
+    )
+    return protected_client, manifest, cards
 
 
 def _raise_protected_client_failure() -> None:

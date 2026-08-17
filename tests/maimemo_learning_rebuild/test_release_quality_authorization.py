@@ -8,8 +8,18 @@ import unittest
 from pathlib import Path
 from unittest.mock import patch
 
-from maimemo_learning_rebuild import release_quality_gate
+from maimemo_learning_rebuild import release_environment, release_quality_gate
+from maimemo_learning_rebuild.guard import GuardResult
+from maimemo_learning_rebuild.release_manifest import load_release_manifest_file
+from maimemo_learning_rebuild.release_writer import _create_protected_client
+from tests.maimemo_learning_rebuild.test_release_environment import TrackingEnvironment
 from tests.maimemo_learning_rebuild.test_release_quality_gate import write_release
+from tests.maimemo_learning_rebuild.test_release_manifest import (
+    STATE_SEQUENCE,
+    advance_release,
+    canonical_bytes,
+    frozen_baseline,
+)
 
 
 SHA = "b" * 40
@@ -36,7 +46,31 @@ def protected_environment(release_dir):
         "GITHUB_WORKFLOW_REF": WORKFLOW_REF,
         "APPROVED_COMMIT_SHA": SHA,
         "RELEASE_HASH": manifest["release_hash"],
+        "MAIMEMO_API_TOKEN": "tracking-only-test-token",
     }
+
+
+def protected_receipt(manifest):
+    return {
+        "schema_version": 2,
+        "receipt_type": "github_protected_release",
+        "release_id": manifest["release_id"],
+        "release_hash": manifest["release_hash"],
+        "approved_sha": SHA,
+        "github_run_id": "12345",
+        "github_environment": "maimemo-final-release",
+        "deployment_status": "success",
+    }
+
+
+def authorize_release(release_dir):
+    manifest_path = release_dir / "release_manifest.json"
+    manifest = load_release_manifest_file(manifest_path)
+    baseline = frozen_baseline(manifest)
+    for state in STATE_SEQUENCE[1 : STATE_SEQUENCE.index("authorized") + 1]:
+        manifest = advance_release(manifest, state, baseline)
+    manifest_path.write_bytes(canonical_bytes(manifest))
+    return load_release_manifest_file(manifest_path)
 
 
 class ProtectedQualityAuthorizationTests(unittest.TestCase):
@@ -163,7 +197,7 @@ class ProtectedQualityAuthorizationTests(unittest.TestCase):
             env = protected_environment(release_dir)
             with patch.object(os, "environ", env):
                 capability = opener(release_dir)
-                real_evaluate = release_quality_gate.evaluate_frozen_release_quality
+                real_evaluate = release_quality_gate._evaluate_sealed_release_quality
 
                 def mutate_during_recheck(path):
                     result = real_evaluate(path)
@@ -172,10 +206,290 @@ class ProtectedQualityAuthorizationTests(unittest.TestCase):
 
                 with patch.object(
                     release_quality_gate,
-                    "evaluate_frozen_release_quality",
+                    "_evaluate_sealed_release_quality",
                     side_effect=mutate_during_recheck,
                 ):
                     self.assertNotEqual([], runner(release_dir, capability))
+
+    def test_final_quality_handoff_sha_drift_blocks_before_token_lookup(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            release_dir = Path(temporary) / "release"
+            write_release(release_dir)
+            manifest = authorize_release(release_dir)
+            env = TrackingEnvironment(protected_environment(release_dir))
+            with patch.object(os, "environ", env):
+                quality_capability = (
+                    release_quality_gate.open_protected_quality_capability(release_dir)
+                )
+                validation = release_environment.validate_release_environment(
+                    manifest, protected_receipt(manifest)
+                )
+                real_consume = release_quality_gate._consume_protected_quality_release
+                handoff_reached = []
+
+                def mutate_after_real_read(*args, **kwargs):
+                    result = real_consume(*args, **kwargs)
+                    handoff_reached.append(True)
+                    env["APPROVED_COMMIT_SHA"] = "c" * 40
+                    return result
+
+                with patch.object(
+                    release_quality_gate,
+                    "_consume_protected_quality_release",
+                    side_effect=mutate_after_real_read,
+                ), self.assertRaises(RuntimeError):
+                    _create_protected_client(
+                        manifest, validation, quality_capability
+                    )
+
+            self.assertEqual(0, env.reads.count("MAIMEMO_API_TOKEN"))
+            self.assertEqual([True], handoff_reached)
+
+    def test_final_quality_handoff_artifact_drift_blocks_before_token_lookup(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            release_dir = Path(temporary) / "release"
+            write_release(release_dir)
+            manifest = authorize_release(release_dir)
+            env = TrackingEnvironment(protected_environment(release_dir))
+            engine_path = release_dir / "engine_tree.bin"
+            with patch.object(os, "environ", env):
+                quality_capability = (
+                    release_quality_gate.open_protected_quality_capability(release_dir)
+                )
+                validation = release_environment.validate_release_environment(
+                    manifest, protected_receipt(manifest)
+                )
+                real_consume = release_quality_gate._consume_protected_quality_release
+                handoff_reached = []
+
+                def mutate_after_real_read(*args, **kwargs):
+                    result = real_consume(*args, **kwargs)
+                    handoff_reached.append(True)
+                    engine_path.write_bytes(engine_path.read_bytes() + b"x")
+                    return result
+
+                with patch.object(
+                    release_quality_gate,
+                    "_consume_protected_quality_release",
+                    side_effect=mutate_after_real_read,
+                ), self.assertRaises(RuntimeError):
+                    _create_protected_client(
+                        manifest, validation, quality_capability
+                    )
+
+            self.assertEqual(0, env.reads.count("MAIMEMO_API_TOKEN"))
+            self.assertEqual([True], handoff_reached)
+
+    def test_same_byte_path_replacements_are_rejected_before_token_lookup(self):
+        targets = ("release_manifest.json", "engine_tree.bin", "final_cards.json")
+        for target_name in targets:
+            with self.subTest(target=target_name), tempfile.TemporaryDirectory() as temporary:
+                release_dir = Path(temporary) / "release"
+                write_release(release_dir)
+                manifest = authorize_release(release_dir)
+                env = TrackingEnvironment(protected_environment(release_dir))
+                with patch.object(os, "environ", env):
+                    quality_capability = (
+                        release_quality_gate.open_protected_quality_capability(
+                            release_dir
+                        )
+                    )
+                    validation = release_environment.validate_release_environment(
+                        manifest, protected_receipt(manifest)
+                    )
+                    target = release_dir / target_name
+                    replacement = release_dir / f"replacement-{target_name}"
+                    replacement.write_bytes(target.read_bytes())
+                    replacement.replace(target)
+                    with self.assertRaisesRegex(RuntimeError, "path changed"):
+                        _create_protected_client(
+                            manifest,
+                            validation,
+                            quality_capability,
+                            release_dir,
+                        )
+
+                self.assertEqual(0, env.reads.count("MAIMEMO_API_TOKEN"))
+
+    def test_environment_mapping_handoff_replacement_blocks_before_token_lookup(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            release_dir = Path(temporary) / "release"
+            write_release(release_dir)
+            manifest = authorize_release(release_dir)
+            original = TrackingEnvironment(protected_environment(release_dir))
+            replacement = TrackingEnvironment(protected_environment(release_dir))
+            with patch.object(os, "environ", original):
+                quality_capability = (
+                    release_quality_gate.open_protected_quality_capability(release_dir)
+                )
+                validation = release_environment.validate_release_environment(
+                    manifest, protected_receipt(manifest)
+                )
+                real_consume = release_quality_gate._consume_protected_quality_release
+
+                def replace_mapping_after_consume(*args, **kwargs):
+                    result = real_consume(*args, **kwargs)
+                    os.environ = replacement
+                    return result
+
+                try:
+                    with patch.object(
+                        release_quality_gate,
+                        "_consume_protected_quality_release",
+                        side_effect=replace_mapping_after_consume,
+                    ), self.assertRaises(RuntimeError):
+                        _create_protected_client(
+                            manifest,
+                            validation,
+                            quality_capability,
+                            release_dir,
+                        )
+                finally:
+                    os.environ = original
+
+            self.assertEqual(0, original.reads.count("MAIMEMO_API_TOKEN"))
+            self.assertEqual(0, replacement.reads.count("MAIMEMO_API_TOKEN"))
+
+    def test_quality_environment_drift_during_token_lookup_discards_client(self):
+        class DriftOnTokenEnvironment(TrackingEnvironment):
+            def get(self, key, default=None):
+                value = super().get(key, default)
+                if key == "MAIMEMO_API_TOKEN":
+                    self["APPROVED_COMMIT_SHA"] = "c" * 40
+                return value
+
+        with tempfile.TemporaryDirectory() as temporary:
+            release_dir = Path(temporary) / "release"
+            write_release(release_dir)
+            manifest = authorize_release(release_dir)
+            env = DriftOnTokenEnvironment(protected_environment(release_dir))
+            with patch.object(os, "environ", env):
+                quality_capability = (
+                    release_quality_gate.open_protected_quality_capability(release_dir)
+                )
+                validation = release_environment.validate_release_environment(
+                    manifest, protected_receipt(manifest)
+                )
+                with self.assertRaisesRegex(RuntimeError, "\[REDACTED\]"):
+                    _create_protected_client(
+                        manifest,
+                        validation,
+                        quality_capability,
+                        release_dir,
+                    )
+
+            self.assertEqual(1, env.reads.count("MAIMEMO_API_TOKEN"))
+
+    def test_sealed_snapshot_registry_tampering_is_detected(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            release_dir = Path(temporary) / "release"
+            write_release(release_dir)
+            env = protected_environment(release_dir)
+            with patch.object(os, "environ", env):
+                capability = release_quality_gate.open_protected_quality_capability(
+                    release_dir
+                )
+                binding = release_quality_gate._QUALITY_CAPABILITIES[capability]
+                with self.assertRaises(AttributeError):
+                    binding.sealed_snapshot.manifest_bytes = b"attacker"
+                changed_snapshot = binding.sealed_snapshot._replace(
+                    manifest_bytes=binding.sealed_snapshot.manifest_bytes + b" "
+                )
+                release_quality_gate._QUALITY_CAPABILITIES[capability] = binding._replace(
+                    sealed_snapshot=changed_snapshot
+                )
+                self.assertIn(
+                    "sealed protected review snapshot changed",
+                    release_quality_gate.run_release_quality_gate(
+                        release_dir, capability
+                    ),
+                )
+
+    def test_sealed_execution_payload_mutation_during_token_lookup_is_redacted(self):
+        class MutatingTokenEnvironment(TrackingEnvironment):
+            mutation = None
+
+            def get(self, key, default=None):
+                value = super().get(key, default)
+                if key == "MAIMEMO_API_TOKEN" and self.mutation is not None:
+                    self.mutation()
+                return value
+
+        with tempfile.TemporaryDirectory() as temporary:
+            release_dir = Path(temporary) / "release"
+            write_release(release_dir)
+            manifest = authorize_release(release_dir)
+            env = MutatingTokenEnvironment(protected_environment(release_dir))
+            with patch.object(os, "environ", env):
+                quality_capability = (
+                    release_quality_gate.open_protected_quality_capability(release_dir)
+                )
+                validation = release_environment.validate_release_environment(
+                    manifest, protected_receipt(manifest)
+                )
+                real_consume = release_quality_gate._consume_protected_quality_release
+
+                def expose_then_mutate(*args, **kwargs):
+                    result = real_consume(*args, **kwargs)
+                    cards = result[2]
+                    env.mutation = lambda: cards[0].__setitem__("title", "tampered")
+                    return result
+
+                with patch.object(
+                    release_quality_gate,
+                    "_consume_protected_quality_release",
+                    side_effect=expose_then_mutate,
+                ), self.assertRaisesRegex(RuntimeError, "\[REDACTED\]"):
+                    _create_protected_client(
+                        manifest,
+                        validation,
+                        quality_capability,
+                        release_dir,
+                    )
+
+            self.assertEqual(1, env.reads.count("MAIMEMO_API_TOKEN"))
+
+    def test_client_revalidates_sealed_paths_before_every_post(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            release_dir = Path(temporary) / "release"
+            write_release(release_dir)
+            manifest = authorize_release(release_dir)
+            env = TrackingEnvironment(protected_environment(release_dir))
+            with patch.object(os, "environ", env):
+                quality_capability = (
+                    release_quality_gate.open_protected_quality_capability(release_dir)
+                )
+                validation = release_environment.validate_release_environment(
+                    manifest, protected_receipt(manifest)
+                )
+                client, sealed_manifest, sealed_cards = _create_protected_client(
+                    manifest,
+                    validation,
+                    quality_capability,
+                    release_dir,
+                    include_sealed_release=True,
+                )
+                self.assertFalse(hasattr(client, "_client"))
+                for operation in (
+                    lambda: copy.copy(client),
+                    lambda: copy.deepcopy(client),
+                    lambda: pickle.dumps(client),
+                ):
+                    with self.assertRaises((TypeError, pickle.PicklingError)):
+                        operation()
+                original_title = sealed_cards[0]["title"]
+                engine_path = release_dir / "engine_tree.bin"
+                engine_path.write_bytes(engine_path.read_bytes() + b"drift")
+                self.assertEqual(manifest["release_hash"], sealed_manifest["release_hash"])
+                self.assertEqual(original_title, sealed_cards[0]["title"])
+                with self.assertRaisesRegex(RuntimeError, "path changed"):
+                    client.create_card(
+                        "chapter-test",
+                        "test content",
+                        GuardResult(True, (), "plan", "review"),
+                    )
+
+            self.assertEqual(1, env.reads.count("MAIMEMO_API_TOKEN"))
 
 
 if __name__ == "__main__":

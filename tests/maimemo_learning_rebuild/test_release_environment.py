@@ -189,7 +189,6 @@ class ReleaseEnvironmentTests(unittest.TestCase):
             self.assertNotIn("MAIMEMO_API_TOKEN", env.reads)
             client = open_protected_client(protected)
 
-        self.assertEqual("MAIMEMO_API_TOKEN", env.reads[-1])
         self.assertEqual(1, env.reads.count("MAIMEMO_API_TOKEN"))
         self.assertEqual("top-secret-token", client._token)
         self.assertEqual(manifest()["deck"]["id"], client.deck_id)
@@ -220,15 +219,20 @@ class ReleaseEnvironmentTests(unittest.TestCase):
 
     def test_task7_opens_client_from_the_validated_environment_only(self):
         env = TrackingEnvironment(complete_environment())
+        current = manifest()
+
+        def combined_factory(capability, quality_capability, release_dir):
+            return open_protected_client(capability), current, []
+
         with patch.object(os, "environ", env), patch(
-            "maimemo_learning_rebuild.release_quality_gate."
-            "_revalidate_protected_quality_capability",
-            return_value=None,
+            "maimemo_learning_rebuild.release_environment."
+            "open_protected_quality_client",
+            side_effect=combined_factory,
         ):
             validation = validate_release_environment(manifest(), receipt())
-            client = _create_protected_client(manifest(), validation, object())
+            client = _create_protected_client(current, validation, object())
 
-        self.assertEqual("MAIMEMO_API_TOKEN", env.reads[-1])
+        self.assertEqual(1, env.reads.count("MAIMEMO_API_TOKEN"))
         self.assertEqual(manifest()["deck"]["id"], client.deck_id)
 
     def test_invalid_quality_capability_blocks_before_token_lookup(self):

@@ -12,6 +12,7 @@ import re
 import stat
 import sys
 from datetime import datetime, timezone
+from typing import NamedTuple
 
 from .api import (
     AmbiguousMutationError,
@@ -23,7 +24,7 @@ from .release_journal import ReleaseJournal
 from .release_manifest import (
     ARTIFACT_KEYS,
     _parse_json_artifact,
-    load_release_manifest_file,
+    load_release_manifest_bytes,
     validate_release_manifest,
 )
 
@@ -80,6 +81,27 @@ class FrozenCards(list):
     def __init__(self, cards, snapshot):
         super().__init__(cards)
         self.snapshot = snapshot
+
+
+class _StableReleaseFile(NamedTuple):
+    label: str
+    path: Path
+    device: int
+    inode: int
+    mode: int
+    size: int
+    modified_ns: int
+    digest: str
+
+
+class _StableReleaseSnapshot(NamedTuple):
+    release_dir: Path
+    manifest_bytes: bytes
+    artifacts: tuple[tuple[str, bytes], ...]
+    files: tuple[_StableReleaseFile, ...]
+
+    def artifact_bytes(self) -> dict[str, bytes]:
+        return dict(self.artifacts)
 
 
 def _now():
@@ -964,24 +986,133 @@ def _artifact_path(release_dir, key):
     return matches[0]
 
 
-def _load_frozen_release(release_dir):
-    """Load exact bytes, validate every bound hash, then expose execution inputs."""
+def _stat_identity(value):
+    return (
+        value.st_dev,
+        value.st_ino,
+        value.st_mode,
+        value.st_size,
+        value.st_mtime_ns,
+    )
+
+
+def _read_stable_release_file(release_dir, path, label):
+    """Read one regular file through one descriptor and prove path/FD identity."""
+
+    canonical = _safe_release_file(release_dir, path, label)
+    flags = os.O_RDONLY | getattr(os, "O_BINARY", 0) | getattr(os, "O_NOFOLLOW", 0)
+    try:
+        descriptor = os.open(canonical, flags)
+    except OSError as error:
+        raise RuntimeError(f"frozen release file could not be opened safely: {label}") from error
+    try:
+        before = os.fstat(descriptor)
+        path_before = os.stat(canonical, follow_symlinks=False)
+        if (
+            not stat.S_ISREG(before.st_mode)
+            or not stat.S_ISREG(path_before.st_mode)
+            or before.st_dev != path_before.st_dev
+            or before.st_ino != path_before.st_ino
+            or _is_link_or_reparse(canonical)
+        ):
+            raise RuntimeError(f"frozen release file identity mismatch: {label}")
+        chunks = []
+        while True:
+            chunk = os.read(descriptor, 1024 * 1024)
+            if not chunk:
+                break
+            chunks.append(chunk)
+        raw = b"".join(chunks)
+        after = os.fstat(descriptor)
+        path_after = os.stat(canonical, follow_symlinks=False)
+        if (
+            _stat_identity(before) != _stat_identity(after)
+            or _stat_identity(after) != _stat_identity(path_after)
+            or after.st_size != len(raw)
+            or _is_link_or_reparse(canonical)
+        ):
+            raise RuntimeError(f"frozen release file changed during stable read: {label}")
+    except OSError as error:
+        raise RuntimeError(f"frozen release file changed during stable read: {label}") from error
+    finally:
+        os.close(descriptor)
+    identity = _StableReleaseFile(
+        label,
+        canonical,
+        after.st_dev,
+        after.st_ino,
+        after.st_mode,
+        after.st_size,
+        after.st_mtime_ns,
+        hashlib.sha256(raw).hexdigest(),
+    )
+    return raw, identity
+
+
+def _read_stable_release_snapshot(release_dir):
+    """Seal all manifest-bound bytes before any authorization can be consumed."""
+
     release_dir = _canonical_release_dir(release_dir)
     manifest_path = _safe_release_file(
         release_dir,
         release_dir / "release_manifest.json",
         "release_manifest",
     )
-    manifest = load_release_manifest_file(manifest_path)
-    artifacts = {
-        key: _artifact_path(release_dir, key).read_bytes() for key in ARTIFACT_KEYS
-    }
+    manifest_raw, manifest_file = _read_stable_release_file(
+        release_dir, manifest_path, "release_manifest"
+    )
+    manifest = load_release_manifest_bytes(manifest_raw)
+    artifact_items = []
+    files = [manifest_file]
+    for key in ARTIFACT_KEYS:
+        raw, file_identity = _read_stable_release_file(
+            release_dir, _artifact_path(release_dir, key), key
+        )
+        artifact_items.append((key, raw))
+        files.append(file_identity)
+    snapshot = _StableReleaseSnapshot(
+        release_dir,
+        manifest_raw,
+        tuple(artifact_items),
+        tuple(files),
+    )
+    artifacts = snapshot.artifact_bytes()
+    errors = validate_release_manifest(manifest, artifacts)
+    if errors:
+        raise RuntimeError("frozen release validation failed: " + "; ".join(errors))
+    return snapshot
+
+
+def _verify_stable_release_snapshot(snapshot):
+    """Fail if the on-disk paths no longer name the exact sealed byte snapshot."""
+
+    if type(snapshot) is not _StableReleaseSnapshot:
+        raise RuntimeError("sealed frozen release snapshot required")
+    if _canonical_release_dir(snapshot.release_dir) != snapshot.release_dir:
+        raise RuntimeError("sealed frozen release directory changed")
+    for expected in snapshot.files:
+        raw, current = _read_stable_release_file(
+            snapshot.release_dir, expected.path, expected.label
+        )
+        if current != expected or hashlib.sha256(raw).hexdigest() != expected.digest:
+            raise RuntimeError(
+                f"sealed frozen release path changed: {expected.label}"
+            )
+
+
+def _load_frozen_release_snapshot(snapshot):
+    """Parse execution inputs only from one already sealed byte snapshot."""
+
+    if type(snapshot) is not _StableReleaseSnapshot:
+        raise RuntimeError("sealed frozen release snapshot required")
+    manifest = load_release_manifest_bytes(snapshot.manifest_bytes)
+    artifacts = snapshot.artifact_bytes()
     errors = validate_release_manifest(manifest, artifacts)
     if errors:
         raise RuntimeError("frozen release validation failed: " + "; ".join(errors))
     final_payload = _parse_json_artifact(artifacts["final_cards"], "final_cards")
     action_plan = _parse_json_artifact(artifacts["action_plan"], "action_plan")
-    snapshot = _parse_json_artifact(artifacts["snapshot"], "snapshot")
+    snapshot_payload = _parse_json_artifact(artifacts["snapshot"], "snapshot")
     if not isinstance(final_payload, dict) or not isinstance(
         final_payload.get("cards"), list
     ):
@@ -1017,7 +1148,13 @@ def _load_frozen_release(release_dir):
                 f"frozen action content drift: {frozen.get('stable_card_key', '')}"
             )
         cards.append(dict(frozen))
-    return manifest, FrozenCards(cards, snapshot)
+    return manifest, FrozenCards(cards, snapshot_payload)
+
+
+def _load_frozen_release(release_dir):
+    """Load and parse only a stable, complete, hash-bound file snapshot."""
+
+    return _load_frozen_release_snapshot(_read_stable_release_snapshot(release_dir))
 
 
 def _unique_object(pairs):
@@ -1097,21 +1234,39 @@ def _validate_protected_release_quality(release_dir):
     return capability
 
 
-def _create_protected_client(manifest, validation, quality_capability=None):
+def _protected_quality_manifest(quality_capability, release_dir):
+    module = _release_quality_gate_module()
+    consumer = getattr(module, "_consume_protected_quality_release", None)
+    if not callable(consumer):
+        raise RuntimeError("protected current-environment review capability required")
+    _snapshot, manifest, _cards = consumer(
+        quality_capability, release_dir, verify_paths=True
+    )
+    return manifest
+
+
+def _create_protected_client(
+    manifest,
+    validation,
+    quality_capability=None,
+    release_dir=None,
+    *,
+    include_sealed_release=False,
+):
     module = _release_environment_module()
-    factory = getattr(module, "open_protected_client", None)
+    factory = getattr(module, "open_protected_quality_client", None)
     capability_reader = getattr(module, "_capability_for_validation", None)
     if not callable(factory) or not callable(capability_reader):
         raise RuntimeError("GitHub release environment receipt is not approved")
     capability = capability_reader(validation)
-    quality_module = _release_quality_gate_module()
-    quality_reader = getattr(
-        quality_module, "_revalidate_protected_quality_capability", None
+    client, sealed_manifest, sealed_cards = factory(
+        capability, quality_capability, release_dir
     )
-    if not callable(quality_reader):
-        raise RuntimeError("protected current-environment review capability required")
-    quality_reader(quality_capability)
-    return factory(capability)
+    if manifest != sealed_manifest:
+        raise RuntimeError("protected review and release manifest differ")
+    if include_sealed_release:
+        return client, sealed_manifest, sealed_cards
+    return client
 
 
 def _safe_error(error):
@@ -1131,11 +1286,17 @@ def _parser():
 def main(argv=None):
     args = _parser().parse_args(argv)
     try:
-        manifest, cards = _load_frozen_release(args.release_dir)
-        validation = _validate_release_environment(manifest, args.approval_receipt)
         quality_capability = _validate_protected_release_quality(args.release_dir)
-        client = _create_protected_client(
-            manifest, validation, quality_capability
+        manifest = _protected_quality_manifest(
+            quality_capability, args.release_dir
+        )
+        validation = _validate_release_environment(manifest, args.approval_receipt)
+        client, manifest, cards = _create_protected_client(
+            manifest,
+            validation,
+            quality_capability,
+            args.release_dir,
+            include_sealed_release=True,
         )
         result = execute_release(
             client,

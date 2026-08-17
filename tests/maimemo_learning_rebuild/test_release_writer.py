@@ -355,7 +355,7 @@ class ReleaseWriterTests(unittest.TestCase):
                 with redirect_stderr(StringIO()), self.assertRaises(SystemExit):
                     main(required + [prohibited, "secret"])
 
-    def test_cli_validates_github_receipt_before_protected_client_and_fails_readback(self):
+    def test_cli_seals_quality_before_receipt_and_protected_client(self):
         events = []
         fake_manifest = {"release_hash": "a" * 64, "deck": {"id": "deck"}}
         fake_result = {"final_readback": {"ok": False, "errors": ["mismatch"]}}
@@ -376,15 +376,23 @@ class ReleaseWriterTests(unittest.TestCase):
             events.append("quality")
             return object()
 
-        def construct(manifest_value, validation, quality_capability):
+        def sealed_manifest(quality_capability, release_dir):
+            events.append("sealed")
+            return fake_manifest
+
+        def construct(
+            manifest_value,
+            validation,
+            quality_capability,
+            release_dir,
+            *,
+            include_sealed_release,
+        ):
             events.append("client")
-            return object()
+            self.assertIs(True, include_sealed_release)
+            return object(), fake_manifest, []
 
         with (
-            patch(
-                "maimemo_learning_rebuild.release_writer._load_frozen_release",
-                return_value=(fake_manifest, []),
-            ),
             patch(
                 "maimemo_learning_rebuild.release_writer._validate_release_environment",
                 side_effect=validate,
@@ -393,6 +401,10 @@ class ReleaseWriterTests(unittest.TestCase):
                 "maimemo_learning_rebuild.release_writer._validate_protected_release_quality",
                 side_effect=validate_quality,
                 create=True,
+            ),
+            patch(
+                "maimemo_learning_rebuild.release_writer._protected_quality_manifest",
+                side_effect=sealed_manifest,
             ),
             patch(
                 "maimemo_learning_rebuild.release_writer._create_protected_client",
@@ -406,7 +418,7 @@ class ReleaseWriterTests(unittest.TestCase):
         ):
             exit_code = main(arguments)
 
-        self.assertEqual(["validated", "quality", "client"], events)
+        self.assertEqual(["quality", "sealed", "validated", "client"], events)
         self.assertEqual(1, exit_code)
 
     def test_cli_validation_failure_never_constructs_client_and_redacts_token(self):

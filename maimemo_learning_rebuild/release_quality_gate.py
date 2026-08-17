@@ -21,7 +21,12 @@ from .learning_quality import (
 )
 from .models import validate_semantic_record
 from .release_manifest import _parse_json_artifact
-from .release_writer import _artifact_path, _load_frozen_release
+from .release_writer import (
+    _StableReleaseSnapshot,
+    _load_frozen_release_snapshot,
+    _read_stable_release_snapshot,
+    _verify_stable_release_snapshot,
+)
 
 
 QUALITY_REPORT_FIELDS = {
@@ -159,6 +164,8 @@ class _ProtectedQualityBinding(NamedTuple):
     environment: _ProtectedQualityEnvironment
     release_dir: Path
     release_hash: str
+    sealed_snapshot: _StableReleaseSnapshot
+    sealed_digest: str
 
 
 _QUALITY_CAPABILITIES: weakref.WeakKeyDictionary = weakref.WeakKeyDictionary()
@@ -168,9 +175,37 @@ def _digest(raw: bytes) -> str:
     return hashlib.sha256(raw).hexdigest()
 
 
-def _payload(release_dir: Path, key: str) -> tuple[bytes, object]:
-    raw = _artifact_path(release_dir, key).read_bytes()
+def _payload(artifacts: Mapping[str, bytes], key: str) -> tuple[bytes, object]:
+    raw = artifacts[key]
     return raw, _parse_json_artifact(raw, key)
+
+
+def _length_prefixed(value: bytes) -> bytes:
+    return len(value).to_bytes(8, "big") + value
+
+
+def _sealed_snapshot_digest(snapshot: _StableReleaseSnapshot) -> str:
+    if type(snapshot) is not _StableReleaseSnapshot:
+        raise RuntimeError("sealed protected review snapshot required")
+    digest = hashlib.sha256()
+    digest.update(_length_prefixed(str(snapshot.release_dir).encode("utf-8")))
+    digest.update(_length_prefixed(snapshot.manifest_bytes))
+    for key, raw in snapshot.artifacts:
+        digest.update(_length_prefixed(key.encode("ascii")))
+        digest.update(_length_prefixed(raw))
+    for item in snapshot.files:
+        for value in (
+            item.label,
+            str(item.path),
+            str(item.device),
+            str(item.inode),
+            str(item.mode),
+            str(item.size),
+            str(item.modified_ns),
+            item.digest,
+        ):
+            digest.update(_length_prefixed(value.encode("utf-8")))
+    return digest.hexdigest()
 
 
 def _quality_report_errors(quality_reports: object) -> list[str]:
@@ -262,14 +297,16 @@ def _frozen_comparison_review_errors(
     return errors
 
 
-def evaluate_frozen_release_quality(release_dir: Path | str) -> list[str]:
-    """Validate bound review evidence and recompute every Task 3 quality check."""
+def _evaluate_sealed_release_quality(
+    snapshot: _StableReleaseSnapshot,
+) -> list[str]:
+    """Recompute quality only from the exact bytes the writer will execute."""
 
-    release_dir = Path(release_dir)
-    manifest, frozen_cards = _load_frozen_release(release_dir)
-    semantic_raw, semantic_payload = _payload(release_dir, "semantic_registry")
-    group_raw, group_payload = _payload(release_dir, "group_registry")
-    _quality_raw, quality_reports = _payload(release_dir, "quality_reports")
+    manifest, frozen_cards = _load_frozen_release_snapshot(snapshot)
+    artifacts = snapshot.artifact_bytes()
+    semantic_raw, semantic_payload = _payload(artifacts, "semantic_registry")
+    group_raw, group_payload = _payload(artifacts, "group_registry")
+    _quality_raw, quality_reports = _payload(artifacts, "quality_reports")
 
     errors = _quality_report_errors(quality_reports)
     if not isinstance(semantic_payload, dict) or not isinstance(
@@ -345,13 +382,59 @@ def evaluate_frozen_release_quality(release_dir: Path | str) -> list[str]:
     return list(dict.fromkeys(errors))
 
 
-def _canonical_quality_release(release_dir: Path | str) -> tuple[Path, dict]:
-    manifest, _cards = _load_frozen_release(release_dir)
-    try:
-        canonical = Path(release_dir).resolve(strict=True)
-    except OSError as error:
-        raise RuntimeError("protected review release directory is missing") from error
-    return canonical, manifest
+def evaluate_frozen_release_quality(release_dir: Path | str) -> list[str]:
+    """Structural precheck; it grants no authority and uses one stable snapshot."""
+
+    return _evaluate_sealed_release_quality(_read_stable_release_snapshot(release_dir))
+
+
+def _binding_for_quality_capability(capability: object) -> _ProtectedQualityBinding:
+    if type(capability) is not _ProtectedQualityCapability:
+        raise RuntimeError("protected current-environment review capability required")
+    binding = _QUALITY_CAPABILITIES.get(capability)
+    if binding is None:
+        raise RuntimeError("protected current-environment review capability required")
+    return binding
+
+
+def _assert_quality_environment(binding: _ProtectedQualityBinding) -> None:
+    mapping = os.environ
+    if mapping is not binding.environment_mapping:
+        raise RuntimeError("protected review environment mapping changed")
+    if _protected_quality_environment(mapping, binding.release_hash) != binding.environment:
+        raise RuntimeError("protected review environment changed after validation")
+
+
+def _consume_protected_quality_release(
+    capability: object,
+    release_dir: Path | str | None = None,
+    *,
+    verify_paths: bool = True,
+):
+    """Return fresh parsed execution objects from one registry-bound sealed snapshot."""
+
+    binding = _binding_for_quality_capability(capability)
+    _assert_quality_environment(binding)
+    if release_dir is not None:
+        try:
+            supplied_dir = Path(release_dir).resolve(strict=True)
+        except OSError as error:
+            raise RuntimeError("protected review release directory is missing") from error
+        if supplied_dir != binding.release_dir:
+            raise RuntimeError("protected review release directory mismatch")
+    if _sealed_snapshot_digest(binding.sealed_snapshot) != binding.sealed_digest:
+        raise RuntimeError("sealed protected review snapshot changed")
+    if verify_paths:
+        _verify_stable_release_snapshot(binding.sealed_snapshot)
+    _assert_quality_environment(binding)
+    errors = _evaluate_sealed_release_quality(binding.sealed_snapshot)
+    if errors:
+        raise RuntimeError("protected learning quality gate failed: " + "; ".join(errors))
+    _assert_quality_environment(binding)
+    manifest, cards = _load_frozen_release_snapshot(binding.sealed_snapshot)
+    if manifest.get("release_hash") != binding.release_hash:
+        raise RuntimeError("sealed protected review release hash changed")
+    return binding.sealed_snapshot, manifest, cards
 
 
 def open_protected_quality_capability(
@@ -359,31 +442,34 @@ def open_protected_quality_capability(
 ) -> _ProtectedQualityCapability:
     """Authorize exact frozen quality only in the current protected release job."""
 
-    canonical, manifest = _canonical_quality_release(release_dir)
+    mapping = os.environ
+    snapshot = _read_stable_release_snapshot(release_dir)
+    canonical = snapshot.release_dir
+    manifest, _cards = _load_frozen_release_snapshot(snapshot)
     release_hash = manifest.get("release_hash")
     if not _lower_digest(release_hash, 64):
         raise RuntimeError("protected review release hash is invalid")
-    mapping = os.environ
     environment = _protected_quality_environment(mapping, release_hash)
-    errors = evaluate_frozen_release_quality(canonical)
+    errors = _evaluate_sealed_release_quality(snapshot)
     if errors:
         raise RuntimeError("protected learning quality gate failed: " + "; ".join(errors))
     if os.environ is not mapping:
         raise RuntimeError("protected review environment mapping changed")
     if _protected_quality_environment(mapping, release_hash) != environment:
         raise RuntimeError("protected review environment changed during validation")
-    current_canonical, current_manifest = _canonical_quality_release(canonical)
-    if (
-        current_canonical != canonical
-        or current_manifest.get("release_hash") != release_hash
-    ):
-        raise RuntimeError("protected review release changed during validation")
+    _verify_stable_release_snapshot(snapshot)
+    if os.environ is not mapping:
+        raise RuntimeError("protected review environment mapping changed")
+    if _protected_quality_environment(mapping, release_hash) != environment:
+        raise RuntimeError("protected review environment changed during validation")
     capability = _ProtectedQualityCapability(_QUALITY_CAPABILITY_KEY)
     _QUALITY_CAPABILITIES[capability] = _ProtectedQualityBinding(
         mapping,
         environment,
         canonical,
         release_hash,
+        snapshot,
+        _sealed_snapshot_digest(snapshot),
     )
     return capability
 
@@ -391,34 +477,7 @@ def open_protected_quality_capability(
 def _revalidate_protected_quality_capability(
     capability: object, release_dir: Path | str | None = None
 ) -> None:
-    if type(capability) is not _ProtectedQualityCapability:
-        raise RuntimeError("protected current-environment review capability required")
-    binding = _QUALITY_CAPABILITIES.get(capability)
-    if binding is None:
-        raise RuntimeError("protected current-environment review capability required")
-    mapping = os.environ
-    if mapping is not binding.environment_mapping:
-        raise RuntimeError("protected review environment mapping changed")
-    if _protected_quality_environment(mapping, binding.release_hash) != binding.environment:
-        raise RuntimeError("protected review environment changed after validation")
-    expected_dir = binding.release_dir
-    if release_dir is not None:
-        try:
-            supplied_dir = Path(release_dir).resolve(strict=True)
-        except OSError as error:
-            raise RuntimeError("protected review release directory is missing") from error
-        if supplied_dir != expected_dir:
-            raise RuntimeError("protected review release directory mismatch")
-    errors = evaluate_frozen_release_quality(expected_dir)
-    if errors:
-        raise RuntimeError("protected learning quality gate failed: " + "; ".join(errors))
-    if os.environ is not mapping:
-        raise RuntimeError("protected review environment mapping changed")
-    if _protected_quality_environment(mapping, binding.release_hash) != binding.environment:
-        raise RuntimeError("protected review environment changed during revalidation")
-    current_dir, manifest = _canonical_quality_release(expected_dir)
-    if current_dir != expected_dir or manifest.get("release_hash") != binding.release_hash:
-        raise RuntimeError("protected review release changed after validation")
+    _consume_protected_quality_release(capability, release_dir)
 
 
 def run_release_quality_gate(
