@@ -1,10 +1,11 @@
 # 墨墨言语词汇学习库离线验收报告
 
 日期：2026-08-17
-目标章节：默认积累
-章节 ID：`mkjch_OlSlOwi_yIbDLFwf6ikOxx6ON5cR.cerVsyQTVArStvrIzxaYhlvaE3GFQ_pTBal`
-冻结快照哈希：`69b4b47c2bfe32752531a371e7eb0b63da20d72d246ee8b01a94b3ab48f324d5`
-冻结计划哈希：`f2d0c4c9efe3eae364d748cf34c8dd1d9e70aab3db61275710025964e5b51c31`
+目标卡组：公考成语积累辨析
+目标章节：默认章节
+章节 ID：`mkjch_ORs2Bradwz8eLH8ZFVNMf4hFpJL9eh_Dd7ryPK6T28oIcLd9I.qEtcJNoHyuLlGk`
+冻结快照哈希：`3416fdecafa1bbfc684b262ded40dbf2a3b3e79c75f5b67cf739afaf19bcdc3b`
+冻结计划哈希：`fe0ea3c515404d394fc4079ef4b27b9a6e5a619f0678ac581ba2b20d8f7aa6e3`
 
 ## 验收结论
 
@@ -53,13 +54,13 @@
 
 ## 冻结动作计划
 
-- 当前线上冻结快照：730 张卡（605 张基础卡、125 张辨析卡）。
-- `update`：730 张。
-- `create`：16 张基础卡、123 张应用卡，共 139 张。
+- 当前目标卡组冻结快照：0 张卡。
+- `update`：0 张。
+- `create`：869 张（621 张基础卡、125 张辨析卡、123 张应用卡）。
 - `manual-review`：0 项。
 - 写入并完整回读后的目标数量：869 张（621 张基础卡、125 张辨析卡、123 张应用卡）。
 
-计划哈希为：`f2d0c4c9efe3eae364d748cf34c8dd1d9e70aab3db61275710025964e5b51c31`。
+计划哈希为：`fe0ea3c515404d394fc4079ef4b27b9a6e5a619f0678ac581ba2b20d8f7aa6e3`。
 
 ## 应用卡验收
 
@@ -72,7 +73,7 @@
 
 ## 自动验收结果
 
-- 单元与集成测试：79 项全部通过。
+- 单元与集成测试：82 项全部通过。
 - 公开仓库质量门禁：通过。
 - 应用卡专用质量门禁：通过。
 - 最终卡数量与计划目标：一致。
@@ -84,10 +85,11 @@
 
 用户需要明确批准以下冻结对象：
 
-- 章节：默认积累；
-- 章节 ID：`mkjch_OlSlOwi_yIbDLFwf6ikOxx6ON5cR.cerVsyQTVArStvrIzxaYhlvaE3GFQ_pTBal`；
-- 计划哈希：`f2d0c4c9efe3eae364d748cf34c8dd1d9e70aab3db61275710025964e5b51c31`；
-- 动作总数：`create 139 / update 730`；
+- 卡组：公考成语积累辨析；
+- 章节：默认章节；
+- 章节 ID：`mkjch_ORs2Bradwz8eLH8ZFVNMf4hFpJL9eh_Dd7ryPK6T28oIcLd9I.qEtcJNoHyuLlGk`；
+- 计划哈希：`fe0ea3c515404d394fc4079ef4b27b9a6e5a619f0678ac581ba2b20d8f7aa6e3`；
+- 动作总数：`create 869`；
 - 写后目标：869 张。
 
 只有收到与以上内容完全一致的授权后，才生成批准记录、调用墨墨写接口，并进行标题、内容、语法版本、根卡引用和总数的完整回读验收。

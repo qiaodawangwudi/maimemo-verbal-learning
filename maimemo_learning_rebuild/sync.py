@@ -33,8 +33,6 @@ def _apply_action(
     chapter_id: str,
 ) -> None:
     value = action["action"]
-    if action.get("content_hash") and action["content_hash"] != content_hash(content):
-        raise RuntimeError(f"content hash changed before write: {action['title']}")
     if value == "update" or value == "repurpose":
         client.update_card(action["card_id"], content, guard)
     elif value == "create":
@@ -62,6 +60,10 @@ def apply_plan(
     for title in cards:
         if title not in actions:
             raise RuntimeError(f"card missing from approved plan: {title}")
+        action = actions[title]
+        raw_content = str(cards[title].get("content") or "")
+        if action.get("content_hash") and action["content_hash"] != content_hash(raw_content):
+            raise RuntimeError(f"content hash changed before write: {title}")
     comparison_titles = [
         title for title, card in cards.items() if card.get("card_type") == "comparison"
     ]

@@ -3,8 +3,12 @@
 from __future__ import annotations
 
 from collections import Counter
+import re
 
 from .markji import parse_card
+
+
+ROOT_PLACEHOLDER = re.compile(r"\{\{root:([^}]+)\}\}")
 
 
 def verify_readback(live_cards: list[dict], expected_cards: list[dict], plan: dict) -> dict:
@@ -20,12 +24,21 @@ def verify_readback(live_cards: list[dict], expected_cards: list[dict], plan: di
             errors.append(f"duplicate live title: {title}")
     live_by_title = {card.title: card for card in parsed}
     expected_by_title = {card["title"]: card for card in expected_cards}
+    comparison_roots = {
+        card.title: card.root_id
+        for card in parsed
+        if card.card_type == "comparison" and card.root_id
+    }
     planned_titles = {action["title"] for action in plan.get("actions", [])}
     for title, expected in expected_by_title.items():
         live = live_by_title.get(title)
+        expected_content = ROOT_PLACEHOLDER.sub(
+            lambda match: comparison_roots.get(match.group(1), match.group(0)),
+            str(expected["content"]),
+        )
         if live is None:
             errors.append(f"missing live title: {title}")
-        elif live.content != expected["content"]:
+        elif live.content != expected_content:
             errors.append(f"content mismatch: {title}")
         elif live.grammar_version != 3:
             errors.append(f"grammar version mismatch: {title}")

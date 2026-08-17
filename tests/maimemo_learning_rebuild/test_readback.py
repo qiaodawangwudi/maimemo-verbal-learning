@@ -13,6 +13,35 @@ def live_card(card_id, root_id, title, content):
 
 
 class ReadbackTests(unittest.TestCase):
+    def test_readback_resolves_expected_runtime_root_placeholder(self):
+        group_content = "[P#H1#近义辨析｜甲、乙]\n---\n辨析"
+        live_base = (
+            "[P#H1#基础词义｜甲]\n---\n"
+            "[Card#ID/mkjr_new_group#近义辨析｜甲、乙]"
+        )
+        expected_base = live_base.replace(
+            "mkjr_new_group", "{{root:近义辨析｜甲、乙}}"
+        )
+        cards = [
+            live_card("g1", "mkjr_new_group", "近义辨析｜甲、乙", group_content),
+            live_card("b1", "mkjr_base", "基础词义｜甲", live_base),
+        ]
+        expected = [
+            {"title": "近义辨析｜甲、乙", "content": group_content},
+            {"title": "基础词义｜甲", "content": expected_base},
+        ]
+        plan = {
+            "expected_after": 2,
+            "actions": [
+                {"title": "近义辨析｜甲、乙"},
+                {"title": "基础词义｜甲"},
+            ],
+        }
+
+        report = verify_readback(cards, expected, plan)
+
+        self.assertTrue(report["ok"], report["errors"])
+
     def test_complete_readback_matches_titles_content_versions_and_counts(self):
         cards = [
             live_card("c1", "r1", "基础词义｜甲", "[P#H1#基础词义｜甲]\n---\n新内容")

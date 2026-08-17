@@ -2,6 +2,7 @@ import unittest
 
 from maimemo_learning_rebuild.api import MaimemoClient
 from maimemo_learning_rebuild.guard import GuardResult
+from maimemo_learning_rebuild.planning import content_hash
 from maimemo_learning_rebuild.sync import apply_plan
 
 
@@ -19,6 +20,62 @@ class FakeTransport:
 
 
 class ApiIsolationTests(unittest.TestCase):
+    def test_new_deck_resolves_created_comparison_root_before_base_write(self):
+        group_content = "[P#H1#近义辨析｜甲、乙]\n\n问题\n\n---\n\n辨析"
+        base_template = (
+            "[P#H1#基础词义｜甲]\n\n问题\n\n---\n\n"
+            "[Card#ID/{{root:近义辨析｜甲、乙}}#近义辨析｜甲、乙]"
+        )
+        transport = FakeTransport(
+            [
+                {"data": {"id": "g1"}},
+                {
+                    "data": {
+                        "chapters": [{"id": "chapter", "card_ids": ["g1"]}],
+                        "cards": [
+                            {
+                                "id": "g1",
+                                "root_id": "mkjr_new_group",
+                                "content": group_content,
+                            }
+                        ],
+                    }
+                },
+                {"data": {"id": "b1"}},
+            ]
+        )
+        client = MaimemoClient(transport, token="secret", deck_id="deck")
+        guard = GuardResult(True, (), "hash")
+        plan = {
+            "chapter_id": "chapter",
+            "actions": [
+                {
+                    "title": "近义辨析｜甲、乙",
+                    "action": "create",
+                    "content_hash": content_hash(group_content),
+                },
+                {
+                    "title": "基础词义｜甲",
+                    "action": "create",
+                    "content_hash": content_hash(base_template),
+                },
+            ],
+        }
+        cards = [
+            {"title": "基础词义｜甲", "card_type": "base", "content": base_template},
+            {
+                "title": "近义辨析｜甲、乙",
+                "card_type": "comparison",
+                "content": group_content,
+            },
+        ]
+
+        apply_plan(client, guard, plan, cards, "chapter", pause=lambda: None)
+
+        written_base = transport.calls[2][3]["card"]["content"]
+        self.assertIn("[Card#ID/mkjr_new_group#近义辨析｜甲、乙]", written_base)
+        self.assertNotIn("{{root:", written_base)
+
     def test_read_call_cannot_mutate_and_write_requires_guard(self):
         transport = FakeTransport([{"data": {"chapters": [], "cards": []}}])
         client = MaimemoClient(transport, token="secret", deck_id="deck")

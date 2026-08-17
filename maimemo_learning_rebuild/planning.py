@@ -47,13 +47,15 @@ def build_action_plan(
     ready_groups = [group for group in groups if group.get("status") == "ready"]
     ready_group_refs: dict[str, list[dict]] = {}
     for group in ready_groups:
-        if group.get("root_id"):
-            reference = {
-                "title": group.get("title") or group.get("current_title"),
-                "root_id": group["root_id"],
-            }
-            for member in group.get("members", []):
-                ready_group_refs.setdefault(member, []).append(reference)
+        title = str(group.get("title") or group.get("current_title") or group.get("group_id"))
+        existing = comparison_by_id.get(str(group.get("source_card_id") or ""))
+        reference_root = existing.root_id if existing else f"{{{{root:{title}}}}}"
+        reference = {
+            "title": title,
+            "root_id": reference_root,
+        }
+        for member in group.get("members", []):
+            ready_group_refs.setdefault(member, []).append(reference)
 
     actions: list[dict] = []
     final_cards: list[dict] = []

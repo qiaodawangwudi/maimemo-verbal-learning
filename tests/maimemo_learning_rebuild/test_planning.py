@@ -39,6 +39,33 @@ def semantic(term, status="ready"):
 
 
 class PlanningTests(unittest.TestCase):
+    def test_new_deck_uses_runtime_root_placeholder_for_created_comparison(self):
+        snapshot = {"cards": []}
+        registry = [semantic("甲"), semantic("乙")]
+        group = {
+            "group_id": "group::old-root",
+            "source_card_id": "old-card",
+            "root_id": "mkjr_old_deck_root",
+            "status": "ready",
+            "title": "近义辨析｜甲、乙",
+            "members": ["甲", "乙"],
+            "minimum_differences": [
+                {"left": "甲", "right": "乙", "text": "甲强调当前状态，乙强调变化过程。"}
+            ],
+            "dimensions": [],
+            "misuse_boundary": "缺少相应判断条件时不得混用。",
+        }
+
+        plan, final_cards = build_action_plan(snapshot, registry, [group])
+
+        comparison_action = next(
+            item for item in plan["actions"] if item["title"] == "近义辨析｜甲、乙"
+        )
+        base_card = next(item for item in final_cards if item["title"] == "基础词义｜甲")
+        self.assertEqual("create", comparison_action["action"])
+        self.assertIn("{{root:近义辨析｜甲、乙}}", base_card["content"])
+        self.assertNotIn("mkjr_old_deck_root", base_card["content"])
+
     def test_plan_creates_reviewed_application_card_and_counts_it(self):
         snapshot = {"cards": []}
         registry = [semantic("因噎废食"), semantic("投鼠忌器")]
