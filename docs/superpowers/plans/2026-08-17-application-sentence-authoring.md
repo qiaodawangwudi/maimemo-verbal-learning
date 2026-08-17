@@ -27,11 +27,11 @@
 - Consumes: structured `application` dictionaries.
 - Produces: validation errors for unsupported provenance, raw speech, copied evidence, and answer leakage.
 
-- [ ] Add a failing test with `construction.mode="raw_transcript"` and a prompt containing “同学们”。
-- [ ] Run `python -m unittest -v tests.maimemo_learning_rebuild.test_application_quality_gate` and confirm the new test fails.
-- [ ] Add `authored`/`adapted` validation, oral-marker rejection and source-copy rejection.
-- [ ] Rerun the test module and confirm it passes.
-- [ ] Commit the gate change.
+- [x] Add a failing test with `construction.mode="raw_transcript"` and a prompt containing “同学们”。
+- [x] Run `python -m unittest -v tests.maimemo_learning_rebuild.test_application_quality_gate` and confirm the new test fails.
+- [x] Add `authored`/`adapted` validation, oral-marker rejection and source-copy rejection.
+- [x] Rerun the test module and confirm it passes.
+- [x] Commit the gate change.
 
 ### Task 2: Render transparent exercise provenance
 
@@ -43,11 +43,11 @@
 - Consumes: `application["construction"]`.
 - Produces: a compact back-side label stating “自主创作” or “原题改编”。
 
-- [ ] Add a failing renderer test requiring `【题目性质】` on the back only.
-- [ ] Run the focused test and confirm failure.
-- [ ] Render the provenance label after the transfer rule.
-- [ ] Rerun renderer tests and confirm success.
-- [ ] Commit the renderer change.
+- [x] Add a failing renderer test requiring `【题目性质】` on the back only.
+- [x] Run the focused test and confirm failure.
+- [x] Render the provenance label after the transfer rule.
+- [x] Rerun renderer tests and confirm success.
+- [x] Commit the renderer change.
 
 ### Task 3: Reclassify raw extraction as source material
 
@@ -60,11 +60,11 @@
 - Consumes: transcript evidence.
 - Produces: `source_material_only=true`, `formal_prompt_eligible=false` pending material.
 
-- [ ] Add a failing test proving extracted material is never formally eligible.
-- [ ] Run the focused test and confirm failure.
-- [ ] Add immutable quarantine flags and rename user-facing warning text.
-- [ ] Regenerate the queue and verify every item remains pending.
-- [ ] Commit the queue change.
+- [x] Add a failing test proving extracted material is never formally eligible.
+- [x] Run the focused test and confirm failure.
+- [x] Add immutable quarantine flags and rename user-facing warning text.
+- [x] Regenerate the queue and verify every item remains pending.
+- [x] Commit the queue change.
 
 ### Task 4: Curate, rebuild, and verify formal application cards
 
@@ -79,9 +79,8 @@
 - Consumes: semantic registry, group registry and quarantined material.
 - Produces: complete review decisions, formal application cards and a new plan hash.
 
-- [ ] Review every ready semantic record and comparison group exactly once.
-- [ ] Author or deeply adapt each approved exercise with explicit clues and distractor exclusions.
-- [ ] Run both public and application quality gates; require only the final write-approval guard to remain blocked.
-- [ ] Run the complete repository-portable test suite.
-- [ ] Commit and push the rebuilt artifacts; verify GitHub checks before requesting final write approval.
-
+- [x] Review every ready semantic record and comparison group exactly once.
+- [x] Author or deeply adapt each approved exercise with explicit clues and distractor exclusions.
+- [x] Run both public and application quality gates; require only the final write-approval guard to remain blocked.
+- [x] Run the complete repository-portable test suite.
+- [x] Commit and push the rebuilt artifacts; verify GitHub checks before requesting final write approval.

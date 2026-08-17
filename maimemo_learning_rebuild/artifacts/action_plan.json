@@ -5,9 +5,9 @@
   "chapter_name": "默认积累",
   "snapshot_hash": "69b4b47c2bfe32752531a371e7eb0b63da20d72d246ee8b01a94b3ab48f324d5",
   "before": 730,
-  "expected_after": 746,
+  "expected_after": 869,
   "action_counts": {
-    "create": 16,
+    "create": 139,
     "update": 730
   },
   "actions": [
@@ -5962,7 +5962,869 @@
       "content_hash": "4e3b46385572e3daa1dd55b47d12bda78e494e1a54aa853633b5c269c5a9b9d1",
       "reason": "按已验收比较图重建辨析卡。",
       "record_status": "ready"
+    },
+    {
+      "title": "语境应用｜因噎废食、投鼠忌器、削足适履、矫枉过正、固步自封、动辄得咎｜因风险停止行动",
+      "action": "create",
+      "content_hash": "fa4fd958e87b0d9019b14df51bbd6bcc3820a0d9d5175169195d3740a6ac3c62",
+      "reason": "应用价值审查确认该语境具有独立训练价值。",
+      "record_status": "ready"
+    },
+    {
+      "title": "语境应用｜广泛、普遍｜判断对象",
+      "action": "create",
+      "content_hash": "100f948a8ddf638d53b9c85d9d1b423a7cdbf4cb305c26fdd16761473d9bc04b",
+      "reason": "应用价值审查确认该语境具有独立训练价值。",
+      "record_status": "ready"
+    },
+    {
+      "title": "语境应用｜固若金汤、坚如磐石｜状态",
+      "action": "create",
+      "content_hash": "b7a76d58c75af1e9a0bfeb19f90e159a195455f7f20330584b9b8443eedf5d72",
+      "reason": "应用价值审查确认该语境具有独立训练价值。",
+      "record_status": "ready"
+    },
+    {
+      "title": "语境应用｜举一反三、触类旁通｜典型对象",
+      "action": "create",
+      "content_hash": "1192fa38b13354a0278ed8906cf5b205e5c03471a716cb158e87af5c99cbf9be",
+      "reason": "应用价值审查确认该语境具有独立训练价值。",
+      "record_status": "ready"
+    },
+    {
+      "title": "语境应用｜冷板凳、香饽饽、风向标、聚光灯｜语义方向",
+      "action": "create",
+      "content_hash": "a723cd6d0d61b44b7f2dbf1494b34968df3aa80cae635e282245dfdc27b5e4d7",
+      "reason": "应用价值审查确认该语境具有独立训练价值。",
+      "record_status": "ready"
+    },
+    {
+      "title": "语境应用｜如火如荼、热火朝天、方兴未艾、如日中天、登峰造极、轰轰烈烈｜典型对象",
+      "action": "create",
+      "content_hash": "b26704f30fd6eb1c91494e2d810b53145e551e3c0b54d35984c7ce62bfaa3b80",
+      "reason": "应用价值审查确认该语境具有独立训练价值。",
+      "record_status": "ready"
+    },
+    {
+      "title": "语境应用｜全力以赴、绞尽脑汁、尽心尽力、挖空心思、殚精竭虑、苦心孤诣｜决定性线索",
+      "action": "create",
+      "content_hash": "d319ae3e9b36d017b66a75b1205507f188d58f5209a698a8312ba2116c223d58",
+      "reason": "应用价值审查确认该语境具有独立训练价值。",
+      "record_status": "ready"
+    },
+    {
+      "title": "语境应用｜空前绝后、史无前例、亘古未有｜时间范围",
+      "action": "create",
+      "content_hash": "f5ad2f2af139c335e0a92cb6e7a34aadb9dec2708a2009e6cad1dbfae25dcecf",
+      "reason": "应用价值审查确认该语境具有独立训练价值。",
+      "record_status": "ready"
+    },
+    {
+      "title": "语境应用｜计划、引导、组织、领导、贯彻｜决定性线索",
+      "action": "create",
+      "content_hash": "991fe8ff060a3d71a3b87799d6a146de7c7c856a34b330e0550a746652e2a5c5",
+      "reason": "应用价值审查确认该语境具有独立训练价值。",
+      "record_status": "ready"
+    },
+    {
+      "title": "语境应用｜刮目相看、赞不绝口、赞叹不已、为之一振｜决定性线索",
+      "action": "create",
+      "content_hash": "a66802026ad49ce61315a9e8542c2e3a454bd61649ed4a4946c5bc35112bb13e",
+      "reason": "应用价值审查确认该语境具有独立训练价值。",
+      "record_status": "ready"
+    },
+    {
+      "title": "语境应用｜果断、忠实、冷静、严谨、准确、唯一｜决定性线索",
+      "action": "create",
+      "content_hash": "87c557db33a5d2119d97dc40a711c619373e425e8ba1cadb2ff5c78372463230",
+      "reason": "应用价值审查确认该语境具有独立训练价值。",
+      "record_status": "ready"
+    },
+    {
+      "title": "语境应用｜跨越、进步、变迁、转变｜变化方向",
+      "action": "create",
+      "content_hash": "1ef7b1fda89d99397c3a9f4719f00ed6ca59197b7da7d86cb2ae9267713d20e5",
+      "reason": "应用价值审查确认该语境具有独立训练价值。",
+      "record_status": "ready"
+    },
+    {
+      "title": "语境应用｜精雕细琢、千锤百炼、锦上添花、精益求精、画蛇添足｜决定性线索",
+      "action": "create",
+      "content_hash": "f8d9b1ce09900dd851ca7922341d4fbb723c55a85b9a878bef354f65ac096f87",
+      "reason": "应用价值审查确认该语境具有独立训练价值。",
+      "record_status": "ready"
+    },
+    {
+      "title": "语境应用｜大刀阔斧、寸土必争、讨价还价、锱铢必较、斤斤计较｜决定性线索",
+      "action": "create",
+      "content_hash": "0659866fa82ef1e28d15bad02ab66f8cf6b481f16f9fefb20fc747b45c0dcccd",
+      "reason": "应用价值审查确认该语境具有独立训练价值。",
+      "record_status": "ready"
+    },
+    {
+      "title": "语境应用｜针锋相对、互不相让、唇枪舌剑、据理力争｜主体数量",
+      "action": "create",
+      "content_hash": "1b218909e7a07fc11985d6825c4d44116d296d4cf6f2891d661157e6617035d6",
+      "reason": "应用价值审查确认该语境具有独立训练价值。",
+      "record_status": "ready"
+    },
+    {
+      "title": "语境应用｜哗众取宠、巧言令色、矫揉造作、故弄玄虚、煞有介事｜动作目的",
+      "action": "create",
+      "content_hash": "a40e849fa38822a1a858a91c398b40649f2c421ba368c3cc521d86dffdf2276a",
+      "reason": "应用价值审查确认该语境具有独立训练价值。",
+      "record_status": "ready"
+    },
+    {
+      "title": "语境应用｜五花八门、千奇百怪、如出一辙、千篇一律、纷繁芜杂、林林总总｜判断对象",
+      "action": "create",
+      "content_hash": "91cc55a0d58279352e8dfdede6cf7d574a8de09de5a199ee98bc4272fdbe6255",
+      "reason": "应用价值审查确认该语境具有独立训练价值。",
+      "record_status": "ready"
+    },
+    {
+      "title": "语境应用｜有迹可循、不过尔尔｜特别落点",
+      "action": "create",
+      "content_hash": "f85a408af6d5a13b995f0cce7ed0809d215ca79ad4b9cb5b41d5cae10c00886b",
+      "reason": "应用价值审查确认该语境具有独立训练价值。",
+      "record_status": "ready"
+    },
+    {
+      "title": "语境应用｜如梦似幻、心有灵犀、感同身受、身临其境｜决定性线索",
+      "action": "create",
+      "content_hash": "a97381d276825b2c19e13440a2370e65586635199c072bb0dad928dc06349b0b",
+      "reason": "应用价值审查确认该语境具有独立训练价值。",
+      "record_status": "ready"
+    },
+    {
+      "title": "语境应用｜明珠暗投、华而不实、买椟还珠｜特别落点",
+      "action": "create",
+      "content_hash": "3beebcbb0f1a8bbc379b841ec705b2ccc49488662a18dd7ef70937d21b3ca7bd",
+      "reason": "应用价值审查确认该语境具有独立训练价值。",
+      "record_status": "ready"
+    },
+    {
+      "title": "语境应用｜上涨、膨胀｜变化方式",
+      "action": "create",
+      "content_hash": "2bbf44128b6cae2579e294c427bc2d0db5469a2091635d98417a1c30c33c005b",
+      "reason": "应用价值审查确认该语境具有独立训练价值。",
+      "record_status": "ready"
+    },
+    {
+      "title": "语境应用｜摩顶放踵、摩肩接踵｜特别落点",
+      "action": "create",
+      "content_hash": "72a18ff387f1e8bbda218d234bfb87e54e4c480bb33bea92b7319b010da0e19c",
+      "reason": "应用价值审查确认该语境具有独立训练价值。",
+      "record_status": "ready"
+    },
+    {
+      "title": "语境应用｜崎岖、逶迤、蜿蜒、盘曲｜典型对象",
+      "action": "create",
+      "content_hash": "db5f6484f5330622effd6fbd2f115ba3cd03d45db6488554bc2220be04aa71a5",
+      "reason": "应用价值审查确认该语境具有独立训练价值。",
+      "record_status": "ready"
+    },
+    {
+      "title": "语境应用｜琳琅满目、美轮美奂、流光溢彩、珠围翠绕｜典型对象",
+      "action": "create",
+      "content_hash": "e05afb13108ad7c002f896c39689b35088524639d78465c9dd1749df4e57227e",
+      "reason": "应用价值审查确认该语境具有独立训练价值。",
+      "record_status": "ready"
+    },
+    {
+      "title": "语境应用｜格调、情调｜层次",
+      "action": "create",
+      "content_hash": "c5a7a162fde665860cd5b078e4454587be24dcc72cae017c87506e9511564fb6",
+      "reason": "应用价值审查确认该语境具有独立训练价值。",
+      "record_status": "ready"
+    },
+    {
+      "title": "语境应用｜错综复杂、一言难尽、含糊其辞、模棱两可、不置可否｜特别落点",
+      "action": "create",
+      "content_hash": "0e8bc9526adb03e92589eae7b92f70420882e211d43df54c55a6064903a82e51",
+      "reason": "应用价值审查确认该语境具有独立训练价值。",
+      "record_status": "ready"
+    },
+    {
+      "title": "语境应用｜丰富、独特、畅通、直接、旋转、单一｜决定性线索",
+      "action": "create",
+      "content_hash": "637ea099eab195336789dcd58bc465b31b0ac5521c2f4188219bdd4ee5777078",
+      "reason": "应用价值审查确认该语境具有独立训练价值。",
+      "record_status": "ready"
+    },
+    {
+      "title": "语境应用｜视如敝履、俗不可耐、荒诞不经、视若拱璧｜决定性线索",
+      "action": "create",
+      "content_hash": "01f1bf92932a1c044648b660db9aa421888ed1ded0a18837f97b0898cd43c771",
+      "reason": "应用价值审查确认该语境具有独立训练价值。",
+      "record_status": "ready"
+    },
+    {
+      "title": "语境应用｜钥匙、自觉、主动、第一、重要、关键｜动力来源",
+      "action": "create",
+      "content_hash": "d17148c0ebf510e4fa218735eb69591b54fe840c7fde8dcdae4a28c4c0f8b109",
+      "reason": "应用价值审查确认该语境具有独立训练价值。",
+      "record_status": "ready"
+    },
+    {
+      "title": "语境应用｜坐等、失去、放弃｜决定性线索",
+      "action": "create",
+      "content_hash": "aa1cd25bb3ef37e21fcb49c5a67fbd43fc772c94446be08bad0adb70a8259109",
+      "reason": "应用价值审查确认该语境具有独立训练价值。",
+      "record_status": "ready"
+    },
+    {
+      "title": "语境应用｜笼子、泥淖、禁锢、陷阱｜特别落点",
+      "action": "create",
+      "content_hash": "bb3ee55dd2e4cafdf43aa610f1f5ba35bcec49b592d68563ab81243a807aa797",
+      "reason": "应用价值审查确认该语境具有独立训练价值。",
+      "record_status": "ready"
+    },
+    {
+      "title": "语境应用｜阻断、防止、削弱、减缓｜时间前提",
+      "action": "create",
+      "content_hash": "3c4b55682b9f2bb22983799ea5f67a5b062bf071f6d385255eebb677b789fed6",
+      "reason": "应用价值审查确认该语境具有独立训练价值。",
+      "record_status": "ready"
+    },
+    {
+      "title": "语境应用｜约束、制约、限制、掣肘、打破、规制｜作用",
+      "action": "create",
+      "content_hash": "d4aab1bf89a9836af904aa0194b52b0275ccda479a1fdc7d8668a34882e1d209",
+      "reason": "应用价值审查确认该语境具有独立训练价值。",
+      "record_status": "ready"
+    },
+    {
+      "title": "语境应用｜同质化、模式化、标准化、工具化｜特别落点",
+      "action": "create",
+      "content_hash": "25dc7d7551840abc9b57ef9333f95bda2b6d5b9dc9ab56497e650fd44643ac62",
+      "reason": "应用价值审查确认该语境具有独立训练价值。",
+      "record_status": "ready"
+    },
+    {
+      "title": "语境应用｜反映、决定、稀缺、珍贵｜作用强度",
+      "action": "create",
+      "content_hash": "9e8b37763860d89b054d52f55f752c21518a997001807b5846e4d371c43b566e",
+      "reason": "应用价值审查确认该语境具有独立训练价值。",
+      "record_status": "ready"
+    },
+    {
+      "title": "语境应用｜心领神会、喜闻乐见、津津乐道、耳熟能详｜决定性线索",
+      "action": "create",
+      "content_hash": "c5184608d72595d8e7bed823458c36ba7f9554c42fd806b935a1efa82022e8bb",
+      "reason": "应用价值审查确认该语境具有独立训练价值。",
+      "record_status": "ready"
+    },
+    {
+      "title": "语境应用｜福祉、幸福、权利｜特别落点",
+      "action": "create",
+      "content_hash": "53ebc41d51f61301a435a8e776c3c4b64c878582e40dd2b55bb42e56ab28eb9d",
+      "reason": "应用价值审查确认该语境具有独立训练价值。",
+      "record_status": "ready"
+    },
+    {
+      "title": "语境应用｜九龙治水、群龙无首、一盘散沙｜比喻对象",
+      "action": "create",
+      "content_hash": "b006be20ca8268116f6f6d988d52290de0ae65c2b9228f7151ccb6eb24508d29",
+      "reason": "应用价值审查确认该语境具有独立训练价值。",
+      "record_status": "ready"
+    },
+    {
+      "title": "语境应用｜根本、完全离不开、片刻｜程度",
+      "action": "create",
+      "content_hash": "dfcecd0d7cc98a123ab6dbfd8add22522348aed1c16378b52be301eebdd9412f",
+      "reason": "应用价值审查确认该语境具有独立训练价值。",
+      "record_status": "ready"
+    },
+    {
+      "title": "语境应用｜舍本逐末、本末倒置、因小失大、细枝末节、枝节｜评价落点",
+      "action": "create",
+      "content_hash": "dbcb2b89594effad59d5446f0d3e22f283a008c29c49910f10e7da8d39f2b3b2",
+      "reason": "应用价值审查确认该语境具有独立训练价值。",
+      "record_status": "ready"
+    },
+    {
+      "title": "语境应用｜凝聚、汇集、聚焦｜特别落点",
+      "action": "create",
+      "content_hash": "20f331d9b268e6f410bc06378b39f5db8a209ae3d1c023b96681f4074d4ccbc0",
+      "reason": "应用价值审查确认该语境具有独立训练价值。",
+      "record_status": "ready"
+    },
+    {
+      "title": "语境应用｜阐明、肃清、澄清、梳理、理清、厘清｜对象",
+      "action": "create",
+      "content_hash": "3e82e462004c1ba5d17104fc265ddb8c310ee86fc5520c279bd5e987d2b57bb6",
+      "reason": "应用价值审查确认该语境具有独立训练价值。",
+      "record_status": "ready"
+    },
+    {
+      "title": "语境应用｜与虎谋皮、对牛弹琴、鸡同鸭讲｜障碍来源",
+      "action": "create",
+      "content_hash": "fb85450b56618b768dd53eea75ebd30c720e06094a74afaf34255fed32396572",
+      "reason": "应用价值审查确认该语境具有独立训练价值。",
+      "record_status": "ready"
+    },
+    {
+      "title": "语境应用｜心术不正、图谋不轨、唯利是图、处心积虑｜评价对象",
+      "action": "create",
+      "content_hash": "79669ccee67c2b417359dcffc5cf5a057c5315ed6eef20daa114211abb0cd4e0",
+      "reason": "应用价值审查确认该语境具有独立训练价值。",
+      "record_status": "ready"
+    },
+    {
+      "title": "语境应用｜并行不悖、如影随形、各有所长、不可或缺｜特别落点",
+      "action": "create",
+      "content_hash": "a753d29fc87227f549d76e6d06f491488d5f8c6d014331d5d21006886646753b",
+      "reason": "应用价值审查确认该语境具有独立训练价值。",
+      "record_status": "ready"
+    },
+    {
+      "title": "语境应用｜传承、弘扬｜传播方向",
+      "action": "create",
+      "content_hash": "8ab0ba0af01c72389fbf80d5e1df3371367b0d0268f64e160b3ce88593e51f32",
+      "reason": "应用价值审查确认该语境具有独立训练价值。",
+      "record_status": "ready"
+    },
+    {
+      "title": "语境应用｜踔厉奋发、勇毅前行、笃行不怠、奋勇争先、久久为功｜行动方向",
+      "action": "create",
+      "content_hash": "488e750009d60703301b7abf315a4ec186a7bb8408392b7f16b5d67969cfeb80",
+      "reason": "应用价值审查确认该语境具有独立训练价值。",
+      "record_status": "ready"
+    },
+    {
+      "title": "语境应用｜履行、堪当、担负、担当｜特别落点",
+      "action": "create",
+      "content_hash": "1a650c78965cffc5b5b0739d8e8f9ae1bb3df83a30c9f4ccbbd42221169784a6",
+      "reason": "应用价值审查确认该语境具有独立训练价值。",
+      "record_status": "ready"
+    },
+    {
+      "title": "语境应用｜淡化、忽视、无视、模糊｜特别落点",
+      "action": "create",
+      "content_hash": "aabbbfff91e3c8f9b2a51735aad67395d3d69e1b52ae11c928836926bda23510",
+      "reason": "应用价值审查确认该语境具有独立训练价值。",
+      "record_status": "ready"
+    },
+    {
+      "title": "语境应用｜约定俗成、未成风气、习以为常、心照不宣｜特别落点",
+      "action": "create",
+      "content_hash": "1ea5722dbc737669053e9f8bcc71ebdf7eff0a0c87d22d99c8f708a742662fed",
+      "reason": "应用价值审查确认该语境具有独立训练价值。",
+      "record_status": "ready"
+    },
+    {
+      "title": "语境应用｜五花八门、琳琅满目、百花齐放、百家争鸣、包罗万象｜适用领域",
+      "action": "create",
+      "content_hash": "15e69f4fe561f791d97d6178482d2fc7d54ff70ccee82bfb0e007d7cc21888e3",
+      "reason": "应用价值审查确认该语境具有独立训练价值。",
+      "record_status": "ready"
+    },
+    {
+      "title": "语境应用｜完备、完整、完善、完全｜特别落点",
+      "action": "create",
+      "content_hash": "1ad057c189d3d09e43bdb4e31ef4cb4470ec78a880c84c063f0dab4df1ab43a2",
+      "reason": "应用价值审查确认该语境具有独立训练价值。",
+      "record_status": "ready"
+    },
+    {
+      "title": "语境应用｜迎合、彰显、凸显｜决定性线索",
+      "action": "create",
+      "content_hash": "71d03427e27483cb5d42cb4af841fe6c4e9c4c691a72081a2beb089487703b39",
+      "reason": "应用价值审查确认该语境具有独立训练价值。",
+      "record_status": "ready"
+    },
+    {
+      "title": "语境应用｜批驳、对抗、抵制、拆穿｜特别落点",
+      "action": "create",
+      "content_hash": "b3515a72848e36d93b5d0d44214d2cfd4dab495823e357c026f5a495683bafbc",
+      "reason": "应用价值审查确认该语境具有独立训练价值。",
+      "record_status": "ready"
+    },
+    {
+      "title": "语境应用｜回应、呼应、响应、反应｜主动性",
+      "action": "create",
+      "content_hash": "914e7324e8e971870f8d6eb10709854c829b7f5334bef40135c19f115aa887e7",
+      "reason": "应用价值审查确认该语境具有独立训练价值。",
+      "record_status": "ready"
+    },
+    {
+      "title": "语境应用｜刻舟求剑、守株待兔、善作善成、坐以待毙｜特别落点",
+      "action": "create",
+      "content_hash": "2278b8e0c76519767d8e02e6bad8d653afb24004c84d6e669fe32a7220e727e1",
+      "reason": "应用价值审查确认该语境具有独立训练价值。",
+      "record_status": "ready"
+    },
+    {
+      "title": "语境应用｜因噎废食、熟视无睹、视而不见｜特别落点",
+      "action": "create",
+      "content_hash": "95c0996651b8e4e00a0d9197d9119e3d3987842fc0121357d65d3227fa215d8e",
+      "reason": "应用价值审查确认该语境具有独立训练价值。",
+      "record_status": "ready"
+    },
+    {
+      "title": "语境应用｜虚张声势、危言耸听、耸人听闻、骇人听闻、空穴来风｜真实性",
+      "action": "create",
+      "content_hash": "e75ff53b3b2eb595e9bb5a47a316b58a44e173066b1c05f30c852adaa2b95535",
+      "reason": "应用价值审查确认该语境具有独立训练价值。",
+      "record_status": "ready"
+    },
+    {
+      "title": "语境应用｜醍醐灌顶、振聋发聩、警钟长鸣、当头棒喝｜时间",
+      "action": "create",
+      "content_hash": "e91840b99275e45e3fe73969b5ba1ba7b891ee77e1fa1b069be9c1f08558c1f2",
+      "reason": "应用价值审查确认该语境具有独立训练价值。",
+      "record_status": "ready"
+    },
+    {
+      "title": "语境应用｜因势利导、因地制宜、因人而异、有的放矢｜决定性线索",
+      "action": "create",
+      "content_hash": "978457cc482da57a57e99c3e79f7afba6b8c67f96d49fc8dd1b03048da3c116f",
+      "reason": "应用价值审查确认该语境具有独立训练价值。",
+      "record_status": "ready"
+    },
+    {
+      "title": "语境应用｜南辕北辙、适得其反、背道而驰｜主体数量",
+      "action": "create",
+      "content_hash": "60538d4a8b3ad4d81b14fc4345c4a9d7e04e558aeaedb6d17739a85f2120882c",
+      "reason": "应用价值审查确认该语境具有独立训练价值。",
+      "record_status": "ready"
+    },
+    {
+      "title": "语境应用｜大而化之、具体而微｜构成与规模",
+      "action": "create",
+      "content_hash": "00be112150741e87cfbf9d362cba7f60791766b75c029f7920dd1a0db2608497",
+      "reason": "应用价值审查确认该语境具有独立训练价值。",
+      "record_status": "ready"
+    },
+    {
+      "title": "语境应用｜坐而论道、起而行之、纸上谈兵｜特别落点",
+      "action": "create",
+      "content_hash": "f25e3c84c6e3e61d0d540c451fe05da5949609c6d582bdf962fe04cc3ffa2201",
+      "reason": "应用价值审查确认该语境具有独立训练价值。",
+      "record_status": "ready"
+    },
+    {
+      "title": "语境应用｜聚沙成塔、集腋成裘｜起点",
+      "action": "create",
+      "content_hash": "9c66e61bd1399cee0ce3d930198ed435c81e7044078b0a4121b7feb7bd20d742",
+      "reason": "应用价值审查确认该语境具有独立训练价值。",
+      "record_status": "ready"
+    },
+    {
+      "title": "语境应用｜汗牛充栋、浩如烟海、卷帙浩繁｜特别落点",
+      "action": "create",
+      "content_hash": "5a7fdbca6aaa6fe9fcc6f9ca7b4b12658689293c32587b4bd7c5c06f02db6dce",
+      "reason": "应用价值审查确认该语境具有独立训练价值。",
+      "record_status": "ready"
+    },
+    {
+      "title": "语境应用｜偏听偏信、亦步亦趋、人云亦云、盲从、盲信｜决定性线索",
+      "action": "create",
+      "content_hash": "9d75d990337978338b60e336b0ce5428772232eb85e332cfc068511de0852500",
+      "reason": "应用价值审查确认该语境具有独立训练价值。",
+      "record_status": "ready"
+    },
+    {
+      "title": "语境应用｜标本兼治、立竿见影｜特别落点",
+      "action": "create",
+      "content_hash": "9114a76c515863493c4e13d3b82e0dc04ba696163ced4aa3fc5b7d701d4d3d95",
+      "reason": "应用价值审查确认该语境具有独立训练价值。",
+      "record_status": "ready"
+    },
+    {
+      "title": "语境应用｜高屋建瓴、纲举目张、抓住牛鼻子｜特别落点",
+      "action": "create",
+      "content_hash": "d7395de75bf16685853aab1faa71e88ba3b1ed1b742c7bb7553817333cbed502",
+      "reason": "应用价值审查确认该语境具有独立训练价值。",
+      "record_status": "ready"
+    },
+    {
+      "title": "语境应用｜事半功倍、事倍功半、无功而返、误入歧途｜投入",
+      "action": "create",
+      "content_hash": "e9d37350aa6d5ad70edc73b50716458ff07dd1e7c9ba4aef30480cb890612700",
+      "reason": "应用价值审查确认该语境具有独立训练价值。",
+      "record_status": "ready"
+    },
+    {
+      "title": "语境应用｜崭露头角、大放异彩、脱颖而出｜发展阶段",
+      "action": "create",
+      "content_hash": "328a41efa7264f6e298fa3e480123093248d69a8dcd5ffdebc7ffdd2c58ab64b",
+      "reason": "应用价值审查确认该语境具有独立训练价值。",
+      "record_status": "ready"
+    },
+    {
+      "title": "语境应用｜买椟还珠、脱节、脱钩｜断开程度",
+      "action": "create",
+      "content_hash": "a8c719a54d2c3c494f3116b67b0b6d784cccd777fa0d4bca087c8e5fb4b2b035",
+      "reason": "应用价值审查确认该语境具有独立训练价值。",
+      "record_status": "ready"
+    },
+    {
+      "title": "语境应用｜天罗地网、风吹草动、蛛丝马迹｜决定性线索",
+      "action": "create",
+      "content_hash": "521e17bb159d4994a96dea9c46560e2af9a51901f91693fffd4538183b888d99",
+      "reason": "应用价值审查确认该语境具有独立训练价值。",
+      "record_status": "ready"
+    },
+    {
+      "title": "语境应用｜精细、直观｜特别落点",
+      "action": "create",
+      "content_hash": "135475b517471401e4c57e2de47fb3fb3d535bbd0c51b440d007711472ad1b4e",
+      "reason": "应用价值审查确认该语境具有独立训练价值。",
+      "record_status": "ready"
+    },
+    {
+      "title": "语境应用｜映射、折射｜对应层级",
+      "action": "create",
+      "content_hash": "9aff25063ecef94c2424c2c351722e2e1fe931a0b96dd89cd3f9cfed85762998",
+      "reason": "应用价值审查确认该语境具有独立训练价值。",
+      "record_status": "ready"
+    },
+    {
+      "title": "语境应用｜声名鹊起、声名大噪｜起点",
+      "action": "create",
+      "content_hash": "055976e9021457c7ba9481dcbd446787b9b40c6ac3473e896c122b712631b410",
+      "reason": "应用价值审查确认该语境具有独立训练价值。",
+      "record_status": "ready"
+    },
+    {
+      "title": "语境应用｜十年磨一剑、决心、厚积薄发、筚路蓝缕、自强不息｜时间",
+      "action": "create",
+      "content_hash": "6d440e73fc4040b0b6c9337cc5bf9bca3874147b1ec2f92b7d73f94e7c2fb8c7",
+      "reason": "应用价值审查确认该语境具有独立训练价值。",
+      "record_status": "ready"
+    },
+    {
+      "title": "语境应用｜混合、隐藏、淹没、存储｜结果",
+      "action": "create",
+      "content_hash": "e3902f1673340cb386f100455b1e0962a1c5358b0680f56d99bc5eb94b46bcfd",
+      "reason": "应用价值审查确认该语境具有独立训练价值。",
+      "record_status": "ready"
+    },
+    {
+      "title": "语境应用｜识别、复原｜特别落点",
+      "action": "create",
+      "content_hash": "beaaca9c33c74b99f35a128257104be8ac5de99c98366dcbd0856251f16839d8",
+      "reason": "应用价值审查确认该语境具有独立训练价值。",
+      "record_status": "ready"
+    },
+    {
+      "title": "语境应用｜喜闻乐见、视而不见、如雷贯耳、置若罔闻、专心致志｜特别落点",
+      "action": "create",
+      "content_hash": "69ddfe5b56c84055aad33b2b4a270f7217d315390ea131197bb3a0ffa9d607ee",
+      "reason": "应用价值审查确认该语境具有独立训练价值。",
+      "record_status": "ready"
+    },
+    {
+      "title": "语境应用｜轻而易举、手到擒来、信手拈来｜特别落点",
+      "action": "create",
+      "content_hash": "bfd9f664a4d5d6d08bf31aa909700dc8cb135b71e330a6e9d5d672c5aab07c60",
+      "reason": "应用价值审查确认该语境具有独立训练价值。",
+      "record_status": "ready"
+    },
+    {
+      "title": "语境应用｜鱼目混珠、良莠不齐、鱼龙混杂、泥沙俱下、滥竽充数、浑水摸鱼｜决定性线索",
+      "action": "create",
+      "content_hash": "fb6e99d4b161ec763a73dbd2f16a54803c7fbe894946c7ab56569e397e43c3ce",
+      "reason": "应用价值审查确认该语境具有独立训练价值。",
+      "record_status": "ready"
+    },
+    {
+      "title": "语境应用｜包罗万象、应有尽有、一应俱全｜对象",
+      "action": "create",
+      "content_hash": "43f0b6a25ee4eb5dadcdec56c4d92da0508817482e46e6f738bccc03db936955",
+      "reason": "应用价值审查确认该语境具有独立训练价值。",
+      "record_status": "ready"
+    },
+    {
+      "title": "语境应用｜生生不息、源远流长、薪火相传、一脉相承｜判断落点",
+      "action": "create",
+      "content_hash": "733aca8d30784f73cf7903808f4e48b46460b11dab07a211ce368c7f9e98956a",
+      "reason": "应用价值审查确认该语境具有独立训练价值。",
+      "record_status": "ready"
+    },
+    {
+      "title": "语境应用｜振聋发聩、高屋建瓴、深入人心、根深蒂固、颠扑不破｜特别落点",
+      "action": "create",
+      "content_hash": "dbc5b1c58d40c086fd3013472fc17ee0272958ebcf817c00a37afe158e53b6ae",
+      "reason": "应用价值审查确认该语境具有独立训练价值。",
+      "record_status": "ready"
+    },
+    {
+      "title": "语境应用｜和风细雨、潜移默化、润物无声、如沐春风、春风化雨｜特别落点",
+      "action": "create",
+      "content_hash": "553dfa8ffcffdd32efd741fdca6b0dcf2d08cd04b7b93ce38162b431ea473d07",
+      "reason": "应用价值审查确认该语境具有独立训练价值。",
+      "record_status": "ready"
+    },
+    {
+      "title": "语境应用｜惟妙惟肖、活灵活现、跃然纸上、入木三分、绘声绘色、栩栩如生｜特别落点",
+      "action": "create",
+      "content_hash": "c5c268c55a55ac1218e75ac49970082a7fc36f7f8e085df2a603e74968a6edd0",
+      "reason": "应用价值审查确认该语境具有独立训练价值。",
+      "record_status": "ready"
+    },
+    {
+      "title": "语境应用｜时不我待、迫在眉睫、刻不容缓｜紧迫来源",
+      "action": "create",
+      "content_hash": "714567a2bb5bdc6d0de49c65a79b3e17e1cf3a537f02a6db78a51b5105a1465e",
+      "reason": "应用价值审查确认该语境具有独立训练价值。",
+      "record_status": "ready"
+    },
+    {
+      "title": "语境应用｜一针见血、简明扼要、言简意赅｜评价对象",
+      "action": "create",
+      "content_hash": "9bc7e7674f79ca5f910d0dfe2f8c0982a12a80ec990e1d0281a154d136c7d8de",
+      "reason": "应用价值审查确认该语境具有独立训练价值。",
+      "record_status": "ready"
+    },
+    {
+      "title": "语境应用｜党同伐异、相辅相成、各自为政｜特别落点",
+      "action": "create",
+      "content_hash": "1ad1b32ea4840b1578cf0ec3de946a6e75ddfda3cb85138d842c2cf644b8de3f",
+      "reason": "应用价值审查确认该语境具有独立训练价值。",
+      "record_status": "ready"
+    },
+    {
+      "title": "语境应用｜精益求精、千篇一律、毫无二致、异曲同工、殊途同归｜特别落点",
+      "action": "create",
+      "content_hash": "f744aca1e50d65a235bad78a2c2a6d0158b8f2615f2587948b342c0922ec5f40",
+      "reason": "应用价值审查确认该语境具有独立训练价值。",
+      "record_status": "ready"
+    },
+    {
+      "title": "语境应用｜截然不同、相去甚远、相形见绌、大相径庭｜比较焦点",
+      "action": "create",
+      "content_hash": "22df1bdb446338de697ae81bf94edfe3bc14538e6ccdb2301199015afa51c553",
+      "reason": "应用价值审查确认该语境具有独立训练价值。",
+      "record_status": "ready"
+    },
+    {
+      "title": "语境应用｜厚此薄彼、此起彼伏、不分彼此、此消彼长｜特别落点",
+      "action": "create",
+      "content_hash": "3d475eeb62d4e0b989a095c64490f395b3fb608563e19e10c7c6b96e5c418529",
+      "reason": "应用价值审查确认该语境具有独立训练价值。",
+      "record_status": "ready"
+    },
+    {
+      "title": "语境应用｜家喻户晓、脍炙人口、妇孺皆知、众所周知｜常见对象",
+      "action": "create",
+      "content_hash": "e33306e3a2d6e681ac7fd818138b8916b46de0634b0a0a495cd965097617f7c0",
+      "reason": "应用价值审查确认该语境具有独立训练价值。",
+      "record_status": "ready"
+    },
+    {
+      "title": "语境应用｜积重难返、厚积薄发｜特别落点",
+      "action": "create",
+      "content_hash": "506c7324c45ede2285149156d513966eebd42b707f3adb755d6cbb94370af438",
+      "reason": "应用价值审查确认该语境具有独立训练价值。",
+      "record_status": "ready"
+    },
+    {
+      "title": "语境应用｜固步自封、闭门造车、向壁虚构、凭空臆造、凭空捏造｜决定性线索",
+      "action": "create",
+      "content_hash": "2b77e122418e633c687c9019783729df54f4dba714999b28db84546685a2d5ec",
+      "reason": "应用价值审查确认该语境具有独立训练价值。",
+      "record_status": "ready"
+    },
+    {
+      "title": "语境应用｜坐井观天、一叶障目、以偏概全、盲人摸象、鼠目寸光、管中窥豹｜决定性线索",
+      "action": "create",
+      "content_hash": "17e9c5137fb03452d9215c6cdd1116e35eedcc85638c39fae8ea486ede83a0ce",
+      "reason": "应用价值审查确认该语境具有独立训练价值。",
+      "record_status": "ready"
+    },
+    {
+      "title": "语境应用｜置之不理、弃如敝履、不以为意、不以为然、束之高阁｜特别落点",
+      "action": "create",
+      "content_hash": "54be000f7ac7833ddcb640ec211cd5fa3389ee7a929d851675763927f2f0247c",
+      "reason": "应用价值审查确认该语境具有独立训练价值。",
+      "record_status": "ready"
+    },
+    {
+      "title": "语境应用｜作壁上观、袖手旁观｜场景结构",
+      "action": "create",
+      "content_hash": "c3f4824bbc876fe77f878ae1159923689704d5453e86c0f226ee6b85ecea3e3a",
+      "reason": "应用价值审查确认该语境具有独立训练价值。",
+      "record_status": "ready"
+    },
+    {
+      "title": "语境应用｜浅尝辄止、不求甚解、蜻蜓点水｜特别落点",
+      "action": "create",
+      "content_hash": "daefa52cde87224ac2e9cef0dc0a5f48644eaf37b4a475284632d6c6824b93f1",
+      "reason": "应用价值审查确认该语境具有独立训练价值。",
+      "record_status": "ready"
+    },
+    {
+      "title": "语境应用｜矫枉过正、文过饰非｜特别落点",
+      "action": "create",
+      "content_hash": "6bff18a458cee4dc2ab2228b570f5274ee1610261a37a3c6186f30e178e41872",
+      "reason": "应用价值审查确认该语境具有独立训练价值。",
+      "record_status": "ready"
+    },
+    {
+      "title": "语境应用｜虚张声势、装腔作势｜特别落点",
+      "action": "create",
+      "content_hash": "529645959b2a42989f1de63fcabcb7bd1b2f22931c276b5870f17be0b12dad98",
+      "reason": "应用价值审查确认该语境具有独立训练价值。",
+      "record_status": "ready"
+    },
+    {
+      "title": "语境应用｜瞻前顾后、优柔寡断、举棋不定｜核心判断",
+      "action": "create",
+      "content_hash": "a4fd0dd5911c1250f1fb777ba036919d3effe350e3be34e54bd653f9cf31ca3d",
+      "reason": "应用价值审查确认该语境具有独立训练价值。",
+      "record_status": "ready"
+    },
+    {
+      "title": "语境应用｜刚愎自用、目空一切、妄自尊大、一意孤行、妄自菲薄、自以为是｜对待意见",
+      "action": "create",
+      "content_hash": "2cc8b83b4dbc24ced0148fb35788f60cc25b84a88b51b0b35579c125c8605099",
+      "reason": "应用价值审查确认该语境具有独立训练价值。",
+      "record_status": "ready"
+    },
+    {
+      "title": "语境应用｜集思广益、和衷共济、众志成城、群策群力｜特别落点",
+      "action": "create",
+      "content_hash": "0a277cfa38c8397bc3d4a3707e3a80606e0a9b40531392ae8bdebffecb389bb8",
+      "reason": "应用价值审查确认该语境具有独立训练价值。",
+      "record_status": "ready"
+    },
+    {
+      "title": "语境应用｜互为表里、休戚与共、千丝万缕、息息相关｜特别落点",
+      "action": "create",
+      "content_hash": "330a22fc2ff36fe40a8308bec7717251c0a4950d73ee4a164dce6a83fda5d491",
+      "reason": "应用价值审查确认该语境具有独立训练价值。",
+      "record_status": "ready"
+    },
+    {
+      "title": "语境应用｜责无旁贷、义不容辞、当仁不让｜承担依据",
+      "action": "create",
+      "content_hash": "8558b831bd48b676ab50e84b93b4a5f0fc1a65e7f21ed573e2fc3799653ddbdd",
+      "reason": "应用价值审查确认该语境具有独立训练价值。",
+      "record_status": "ready"
+    },
+    {
+      "title": "语境应用｜坚如磐石、安之若素、不动声色、漠不关心、无动于衷、泰然自若｜特别落点",
+      "action": "create",
+      "content_hash": "e16f8b9406d4dcbf016a72599a106965f711676c08db5134dc6a1845c71dde06",
+      "reason": "应用价值审查确认该语境具有独立训练价值。",
+      "record_status": "ready"
+    },
+    {
+      "title": "语境应用｜滴水不漏、面面俱到｜评价标准",
+      "action": "create",
+      "content_hash": "45d52182dfcebe95a1bb79eb0278219b27c585c8ee5a8da7e700b9501140e378",
+      "reason": "应用价值审查确认该语境具有独立训练价值。",
+      "record_status": "ready"
+    },
+    {
+      "title": "语境应用｜量入为出、开源节流、精打细算、勤俭节约｜特别落点",
+      "action": "create",
+      "content_hash": "a5c050eceee22705f018d58a0dc21d2046d0f5f1c08161a417843baf503e42e5",
+      "reason": "应用价值审查确认该语境具有独立训练价值。",
+      "record_status": "ready"
+    },
+    {
+      "title": "语境应用｜正本清源、返璞归真、拨乱反正、固本强基｜特别落点",
+      "action": "create",
+      "content_hash": "8da1caf5465ddb6e8665ce7cc10bfce659acb92e8e9facab0d5dcca6f3869a03",
+      "reason": "应用价值审查确认该语境具有独立训练价值。",
+      "record_status": "ready"
+    },
+    {
+      "title": "语境应用｜寡见鲜闻、鲜为人知｜评价对象",
+      "action": "create",
+      "content_hash": "b78b48a572c048e28db41dff449a5a6217624fcd8bbf40b6385a9481d5b359d7",
+      "reason": "应用价值审查确认该语境具有独立训练价值。",
+      "record_status": "ready"
+    },
+    {
+      "title": "语境应用｜投鼠忌器、畏首畏尾｜特别落点",
+      "action": "create",
+      "content_hash": "dcd8030bfd95c089a50f2a8c8c472ebd3d7e2292dda25ced95ce191105044d1e",
+      "reason": "应用价值审查确认该语境具有独立训练价值。",
+      "record_status": "ready"
+    },
+    {
+      "title": "语境应用｜作壁上观、冷眼旁观｜特别落点",
+      "action": "create",
+      "content_hash": "4d7c87bd1d2da29b1b300f0f9ed7b315cb75b73599d305220d8e7b3153f99484",
+      "reason": "应用价值审查确认该语境具有独立训练价值。",
+      "record_status": "ready"
+    },
+    {
+      "title": "语境应用｜大而化之、走马观花、粗枝大叶｜评价对象",
+      "action": "create",
+      "content_hash": "728af3a7943646154b53a1d2285f88695f3c8190336348e0e7ddca213f536be0",
+      "reason": "应用价值审查确认该语境具有独立训练价值。",
+      "record_status": "ready"
+    },
+    {
+      "title": "语境应用｜因陋就简、简单易行｜判断对象",
+      "action": "create",
+      "content_hash": "cfe719ee57d037a1fe5a02d12a6b94a5c771f5b283980ba08a399ce0572096d4",
+      "reason": "应用价值审查确认该语境具有独立训练价值。",
+      "record_status": "ready"
+    },
+    {
+      "title": "语境应用｜虚怀若谷、不卑不亢｜特别落点",
+      "action": "create",
+      "content_hash": "32a7efc62d08dc9c90becf77760a1c1e0e7333ea880bab136f85eb8d2e58c786",
+      "reason": "应用价值审查确认该语境具有独立训练价值。",
+      "record_status": "ready"
+    },
+    {
+      "title": "语境应用｜泰然自若、临危不乱、从容不迫｜危险前提",
+      "action": "create",
+      "content_hash": "2cef42e732047fe71b149ea17680c473b43bd63ffa6aed3a3c9ebfd719b6aa28",
+      "reason": "应用价值审查确认该语境具有独立训练价值。",
+      "record_status": "ready"
+    },
+    {
+      "title": "语境应用｜固本强基、扬长避短｜特别落点",
+      "action": "create",
+      "content_hash": "a66888be23631a8cba63c61987c6fbd67ad06cc2539e14701f5345197c31ae6d",
+      "reason": "应用价值审查确认该语境具有独立训练价值。",
+      "record_status": "ready"
+    },
+    {
+      "title": "语境应用｜拨乱反正、改弦更张、改过自新｜特别落点",
+      "action": "create",
+      "content_hash": "bd0cf2490b6a1c228caec23522c580e434c7462b6bdea2b10ef7bf469e4437cf",
+      "reason": "应用价值审查确认该语境具有独立训练价值。",
+      "record_status": "ready"
+    },
+    {
+      "title": "语境应用｜鲜为人知、无人问津、门可罗雀｜评价对象",
+      "action": "create",
+      "content_hash": "edffddc85a68bf6a5816305e8726b268d16dfaac21ce361fb07358b4ced08776",
+      "reason": "应用价值审查确认该语境具有独立训练价值。",
+      "record_status": "ready"
+    },
+    {
+      "title": "语境应用｜锦上添花、雪中送炭、鼎力相助｜帮助时机",
+      "action": "create",
+      "content_hash": "4f5a7243d0c0d7f595d0b614ab299b80c2a9391ebc7b9dc959dd3a7eb836dbb0",
+      "reason": "应用价值审查确认该语境具有独立训练价值。",
+      "record_status": "ready"
+    },
+    {
+      "title": "语境应用｜积重难返、根深蒂固、冰冻三尺｜时间过程",
+      "action": "create",
+      "content_hash": "bdccefd5cd8b7db1cf0877f816d0d68f88905d7e8166f02ad878fbd6c5cb8acf",
+      "reason": "应用价值审查确认该语境具有独立训练价值。",
+      "record_status": "ready"
+    },
+    {
+      "title": "语境应用｜未雨绸缪、杞人忧天｜风险与行动",
+      "action": "create",
+      "content_hash": "9f28e7adfe889dfe6d63f674e2321686634172085255d824bd0b253c9056f00c",
+      "reason": "应用价值审查确认该语境具有独立训练价值。",
+      "record_status": "ready"
     }
   ],
-  "plan_hash": "11034736ede79b15027c946e5b144b41d8f1fc418df2d9c94ddcfff00fc16736"
+  "application_review_hash": "451e7c8d5a5cbae972ffc8e35b1cdcfc3451a2df0dd00ee2a3efd89643e9eb7f",
+  "plan_hash": "f2d0c4c9efe3eae364d748cf34c8dd1d9e70aab3db61275710025964e5b51c31"
 }
