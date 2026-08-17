@@ -1,0 +1,174 @@
+{
+  "schema_version": 1,
+  "basis": "按原始三讲逐字稿中的明确解释和例句，重建八个小型辨析组；不沿用旧卡的复制定义式最小差别。",
+  "records": {
+    "应有尽有": {
+      "meaning": "应该具备的东西全都有，常说具体事物或品类十分齐全。",
+      "distinctive_feature": "落在具体事物、商品或物资的品类齐全。",
+      "recognition_cues": ["对象是可列举的具体事物或品类", "题干强调该有的全都有"],
+      "dimensions": [{"axis": "对象", "judgment": "具体事物、商品、物资或品类。"}, {"axis": "落点", "judgment": "该有的内容没有缺项。"}],
+      "comparison_edges": [{"other_term": "一应俱全", "minimum_difference": "应有尽有偏具体事物和品类齐全；一应俱全偏配套设施、功能完整。"}, {"other_term": "包罗万象", "minimum_difference": "应有尽有要求所需事物齐全；包罗万象强调包含范围极广、内容多方面。"}],
+      "misuse_boundary": "只说内容范围广、种类繁多，却没有“该有的全有”的齐备性时，不宜使用应有尽有。"
+    },
+    "一应俱全": {
+      "meaning": "应该配备的项目一样不少，设施或功能全部齐备。",
+      "distinctive_feature": "落在一个系统所需的配套设施、功能完整。",
+      "recognition_cues": ["题干出现配套、设施、功能", "强调所需项目一样不少"],
+      "dimensions": [{"axis": "对象", "judgment": "设施、功能、配套项目。"}, {"axis": "结构", "judgment": "围绕一个整体的所需配置齐全。"}],
+      "comparison_edges": [{"other_term": "应有尽有", "minimum_difference": "一应俱全偏配套设施和功能完整；应有尽有偏具体事物、商品或品类齐全。"}, {"other_term": "包罗万象", "minimum_difference": "一应俱全强调一个整体所需配置齐全；包罗万象强调包含范围广。"}],
+      "misuse_boundary": "只是内容丰富、范围广，却不存在围绕一个整体的配套齐全关系时，不宜使用一应俱全。"
+    },
+    "生生不息": {
+      "meaning": "生命力旺盛，能够不断产生、延续而不停止。",
+      "distinctive_feature": "面向未来，突出生命力仍会继续延续。",
+      "recognition_cues": ["有生命力或发展活力", "强调继续产生、延续"],
+      "dimensions": [{"axis": "时间方向", "judgment": "由现在向未来持续。"}, {"axis": "语义落点", "judgment": "生命力不衰、延续不止。"}],
+      "comparison_edges": [{"other_term": "源远流长", "minimum_difference": "生生不息看未来仍会延续；源远流长看过去已有漫长历史。"}, {"other_term": "薪火相传", "minimum_difference": "生生不息突出整体生命力延续；薪火相传突出技艺、精神在代际之间接力传递。"}],
+      "misuse_boundary": "题干只说明历史悠久，却没有旺盛生命力继续延续的语义时，应考虑源远流长。"
+    },
+    "源远流长": {
+      "meaning": "源头久远，延续时间很长，多形容历史、文化或传统。",
+      "distinctive_feature": "回看过去，突出已经拥有悠久历史。",
+      "recognition_cues": ["题干追溯源头或历史", "强调过去延续至今"],
+      "dimensions": [{"axis": "时间方向", "judgment": "由现在回看过去。"}, {"axis": "语义落点", "judgment": "历史悠久、源头久远。"}],
+      "comparison_edges": [{"other_term": "生生不息", "minimum_difference": "源远流长看过去历史悠久；生生不息看未来生命力仍将延续。"}, {"other_term": "一脉相承", "minimum_difference": "源远流长只要求历史延续长；一脉相承还要求前后具有同一本源或脉络。"}],
+      "misuse_boundary": "只强调今后仍会持续发展，却没有过去历史久远的依据时，不宜使用源远流长。"
+    },
+    "薪火相传": {
+      "meaning": "技艺、精神等由前一代传给后一代，像传递火种一样代代接续。",
+      "distinctive_feature": "突出代际接力的传承动作和过程。",
+      "recognition_cues": ["有前辈与后辈或代际关系", "传递对象是技艺、精神、事业"],
+      "dimensions": [{"axis": "传承方式", "judgment": "一代传一代的接力。"}, {"axis": "常见对象", "judgment": "技艺、精神、事业传统。"}],
+      "comparison_edges": [{"other_term": "一脉相承", "minimum_difference": "薪火相传突出代际接力传递；一脉相承突出前后来自同一本源、脉络一致。"}, {"other_term": "生生不息", "minimum_difference": "薪火相传需要传承主体和接力过程；生生不息只强调生命力延续。"}],
+      "misuse_boundary": "只有理念前后一致，却没有代际接力或传递过程时，更适合一脉相承。"
+    },
+    "一脉相承": {
+      "meaning": "前后事物由同一本源或同一脉络承续下来。",
+      "distinctive_feature": "不仅有传承，还要求前后具有共同本源、核心脉络一致。",
+      "recognition_cues": ["题干强调同源、一脉、核心不变", "前后阶段或事物具有继承关系"],
+      "dimensions": [{"axis": "传承基础", "judgment": "共同本源或同一脉络。"}, {"axis": "落点", "judgment": "前后核心理念、传统保持承续。"}],
+      "comparison_edges": [{"other_term": "薪火相传", "minimum_difference": "一脉相承看共同本源和脉络一致；薪火相传看代际之间接力传递。"}, {"other_term": "源远流长", "minimum_difference": "一脉相承要求前后同源；源远流长只强调历史悠久、延续时间长。"}],
+      "misuse_boundary": "只有一代代传授的动作，却没有同一本源或脉络一致的语义时，更适合薪火相传。"
+    },
+    "时不我待": {
+      "meaning": "时间不等人，必须主动把握时机、抓紧行动。",
+      "distinctive_feature": "紧迫感与主动作为相连，强调人应当立即行动。",
+      "recognition_cues": ["时间不等人", "主体需要主动把握机会并行动"],
+      "dimensions": [{"axis": "紧迫来源", "judgment": "时间流逝、机会不等人。"}, {"axis": "主体状态", "judgment": "主动抓紧行动。"}],
+      "comparison_edges": [{"other_term": "迫在眉睫", "minimum_difference": "时不我待强调时间不等人、主体要主动作为；迫在眉睫强调外部事情已经逼近眼前。"}, {"other_term": "刻不容缓", "minimum_difference": "时不我待突出把握时间和时机；刻不容缓突出行动一刻也不能拖延。"}],
+      "misuse_boundary": "只有外部危险逼近，却没有主体主动把握时间、抓紧行动的语义时，更适合迫在眉睫。"
+    },
+    "迫在眉睫": {
+      "meaning": "事情已经逼近眼前，形势十分紧迫。",
+      "distinctive_feature": "紧迫性来自外部事态已经发展到眼前。",
+      "recognition_cues": ["事情已经临近", "形势或问题外部逼近"],
+      "dimensions": [{"axis": "紧迫来源", "judgment": "外部事态逼近眼前。"}, {"axis": "语体色彩", "judgment": "中性描述事情紧急。"}],
+      "comparison_edges": [{"other_term": "时不我待", "minimum_difference": "迫在眉睫看外部事情已经逼近；时不我待看时间不等人、主体应主动作为。"}, {"other_term": "刻不容缓", "minimum_difference": "迫在眉睫描述形势紧迫；刻不容缓直接要求行动不能拖延。"}],
+      "misuse_boundary": "题干只强调必须马上采取行动，却没有事情逼近眼前的形势描写时，更适合刻不容缓。"
+    },
+    "刻不容缓": {
+      "meaning": "一刻也不能拖延，必须立即采取行动。",
+      "distinctive_feature": "落点是行动要求，强调马上落实、不得延误。",
+      "recognition_cues": ["必须、立即、马上", "题干要求落实具体举措"],
+      "dimensions": [{"axis": "语义落点", "judgment": "行动不得拖延。"}, {"axis": "程度", "judgment": "一刻也不能耽搁。"}],
+      "comparison_edges": [{"other_term": "迫在眉睫", "minimum_difference": "刻不容缓要求立即行动；迫在眉睫描述事情已经逼近、形势紧迫。"}, {"other_term": "时不我待", "minimum_difference": "刻不容缓强调不能拖延；时不我待强调时间不等人并主动把握时机。"}],
+      "misuse_boundary": "只是说明事情临近或时间宝贵，却没有立即落实行动的要求时，不宜使用刻不容缓。"
+    },
+    "一针见血": {
+      "meaning": "评论或分析直接指出问题的本质、要害。",
+      "distinctive_feature": "强调分析内容直击要害，不是泛指做事有针对性。",
+      "recognition_cues": ["对象是评论、分析或语言", "直接点出本质、要害"],
+      "dimensions": [{"axis": "常见对象", "judgment": "评论、分析、观点、语言。"}, {"axis": "语义落点", "judgment": "直击问题本质或要害。"}],
+      "comparison_edges": [{"other_term": "简明扼要", "minimum_difference": "一针见血看是否击中本质要害；简明扼要看表达是否明白、抓住要点。"}, {"other_term": "言简意赅", "minimum_difference": "一针见血强调见解深准；言简意赅强调文字少而意思完整。"}],
+      "misuse_boundary": "只说明表达简短清楚，却没有指出问题本质或要害时，不宜使用一针见血。"
+    },
+    "简明扼要": {
+      "meaning": "表达简单明白，抓住主要内容和要点。",
+      "distinctive_feature": "既要简洁，也要让人容易明白并迅速抓住重点。",
+      "recognition_cues": ["表达简单明了", "重点突出、便于理解"],
+      "dimensions": [{"axis": "表达效果", "judgment": "清楚易懂、要点明确。"}, {"axis": "信息结构", "judgment": "去除枝节并保留重点。"}],
+      "comparison_edges": [{"other_term": "言简意赅", "minimum_difference": "简明扼要偏明白易懂、要点突出；言简意赅偏用语简练而意思完整。"}, {"other_term": "一针见血", "minimum_difference": "简明扼要评价表达方式清楚精要；一针见血评价分析击中本质。"}],
+      "misuse_boundary": "只是字数少却没有讲清重点，或观点深刻但表达并不简明时，不宜使用简明扼要。"
+    },
+    "言简意赅": {
+      "meaning": "语言简练而意思完整，没有多余的话。",
+      "distinctive_feature": "突出用语少、无废话，同时完整承载所要表达的意思。",
+      "recognition_cues": ["语言、文字十分简练", "信息完整而无冗余"],
+      "dimensions": [{"axis": "语言长度", "judgment": "用语精简、没有废话。"}, {"axis": "信息完整性", "judgment": "意思完整，不因简短而残缺。"}],
+      "comparison_edges": [{"other_term": "简明扼要", "minimum_difference": "言简意赅偏语言少而意思完整；简明扼要偏表达明白、重点突出。"}, {"other_term": "一针见血", "minimum_difference": "言简意赅评价语言精练；一针见血评价分析直击本质。"}],
+      "misuse_boundary": "只是通俗易懂却并不简练，或虽短但意思残缺时，不宜使用言简意赅。"
+    },
+    "作壁上观": {
+      "meaning": "双方冲突时，第三方在旁观看而不参与、不帮助任何一方。",
+      "distinctive_feature": "必须有冲突双方和置身事外的第三方。",
+      "recognition_cues": ["存在双方争斗或冲突", "第三方旁观、不介入"],
+      "dimensions": [{"axis": "关系结构", "judgment": "冲突双方加旁观第三方。"}, {"axis": "动作", "judgment": "不参与、不帮助任何一方。"}],
+      "comparison_edges": [{"other_term": "袖手旁观", "minimum_difference": "作壁上观要求旁观双方冲突；袖手旁观只要面对他人困难而有能力却不愿帮助。"}],
+      "misuse_boundary": "只有一个对象遭遇困难，并不存在双方冲突时，不宜使用作壁上观。"
+    },
+    "袖手旁观": {
+      "meaning": "面对他人需要帮助的处境，自己有能力介入却冷漠地不采取行动。",
+      "distinctive_feature": "落在能帮却不愿帮，带有冷漠和缺乏责任感的评价。",
+      "recognition_cues": ["他人遇到困难或不公", "主体有能力帮助却选择不管"],
+      "dimensions": [{"axis": "能力前提", "judgment": "主体具备介入或帮助的可能。"}, {"axis": "态度", "judgment": "冷漠、不愿承担责任。"}],
+      "comparison_edges": [{"other_term": "作壁上观", "minimum_difference": "袖手旁观看能帮却不帮；作壁上观看第三方不介入双方冲突。"}],
+      "misuse_boundary": "只是第三方不参与双方争斗，却没有能帮而不帮的责任语义时，更适合作壁上观。"
+    },
+    "责无旁贷": {
+      "meaning": "责任属于自己，不能推卸给别人。",
+      "distinctive_feature": "承担依据是职责本身归于主体。",
+      "recognition_cues": ["题干明确职责、使命或本职", "责任不能转给他人"],
+      "dimensions": [{"axis": "承担依据", "judgment": "主体负有明确责任。"}, {"axis": "态度", "judgment": "不推卸、不转嫁。"}],
+      "comparison_edges": [{"other_term": "义不容辞", "minimum_difference": "责无旁贷因职责在身而不能推卸；义不容辞因道义要求而不能推辞。"}, {"other_term": "当仁不让", "minimum_difference": "责无旁贷强调责任不能推；当仁不让强调面对该做的事主动站出来。"}],
+      "misuse_boundary": "主体并无职责，只是出于道义自愿承担时，更适合义不容辞。"
+    },
+    "义不容辞": {
+      "meaning": "从道义上讲不能推辞，应当承担。",
+      "distinctive_feature": "承担依据是社会道义或道德要求，不一定属于本职责任。",
+      "recognition_cues": ["题干出现道义、道德、情理", "即使非本职也应承担"],
+      "dimensions": [{"axis": "承担依据", "judgment": "道义和道德规范。"}, {"axis": "责任归属", "judgment": "不要求原本就是主体的职责。"}],
+      "comparison_edges": [{"other_term": "责无旁贷", "minimum_difference": "义不容辞因道义不能推辞；责无旁贷因职责属于自己不能推卸。"}, {"other_term": "当仁不让", "minimum_difference": "义不容辞强调不能推辞；当仁不让强调主动站出来承担。"}],
+      "misuse_boundary": "题干明确这是主体的本职责任、不得转嫁给别人时，更适合责无旁贷。"
+    },
+    "当仁不让": {
+      "meaning": "遇到应该做、适合自己承担的事，主动站出来而不退让。",
+      "distinctive_feature": "具有主动担当和“该我上就先上”的行动姿态。",
+      "recognition_cues": ["事情适合或应由主体承担", "主体主动站出来、率先承担"],
+      "dimensions": [{"axis": "主动性", "judgment": "主动承担而不是被动不能推辞。"}, {"axis": "适配关系", "judgment": "事情与主体能力、身份或职责相匹配。"}],
+      "comparison_edges": [{"other_term": "责无旁贷", "minimum_difference": "当仁不让强调主动站出来；责无旁贷强调责任不能推给别人。"}, {"other_term": "义不容辞", "minimum_difference": "当仁不让突出主动担当；义不容辞突出道义上不能推辞。"}],
+      "misuse_boundary": "只说明职责不能推卸或道义上应当承担，却没有主动站出来的语义时，不宜使用当仁不让。"
+    },
+    "滴水不漏": {
+      "meaning": "说话、做事或谋划非常严密，没有疏漏和破绽。",
+      "distinctive_feature": "落在严谨无漏洞，常评价逻辑、言辞或谋划。",
+      "recognition_cues": ["没有漏洞、破绽、疏漏", "对象是逻辑、说法、安排或谋划"],
+      "dimensions": [{"axis": "语义落点", "judgment": "严密无漏洞。"}, {"axis": "常见对象", "judgment": "逻辑、言辞、安排、谋划。"}],
+      "comparison_edges": [{"other_term": "面面俱到", "minimum_difference": "滴水不漏看是否严密无漏洞；面面俱到看范围是否全面、各方面都照顾到。"}],
+      "misuse_boundary": "只是覆盖范围广、各方面都考虑到，却不能说明没有漏洞时，更适合面面俱到。"
+    },
+    "面面俱到": {
+      "meaning": "各个方面都照顾到，范围覆盖全面。",
+      "distinctive_feature": "落在覆盖面全，不等于逻辑或谋划毫无破绽。",
+      "recognition_cues": ["题干列举多个方面", "每个方面都得到照顾"],
+      "dimensions": [{"axis": "语义落点", "judgment": "覆盖全面。"}, {"axis": "范围", "judgment": "各个方面没有遗漏。"}],
+      "comparison_edges": [{"other_term": "滴水不漏", "minimum_difference": "面面俱到看各方面是否覆盖；滴水不漏看表达或谋划是否严密无漏洞。"}],
+      "misuse_boundary": "题干只强调论证严密、没有破绽，却没有各方面全面覆盖的语义时，更适合滴水不漏。"
+    },
+    "寡见鲜闻": {
+      "meaning": "见得少、听得少，形容个人见识短浅。",
+      "distinctive_feature": "评价的是人的见闻和见识不足。",
+      "recognition_cues": ["主体是人", "长期局限导致见闻少、见识窄"],
+      "dimensions": [{"axis": "评价对象", "judgment": "个人的见闻和见识。"}, {"axis": "语义方向", "judgment": "见识短浅。"}],
+      "comparison_edges": [{"other_term": "鲜为人知", "minimum_difference": "寡见鲜闻说某个人见识少；鲜为人知说某件事知道的人少。"}],
+      "misuse_boundary": "题干只是某件事情很少有人知道，不能据此评价某个人见识短浅，应使用鲜为人知。"
+    },
+    "鲜为人知": {
+      "meaning": "很少有人知道，强调知晓范围很小。",
+      "distinctive_feature": "评价的是事情的知名度低，不评价个人见识。",
+      "recognition_cues": ["主体是故事、人物经历、事实或事物", "知道这件事的人很少"],
+      "dimensions": [{"axis": "评价对象", "judgment": "事情、事实、故事或人物。"}, {"axis": "语义落点", "judgment": "知晓范围小。"}],
+      "comparison_edges": [{"other_term": "寡见鲜闻", "minimum_difference": "鲜为人知说事情知道的人少；寡见鲜闻说某个人见识少。"}],
+      "misuse_boundary": "题干评价某个人因见得少、听得少而见识短浅时，应使用寡见鲜闻。"
+    }
+  }
+}

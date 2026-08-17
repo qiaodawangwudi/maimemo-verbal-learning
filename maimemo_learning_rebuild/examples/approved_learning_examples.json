@@ -1,0 +1,202 @@
+{
+  "schema_version": 1,
+  "purpose": "冻结统一卡片结构与学习质量下限；语义仍须接受全量来源复核。",
+  "records": [
+    {
+      "term": "因噎废食",
+      "sense_id": "因噎废食::课程义::001",
+      "status": "ready",
+      "source_kind": "teacher_transcript",
+      "meaning": "因出过问题或怕出问题，索性停止本应继续的行动。",
+      "distinctive_feature": "风险恐惧触发，结果是把必要行动整体停掉。",
+      "recognition_cues": ["先有问题或风险担忧", "后有停止必要行动"],
+      "dimensions": [
+        {"axis": "触发条件", "judgment": "已有问题，或担心问题发生。"},
+        {"axis": "动作结果", "judgment": "本应继续的行动被整体停止。"}
+      ],
+      "comparison_edges": [
+        {"other_term": "投鼠忌器", "minimum_difference": "因噎废食怕出问题而停；投鼠忌器怕牵连旁人旁物而不敢动。"}
+      ],
+      "misuse_boundary": "只有害怕或犹豫，却没有停止必要行动时，不足以使用。",
+      "typical_contexts": ["不能因为个别事故就停止必要改革。"],
+      "evidence": [
+        {"source": "20260107 选词刷题4_文稿.docx", "location": "P0009", "quote": "因为出过问题……我害怕会出问题……然后我就再也不吃饭了；它引申的就是该做的不做了。"}
+      ]
+    },
+    {
+      "term": "投鼠忌器",
+      "sense_id": "投鼠忌器::课程义::001",
+      "status": "ready",
+      "source_kind": "teacher_transcript",
+      "meaning": "想采取行动，却担心伤及旁边的人或事物，因顾虑而不敢放手。",
+      "distinctive_feature": "行动意图仍在，阻碍来自可能牵连旁人旁物。",
+      "recognition_cues": ["想采取行动", "顾虑行动会牵连保护对象"],
+      "dimensions": [
+        {"axis": "顾虑对象", "judgment": "担心行动伤及旁边的人或事物。"},
+        {"axis": "动作状态", "judgment": "想做但不敢放手，并非把必要行动彻底否定。"}
+      ],
+      "comparison_edges": [
+        {"other_term": "因噎废食", "minimum_difference": "投鼠忌器怕牵连而不敢动；因噎废食怕出问题而把必要行动停掉。"}
+      ],
+      "misuse_boundary": "只有一般担忧，却不存在行动可能牵连的对象时，不足以使用。",
+      "typical_contexts": ["查处问题时担心伤及无辜，因而迟迟不敢行动。"],
+      "evidence": [
+        {"source": "20260107 选词刷题4_文稿.docx", "location": "P0036", "quote": "我想去打老鼠，我又怕把旁边的花瓶打碎了；做事情有顾虑不敢干。"}
+      ]
+    },
+    {
+      "term": "走马观花",
+      "sense_id": "走马观花::课程义::001",
+      "status": "ready",
+      "source_kind": "teacher_transcript",
+      "meaning": "观察或了解事物时不深入、不细致，只作粗略浏览。",
+      "distinctive_feature": "着眼观察过程粗略，题干不必真的出现旅游场景。",
+      "recognition_cues": ["观察过程很快", "没有深入细节"],
+      "dimensions": [
+        {"axis": "侧重环节", "judgment": "侧重观察、了解的过程。"},
+        {"axis": "深入程度", "judgment": "过程不深入、不细致。"}
+      ],
+      "comparison_edges": [
+        {"other_term": "浮光掠影", "minimum_difference": "走马观花偏粗略观察的过程；浮光掠影偏留下的印象浅而短暂。"}
+      ],
+      "misuse_boundary": "只表达记忆消失，却没有粗略观察或了解过程时，不优先使用。",
+      "typical_contexts": ["调研只看几个点位而不深究原因，仍可说走马观花。"],
+      "evidence": [
+        {"source": "逻辑填空400词第一讲-四诗风雅颂_文稿.txt", "location": "P0007", "quote": "它一般形容在旅游的时候不深入、不细致。"},
+        {"source": "逻辑填空400词第一讲-四诗风雅颂_文稿.txt", "location": "P0008", "quote": "所有成语没有固定用法、没有固定语境，大家一定要灵活变通，一定不能公式化做题。"}
+      ]
+    },
+    {
+      "term": "浮光掠影",
+      "sense_id": "浮光掠影::课程义::001",
+      "status": "ready",
+      "source_kind": "teacher_transcript",
+      "meaning": "接触事物后留下的印象浅淡而短暂，一闪而过。",
+      "distinctive_feature": "着眼认知结果没有留下深刻、稳定的印象。",
+      "recognition_cues": ["印象一闪而过", "没有形成深刻认识"],
+      "dimensions": [
+        {"axis": "侧重环节", "judgment": "侧重接触后形成的浅表结果。"},
+        {"axis": "持续状态", "judgment": "印象短暂、不稳定。"}
+      ],
+      "comparison_edges": [
+        {"other_term": "走马观花", "minimum_difference": "浮光掠影偏浅淡短暂的结果；走马观花偏不深入的观察过程。"}
+      ],
+      "misuse_boundary": "只说观察速度快，却没有浅淡印象这一结果时，不优先使用。",
+      "typical_contexts": ["阅读材料很多，但脑中只留下零散浅淡的印象。"],
+      "evidence": [
+        {"source": "逻辑填空400词第二讲-四诗风雅颂_文稿.txt", "location": "P0127", "quote": "浮光掠影，就是一闪而过的影子，这叫掠影。"}
+      ]
+    },
+    {
+      "term": "根深蒂固",
+      "sense_id": "根深蒂固::课程义::001",
+      "status": "ready",
+      "source_kind": "teacher_transcript",
+      "meaning": "思想、观念或现象根基牢固，难以动摇。",
+      "distinctive_feature": "突出已经形成的稳固状态，不必强调负面累积过程。",
+      "recognition_cues": ["对象多为思想、观念或社会现象", "落点是牢固、难动摇"],
+      "dimensions": [
+        {"axis": "落点", "judgment": "已经形成的稳固状态。"},
+        {"axis": "褒贬", "judgment": "词本身可中性，依所修饰对象判断。"}
+      ],
+      "comparison_edges": [
+        {"other_term": "积重难返", "minimum_difference": "根深蒂固看稳固状态；积重难返还要求负面问题长期累积且难以扭转。"},
+        {"other_term": "冰冻三尺", "minimum_difference": "根深蒂固落在难以动摇；冰冻三尺落在局面由来已久。"}
+      ],
+      "misuse_boundary": "题干只强调长期形成，却没有牢固、难动摇的状态时，不足以使用。",
+      "typical_contexts": ["某种偏见长期存在，并已难以动摇。"],
+      "evidence": [
+        {"source": "逻辑填空400词第三讲-四诗风雅颂_文稿.txt", "location": "P0174", "quote": "根基牢固，难以动摇。"}
+      ]
+    },
+    {
+      "term": "积重难返",
+      "sense_id": "积重难返::课程义::001",
+      "status": "ready",
+      "source_kind": "teacher_transcript",
+      "meaning": "问题或不良现象长期累积加重，已经难以改变。",
+      "distinctive_feature": "同时要求长期累积、负面对象和难以扭转。",
+      "recognition_cues": ["长期积累", "对象是问题或不良现象", "结果难以扭转"],
+      "dimensions": [
+        {"axis": "时间过程", "judgment": "问题长期累积并越来越重。"},
+        {"axis": "结果状态", "judgment": "已经到了难以改变的程度。"}
+      ],
+      "comparison_edges": [
+        {"other_term": "根深蒂固", "minimum_difference": "积重难返必须有负面问题长期累积；根深蒂固只要求状态牢固、难动摇。"},
+        {"other_term": "冰冻三尺", "minimum_difference": "积重难返落在难以改变；冰冻三尺只说明严重局面不是短期形成。"}
+      ],
+      "misuse_boundary": "只有严重或难改变的结果，却没有长期累积过程时，使用依据不足。",
+      "typical_contexts": ["长期累积的行业弊病已经很难纠正。"],
+      "evidence": [
+        {"source": "逻辑填空400词第三讲-四诗风雅颂_文稿.txt", "location": "P0280", "quote": "它一般前面搭配什么问题不好的东西才积重难返。"}
+      ]
+    },
+    {
+      "term": "冰冻三尺",
+      "sense_id": "冰冻三尺::用户补充义::001",
+      "status": "ready",
+      "source_kind": "user_directed_supplement",
+      "meaning": "严重局面不是短期造成，而是长期因素逐渐积累形成。",
+      "distinctive_feature": "强调当前局面的长期成因，不必表达已经无法改变。",
+      "recognition_cues": ["当前已有较深或严重局面", "强调由来已久、非一日形成"],
+      "dimensions": [
+        {"axis": "时间过程", "judgment": "必须有长期形成的含义。"},
+        {"axis": "落点", "judgment": "解释当前局面的长期成因。"}
+      ],
+      "comparison_edges": [
+        {"other_term": "根深蒂固", "minimum_difference": "冰冻三尺解释局面为何形成；根深蒂固描述状态为何难动摇。"},
+        {"other_term": "积重难返", "minimum_difference": "冰冻三尺不必表达难以改变；积重难返的落点正是问题难以扭转。"}
+      ],
+      "misuse_boundary": "只有时间长，却没有当前局面由长期因素积累形成的因果关系时，不足以使用。",
+      "typical_contexts": ["当前矛盾并非突然出现，而是多年问题叠加的结果。"],
+      "evidence": []
+    }
+  ],
+  "groups": [
+    {
+      "group_id": "因噎废食__投鼠忌器",
+      "title": "近义辨析｜因噎废食、投鼠忌器",
+      "status": "ready",
+      "purpose": "区分风险恐惧导致停做与牵连顾虑导致不敢动。",
+      "members": ["因噎废食", "投鼠忌器"],
+      "minimum_differences": [
+        {"left": "因噎废食", "right": "投鼠忌器", "text": "因噎废食怕出问题而停；投鼠忌器怕牵连旁人旁物而不敢动。"}
+      ],
+      "dimensions": [
+        {"axis": "触发来源", "judgments": {"因噎废食": "出过问题或怕出问题", "投鼠忌器": "担心伤及旁人旁物"}},
+        {"axis": "动作落点", "judgments": {"因噎废食": "停止本应继续的事", "投鼠忌器": "想行动但不敢放手"}}
+      ]
+    },
+    {
+      "group_id": "走马观花__浮光掠影",
+      "title": "近义辨析｜走马观花、浮光掠影",
+      "status": "ready",
+      "purpose": "区分观察过程粗略与认知结果浅淡。",
+      "members": ["走马观花", "浮光掠影"],
+      "minimum_differences": [
+        {"left": "走马观花", "right": "浮光掠影", "text": "走马观花偏粗略观察的过程；浮光掠影偏留下的印象浅而短暂。"}
+      ],
+      "dimensions": [
+        {"axis": "侧重环节", "judgments": {"走马观花": "观察、了解的过程", "浮光掠影": "接触后形成的结果"}},
+        {"axis": "核心问题", "judgments": {"走马观花": "没有深入细看", "浮光掠影": "没有留下深刻稳定印象"}}
+      ]
+    },
+    {
+      "group_id": "根深蒂固__积重难返__冰冻三尺",
+      "title": "近义辨析｜根深蒂固、积重难返、冰冻三尺",
+      "status": "ready",
+      "purpose": "区分稳固状态、负面累积难返与长期成因。",
+      "members": ["根深蒂固", "积重难返", "冰冻三尺"],
+      "minimum_differences": [
+        {"left": "根深蒂固", "right": "积重难返", "text": "根深蒂固看稳固状态；积重难返还要求负面问题长期累积且难以扭转。"},
+        {"left": "积重难返", "right": "冰冻三尺", "text": "积重难返落在难以改变；冰冻三尺落在局面并非一日形成。"},
+        {"left": "根深蒂固", "right": "冰冻三尺", "text": "根深蒂固落在难以动摇；冰冻三尺落在当前局面的长期成因。"}
+      ],
+      "dimensions": [
+        {"axis": "长期过程", "judgments": {"根深蒂固": "不要求明说", "积重难返": "必须", "冰冻三尺": "必须"}},
+        {"axis": "落点", "judgments": {"根深蒂固": "稳固状态", "积重难返": "难以扭转", "冰冻三尺": "长期成因"}},
+        {"axis": "对象方向", "judgments": {"根深蒂固": "可中性，依对象定褒贬", "积重难返": "负面问题或现象", "冰冻三尺": "多指负面局面"}}
+      ]
+    }
+  ]
+}

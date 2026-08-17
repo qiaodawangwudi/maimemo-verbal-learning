@@ -1,0 +1,62 @@
+{
+  "schema_version": 1,
+  "basis": "按原始逐字稿直接讲解与用户补充定义，重建三组小型辨析；比较边均明确写出题干判断落点。",
+  "records": {
+    "瞻前顾后": {
+      "meaning": "做事顾虑过多，反复考虑此前与此后的影响，因而犹豫不前。",
+      "distinctive_feature": "落在时间前后的多重顾虑，不是空间上向前后张望。",
+      "recognition_cues": ["反复考虑过去和以后", "顾虑太多而不敢推进"],
+      "dimensions": [{"axis": "顾虑结构", "judgment": "围绕时间前后反复权衡。"}, {"axis": "行为结果", "judgment": "因顾虑而不敢前进或作为。"}],
+      "comparison_edges": [{"other_term": "优柔寡断", "minimum_difference": "瞻前顾后突出考虑前后、顾虑太多；优柔寡断泛指性格或处事迟疑、缺少决断。"}, {"other_term": "举棋不定", "minimum_difference": "瞻前顾后突出决策前反复考虑前后；举棋不定突出到了具体决策时刻仍拿不定主意。"}],
+      "misuse_boundary": "只是在两个方案之间临场拿不定主意，却没有反复顾虑前后影响时，更贴近举棋不定。"
+    },
+    "优柔寡断": {
+      "meaning": "做事迟疑，缺乏果断作出决定的能力。",
+      "distinctive_feature": "泛指处事或性格上的迟疑不决，不限定某个临场决策点。",
+      "recognition_cues": ["长期或一般性地迟疑", "缺乏果断性"],
+      "dimensions": [{"axis": "适用范围", "judgment": "可评价一贯的性格或处事方式。"}, {"axis": "语义落点", "judgment": "缺少决断。"}],
+      "comparison_edges": [{"other_term": "瞻前顾后", "minimum_difference": "优柔寡断泛指迟疑、缺少决断；瞻前顾后点明顾虑来自对前后影响考虑过多。"}, {"other_term": "举棋不定", "minimum_difference": "优柔寡断可评价一般处事倾向；举棋不定聚焦某个必须作出选择的时刻。"}],
+      "misuse_boundary": "题干明确出现截止时点或摆在眼前的具体选择时，举棋不定通常比泛泛的优柔寡断更精准。"
+    },
+    "举棋不定": {
+      "meaning": "面临具体选择或决定时犹豫，拿不定主意。",
+      "distinctive_feature": "落在某一具体决策时刻，选择已经摆在眼前却无法落子。",
+      "recognition_cues": ["有明确的两个或多个选项", "到了应作决定的时点"],
+      "dimensions": [{"axis": "时间节点", "judgment": "正在作出具体决定的当下。"}, {"axis": "题干结构", "judgment": "选项明确，但无法确定取舍。"}],
+      "comparison_edges": [{"other_term": "瞻前顾后", "minimum_difference": "举棋不定突出临场选择时拿不定主意；瞻前顾后突出因考虑前后、顾虑太多而迟疑。"}, {"other_term": "优柔寡断", "minimum_difference": "举棋不定聚焦一次具体选择；优柔寡断可概括一般性的迟疑和不果断。"}],
+      "misuse_boundary": "题干只说一贯不果断，却没有具体选择或决策节点时，不必优先使用举棋不定。"
+    },
+    "因陋就简": {
+      "meaning": "利用现有简陋条件，把事情从简办理。",
+      "distinctive_feature": "前提是客观条件简陋，态度是将就现有条件继续办事，并非消极敷衍。",
+      "recognition_cues": ["现有环境、设备或技术简陋", "不铺张，依托现有条件开展工作"],
+      "dimensions": [{"axis": "客观前提", "judgment": "条件本来就简陋。"}, {"axis": "主观态度", "judgment": "不追求完美条件，但仍认真把事办下去。"}],
+      "comparison_edges": [{"other_term": "简单易行", "minimum_difference": "因陋就简说的是受简陋条件限制而从简办理；简单易行说的是方法本身不复杂、容易实施。"}],
+      "misuse_boundary": "方法容易操作不等于因陋就简；若题干没有简陋条件这一前提，应考虑简单易行等词。"
+    },
+    "简单易行": {
+      "meaning": "方法或措施不复杂，而且容易实行。",
+      "distinctive_feature": "评价方案自身操作门槛低，不要求外部条件简陋。",
+      "recognition_cues": ["对象是方法、措施或流程", "强调不复杂、容易落地"],
+      "dimensions": [{"axis": "评价对象", "judgment": "方法或措施本身。"}, {"axis": "评价标准", "judgment": "操作简单、实施容易。"}],
+      "comparison_edges": [{"other_term": "因陋就简", "minimum_difference": "简单易行评价方法本身容易实施；因陋就简强调利用原有简陋条件从简办理。"}],
+      "misuse_boundary": "只是条件差、只能将就着办时，不能用简单易行替代因陋就简。"
+    },
+    "未雨绸缪": {
+      "meaning": "在风险或问题尚未发生前，预先采取准备和防范行动。",
+      "distinctive_feature": "不仅预想到风险，还已经实施检查、修补、储备等准备动作。",
+      "recognition_cues": ["风险尚未发生", "已经采取具体准备行动"],
+      "dimensions": [{"axis": "风险依据", "judgment": "对可能风险有合理预判。"}, {"axis": "行为层次", "judgment": "从意识落实到实际准备。"}],
+      "comparison_edges": [{"other_term": "杞人忧天", "minimum_difference": "未雨绸缪基于合理风险预判并提前行动；杞人忧天是为缺乏根据或不必要的事情空自忧虑。"}],
+      "misuse_boundary": "只有忧患意识却没有准备动作时，尚不足以突出未雨绸缪；忧虑本身无根据时更不能使用。"
+    },
+    "杞人忧天": {
+      "meaning": "为没有根据或不必要的事情忧虑。",
+      "distinctive_feature": "风险判断缺乏现实依据，落点是多余的担忧，而非有效防范。",
+      "recognition_cues": ["担忧对象不大可能发生或没有依据", "只有忧虑，没有有效准备"],
+      "dimensions": [{"axis": "风险依据", "judgment": "缺乏根据或没有必要。"}, {"axis": "行为结果", "judgment": "停留在无谓忧虑。"}],
+      "comparison_edges": [{"other_term": "未雨绸缪", "minimum_difference": "杞人忧天是无根据地忧虑；未雨绸缪是对合理风险提前采取准备行动。"}],
+      "misuse_boundary": "题干所担忧的风险真实可预见，而且主体已提前采取措施时，应使用未雨绸缪而不是杞人忧天。"
+    }
+  }
+}
