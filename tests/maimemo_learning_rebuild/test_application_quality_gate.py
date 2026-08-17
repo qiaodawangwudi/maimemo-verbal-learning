@@ -1,6 +1,7 @@
 import unittest
 
 from maimemo_learning_rebuild.application_quality_gate import (
+    application_review_hash,
     evaluate_application_gate,
 )
 
@@ -31,6 +32,13 @@ def application_card(title: str) -> dict:
     }
 
 
+def bound_plan(review: dict, titles: list[str]) -> dict:
+    return {
+        "application_review_hash": application_review_hash(review),
+        "actions": [{"title": title} for title in titles],
+    }
+
+
 class ApplicationQualityGateTests(unittest.TestCase):
     def setUp(self):
         self.registry = {
@@ -49,6 +57,7 @@ class ApplicationQualityGateTests(unittest.TestCase):
             self.groups,
             {},
             {"cards": []},
+            {},
         )
 
         self.assertIn("application review is not marked complete", errors)
@@ -87,6 +96,7 @@ class ApplicationQualityGateTests(unittest.TestCase):
             self.groups,
             review,
             {"cards": []},
+            bound_plan(review, []),
         )
 
         self.assertIn(
@@ -136,6 +146,7 @@ class ApplicationQualityGateTests(unittest.TestCase):
             self.groups,
             review,
             {"cards": [weak_card]},
+            bound_plan(review, [title]),
         )
 
         self.assertIn(f"application card lacks usable context: {title}", errors)
@@ -177,9 +188,49 @@ class ApplicationQualityGateTests(unittest.TestCase):
             self.groups,
             review,
             {"cards": [application_card(title)]},
+            bound_plan(review, [title]),
         )
 
         self.assertEqual([], errors)
+
+    def test_rejects_plan_not_bound_to_review_or_missing_application_action(self):
+        title = "语境应用｜因噎废食、投鼠忌器｜风险触发"
+        review = {
+            "complete": True,
+            "decisions": [
+                {
+                    "subject_type": "semantic",
+                    "subject_id": "因噎废食::课程义::001",
+                    "decision": "not_needed",
+                    "reason": "该词的独立误用边界已由同组语境训练覆盖，无需重复建卡。",
+                },
+                {
+                    "subject_type": "semantic",
+                    "subject_id": "投鼠忌器::课程义::001",
+                    "decision": "not_needed",
+                    "reason": "该词的独立误用边界已由同组语境训练覆盖，无需重复建卡。",
+                },
+                {
+                    "subject_type": "comparison_group",
+                    "subject_id": "g-risk",
+                    "decision": "create",
+                    "reason": "只有放进风险触发和关联对象不同的语境，才能训练二者的选择。",
+                    "training_goal": "区分停止必要行动与顾忌关联对象。",
+                    "card_title": title,
+                },
+            ],
+        }
+
+        errors = evaluate_application_gate(
+            self.registry,
+            self.groups,
+            review,
+            {"cards": [application_card(title)]},
+            {"application_review_hash": "stale", "actions": []},
+        )
+
+        self.assertIn("action plan is not bound to current application review", errors)
+        self.assertIn(f"application card is missing from action plan: {title}", errors)
 
 
 if __name__ == "__main__":

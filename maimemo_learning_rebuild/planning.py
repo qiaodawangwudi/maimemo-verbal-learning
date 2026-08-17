@@ -8,9 +8,10 @@ import json
 from collections import Counter
 from pathlib import Path
 
+from .application_quality_gate import application_review_hash
 from .markji import parse_card
 from .models import validate_action_record
-from .render import render_base_card, render_comparison_card
+from .render import render_application_card, render_base_card, render_comparison_card
 
 
 def content_hash(content: str) -> str:
@@ -29,12 +30,18 @@ def snapshot_hash(snapshot: dict) -> str:
 
 
 def build_action_plan(
-    snapshot: dict, registry: list[dict], groups: list[dict]
+    snapshot: dict,
+    registry: list[dict],
+    groups: list[dict],
+    application_review: dict | None = None,
 ) -> tuple[dict, list[dict]]:
     parsed = [parse_card(card) for card in snapshot.get("cards", [])]
     base_by_term = {card.term: card for card in parsed if card.card_type == "base"}
     comparison_by_id = {
         card.card_id: card for card in parsed if card.card_type == "comparison"
+    }
+    application_by_title = {
+        card.title: card for card in parsed if card.card_type == "application"
     }
     records_by_term = {record["term"]: record for record in registry}
     ready_groups = [group for group in groups if group.get("status") == "ready"]
@@ -165,6 +172,57 @@ def build_action_plan(
                 }
             )
 
+    handled_application_titles: set[str] = set()
+    for application in (application_review or {}).get("applications", []):
+        title = str(application["title"])
+        handled_application_titles.add(title)
+        existing = application_by_title.get(title)
+        content = render_application_card(application)
+        digest = content_hash(content)
+        if existing:
+            value = "unchanged" if existing.content == content else "update"
+            action = {
+                "title": title,
+                "card_id": existing.card_id,
+                "action": value,
+                "content_hash": digest,
+                "reason": "按已验收应用场景重建训练卡。" if value == "update" else "应用场景卡内容已一致。",
+                "record_status": "ready",
+            }
+        else:
+            action = {
+                "title": title,
+                "action": "create",
+                "content_hash": digest,
+                "reason": "应用价值审查确认该语境具有独立训练价值。",
+                "record_status": "ready",
+            }
+        actions.append(action)
+        final_cards.append(
+            {
+                "title": title,
+                "card_type": "application",
+                "application": application,
+                "content": content,
+                "content_hash": digest,
+                "action": action["action"],
+                "card_id": action.get("card_id", ""),
+            }
+        )
+
+    for title, card in application_by_title.items():
+        if title not in handled_application_titles:
+            actions.append(
+                {
+                    "title": title,
+                    "card_id": card.card_id,
+                    "action": "manual-review",
+                    "content_hash": content_hash(card.content),
+                    "reason": "现有应用卡未进入统一应用价值审查档案。",
+                    "record_status": "unresolved",
+                }
+            )
+
     action_counts = Counter(action["action"] for action in actions)
     create_count = action_counts.get("create", 0)
     plan = {
@@ -178,6 +236,8 @@ def build_action_plan(
         "action_counts": dict(sorted(action_counts.items())),
         "actions": actions,
     }
+    if application_review is not None:
+        plan["application_review_hash"] = application_review_hash(application_review)
     plan["plan_hash"] = _plan_hash(plan)
     return plan, final_cards
 
@@ -240,12 +300,20 @@ def main() -> int:
     parser.add_argument("--snapshot", type=Path, required=True)
     parser.add_argument("--registry", type=Path, required=True)
     parser.add_argument("--groups", type=Path, required=True)
+    parser.add_argument("--applications", type=Path)
     parser.add_argument("--output-dir", type=Path, default=Path(__file__).parent / "artifacts")
     args = parser.parse_args()
     snapshot = json.loads(args.snapshot.read_text(encoding="utf-8-sig"))
     registry = json.loads(args.registry.read_text(encoding="utf-8-sig"))["records"]
     groups = json.loads(args.groups.read_text(encoding="utf-8-sig"))["groups"]
-    plan, final_cards = build_action_plan(snapshot, registry, groups)
+    application_review = (
+        json.loads(args.applications.read_text(encoding="utf-8-sig"))
+        if args.applications
+        else None
+    )
+    plan, final_cards = build_action_plan(
+        snapshot, registry, groups, application_review
+    )
     errors = validate_action_plan(plan, snapshot)
     if errors:
         for error in errors:

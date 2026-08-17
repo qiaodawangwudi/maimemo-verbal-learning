@@ -25,6 +25,7 @@ jobs:
           tests.maimemo_learning_rebuild.test_application_quality_gate
           tests.maimemo_learning_rebuild.test_markji
           tests.maimemo_learning_rebuild.test_models
+          tests.maimemo_learning_rebuild.test_planning
           tests.maimemo_learning_rebuild.test_public_quality_gate
           tests.maimemo_learning_rebuild.test_readback
           tests.maimemo_learning_rebuild.test_render

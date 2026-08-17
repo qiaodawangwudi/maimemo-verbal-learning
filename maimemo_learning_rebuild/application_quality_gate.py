@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 from collections import Counter
 from pathlib import Path
@@ -14,6 +15,14 @@ DECISIONS = {"create", "not_needed"}
 
 def _text(value: object) -> str:
     return str(value or "").strip()
+
+
+def application_review_hash(review: dict) -> str:
+    payload = {key: value for key, value in review.items() if key != "review_hash"}
+    canonical = json.dumps(
+        payload, ensure_ascii=False, sort_keys=True, separators=(",", ":")
+    )
+    return hashlib.sha256(canonical.encode("utf-8")).hexdigest()
 
 
 def _subject_key(decision: dict) -> tuple[str, str]:
@@ -70,6 +79,7 @@ def evaluate_application_gate(
     groups: dict,
     review: dict,
     final_cards: dict,
+    plan: dict,
 ) -> list[str]:
     """Require complete review coverage and useful cards for every create decision."""
 
@@ -135,6 +145,13 @@ def evaluate_application_gate(
         if count > 1:
             errors.append(f"duplicate application card title: {title}")
     actual_titles = set(title_counts)
+    if plan.get("application_review_hash") != application_review_hash(review):
+        errors.append("action plan is not bound to current application review")
+    planned_titles = {
+        _text(action.get("title")) for action in plan.get("actions", [])
+    }
+    for title in sorted(create_titles - planned_titles):
+        errors.append(f"application card is missing from action plan: {title}")
     for title in sorted(create_titles - actual_titles):
         errors.append(f"application decision has no matching card: {title}")
     for title in sorted(actual_titles - create_titles):
@@ -160,6 +177,7 @@ def main() -> int:
         load("group_registry.json"),
         load("application_review.json"),
         load("final_cards.json"),
+        load("action_plan.json"),
     )
     print(json.dumps({"ok": not errors, "errors": errors}, ensure_ascii=False))
     return 0 if not errors else 1

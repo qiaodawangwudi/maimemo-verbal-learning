@@ -39,6 +39,33 @@ def semantic(term, status="ready"):
 
 
 class PlanningTests(unittest.TestCase):
+    def test_plan_creates_reviewed_application_card_and_counts_it(self):
+        snapshot = {"cards": []}
+        registry = [semantic("因噎废食"), semantic("投鼠忌器")]
+        application = {
+            "title": "语境应用｜因噎废食、投鼠忌器｜风险触发",
+            "prompt": "某地担心改革过程中出现问题，索性停止已经启动且有必要继续的改革。填入哪个词最准确？",
+            "options": ["因噎废食", "投鼠忌器"],
+            "answer": "因噎废食",
+            "clue_extraction": ["担心改革出问题", "停止本应继续的行动"],
+            "fit_reasoning": "因噎废食要求风险担忧导致必要行动被整体放弃。",
+            "distractor_rejections": {
+                "投鼠忌器": "投鼠忌器要求顾忌行动会伤及关联对象，题干没有关联对象。"
+            },
+            "transfer_rule": "先判断是停止必要行动，还是因顾忌关联对象而不敢行动。",
+        }
+        review = {"complete": True, "applications": [application]}
+
+        plan, final_cards = build_action_plan(snapshot, registry, [], review)
+
+        action = next(item for item in plan["actions"] if item["title"] == application["title"])
+        card = next(item for item in final_cards if item["title"] == application["title"])
+        self.assertEqual("create", action["action"])
+        self.assertEqual("application", card["card_type"])
+        self.assertEqual(application, card["application"])
+        self.assertIn("【排除投鼠忌器】", card["content"])
+        self.assertEqual(3, plan["expected_after"])
+
     def test_real_offline_plan_is_deterministic_and_count_safe(self):
         root = Path(__file__).parents[2]
         artifact_root = root / "maimemo_learning_rebuild" / "artifacts"

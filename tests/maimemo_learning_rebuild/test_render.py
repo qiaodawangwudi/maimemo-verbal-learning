@@ -3,10 +3,41 @@ import unittest
 from pathlib import Path
 
 from maimemo_learning_rebuild.models import validate_group_record, validate_semantic_record
-from maimemo_learning_rebuild.render import render_base_card, render_comparison_card
+from maimemo_learning_rebuild.render import (
+    render_application_card,
+    render_base_card,
+    render_comparison_card,
+)
 
 
 class LayeredRenderTests(unittest.TestCase):
+    def test_application_card_hides_analysis_until_after_context_and_options(self):
+        application = {
+            "title": "语境应用｜因噎废食、投鼠忌器｜风险触发",
+            "prompt": "某地担心改革过程中出现问题，索性停止了已经启动且有必要继续的改革。填入哪个词最准确？",
+            "options": ["因噎废食", "投鼠忌器"],
+            "answer": "因噎废食",
+            "clue_extraction": ["担心改革出问题", "停止本应继续的行动"],
+            "fit_reasoning": "因噎废食要求因问题或风险担忧而整体放弃必要行动，与题干因果链完全一致。",
+            "distractor_rejections": {
+                "投鼠忌器": "投鼠忌器要求顾忌行动会牵连旁人旁物，题干不存在被牵连的关联对象。"
+            },
+            "transfer_rule": "先找行为结果；停止必要行动对应因噎废食，因顾忌关联对象而不敢行动对应投鼠忌器。",
+        }
+
+        rendered = render_application_card(application)
+        front, back = rendered.split("\n---\n")
+
+        self.assertIn(application["prompt"], front)
+        self.assertIn("A. 因噎废食", front)
+        self.assertIn("B. 投鼠忌器", front)
+        self.assertNotIn("【答案】", front)
+        self.assertIn("【答案】]因噎废食", back)
+        self.assertIn("【题干线索】", back)
+        self.assertIn("【为什么匹配】", back)
+        self.assertIn("【排除投鼠忌器】", back)
+        self.assertIn("【迁移规则】", back)
+
     def test_frozen_examples_cover_the_three_approved_groups(self):
         path = (
             Path(__file__).parents[2]

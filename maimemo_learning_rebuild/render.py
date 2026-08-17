@@ -7,6 +7,54 @@ def _line(label: str, text: str) -> str:
     return f"[T#B#{label}]{text}"
 
 
+def render_application_card(application: dict) -> str:
+    """Render a scenario exercise with the judgment process hidden on the back."""
+
+    title = str(application["title"])
+    options = [str(option) for option in application["options"]]
+    answer = str(application["answer"])
+    rejections = application.get("distractor_rejections", {})
+    lines = [
+        f"[P#H1#{title}]",
+        "",
+        str(application["prompt"]),
+        "",
+    ]
+    lines.extend(f"{chr(65 + index)}. {option}" for index, option in enumerate(options))
+    lines.extend(
+        [
+            "",
+            "---",
+            "",
+            _line("【答案】", answer),
+            "",
+            "[T#B#【题干线索】]",
+        ]
+    )
+    lines.extend(f"- {clue}" for clue in application.get("clue_extraction", []))
+    lines.extend(
+        [
+            "",
+            _line("【为什么匹配】", str(application["fit_reasoning"])),
+        ]
+    )
+    for option in options:
+        if option != answer:
+            lines.extend(
+                [
+                    "",
+                    _line(f"【排除{option}】", str(rejections[option])),
+                ]
+            )
+    lines.extend(
+        [
+            "",
+            _line("【迁移规则】", str(application["transfer_rule"])),
+        ]
+    )
+    return "\n".join(lines).rstrip()
+
+
 def render_base_card(record: dict, group_refs: list[dict]) -> str:
     term = str(record["term"])
     lines = [
