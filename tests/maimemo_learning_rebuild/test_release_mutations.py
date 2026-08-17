@@ -217,6 +217,30 @@ class ReleaseMutationTests(unittest.TestCase):
                 "二者差异在于：因害怕问题而停止本来应该继续的行动。",
             ),
             (
+                "left definition with two scattered deletions",
+                "因害怕出问题停止本来应该继续行动。",
+            ),
+            (
+                "left definition with three scattered deletions",
+                "因害怕问题停止本来应该继续行动。",
+            ),
+            (
+                "wrapped left definition with two scattered deletions",
+                "二者差异在于：因害怕出问题停止本来应该继续行动。",
+            ),
+            (
+                "right definition with two scattered deletions",
+                "因顾忌伤关联对象不敢采取行动。",
+            ),
+            (
+                "right definition with three scattered deletions",
+                "因顾忌伤关联对象不敢采行动。",
+            ),
+            (
+                "wrapped right definition with two scattered deletions",
+                "也就是说，因顾忌伤关联对象不敢采取行动。",
+            ),
+            (
                 "concatenated features",
                 "结果是把必要行动整体停止；顾忌点落在行动可能牵连的对象。",
             ),
@@ -226,11 +250,27 @@ class ReleaseMutationTests(unittest.TestCase):
                 errors = _comparison_quality(text)
                 self.assertIn(copied_error, errors, errors)
 
-        genuine = _comparison_quality(
-            "因噎废食的决定性结果是放弃必要行动；"
-            "投鼠忌器的决定性顾虑是行动会牵连特定对象。"
+        genuine_cases = (
+            (
+                "distinct result and concern",
+                "因噎废食的决定性结果是放弃必要行动；"
+                "投鼠忌器的决定性顾虑是行动会牵连特定对象。",
+            ),
+            (
+                "shared inaction vocabulary with two landings",
+                "二词都可能表现为不采取行动；因噎废食是因小风险放弃必要事项，"
+                "投鼠忌器是因会牵连特定对象而暂不行动。",
+            ),
+            (
+                "shared concern vocabulary with two objects",
+                "二词都含有因顾虑而停止动作；因噎废食落在本应继续的事项被放弃，"
+                "投鼠忌器落在保护可能被牵连的对象。",
+            ),
         )
-        self.assertNotIn(copied_error, genuine, genuine)
+        for label, text in genuine_cases:
+            with self.subTest(genuine_contrast=label):
+                errors = _comparison_quality(text)
+                self.assertNotIn(copied_error, errors, errors)
 
     def test_every_protected_mutation_has_a_named_gate_failure(self):
         cases = (

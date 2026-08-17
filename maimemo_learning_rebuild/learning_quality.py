@@ -99,13 +99,15 @@ def _copies_definition(edge_text: object, definition: object) -> bool:
             candidate_matcher = SequenceMatcher(
                 None, normalized_definition, candidate
             )
-            candidate_longest = max(
-                (block.size for block in candidate_matcher.get_matching_blocks()),
-                default=0,
+            matched = sum(
+                block.size for block in candidate_matcher.get_matching_blocks()
             )
+            definition_coverage = matched / len(normalized_definition)
+            candidate_coverage = matched / len(candidate)
             if (
                 candidate_matcher.ratio() >= 0.88
-                and candidate_longest >= max(6, len(normalized_definition) // 2)
+                and definition_coverage >= 0.8
+                and candidate_coverage >= 0.8
             ):
                 return True
     return False
