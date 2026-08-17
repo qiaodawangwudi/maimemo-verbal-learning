@@ -45,12 +45,13 @@ TYPE_PREFIXES = {
 }
 TITLE = re.compile(r"^\[P#H1#([^\]]+)\]")
 ROOT_PLACEHOLDER = re.compile(r"\{\{root:([^}]+)\}\}")
-ROOT_ID = re.compile(r"mkjr_\S+")
+ROOT_TOKEN = r"mkjr_[A-Za-z0-9_.-]+"
+ROOT_ID = re.compile(ROOT_TOKEN)
 RELEASE_HASH = re.compile(r"[0-9a-fA-F]{64}")
 PLACEHOLDER_REFERENCE = re.compile(
     r"\[Card#ID/\{\{root:([^{}]+)\}\}#([^\]]+)\]"
 )
-RESOLVED_REFERENCE = re.compile(r"\[Card#ID/(mkjr_[^#\]\s]+)#([^\]]+)\]")
+RESOLVED_REFERENCE = re.compile(rf"\[Card#ID/({ROOT_TOKEN})#([^\]]+)\]")
 MAX_RATE_LIMIT_RETRIES = 8
 VALIDATION_FIELDS = {
     "ok",
@@ -246,10 +247,9 @@ def _normalize_cards(cards):
             target, label = match.groups()
             if target != label or target not in comparison_titles:
                 raise RuntimeError(f"invalid root placeholder target: {value['title']}")
-        reference_matches = list(RESOLVED_REFERENCE.finditer(content))
-        reference_remainder = RESOLVED_REFERENCE.sub("", placeholder_remainder)
-        if "[Card#ID/" in reference_remainder:
-            raise RuntimeError(f"malformed root reference: {value['title']}")
+        reference_matches = _parse_resolved_references(
+            placeholder_remainder, value["title"]
+        )
         if reference_matches and value["card_type"] != "base":
             raise RuntimeError(f"root reference is not permitted: {value['title']}")
         for match in reference_matches:
@@ -259,8 +259,8 @@ def _normalize_cards(cards):
     return normalized
 
 
-def _index_live(deck, manifest, *, require_routes):
-    _require_strict_json(deck, "live deck" if require_routes else "snapshot")
+def _index_live(deck, manifest, *, require_routes, snapshot=False):
+    _require_strict_json(deck, "snapshot" if snapshot else "live deck")
     if not isinstance(deck, dict) or not isinstance(deck.get("cards"), list):
         raise RuntimeError("live deck readback is malformed")
     if require_routes:
@@ -321,7 +321,11 @@ def _index_live(deck, manifest, *, require_routes):
         if require_routes:
             for route, route_id in route_ids.items():
                 if route_id not in chapters_by_id:
-                    raise RuntimeError(f"release target route is missing: {route}")
+                    label = "snapshot" if snapshot else "release target"
+                    raise RuntimeError(f"{label} route is missing: {route}")
+        if snapshot and set(chapters_by_id) != set(route_ids.values()):
+            raise RuntimeError("snapshot must contain exactly the three release routes")
+        routed_card_ids = set()
         for route, route_id in route_ids.items():
             chapter = chapters_by_id.get(route_id)
             if not isinstance(chapter, dict):
@@ -330,6 +334,7 @@ def _index_live(deck, manifest, *, require_routes):
             if chapter.get("name") != expected_name:
                 raise RuntimeError(f"chapter name mismatch: {route}")
             for card_id in chapter["card_ids"]:
+                routed_card_ids.add(card_id)
                 value = cards_by_id.get(card_id)
                 if value is None:
                     raise RuntimeError(f"live route references missing card: {route}")
@@ -341,6 +346,8 @@ def _index_live(deck, manifest, *, require_routes):
                 if _card_type(title) != route:
                     raise RuntimeError(f"live card is in wrong route: {title}")
                 indexed[route][title] = value
+        if snapshot and routed_card_ids != set(cards_by_id):
+            raise RuntimeError("snapshot card is not in an exact release route")
         return indexed
     if require_routes:
         raise RuntimeError("live deck has no chapter routes")
@@ -356,6 +363,15 @@ def _index_live(deck, manifest, *, require_routes):
 
 def _valid_root(value):
     return isinstance(value, str) and bool(ROOT_ID.fullmatch(value))
+
+
+def _parse_resolved_references(content, title):
+    if "{{" in content or "}}" in content:
+        raise RuntimeError(f"unresolved root placeholder: {title}")
+    matches = list(RESOLVED_REFERENCE.finditer(content))
+    if "[Card#ID/" in RESOLVED_REFERENCE.sub("", content):
+        raise RuntimeError(f"malformed root reference: {title}")
+    return matches
 
 
 def _root_map(indexed, cards):
@@ -416,12 +432,23 @@ def _live_state(route, card):
     }
 
 
-def _matches_final(card, live, resolved):
+def _matches_frozen_immutable(route, frozen, live):
+    if frozen is None or live is None:
+        return False
+    frozen_state = _live_state(route, frozen)
+    live_state = _live_state(route, live)
+    return all(
+        frozen_state[field] == live_state[field]
+        for field in ("route", "id", "root_id", "grammar_version")
+    )
+
+
+def _matches_final(card, frozen, live, resolved, route):
     if live is None or live.get("content") != resolved[card["title"]]:
         return False
     if card["action"] in {"update", "unchanged"}:
-        return live.get("id") == card.get("card_id")
-    return True
+        return _matches_frozen_immutable(route, frozen, live)
+    return frozen is None
 
 
 def _precheck(client, manifest, cards, snapshot):
@@ -439,7 +466,9 @@ def _precheck(client, manifest, cards, snapshot):
         raise RuntimeError("frozen snapshot deck identity differs from manifest")
     if not isinstance(snapshot.get("chapters"), list):
         raise RuntimeError("snapshot chapters must be a list")
-    frozen = _index_live(snapshot, manifest, require_routes=False)
+    frozen = _index_live(
+        snapshot, manifest, require_routes=True, snapshot=True
+    )
     expected = {card["title"]: card for card in cards}
     resolved = _resolved_if_possible(cards, live)
     for route in ROUTES:
@@ -459,9 +488,15 @@ def _precheck(client, manifest, cards, snapshot):
             if final["action"] in {"update", "unchanged"}:
                 if before is None or before.get("id") != final.get("card_id"):
                     raise RuntimeError(f"frozen card id drift: {title}")
+                if current is not None and current.get("id") != final.get("card_id"):
+                    raise RuntimeError(f"card id drift: {title}")
+                if current is not None and not _matches_frozen_immutable(
+                    route, before, current
+                ):
+                    raise RuntimeError(f"immutable frozen card drift: {title}")
             if _live_state(route, before) == _live_state(route, current):
                 continue
-            if _matches_final(final, current, resolved):
+            if _matches_final(final, before, current, resolved, route):
                 continue
             if (
                 current is not None
@@ -555,16 +590,20 @@ def _gate_release(client, manifest, cards, baseline, completed, required_roots):
     return indexed
 
 
-def _exact_written(card, live, content):
+def _exact_written(card, live, content, frozen_state):
     if live is None or live.get("content") != content:
         return False
     if card["action"] in {"update", "unchanged"}:
-        return live.get("id") == card.get("card_id")
+        live_state = _live_state(card["card_type"], live)
+        return frozen_state is not None and all(
+            live_state[field] == frozen_state[field]
+            for field in ("route", "id", "root_id", "grammar_version")
+        )
     return True
 
 
 def _assert_content_root_mapping(card, content, roots):
-    matches = list(RESOLVED_REFERENCE.finditer(content))
+    matches = _parse_resolved_references(content, card["title"])
     if not matches:
         return
     if card["card_type"] != "base" or roots is None:
@@ -600,7 +639,7 @@ def _write_action(
             live is None or live.get("id") != card.get("card_id")
         ):
             raise RuntimeError(f"card id drift: {card['title']}")
-        if _exact_written(card, live, content):
+        if _exact_written(card, live, content, baseline[card["title"]]):
             return ("unchanged" if card["action"] == "unchanged" else "already_present"), live
         if card["action"] == "unchanged":
             raise RuntimeError(f"unchanged frozen content differs live: {card['title']}")
@@ -613,7 +652,9 @@ def _write_action(
                 client.update_card(card["card_id"], content, guard)
             readback = _read_live_release(client, manifest)
             written = readback[card["card_type"]].get(card["title"])
-            if not _exact_written(card, written, content):
+            if not _exact_written(
+                card, written, content, baseline[card["title"]]
+            ):
                 raise AmbiguousMutationError(
                     f"mutation result did not read back exactly: {card['title']}"
                 )
@@ -621,7 +662,9 @@ def _write_action(
         except RateLimitError as error:
             readback_index = _read_live_release(client, manifest)
             readback = readback_index[card["card_type"]].get(card["title"])
-            if _exact_written(card, readback, content):
+            if _exact_written(
+                card, readback, content, baseline[card["title"]]
+            ):
                 return "recovered_after_ambiguous_response", readback
             rate_limits += 1
             if rate_limits > MAX_RATE_LIMIT_RETRIES:
@@ -630,7 +673,9 @@ def _write_action(
         except AmbiguousMutationError:
             readback_index = _read_live_release(client, manifest)
             readback = readback_index[card["card_type"]].get(card["title"])
-            if _exact_written(card, readback, content):
+            if _exact_written(
+                card, readback, content, baseline[card["title"]]
+            ):
                 return "recovered_after_ambiguous_response", readback
             raise
 
@@ -710,11 +755,13 @@ def _verify_final(live_deck, manifest, cards, resolved, completed):
             if title in completed and _live_state(route, live) != completed[title]:
                 errors.append(f"completed outcome drift: {title}")
             live_content = str(live.get("content") or "")
-            if "{{" in live_content or "}}" in live_content:
-                errors.append(f"unresolved root placeholder: {title}")
-            reference_matches = list(RESOLVED_REFERENCE.finditer(live_content))
-            if "[Card#ID/" in RESOLVED_REFERENCE.sub("", live_content):
-                errors.append(f"malformed root reference: {title}")
+            try:
+                reference_matches = _parse_resolved_references(
+                    live_content, title
+                )
+            except RuntimeError as error:
+                reference_matches = []
+                errors.append(str(error))
             for match in reference_matches:
                 root_id, label = match.groups()
                 if root_id not in set(live_roots.values()):

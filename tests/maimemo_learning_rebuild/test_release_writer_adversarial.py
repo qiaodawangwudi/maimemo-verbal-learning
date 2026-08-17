@@ -61,6 +61,15 @@ class BoundedRateLimitClient(FakeClient):
         raise RateLimitError(3600)
 
 
+class RootChangingUpdateClient(FakeClient):
+    def update_card(self, card_id, content, guard):
+        result = super().update_card(card_id, content, guard)
+        next(value for value in self.live["cards"] if value["id"] == card_id)[
+            "root_id"
+        ] = "mkjr_changed_by_update"
+        return result
+
+
 class CancelAfterWaitPolicy(WaitPolicy):
     def wait(self, seconds):
         super().wait(seconds)
@@ -95,6 +104,251 @@ def successful_validation(receipt_value):
 
 
 class ReleaseWriterAdversarialTests(unittest.TestCase):
+    def test_existing_final_content_resume_preserves_frozen_immutable_identity(self):
+        base_title = "基础词义｜甲"
+        base_content = (
+            f"[P#H1#{base_title}]\n---\n"
+            f"[Card#ID/{{{{root:{COMPARISON_A}}}}}#{COMPARISON_A}]"
+        )
+        for action in ("update", "unchanged"):
+            frozen_content = (
+                f"[P#H1#{COMPARISON_A}]\n---\n旧辨析"
+                if action == "update"
+                else COMPARISON_A_CONTENT
+            )
+            comparison = card(
+                COMPARISON_A,
+                "comparison",
+                COMPARISON_A_CONTENT,
+                action=action,
+                card_id="comparison-1",
+            )
+            base = card(base_title, "base", base_content)
+            snapshot = live_deck(
+                [
+                    live_card(
+                        "comparison-1",
+                        COMPARISON_A,
+                        "comparison",
+                        frozen_content,
+                        "mkjr_frozen",
+                    )
+                ]
+            )
+            live = live_deck(
+                [
+                    live_card(
+                        "comparison-1",
+                        COMPARISON_A,
+                        "comparison",
+                        COMPARISON_A_CONTENT,
+                        "mkjr_changed",
+                    )
+                ]
+            )
+            client = FakeClient(live)
+
+            with self.subTest(action=action):
+                with self.assertRaisesRegex(RuntimeError, "immutable frozen card drift"):
+                    execute_release(
+                        client,
+                        manifest(snapshot, [comparison, base]),
+                        [comparison, base],
+                        MemoryJournal(),
+                        no_wait,
+                    )
+                self.assertEqual([], client.post_calls)
+
+    def test_update_readback_requires_frozen_immutable_identity(self):
+        old_content = f"[P#H1#{COMPARISON_A}]\n---\n旧辨析"
+        comparison = card(
+            COMPARISON_A,
+            "comparison",
+            COMPARISON_A_CONTENT,
+            action="update",
+            card_id="comparison-1",
+        )
+        snapshot = live_deck(
+            [
+                live_card(
+                    "comparison-1",
+                    COMPARISON_A,
+                    "comparison",
+                    old_content,
+                    "mkjr_frozen",
+                )
+            ]
+        )
+        client = RootChangingUpdateClient(snapshot)
+
+        with self.assertRaises(AmbiguousMutationError):
+            execute_release(
+                client,
+                manifest(snapshot, [comparison]),
+                [comparison],
+                MemoryJournal(),
+                no_wait,
+            )
+        self.assertEqual(1, len(client.post_calls))
+
+    def test_create_resume_requires_stable_title_absent_from_snapshot(self):
+        title = "语境应用｜甲、乙｜差别"
+        content = f"[P#H1#{title}]\n---\n练习"
+        expected = card(title, "application", content)
+        snapshot = live_deck()
+        snapshot["cards"].append(
+            live_card("orphan", title, "application", content, "mkjr_orphan")
+        )
+        live = live_deck(
+            [live_card("server", title, "application", content, "mkjr_server")]
+        )
+        client = FakeClient(live)
+
+        with self.assertRaisesRegex(RuntimeError, "snapshot card.*route"):
+            execute_release(
+                client,
+                manifest(live_deck(), [expected]) | {"snapshot": snapshot},
+                [expected],
+                MemoryJournal(),
+                no_wait,
+            )
+        self.assertEqual([], client.post_calls)
+
+    def test_snapshot_requires_all_three_exact_routes_for_all_create_and_mixed(self):
+        app_title = "语境应用｜甲、乙｜差别"
+        app = card(app_title, "application", f"[P#H1#{app_title}]\n---\n练习")
+        for mode in ("all_create", "mixed"):
+            if mode == "mixed":
+                comparison = card(
+                    COMPARISON_A,
+                    "comparison",
+                    COMPARISON_A_CONTENT,
+                    action="unchanged",
+                    card_id="comparison-1",
+                )
+                source_snapshot = live_deck(
+                    [
+                        live_card(
+                            "comparison-1",
+                            COMPARISON_A,
+                            "comparison",
+                            COMPARISON_A_CONTENT,
+                            "mkjr_frozen",
+                        )
+                    ]
+                )
+                cards = [comparison, app]
+            else:
+                source_snapshot = live_deck()
+                cards = [app]
+
+            mutations = {}
+            one_missing = copy.deepcopy(source_snapshot)
+            one_missing["chapters"] = [
+                chapter
+                for chapter in one_missing["chapters"]
+                if chapter["id"] != ROUTES["application"]
+            ]
+            mutations["one_missing"] = one_missing
+            all_missing = copy.deepcopy(source_snapshot)
+            all_missing["chapters"] = []
+            mutations["all_missing"] = all_missing
+            wrong_membership = copy.deepcopy(source_snapshot)
+            if mode == "mixed":
+                for chapter in wrong_membership["chapters"]:
+                    chapter["card_ids"] = (
+                        ["comparison-1"] if chapter["id"] == ROUTES["base"] else []
+                    )
+            else:
+                wrong_membership["cards"].append(
+                    live_card(
+                        "wrong",
+                        "基础词义｜孤立",
+                        "base",
+                        "[P#H1#基础词义｜孤立]\n---\n定义",
+                        "mkjr_wrong",
+                    )
+                )
+                next(
+                    chapter
+                    for chapter in wrong_membership["chapters"]
+                    if chapter["id"] == ROUTES["application"]
+                )["card_ids"] = ["wrong"]
+            mutations["wrong_membership"] = wrong_membership
+            duplicate = copy.deepcopy(source_snapshot)
+            duplicate["chapters"].append(copy.deepcopy(duplicate["chapters"][0]))
+            mutations["duplicate"] = duplicate
+
+            for mutation, snapshot in mutations.items():
+                client = FakeClient(source_snapshot)
+                with self.subTest(mode=mode, mutation=mutation):
+                    with self.assertRaises(RuntimeError):
+                        execute_release(
+                            client,
+                            manifest(source_snapshot, cards) | {"snapshot": snapshot},
+                            cards,
+                            MemoryJournal(),
+                            no_wait,
+                        )
+                    self.assertEqual([], client.post_calls)
+
+    def test_root_id_grammar_is_card_syntax_safe_before_resolution_and_post(self):
+        base_title = "基础词义｜甲"
+        base_content = (
+            f"[P#H1#{base_title}]\n---\n"
+            f"[Card#ID/{{{{root:{COMPARISON_A}}}}}#{COMPARISON_A}]"
+        )
+        cards = [
+            card(COMPARISON_A, "comparison", COMPARISON_A_CONTENT),
+            card(base_title, "base", base_content),
+        ]
+        for root_id in (
+            "mkjr_bad]oops",
+            "mkjr_bad#oops",
+            "mkjr_bad{oops",
+            "mkjr_bad}oops",
+            "mkjr_bad oops",
+        ):
+            live = live_deck(
+                [
+                    live_card(
+                        "comparison-1",
+                        COMPARISON_A,
+                        "comparison",
+                        COMPARISON_A_CONTENT,
+                        root_id,
+                    )
+                ]
+            )
+            client = FakeClient(live)
+            with self.subTest(root_id=root_id):
+                with self.assertRaisesRegex(RuntimeError, "root"):
+                    execute_release(
+                        client,
+                        manifest(live_deck(), cards),
+                        cards,
+                        MemoryJournal(),
+                        no_wait,
+                    )
+                self.assertEqual([], client.post_calls)
+
+            frozen_base = card(
+                base_title,
+                "base",
+                f"[P#H1#{base_title}]\n---\n[Card#ID/{root_id}#{COMPARISON_A}]",
+            )
+            frozen_client = FakeClient(live_deck())
+            with self.subTest(root_id=root_id, source="frozen_reference"):
+                with self.assertRaisesRegex(RuntimeError, "root"):
+                    execute_release(
+                        frozen_client,
+                        manifest(live_deck(), [cards[0], frozen_base]),
+                        [cards[0], frozen_base],
+                        MemoryJournal(),
+                        no_wait,
+                    )
+                self.assertEqual([], frozen_client.post_calls)
+
     def test_dependent_write_revalidates_exact_title_to_root_mapping(self):
         base_content = (
             "[P#H1#基础词义｜甲]\n---\n"
