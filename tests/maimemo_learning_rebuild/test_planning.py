@@ -71,12 +71,7 @@ class PlanningTests(unittest.TestCase):
         artifact_root = root / "maimemo_learning_rebuild" / "artifacts"
         source_root = root.parents[1]
         snapshot = json.loads(
-            (
-                source_root
-                / "maimemo_four_poems"
-                / "audit_readonly"
-                / "current_library_snapshot_2026-08-17.json"
-            ).read_text(encoding="utf-8-sig")
+            self._required_private_snapshot(source_root).read_text(encoding="utf-8-sig")
         )
         registry = json.loads(
             (artifact_root / "master_semantic_registry.json").read_text(encoding="utf-8")
@@ -96,6 +91,17 @@ class PlanningTests(unittest.TestCase):
         )
         self.assertEqual(746, first_plan["expected_after"])
         self.assertEqual([], validate_action_plan(first_plan, snapshot))
+
+    def _required_private_snapshot(self, source_root: Path) -> Path:
+        path = (
+            source_root
+            / "maimemo_four_poems"
+            / "audit_readonly"
+            / "current_library_snapshot_2026-08-17.json"
+        )
+        if not path.exists():
+            self.skipTest("private live-library snapshot is intentionally not published")
+        return path
 
     def test_plan_updates_existing_creates_missing_and_holds_pending(self):
         snapshot = {
