@@ -8,6 +8,7 @@ from dataclasses import dataclass
 from pathlib import Path
 
 from .groups import validate_group_registry
+from .learning_quality import learning_review_hash
 from .planning import content_hash, validate_action_plan
 from .review import GENERIC_WARNINGS, review_registry
 from .snapshot import audit_snapshot
@@ -19,6 +20,7 @@ class GuardResult:
     ok: bool
     errors: tuple[str, ...]
     plan_hash: str
+    learning_review_hash: str = ""
 
 
 def evaluate_guard(
@@ -31,10 +33,37 @@ def evaluate_guard(
     catalog: dict,
     approval: dict | None,
     target_chapter_id: str,
+    independent_review: dict | None = None,
 ) -> GuardResult:
     errors: list[str] = []
     plan_hash = str(plan.get("plan_hash") or "")
+    current_learning_review_hash = ""
+    review_for_quality: dict | None = None
     errors.extend(validate_action_plan(plan, snapshot))
+
+    if independent_review is None:
+        errors.append("missing independent learning review")
+    elif not isinstance(independent_review, dict):
+        errors.append("independent learning review is incomplete")
+    else:
+        review_for_quality = independent_review
+        current_learning_review_hash = learning_review_hash(independent_review)
+        stored_review_hash = str(independent_review.get("review_hash") or "")
+        if stored_review_hash and stored_review_hash != current_learning_review_hash:
+            errors.append("independent learning review hash mismatch")
+        if independent_review.get("complete") is not True:
+            errors.append("independent learning review is incomplete")
+        resolutions = independent_review.get("resolutions")
+        resolution_isolation_failed = isinstance(resolutions, list) and any(
+            not isinstance(resolution, dict)
+            or resolution.get("reviewer_context_isolated") is not True
+            for resolution in resolutions
+        )
+        if (
+            independent_review.get("reviewer_context_isolated") is not True
+            or resolution_isolation_failed
+        ):
+            errors.append("independent learning review is not context-isolated")
 
     snapshot_report = audit_snapshot(snapshot)
     if snapshot_report["missing_reference_targets"]:
@@ -44,10 +73,11 @@ def evaluate_guard(
     if snapshot_report["duplicate_titles"]:
         errors.append(f"snapshot has duplicate titles: {len(snapshot_report['duplicate_titles'])}")
 
-    review = review_registry(registry, catalog, groups)
+    review = review_registry(registry, catalog, groups, review_for_quality)
     for detail in review["details"]:
         for error in detail["errors"]:
             errors.append(f"semantic error {detail['term']}: {error}")
+    errors.extend(review["learning_quality_errors"])
     non_ready = sum(record.get("status") != "ready" for record in registry)
     if non_ready:
         errors.append(f"registry has non-ready records: {non_ready}")
@@ -99,7 +129,14 @@ def evaluate_guard(
             errors.append("approval action counts mismatch")
         if approval.get("chapter_id") != expected_chapter_id:
             errors.append("approval chapter mismatch")
-    return GuardResult(ok=not errors, errors=tuple(dict.fromkeys(errors)), plan_hash=plan_hash)
+        if approval.get("learning_review_hash") != current_learning_review_hash:
+            errors.append("approval learning review hash mismatch")
+    return GuardResult(
+        ok=not errors,
+        errors=tuple(dict.fromkeys(errors)),
+        plan_hash=plan_hash,
+        learning_review_hash=current_learning_review_hash,
+    )
 
 
 def main() -> int:
@@ -111,6 +148,7 @@ def main() -> int:
     parser.add_argument("--plan", type=Path, required=True)
     parser.add_argument("--sources", type=Path, required=True)
     parser.add_argument("--approval", type=Path)
+    parser.add_argument("--independent-review", type=Path)
     parser.add_argument("--target-chapter-id", required=True)
     args = parser.parse_args()
     snapshot = json.loads(args.snapshot.read_text(encoding="utf-8-sig"))
@@ -124,6 +162,11 @@ def main() -> int:
         if args.approval
         else None
     )
+    independent_review = (
+        json.loads(args.independent_review.read_text(encoding="utf-8-sig"))
+        if args.independent_review
+        else None
+    )
     result = evaluate_guard(
         snapshot=snapshot,
         registry=registry,
@@ -133,8 +176,19 @@ def main() -> int:
         catalog=catalog,
         approval=approval,
         target_chapter_id=args.target_chapter_id,
+        independent_review=independent_review,
     )
-    print(json.dumps({"ok": result.ok, "plan_hash": result.plan_hash, "errors": result.errors}, ensure_ascii=False))
+    print(
+        json.dumps(
+            {
+                "ok": result.ok,
+                "plan_hash": result.plan_hash,
+                "learning_review_hash": result.learning_review_hash,
+                "errors": result.errors,
+            },
+            ensure_ascii=False,
+        )
+    )
     return 0 if result.ok else 1
 
 

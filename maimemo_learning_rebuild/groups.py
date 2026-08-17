@@ -10,6 +10,34 @@ from .models import validate_group_record
 
 
 DECISIONS = {"keep", "split", "merge", "retire_content", "repurpose"}
+REVIEWED_CONTRAST_FIELDS = (
+    "shared_basis",
+    "axis",
+    "left_landing",
+    "right_landing",
+)
+
+
+def comparison_edge_subject_id(group: dict, edge: dict) -> str:
+    group_id = str(group.get("group_id") or "").strip()
+    left = str(edge.get("left") or "").strip()
+    right = str(edge.get("right") or "").strip()
+    if not group_id or not left or not right:
+        return ""
+    return f"{group_id}:{left}:{right}"
+
+
+def has_reviewed_contrast_contract(edge: dict) -> bool:
+    if not isinstance(edge, dict):
+        return False
+    if any(not str(edge.get(field) or "").strip() for field in REVIEWED_CONTRAST_FIELDS):
+        return False
+    evidence_ids = edge.get("evidence_ids")
+    if not isinstance(evidence_ids, list) or not evidence_ids:
+        return False
+    if any(not str(evidence_id or "").strip() for evidence_id in evidence_ids):
+        return False
+    return edge.get("review_status") == "pass"
 
 
 def audit_group_overlaps(groups: list[dict]) -> list[dict]:

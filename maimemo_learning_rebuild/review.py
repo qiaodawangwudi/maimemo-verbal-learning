@@ -7,6 +7,7 @@ import json
 from collections import Counter
 from pathlib import Path
 
+from .learning_quality import evaluate_learning_quality
 from .models import validate_semantic_record
 from .sources import load_source_catalog, validate_evidence
 
@@ -24,8 +25,12 @@ SUSPICIOUS_EXACT = {
 }
 
 
-def review_registry(records: list[dict], catalog: dict, groups: list[dict]) -> dict:
-    del groups  # Group-edge existence is checked against the complete term universe below.
+def review_registry(
+    records: list[dict],
+    catalog: dict,
+    groups: list[dict],
+    independent_review: dict | None = None,
+) -> dict:
     key_counts = Counter(
         (str(record.get("term") or ""), str(record.get("sense_id") or ""))
         for record in records
@@ -82,6 +87,12 @@ def review_registry(records: list[dict], catalog: dict, groups: list[dict]) -> d
             hard_errors += len(errors)
             details.append({"term": term, "errors": errors})
 
+    learning_quality_errors = (
+        evaluate_learning_quality(records, groups, independent_review)
+        if independent_review is not None
+        else []
+    )
+    hard_errors += len(learning_quality_errors)
     return {
         "records": len(records),
         "ready": effective_ready,
@@ -97,6 +108,7 @@ def review_registry(records: list[dict], catalog: dict, groups: list[dict]) -> d
         "suspicious_fragments": suspicious_fragments,
         "hard_errors": hard_errors,
         "details": details,
+        "learning_quality_errors": learning_quality_errors,
     }
 
 

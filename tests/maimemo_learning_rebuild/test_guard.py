@@ -2,6 +2,7 @@ import copy
 import unittest
 
 from maimemo_learning_rebuild.guard import evaluate_guard
+from maimemo_learning_rebuild.learning_quality import learning_review_hash
 from maimemo_learning_rebuild.planning import build_action_plan
 
 
@@ -37,17 +38,24 @@ def safe_fixture():
     }
     registry = [ready_record()]
     plan, cards = build_action_plan(snapshot, registry, [])
+    independent_review = {
+        "complete": True,
+        "reviewer_context_isolated": True,
+        "resolutions": [],
+    }
+    independent_review["review_hash"] = learning_review_hash(independent_review)
     approval = {
         "chapter_id": "chapter",
         "plan_hash": plan["plan_hash"],
         "action_counts": plan["action_counts"],
+        "learning_review_hash": independent_review["review_hash"],
     }
-    return snapshot, registry, [], cards, plan, approval
+    return snapshot, registry, [], cards, plan, approval, independent_review
 
 
 class WriteGuardTests(unittest.TestCase):
     def test_safe_complete_plan_passes(self):
-        snapshot, registry, groups, cards, plan, approval = safe_fixture()
+        snapshot, registry, groups, cards, plan, approval, independent_review = safe_fixture()
 
         result = evaluate_guard(
             snapshot=snapshot,
@@ -58,12 +66,13 @@ class WriteGuardTests(unittest.TestCase):
             catalog={"sources": []},
             approval=approval,
             target_chapter_id="chapter",
+            independent_review=independent_review,
         )
 
         self.assertTrue(result.ok, result.errors)
 
     def test_pending_record_missing_approval_and_wrong_chapter_are_blocked(self):
-        snapshot, registry, groups, cards, plan, _ = safe_fixture()
+        snapshot, registry, groups, cards, plan, _, independent_review = safe_fixture()
         registry[0] = {
             "term": "甲",
             "sense_id": "甲::待核::001",
@@ -80,6 +89,7 @@ class WriteGuardTests(unittest.TestCase):
             catalog={"sources": []},
             approval=None,
             target_chapter_id="wrong",
+            independent_review=independent_review,
         )
 
         self.assertIn("registry has non-ready records: 1", result.errors)
@@ -87,7 +97,7 @@ class WriteGuardTests(unittest.TestCase):
         self.assertIn("wrong target chapter: wrong", result.errors)
 
     def test_repeated_fields_generic_warning_and_changed_plan_hash_are_blocked(self):
-        snapshot, registry, groups, cards, plan, approval = safe_fixture()
+        snapshot, registry, groups, cards, plan, approval, independent_review = safe_fixture()
         registry[0]["distinctive_feature"] = registry[0]["meaning"]
         registry[0]["misuse_boundary"] = "需结合题干逻辑对应点使用。"
         plan["expected_after"] = 99
@@ -101,6 +111,7 @@ class WriteGuardTests(unittest.TestCase):
             catalog={"sources": []},
             approval=approval,
             target_chapter_id="chapter",
+            independent_review=independent_review,
         )
 
         self.assertTrue(any("meaning equals distinctive_feature" in error for error in result.errors))
@@ -109,7 +120,7 @@ class WriteGuardTests(unittest.TestCase):
         self.assertIn("plan hash mismatch", result.errors)
 
     def test_approval_must_match_hash_counts_and_chapter(self):
-        snapshot, registry, groups, cards, plan, approval = safe_fixture()
+        snapshot, registry, groups, cards, plan, approval, independent_review = safe_fixture()
         bad = copy.deepcopy(approval)
         bad["plan_hash"] = "changed"
         bad["action_counts"] = {"create": 999}
@@ -124,11 +135,103 @@ class WriteGuardTests(unittest.TestCase):
             catalog={"sources": []},
             approval=bad,
             target_chapter_id="chapter",
+            independent_review=independent_review,
         )
 
         self.assertIn("approval plan hash mismatch", result.errors)
         self.assertIn("approval action counts mismatch", result.errors)
         self.assertIn("approval chapter mismatch", result.errors)
+
+    def test_missing_independent_review_is_blocked(self):
+        snapshot, registry, groups, cards, plan, approval, _ = safe_fixture()
+
+        result = evaluate_guard(
+            snapshot=snapshot,
+            registry=registry,
+            groups=groups,
+            final_cards=cards,
+            plan=plan,
+            catalog={"sources": []},
+            approval=approval,
+            target_chapter_id="chapter",
+            independent_review=None,
+        )
+
+        self.assertIn("missing independent learning review", result.errors)
+
+    def test_malformed_independent_review_is_rejected_as_incomplete(self):
+        snapshot, registry, groups, cards, plan, approval, _ = safe_fixture()
+
+        result = evaluate_guard(
+            snapshot=snapshot,
+            registry=registry,
+            groups=groups,
+            final_cards=cards,
+            plan=plan,
+            catalog={"sources": []},
+            approval=approval,
+            target_chapter_id="chapter",
+            independent_review=[],
+        )
+
+        self.assertIn("independent learning review is incomplete", result.errors)
+
+    def test_changed_incomplete_and_non_isolated_reviews_are_blocked(self):
+        snapshot, registry, groups, cards, plan, approval, review = safe_fixture()
+        review["complete"] = False
+        review["reviewer_context_isolated"] = False
+
+        result = evaluate_guard(
+            snapshot=snapshot,
+            registry=registry,
+            groups=groups,
+            final_cards=cards,
+            plan=plan,
+            catalog={"sources": []},
+            approval=approval,
+            target_chapter_id="chapter",
+            independent_review=review,
+        )
+
+        self.assertIn("independent learning review hash mismatch", result.errors)
+        self.assertIn("independent learning review is incomplete", result.errors)
+        self.assertIn("independent learning review is not context-isolated", result.errors)
+
+    def test_approval_must_bind_current_learning_review_hash(self):
+        snapshot, registry, groups, cards, plan, approval, review = safe_fixture()
+        approval["learning_review_hash"] = "stale"
+
+        result = evaluate_guard(
+            snapshot=snapshot,
+            registry=registry,
+            groups=groups,
+            final_cards=cards,
+            plan=plan,
+            catalog={"sources": []},
+            approval=approval,
+            target_chapter_id="chapter",
+            independent_review=review,
+        )
+
+        self.assertIn("approval learning review hash mismatch", result.errors)
+
+    def test_approval_hash_can_bind_review_without_redundant_self_hash(self):
+        snapshot, registry, groups, cards, plan, approval, review = safe_fixture()
+        review.pop("review_hash")
+
+        result = evaluate_guard(
+            snapshot=snapshot,
+            registry=registry,
+            groups=groups,
+            final_cards=cards,
+            plan=plan,
+            catalog={"sources": []},
+            approval=approval,
+            target_chapter_id="chapter",
+            independent_review=review,
+        )
+
+        self.assertTrue(result.ok, result.errors)
 
 
 if __name__ == "__main__":
