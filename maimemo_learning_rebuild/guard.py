@@ -7,14 +7,14 @@ import json
 from dataclasses import dataclass
 from pathlib import Path
 
-from .application_blind_review import load_strict_json, strict_json_error
+from .application_blind_review import load_strict_json
 from .groups import validate_group_registry
 from .learning_quality import learning_review_hash
 from .planning import content_hash, validate_action_plan
 from .review import GENERIC_WARNINGS, review_registry
 from .snapshot import audit_snapshot
 from .sources import load_source_catalog
-from .release_environment import RECEIPT_FIELDS
+from .release_environment import validate_receipt_contract
 
 
 @dataclass(frozen=True)
@@ -117,19 +117,26 @@ def evaluate_guard(
     if target_chapter_id != expected_chapter_id:
         errors.append(f"wrong target chapter: {target_chapter_id}")
     if plan.get("schema_version") == 2:
-        try:
-            receipt_is_strict = (
-                isinstance(github_receipt, dict)
-                and set(github_receipt) == RECEIPT_FIELDS
-                and strict_json_error(github_receipt) is None
-                and github_receipt.get("schema_version") == 2
-                and type(github_receipt.get("schema_version")) is int
-                and github_receipt.get("receipt_type") == "github_protected_release"
+        release_id = plan.get("release_id")
+        release_hash = plan.get("release_hash")
+        plan_binding_is_valid = (
+            isinstance(release_id, str)
+            and bool(release_id)
+            and isinstance(release_hash, str)
+            and len(release_hash) == 64
+            and all(character in "0123456789abcdef" for character in release_hash)
+        )
+        receipt_errors = (
+            validate_receipt_contract(
+                github_receipt,
+                release_id=release_id,
+                release_hash=release_hash,
             )
-        except (RecursionError, OverflowError, TypeError, ValueError):
-            receipt_is_strict = False
-        if not receipt_is_strict:
-            errors.append("schema-v2 write requires GitHub receipt")
+            if plan_binding_is_valid
+            else ("missing schema-v2 release binding",)
+        )
+        if receipt_errors:
+            errors.append("schema-v2 write requires bound GitHub receipt")
             if approval is not None:
                 errors.append(
                     "legacy write approval is read-only and cannot authorize writes"

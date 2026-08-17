@@ -994,10 +994,11 @@ def _validate_release_environment(manifest, receipt_path):
 def _create_protected_client(manifest, validation):
     module = _release_environment_module()
     factory = getattr(module, "open_protected_client", None)
-    environment = getattr(validation, "environment", None)
-    if not callable(factory) or environment is None:
+    capability_reader = getattr(module, "_capability_for_validation", None)
+    if not callable(factory) or not callable(capability_reader):
         raise RuntimeError("GitHub release environment receipt is not approved")
-    return factory(environment)
+    capability = capability_reader(validation)
+    return factory(capability)
 
 
 def _safe_error(error):

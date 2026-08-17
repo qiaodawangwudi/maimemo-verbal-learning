@@ -25,6 +25,11 @@ load_release_manifest_file = getattr(
     "load_release_manifest_file",
     lambda path: {},
 )
+validate_release_manifest_envelope = getattr(
+    release_manifest_module,
+    "validate_release_manifest_envelope",
+    lambda manifest: ["release manifest envelope validator is unavailable"],
+)
 
 
 ROOT = Path(__file__).parents[2]
@@ -182,6 +187,23 @@ def replace_json_artifact(manifest, current_artifacts, key, payload):
 
 
 class ReleaseManifestTests(unittest.TestCase):
+    def test_authorized_envelope_validator_requires_strict_marker_lineage_and_self_hash(self):
+        authorized, _ = release_at("authorized")
+
+        self.assertEqual([], validate_release_manifest_envelope(authorized))
+        self.assertIn(
+            "release manifest must be built or loaded with the strict loader",
+            validate_release_manifest_envelope(dict(authorized)),
+        )
+        tampered = copy.deepcopy(authorized)
+        tampered["deck"]["name"] = "attacker deck"
+        self.assertIn("release self-hash mismatch", validate_release_manifest_envelope(tampered))
+        draft = complete_manifest()
+        self.assertIn(
+            "release state is not authorized",
+            validate_release_manifest_envelope(draft),
+        )
+
     def test_builds_v2_manifest_with_exact_routes_and_counts(self):
         manifest = complete_manifest()
 

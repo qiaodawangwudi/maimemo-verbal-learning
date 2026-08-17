@@ -653,7 +653,11 @@ def validate_release_manifest(manifest: dict | bytes | Path, artifacts: dict) ->
         if isinstance(manifest, bytes):
             return ["release manifest is not strict JSON"]
         return ["release manifest must be built or loaded with the strict loader"]
-    if strict_json_error(manifest):
+    try:
+        manifest_is_strict = strict_json_error(manifest) is None
+    except (RecursionError, OverflowError, TypeError, ValueError):
+        manifest_is_strict = False
+    if not manifest_is_strict:
         return ["release manifest is not strict JSON"]
 
     errors: list[str] = []
@@ -807,6 +811,123 @@ def validate_release_manifest(manifest: dict | bytes | Path, artifacts: dict) ->
     except (TypeError, ValueError, OverflowError, RecursionError):
         errors.append("release self-hash mismatch")
     return errors
+
+
+def validate_release_manifest_envelope(manifest: dict) -> list[str]:
+    """Validate the complete authorized v2 envelope without artifact contents."""
+
+    if not isinstance(manifest, _StrictManifest):
+        return ["release manifest must be built or loaded with the strict loader"]
+    try:
+        manifest_is_strict = strict_json_error(manifest) is None
+    except (RecursionError, OverflowError, TypeError, ValueError):
+        manifest_is_strict = False
+    if not manifest_is_strict:
+        return ["release manifest is not strict JSON"]
+
+    errors: list[str] = []
+    errors.extend(_prohibited_git_fields(manifest))
+    if set(manifest) != MANIFEST_FIELDS:
+        errors.append("release manifest fields mismatch")
+    if manifest.get("schema_version") != 2 or type(manifest.get("schema_version")) is not int:
+        errors.append("release manifest schema version mismatch")
+    if not isinstance(manifest.get("release_id"), str) or not manifest.get("release_id"):
+        errors.append("release id is missing")
+    if manifest.get("state") != "authorized":
+        errors.append("release state is not authorized")
+    if not isinstance(manifest.get("state_evidence"), dict):
+        errors.append("release state evidence must be an object")
+    else:
+        try:
+            errors.extend(_state_lineage_errors(manifest))
+        except (KeyError, TypeError, ValueError, OverflowError, RecursionError):
+            errors.append("release state evidence lineage incomplete: authorized")
+
+    deck = manifest.get("deck")
+    if not isinstance(deck, dict) or set(deck) != DECK_FIELDS:
+        errors.append("deck fields mismatch")
+    elif any(not isinstance(deck.get(key), str) or not deck[key] for key in DECK_FIELDS):
+        errors.append("deck identity is missing")
+
+    routes = manifest.get("chapter_routes")
+    if not isinstance(routes, dict) or set(routes) != set(ROUTE_KEYS):
+        errors.append("chapter route keys mismatch")
+        routes = routes if isinstance(routes, dict) else {}
+    route_ids: list[str] = []
+    route_names: list[str] = []
+    totals = {key: 0 for key in ROUTE_COUNT_KEYS}
+    action_totals = {key: 0 for key in ACTION_KEYS}
+    for route in ROUTE_KEYS:
+        current = routes.get(route)
+        if not isinstance(current, dict):
+            errors.append(f"chapter route must be an object: {route}")
+            continue
+        if set(current) != {"id", "name", "type", "counts"}:
+            errors.append(f"chapter route fields mismatch: {route}")
+        if current.get("type") != route:
+            errors.append(f"chapter route type mismatch: {route}")
+        for field, identities in (("id", route_ids), ("name", route_names)):
+            value = current.get(field)
+            if not isinstance(value, str) or not value:
+                errors.append(f"chapter route {field} is missing: {route}")
+            else:
+                identities.append(value)
+        counts = current.get("counts")
+        if not isinstance(counts, dict) or set(counts) != set(ROUTE_COUNT_KEYS):
+            errors.append(f"chapter route count fields mismatch: {route}")
+            continue
+        valid_counts = True
+        for key in ROUTE_COUNT_KEYS:
+            if type(counts.get(key)) is not int or counts[key] < 0:
+                errors.append(f"invalid chapter route count: {route}.{key}")
+                valid_counts = False
+            else:
+                totals[key] += counts[key]
+                if key in ACTION_KEYS:
+                    action_totals[key] += counts[key]
+        if valid_counts and (
+            counts["after"] != sum(counts[key] for key in ACTION_KEYS)
+            or counts["before"] != counts["update"] + counts["unchanged"]
+        ):
+            errors.append(f"chapter route count equation mismatch: {route}")
+    if len(route_ids) != len(set(route_ids)):
+        errors.append("duplicate chapter route id")
+    if len(route_names) != len(set(route_names)):
+        errors.append("duplicate chapter route name")
+
+    card_counts = manifest.get("card_counts")
+    if not isinstance(card_counts, dict) or set(card_counts) != {"before", "after"}:
+        errors.append("card count fields mismatch")
+    else:
+        for key in ("before", "after"):
+            if type(card_counts.get(key)) is not int or card_counts[key] < 0:
+                errors.append(f"invalid card count: {key}")
+            elif card_counts[key] != totals[key]:
+                errors.append(f"card {key} count mismatch")
+
+    action_counts = manifest.get("action_counts")
+    if not isinstance(action_counts, dict) or set(action_counts) != set(ACTION_KEYS):
+        errors.append("action count fields mismatch")
+    else:
+        for action in ACTION_KEYS:
+            if type(action_counts.get(action)) is not int or action_counts[action] < 0:
+                errors.append(f"invalid action count: {action}")
+            elif action_counts[action] != action_totals[action]:
+                errors.append(f"action count mismatch: {action}")
+
+    artifact_hashes = manifest.get("artifact_hashes")
+    if not isinstance(artifact_hashes, dict) or set(artifact_hashes) != set(ARTIFACT_KEYS):
+        errors.append("artifact hash keys mismatch")
+    else:
+        for key in ARTIFACT_KEYS:
+            if not _digest(artifact_hashes.get(key)):
+                errors.append(f"artifact hash is invalid: {key}")
+    try:
+        if manifest.get("release_hash") != release_hash(manifest):
+            errors.append("release self-hash mismatch")
+    except (TypeError, ValueError, OverflowError, RecursionError):
+        errors.append("release self-hash mismatch")
+    return list(dict.fromkeys(errors))
 
 
 def _fork_draft(

@@ -274,7 +274,7 @@ class WriteGuardTests(unittest.TestCase):
             independent_review=independent_review,
         )
 
-        self.assertIn("schema-v2 write requires GitHub receipt", result.errors)
+        self.assertIn("schema-v2 write requires bound GitHub receipt", result.errors)
         self.assertIn(
             "legacy write approval is read-only and cannot authorize writes",
             result.errors,
@@ -283,6 +283,8 @@ class WriteGuardTests(unittest.TestCase):
     def test_schema_v2_github_receipt_satisfies_authorization_gate(self):
         snapshot, registry, groups, cards, plan, approval, independent_review = safe_fixture()
         plan["schema_version"] = 2
+        plan["release_id"] = "release-1"
+        plan["release_hash"] = "a" * 64
         github_receipt = {
             "schema_version": 2,
             "receipt_type": "github_protected_release",
@@ -307,11 +309,83 @@ class WriteGuardTests(unittest.TestCase):
             independent_review=independent_review,
         )
 
-        self.assertNotIn("schema-v2 write requires GitHub receipt", result.errors)
+        self.assertNotIn("schema-v2 write requires bound GitHub receipt", result.errors)
         self.assertNotIn(
             "legacy write approval is read-only and cannot authorize writes",
             result.errors,
         )
+
+    def test_schema_v2_placeholder_receipt_never_authorizes(self):
+        snapshot, registry, groups, cards, plan, _, independent_review = safe_fixture()
+        plan["schema_version"] = 2
+        plan["release_id"] = "release-1"
+        plan["release_hash"] = "a" * 64
+        placeholder = {key: None for key in (
+            "schema_version",
+            "receipt_type",
+            "release_id",
+            "release_hash",
+            "approved_sha",
+            "github_run_id",
+            "github_environment",
+            "deployment_status",
+        )}
+        placeholder["schema_version"] = 2
+        placeholder["receipt_type"] = "github_protected_release"
+
+        result = evaluate_guard(
+            snapshot=snapshot,
+            registry=registry,
+            groups=groups,
+            final_cards=cards,
+            plan=plan,
+            catalog={"sources": []},
+            approval=None,
+            github_receipt=placeholder,
+            target_chapter_id="chapter",
+            independent_review=independent_review,
+        )
+
+        self.assertIn("schema-v2 write requires bound GitHub receipt", result.errors)
+
+    def test_schema_v2_requires_release_binding_and_exact_receipt_match(self):
+        receipt = {
+            "schema_version": 2,
+            "receipt_type": "github_protected_release",
+            "release_id": "release-1",
+            "release_hash": "a" * 64,
+            "approved_sha": "b" * 40,
+            "github_run_id": "12345",
+            "github_environment": "maimemo-final-release",
+            "deployment_status": "success",
+        }
+        for plan_binding, receipt_change in (
+            ({}, {}),
+            ({"release_id": "release-1", "release_hash": "a" * 64}, {"release_id": "other"}),
+            ({"release_id": "release-1", "release_hash": "a" * 64}, {"release_hash": "c" * 64}),
+        ):
+            with self.subTest(plan_binding=plan_binding, receipt_change=receipt_change):
+                snapshot, registry, groups, cards, plan, _, review = safe_fixture()
+                plan["schema_version"] = 2
+                plan.update(plan_binding)
+                current_receipt = {**receipt, **receipt_change}
+
+                result = evaluate_guard(
+                    snapshot=snapshot,
+                    registry=registry,
+                    groups=groups,
+                    final_cards=cards,
+                    plan=plan,
+                    catalog={"sources": []},
+                    approval=None,
+                    github_receipt=current_receipt,
+                    target_chapter_id="chapter",
+                    independent_review=review,
+                )
+
+                self.assertIn(
+                    "schema-v2 write requires bound GitHub receipt", result.errors
+                )
 
     def test_missing_independent_review_is_blocked(self):
         snapshot, registry, groups, cards, plan, approval, _ = safe_fixture()
