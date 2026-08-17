@@ -1,0 +1,23 @@
+{
+  "ok": true,
+  "errors": [],
+  "live_total": 869,
+  "expected_total": 869,
+  "verified_content": 869,
+  "chapter_counts": {
+    "comparison": 125,
+    "base": 621,
+    "application": 123
+  },
+  "chapter_names": {
+    "近义辨析": 125,
+    "基本词义": 621,
+    "场景应用": 123
+  },
+  "unresolved_placeholders": 0,
+  "planned_card_types": {
+    "comparison": 125,
+    "base": 621,
+    "application": 123
+  }
+}

@@ -3,7 +3,7 @@ import unittest
 from maimemo_learning_rebuild.api import MaimemoClient
 from maimemo_learning_rebuild.guard import GuardResult
 from maimemo_learning_rebuild.planning import content_hash
-from maimemo_learning_rebuild.sync import apply_plan
+from maimemo_learning_rebuild.sync import apply_plan, apply_plan_to_chapters
 
 
 class FakeTransport:
@@ -20,6 +20,129 @@ class FakeTransport:
 
 
 class ApiIsolationTests(unittest.TestCase):
+    def test_routed_sync_resumes_matching_creates_without_duplicates(self):
+        group_content = "[P#H1#近义辨析｜甲、乙]\n---\n辨析"
+        base_template = (
+            "[P#H1#基础词义｜甲]\n---\n"
+            "[Card#ID/{{root:近义辨析｜甲、乙}}#近义辨析｜甲、乙]"
+        )
+        resolved_base = base_template.replace(
+            "{{root:近义辨析｜甲、乙}}", "mkjr_existing"
+        )
+        app_content = "[P#H1#语境应用｜甲、乙｜差别]\n---\n应用"
+        live_data = {
+            "data": {
+                "chapters": [
+                    {"id": "comparison", "card_ids": ["g1"]},
+                    {"id": "base", "card_ids": ["b1"]},
+                    {"id": "application", "card_ids": []},
+                ],
+                "cards": [
+                    {
+                        "id": "g1",
+                        "root_id": "mkjr_existing",
+                        "content": group_content,
+                    },
+                    {"id": "b1", "content": resolved_base},
+                ],
+            }
+        }
+        transport = FakeTransport([live_data, live_data, {"data": {"id": "a1"}}])
+        client = MaimemoClient(transport, token="secret", deck_id="deck")
+        guard = GuardResult(True, (), "hash")
+        plan = {
+            "actions": [
+                {"title": "近义辨析｜甲、乙", "action": "create", "content_hash": content_hash(group_content)},
+                {"title": "基础词义｜甲", "action": "create", "content_hash": content_hash(base_template)},
+                {"title": "语境应用｜甲、乙｜差别", "action": "create", "content_hash": content_hash(app_content)},
+            ]
+        }
+        cards = [
+            {"title": "近义辨析｜甲、乙", "card_type": "comparison", "content": group_content},
+            {"title": "基础词义｜甲", "card_type": "base", "content": base_template},
+            {"title": "语境应用｜甲、乙｜差别", "card_type": "application", "content": app_content},
+        ]
+
+        counts = apply_plan_to_chapters(
+            client,
+            guard,
+            plan,
+            cards,
+            {"comparison": "comparison", "base": "base", "application": "application"},
+            pause=lambda: None,
+        )
+
+        self.assertEqual(["GET", "GET", "POST"], [call[0] for call in transport.calls])
+        self.assertIn("/chapters/application/cards", transport.calls[2][1])
+        self.assertEqual(2, counts["already_present"])
+        self.assertEqual(1, counts["create"])
+
+    def test_sync_routes_each_card_type_to_its_approved_chapter(self):
+        group_content = "[P#H1#近义辨析｜甲、乙]\n---\n辨析"
+        base_template = (
+            "[P#H1#基础词义｜甲]\n---\n"
+            "[Card#ID/{{root:近义辨析｜甲、乙}}#近义辨析｜甲、乙]"
+        )
+        app_content = "[P#H1#语境应用｜甲、乙｜差别]\n---\n应用"
+        transport = FakeTransport(
+            [
+                {
+                    "data": {
+                        "chapters": [
+                            {"id": "comparison", "card_ids": []},
+                            {"id": "base", "card_ids": []},
+                            {"id": "application", "card_ids": []},
+                        ],
+                        "cards": [],
+                    }
+                },
+                {"data": {"id": "g1"}},
+                {
+                    "data": {
+                        "chapters": [
+                            {"id": "comparison", "card_ids": ["g1"]},
+                            {"id": "base", "card_ids": []},
+                            {"id": "application", "card_ids": []},
+                        ],
+                        "cards": [
+                            {"id": "g1", "root_id": "mkjr_new", "content": group_content}
+                        ],
+                    }
+                },
+                {"data": {"id": "b1"}},
+                {"data": {"id": "a1"}},
+            ]
+        )
+        client = MaimemoClient(transport, token="secret", deck_id="deck")
+        guard = GuardResult(True, (), "hash")
+        plan = {
+            "actions": [
+                {"title": "近义辨析｜甲、乙", "action": "create", "content_hash": content_hash(group_content)},
+                {"title": "基础词义｜甲", "action": "create", "content_hash": content_hash(base_template)},
+                {"title": "语境应用｜甲、乙｜差别", "action": "create", "content_hash": content_hash(app_content)},
+            ]
+        }
+        cards = [
+            {"title": "近义辨析｜甲、乙", "card_type": "comparison", "content": group_content},
+            {"title": "基础词义｜甲", "card_type": "base", "content": base_template},
+            {"title": "语境应用｜甲、乙｜差别", "card_type": "application", "content": app_content},
+        ]
+
+        counts = apply_plan_to_chapters(
+            client,
+            guard,
+            plan,
+            cards,
+            {"comparison": "comparison", "base": "base", "application": "application"},
+            pause=lambda: None,
+        )
+
+        self.assertIn("/chapters/comparison/cards", transport.calls[1][1])
+        self.assertIn("/chapters/base/cards", transport.calls[3][1])
+        self.assertIn("/chapters/application/cards", transport.calls[4][1])
+        self.assertIn("mkjr_new", transport.calls[3][3]["card"]["content"])
+        self.assertEqual(3, counts["create"])
+
     def test_new_deck_resolves_created_comparison_root_before_base_write(self):
         group_content = "[P#H1#近义辨析｜甲、乙]\n\n问题\n\n---\n\n辨析"
         base_template = (
