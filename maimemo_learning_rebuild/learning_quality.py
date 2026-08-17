@@ -39,16 +39,6 @@ _DISCOURSE_FILLERS = (
     "并且",
     "并",
 )
-_CONTRAST_CONNECTORS = (
-    "而",
-    "但",
-    "区别",
-    "不同",
-    "相比",
-    "前者",
-    "后者",
-    "分别",
-)
 
 
 def _text(value: object) -> str:
@@ -103,82 +93,19 @@ def _reason_is_specific(value: object) -> bool:
     )
 
 
-def _normalized_statement(value: object) -> str:
-    return re.sub(
-        r"[^0-9a-z\u4e00-\u9fff]", "", _strict_text(value).lower()
-    )
-
-
-def _observation_is_specific(value: object) -> bool:
-    normalized = _normalized_statement(value)
-    return (
-        len(normalized) >= 6
-        and len(set(normalized)) >= 4
-        and normalized not in _PLACEHOLDER_REASONS
-        and not _is_repeated_text(normalized)
-    )
-
-
-def _reason_links_observations(
-    reason: object,
-    meaning_observation: object,
-    feature_observation: object,
-) -> bool:
-    normalized_reason = _normalized_statement(reason)
-    normalized_meaning = _normalized_statement(meaning_observation)
-    normalized_feature = _normalized_statement(feature_observation)
-    if not normalized_meaning or not normalized_feature:
-        return False
-    if (
-        normalized_meaning not in normalized_reason
-        or normalized_feature not in normalized_reason
-    ):
-        return False
-    remainder = normalized_reason.replace(normalized_meaning, "", 1).replace(
-        normalized_feature, "", 1
-    )
-    return len(remainder) >= 6 and any(
-        connector in remainder for connector in _CONTRAST_CONNECTORS
-    )
-
-
-def _observation_is_grounded(observation: object, source_text: object) -> bool:
-    normalized_observation = _normalized_statement(observation)
-    normalized_source = _normalized_statement(source_text)
-    if not normalized_observation or not normalized_source:
-        return False
-    matcher = SequenceMatcher(None, normalized_observation, normalized_source)
-    longest_match = max(block.size for block in matcher.get_matching_blocks())
-    return matcher.ratio() >= 0.45 and longest_match >= 4
-
-
 def _resolution_schema_is_valid(resolution: dict) -> bool:
     decision = _strict_text(resolution.get("decision"))
+    issue = _strict_text(resolution.get("issue"))
     base_valid = (
         bool(_strict_text(resolution.get("subject_id")))
-        and bool(_strict_text(resolution.get("issue")))
+        and bool(issue)
         and decision in RESOLUTION_DECISIONS
         and _reason_is_specific(resolution.get("reason"))
         and resolution.get("reviewer_context_isolated") is True
     )
-    if not base_valid or decision == "rewrite_required":
-        return base_valid
-
-    meaning_observation = resolution.get("meaning_observation")
-    feature_observation = resolution.get("feature_observation")
-    normalized_meaning = _normalized_statement(meaning_observation)
-    normalized_feature = _normalized_statement(feature_observation)
-    return (
-        _observation_is_specific(meaning_observation)
-        and _observation_is_specific(feature_observation)
-        and normalized_meaning != normalized_feature
-        and SequenceMatcher(None, normalized_meaning, normalized_feature).ratio() < 0.9
-        and _reason_links_observations(
-            resolution.get("reason"),
-            meaning_observation,
-            feature_observation,
-        )
-    )
+    if issue == NEAR_DUPLICATE_ISSUE:
+        return base_valid and decision == "rewrite_required"
+    return base_valid
 
 
 def validate_independent_review(independent_review: object) -> list[str]:
@@ -208,42 +135,14 @@ def validate_independent_review(independent_review: object) -> list[str]:
     return list(dict.fromkeys(errors))
 
 
-def _resolution_is_valid(
-    resolution: dict,
-    *,
-    subject_id: str,
-    issue: str,
-    meaning: object,
-    feature: object,
-) -> bool:
-    return (
-        _resolution_schema_is_valid(resolution)
-        and _strict_text(resolution.get("subject_id")) == subject_id
-        and _strict_text(resolution.get("issue")) == issue
-        and _strict_text(resolution.get("decision")) == "rewrite_not_required"
-        and _observation_is_grounded(
-            resolution.get("meaning_observation"), meaning
-        )
-        and _observation_is_grounded(
-            resolution.get("feature_observation"), feature
-        )
-    )
-
-
 def evaluate_learning_quality(
     records: list[dict],
     groups: list[dict],
     independent_review: dict,
 ) -> list[str]:
-    """Return unresolved learning-quality flags; never infer semantic approval."""
+    """Return content-level quality flags that human resolutions cannot waive."""
 
     errors: list[str] = []
-    raw_resolutions = (
-        independent_review.get("resolutions")
-        if isinstance(independent_review, dict)
-        else None
-    )
-    resolutions = raw_resolutions if isinstance(raw_resolutions, list) else []
     for record in records:
         if record.get("status") != "ready":
             continue
@@ -251,22 +150,7 @@ def evaluate_learning_quality(
             record.get("meaning"), record.get("distinctive_feature")
         ):
             continue
-        subject_id = _text(record.get("sense_id")) or _text(record.get("term"))
-        resolved = any(
-            isinstance(resolution, dict)
-            and _resolution_is_valid(
-                resolution,
-                subject_id=subject_id,
-                issue=NEAR_DUPLICATE_ISSUE,
-                meaning=record.get("meaning"),
-                feature=record.get("distinctive_feature"),
-            )
-            for resolution in resolutions
-        )
-        if not resolved:
-            errors.append(
-                f"{NEAR_DUPLICATE_ISSUE}: {_text(record.get('term'))}"
-            )
+        errors.append(f"{NEAR_DUPLICATE_ISSUE}: {_text(record.get('term'))}")
 
     for group in groups:
         if group.get("status") != "ready":

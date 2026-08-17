@@ -2,7 +2,10 @@ import copy
 import unittest
 
 from maimemo_learning_rebuild.guard import evaluate_guard
-from maimemo_learning_rebuild.learning_quality import learning_review_hash
+from maimemo_learning_rebuild.learning_quality import (
+    evaluate_learning_quality,
+    learning_review_hash,
+)
 from maimemo_learning_rebuild.planning import build_action_plan
 
 
@@ -51,6 +54,32 @@ def safe_fixture():
         "learning_review_hash": independent_review["review_hash"],
     }
     return snapshot, registry, [], cards, plan, approval, independent_review
+
+
+def reviewed_fixture(record, resolution):
+    snapshot, _, groups, _, _, _, _ = safe_fixture()
+    registry = [record]
+    plan, cards = build_action_plan(snapshot, registry, groups)
+    independent_review = {
+        "complete": True,
+        "reviewer_context_isolated": True,
+        "resolutions": [
+            {
+                "subject_id": record["sense_id"],
+                "issue": "meaning and feature are near-duplicates",
+                "reviewer_context_isolated": True,
+                **resolution,
+            }
+        ],
+    }
+    independent_review["review_hash"] = learning_review_hash(independent_review)
+    approval = {
+        "chapter_id": "chapter",
+        "plan_hash": plan["plan_hash"],
+        "action_counts": plan["action_counts"],
+        "learning_review_hash": independent_review["review_hash"],
+    }
+    return snapshot, registry, groups, cards, plan, approval, independent_review
 
 
 class WriteGuardTests(unittest.TestCase):
@@ -202,7 +231,7 @@ class WriteGuardTests(unittest.TestCase):
                 self.assertFalse(result.ok)
                 self.assertIn("independent learning review is incomplete", result.errors)
 
-    def test_rewrite_not_required_resolution_without_object_observations_is_incomplete(self):
+    def test_near_duplicate_rewrite_not_required_resolution_is_incomplete(self):
         snapshot, registry, groups, cards, plan, approval, review = safe_fixture()
         review.pop("review_hash")
         review["resolutions"] = [
@@ -230,6 +259,92 @@ class WriteGuardTests(unittest.TestCase):
 
         self.assertFalse(result.ok)
         self.assertIn("independent learning review is incomplete", result.errors)
+
+    def test_near_duplicate_explanations_cannot_bypass_guard(self):
+        cases = (
+            {
+                "decision": "rewrite_not_required",
+                "meaning_observation": "基础已经牢固，并进一步得到强化",
+                "feature_observation": "巩固原有根基，同时强化既有基础",
+                "reason": (
+                    "基础已经牢固，并进一步得到强化巩固原有根基，同时强化既有基础，"
+                    "而两者不同所以不同。"
+                ),
+            },
+            {
+                "decision": "rewrite_not_required",
+                "meaning_observation": "基础已经牢固",
+                "feature_observation": "强化既有基础",
+                "reason": "基础已经牢固强化既有基础，两者就是不同内容且落点不同。",
+            },
+            {
+                "decision": "rewrite_required",
+                "meaning_observation": "meaning陈述基础牢固的状态结果",
+                "feature_observation": "feature重复巩固与强化基础的动作",
+                "reason": (
+                    "当前meaning仅陈述基础状态结果，feature仍重复巩固与强化动作，"
+                    "内容尚未完成改写。"
+                ),
+            },
+        )
+
+        for resolution in cases:
+            with self.subTest(resolution=resolution):
+                record = ready_record("固本强基")
+                record["meaning"] = "基础已经牢固，并进一步得到强化。"
+                record["distinctive_feature"] = "巩固原有根基，同时强化既有基础。"
+                fixture = reviewed_fixture(record, resolution)
+                snapshot, registry, groups, cards, plan, approval, review = fixture
+
+                self.assertIn(
+                    "meaning and feature are near-duplicates: 固本强基",
+                    evaluate_learning_quality(registry, groups, review),
+                )
+                result = evaluate_guard(
+                    snapshot=snapshot,
+                    registry=registry,
+                    groups=groups,
+                    final_cards=cards,
+                    plan=plan,
+                    catalog={"sources": []},
+                    approval=approval,
+                    target_chapter_id="chapter",
+                    independent_review=review,
+                )
+
+                self.assertFalse(result.ok)
+                self.assertIn(
+                    "meaning and feature are near-duplicates: 固本强基",
+                    result.errors,
+                )
+
+    def test_actual_record_rewrite_passes_guard(self):
+        record = ready_record("固本强基")
+        record["meaning"] = "指先稳住根本条件，再增强支撑长期发展的基础能力。"
+        record["distinctive_feature"] = (
+            "题干必须同时出现巩固根本与提升基础能力两个动作。"
+        )
+        resolution = {
+            "decision": "rewrite_required",
+            "reason": "已按审查要求改写词义与判断特征，并重新运行算法核验两者不再近似。",
+        }
+        fixture = reviewed_fixture(record, resolution)
+        snapshot, registry, groups, cards, plan, approval, review = fixture
+
+        self.assertEqual([], evaluate_learning_quality(registry, groups, review))
+        result = evaluate_guard(
+            snapshot=snapshot,
+            registry=registry,
+            groups=groups,
+            final_cards=cards,
+            plan=plan,
+            catalog={"sources": []},
+            approval=approval,
+            target_chapter_id="chapter",
+            independent_review=review,
+        )
+
+        self.assertTrue(result.ok, result.errors)
 
     def test_changed_incomplete_and_non_isolated_reviews_are_blocked(self):
         snapshot, registry, groups, cards, plan, approval, review = safe_fixture()

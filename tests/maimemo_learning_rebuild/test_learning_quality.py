@@ -4,6 +4,7 @@ import unittest
 from maimemo_learning_rebuild.learning_quality import (
     evaluate_learning_quality,
     learning_review_hash,
+    validate_independent_review,
 )
 
 
@@ -63,30 +64,93 @@ class LearningQualityTests(unittest.TestCase):
             evaluate_learning_quality([record], [], empty_review()),
         )
 
-    def test_valid_isolated_resolution_clears_algorithmic_flag(self):
+    def test_human_resolution_cannot_clear_near_duplicate_flag(self):
         record = ready_record(
             term="固本强基",
             meaning="基础已经牢固，并进一步得到强化。",
             distinctive_feature="巩固原有根基，同时强化既有基础。",
         )
+        resolutions = (
+            {
+                "decision": "rewrite_not_required",
+                "meaning_observation": "基础已经牢固，并进一步得到强化",
+                "feature_observation": "巩固原有根基，同时强化既有基础",
+                "reason": (
+                    "基础已经牢固，并进一步得到强化巩固原有根基，同时强化既有基础，"
+                    "而两者不同所以不同。"
+                ),
+            },
+            {
+                "decision": "rewrite_not_required",
+                "meaning_observation": "基础已经牢固",
+                "feature_observation": "强化既有基础",
+                "reason": "基础已经牢固强化既有基础，两者就是不同内容且落点不同。",
+            },
+            {
+                "decision": "rewrite_required",
+                "meaning_observation": "meaning陈述基础牢固的状态结果",
+                "feature_observation": "feature重复巩固与强化基础的动作",
+                "reason": (
+                    "当前meaning仅陈述基础状态结果，feature仍重复巩固与强化动作，"
+                    "内容尚未完成改写。"
+                ),
+            },
+        )
+
+        for resolution in resolutions:
+            with self.subTest(resolution=resolution):
+                review = empty_review()
+                review["resolutions"] = [
+                    {
+                        "subject_id": record["sense_id"],
+                        "issue": "meaning and feature are near-duplicates",
+                        "reviewer_context_isolated": True,
+                        **resolution,
+                    }
+                ]
+                self.assertIn(
+                    "meaning and feature are near-duplicates: 固本强基",
+                    evaluate_learning_quality([record], [], review),
+                )
+
+    def test_near_duplicate_resolution_requires_rewrite_required_decision(self):
+        record = ready_record()
         review = empty_review()
-        meaning_observation = "基础已经牢固，并进一步得到强化"
-        feature_observation = "巩固原有根基，同时强化既有基础"
         review["resolutions"] = [
             {
                 "subject_id": record["sense_id"],
                 "issue": "meaning and feature are near-duplicates",
                 "decision": "rewrite_not_required",
-                "meaning_observation": meaning_observation,
-                "feature_observation": feature_observation,
-                "reason": (
-                    f"meaning观察“{meaning_observation}”，而feature观察“{feature_observation}”；"
-                    "前者陈述状态结果，后者陈述巩固与强化两个动作落点。"
-                ),
+                "reason": "人工观察认为字段落点不同，但算法仍判定内容近似，暂不改写。",
                 "reviewer_context_isolated": True,
             }
         ]
 
+        self.assertIn(
+            "independent learning review is incomplete",
+            validate_independent_review(review),
+        )
+
+        review["resolutions"][0]["decision"] = "rewrite_required"
+        self.assertEqual([], validate_independent_review(review))
+
+    def test_actual_rewrite_clears_algorithmic_flag(self):
+        record = ready_record(
+            meaning="指先稳住根本条件，再增强支撑长期发展的基础能力。",
+            distinctive_feature="题干必须同时出现巩固根本与提升基础能力两个动作。",
+        )
+        review = empty_review()
+        review["resolutions"] = [
+            {
+                "subject_id": record["sense_id"],
+                "issue": "meaning and feature are near-duplicates",
+                "decision": "rewrite_required",
+                "reason": "已按审查要求改写词义与判断特征，并重新运行算法核验两者不再近似。",
+                "reviewer_context_isolated": True,
+            }
+        ]
+
+        self.assertEqual([], validate_independent_review(review))
         self.assertEqual([], evaluate_learning_quality([record], [], review))
 
     def test_non_isolated_or_vague_resolution_cannot_clear_flag(self):
@@ -120,28 +184,27 @@ class LearningQualityTests(unittest.TestCase):
         valid = {
             "subject_id": record["sense_id"],
             "issue": "meaning and feature are near-duplicates",
-            "decision": "rewrite_not_required",
-            "meaning_observation": "基础已经牢固，并进一步得到强化",
-            "feature_observation": "巩固原有根基，同时强化既有基础",
+            "decision": "rewrite_required",
             "reason": (
-                "meaning观察“基础已经牢固，并进一步得到强化”，而feature观察"
-                "“巩固原有根基，同时强化既有基础”；前者陈述状态，后者陈述动作。"
+                "当前meaning与feature仍重复表达巩固基础，必须改写后重新运行算法核验。"
             ),
             "reviewer_context_isolated": True,
         }
         malformed_values = {
             "subject_id": [record["sense_id"]],
             "issue": {"value": "meaning and feature are near-duplicates"},
-            "decision": {"value": "rewrite_not_required"},
+            "decision": {"value": "rewrite_required"},
             "reason": {"detail": "词义和特征确实存在不同的动作落点"},
-            "meaning_observation": ["基础已经牢固，并进一步得到强化"],
-            "feature_observation": {"value": "巩固原有根基，同时强化既有基础"},
         }
 
         for field, value in malformed_values.items():
             with self.subTest(field=field):
                 resolution = {**valid, field: value}
                 review = {**empty_review(), "resolutions": [resolution]}
+                self.assertIn(
+                    "independent learning review is incomplete",
+                    validate_independent_review(review),
+                )
                 self.assertIn(
                     "meaning and feature are near-duplicates: 固本强基",
                     evaluate_learning_quality([record], [], review),
@@ -155,11 +218,8 @@ class LearningQualityTests(unittest.TestCase):
         )
         invalid_pairs = (
             ("pass", "词义说明状态变化，特征说明两个不同的动作落点。"),
-            ("rewrite_not_required", "不同不同不同不同不同不同"),
-            ("rewrite_not_required", "已经人工审查确认没有问题"),
-            ("rewrite_not_required", "已经完成独立人工审核没有发现问题"),
-            ("rewrite_not_required", "人工已经确认这个理由是充分的"),
-            ("rewrite_not_required", "这两个字段就是不同所以无需进行修改"),
+            ("rewrite_required", "不同不同不同不同不同不同"),
+            ("rewrite_required", "已经人工审查确认没有问题"),
         )
 
         for decision, reason in invalid_pairs:
@@ -177,75 +237,13 @@ class LearningQualityTests(unittest.TestCase):
                     }
                 ]
                 self.assertIn(
-                    "meaning and feature are near-duplicates: 固本强基",
-                    evaluate_learning_quality([record], [], review),
+                    "independent learning review is incomplete",
+                    validate_independent_review(review),
                 )
-
-    def test_rewrite_not_required_requires_distinct_grounded_observations(self):
-        record = ready_record(
-            term="固本强基",
-            meaning="基础已经牢固，并进一步得到强化。",
-            distinctive_feature="巩固原有根基，同时强化既有基础。",
-        )
-        invalid_observations = (
-            ("", "巩固原有根基，同时强化既有基础"),
-            ("基础基础基础基础基础基础", "巩固原有根基，同时强化既有基础"),
-            ("已经完成独立人工审核", "没有发现任何问题可以直接通过"),
-            (
-                "基础已经牢固，已经完成独立人工审核没有问题",
-                "巩固原有根基，同时强化既有基础",
-            ),
-            ("基础已经牢固", "基础已经牢固"),
-        )
-
-        for meaning_observation, feature_observation in invalid_observations:
-            with self.subTest(
-                meaning_observation=meaning_observation,
-                feature_observation=feature_observation,
-            ):
-                review = empty_review()
-                review["resolutions"] = [
-                    {
-                        "subject_id": record["sense_id"],
-                        "issue": "meaning and feature are near-duplicates",
-                        "decision": "rewrite_not_required",
-                        "meaning_observation": meaning_observation,
-                        "feature_observation": feature_observation,
-                        "reason": (
-                            f"meaning观察“{meaning_observation}”，而feature观察"
-                            f"“{feature_observation}”；两类观察的对象和落点不同。"
-                        ),
-                        "reviewer_context_isolated": True,
-                    }
-                ]
                 self.assertIn(
                     "meaning and feature are near-duplicates: 固本强基",
                     evaluate_learning_quality([record], [], review),
                 )
-
-    def test_reason_must_reference_both_observations_and_connect_their_landings(self):
-        record = ready_record(
-            term="固本强基",
-            meaning="基础已经牢固，并进一步得到强化。",
-            distinctive_feature="巩固原有根基，同时强化既有基础。",
-        )
-        review = empty_review()
-        review["resolutions"] = [
-            {
-                "subject_id": record["sense_id"],
-                "issue": "meaning and feature are near-duplicates",
-                "decision": "rewrite_not_required",
-                "meaning_observation": "基础已经牢固，并进一步得到强化",
-                "feature_observation": "巩固原有根基，同时强化既有基础",
-                "reason": "meaning说明状态结果，而feature说明动作落点，二者已经核对。",
-                "reviewer_context_isolated": True,
-            }
-        ]
-
-        self.assertIn(
-            "meaning and feature are near-duplicates: 固本强基",
-            evaluate_learning_quality([record], [], review),
-        )
 
     def test_rewrite_required_keeps_flag_without_fabricating_observations(self):
         record = ready_record(
@@ -333,7 +331,7 @@ class LearningQualityTests(unittest.TestCase):
             {
                 "subject_id": "固本强基::补充义::001",
                 "issue": "meaning and feature are near-duplicates",
-                "decision": "rewrite_not_required",
+                "decision": "rewrite_required",
                 "meaning_observation": "基础已经牢固，并进一步得到强化",
                 "feature_observation": "巩固原有根基，同时强化既有基础",
                 "reason": (
