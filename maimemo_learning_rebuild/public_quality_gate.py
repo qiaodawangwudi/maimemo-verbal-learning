@@ -21,8 +21,18 @@ def evaluate_public_gate(
     non_ready_groups = sum(group.get("status") != "ready" for group in group_records)
     if non_ready_groups:
         errors.append(f"comparison groups still require review: {non_ready_groups}")
+    planned_base_creates = {
+        str(action.get("title") or "").removeprefix("基础词义｜")
+        for action in actions
+        if action.get("action") == "create"
+        and str(action.get("title") or "").startswith("基础词义｜")
+    }
     missing_base_groups = sum(
-        bool(group.get("audit", {}).get("missing_base_terms")) for group in group_records
+        any(
+            term not in planned_base_creates
+            for term in group.get("audit", {}).get("missing_base_terms", [])
+        )
+        for group in group_records
     )
     if missing_base_groups:
         errors.append(f"comparison groups have missing base cards: {missing_base_groups}")

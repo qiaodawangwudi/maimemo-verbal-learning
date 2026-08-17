@@ -1,0 +1,126 @@
+{
+  "schema_version": 1,
+  "basis": "逐词回到四诗风雅颂逐字稿，重建无形影响、主观感受、作品生动、机会短暂、部门割裂、偏厚偏薄、交替变化、传播熟知、无据编造、坐享成果、片面短视和嫌弃抛弃的判断边界；作茧自缚因现有引文未给出直接释义继续隔离。",
+  "records": {
+    "潜移默化": {
+      "meaning": "在不知不觉中受到持续影响，使思想、性格或习惯慢慢发生变化。",
+      "distinctive_feature": "接受影响的人往往没有察觉，变化发生在潜意识和长期积累中；不限定教育场景，也不限定褒贬。",
+      "recognition_cues": ["风尚在不知不觉中影响习惯", "思想性格悄悄发生改变"],
+      "dimensions": [{"axis": "感知状态", "judgment": "自己未察觉。"}, {"axis": "变化对象", "judgment": "思想、性格、习惯。"}],
+      "comparison_edges": [{"other_term": "春风化雨", "minimum_difference": "潜移默化泛指不知不觉中的无形影响，可褒可贬；春风化雨通常指良好教育、教化温和地滋养人。"}, {"other_term": "润物无声", "minimum_difference": "潜移默化从接受者角度强调无察觉的变化；润物无声从施加者角度强调默默付出、滋养而不张扬。"}],
+      "misuse_boundary": "题干明确赞扬教育者温和教化，或强调施加者默默奉献，而非受影响者不知不觉改变时，不宜使用。"
+    },
+    "润物无声": {
+      "meaning": "像细雨无声滋润万物一样，默默付出、传递或滋养，不张扬、不求回报。",
+      "distinctive_feature": "课程把落点放在施加影响者的无声奉献和付出，不是接受者不知不觉变化。",
+      "recognition_cues": ["基层工作者默默传播理念", "不张扬地长期付出和滋养"],
+      "dimensions": [{"axis": "行动方式", "judgment": "无声、默默。"}, {"axis": "主体态度", "judgment": "付出而不求回报。"}],
+      "comparison_edges": [{"other_term": "潜移默化", "minimum_difference": "润物无声强调施加者默默滋养、付出；潜移默化强调接受者在未察觉中思想、习惯慢慢变化。"}, {"other_term": "春风化雨", "minimum_difference": "润物无声可用于广泛的默默付出和传播；春风化雨更固定地形容良好教育、教化的温和影响。"}],
+      "misuse_boundary": "题干只说人们不知不觉改变，或明确是良好教育教化，却没有默默付出视角时，应选对应词。"
+    },
+    "如沐春风": {
+      "meaning": "与人接触、听人说话或受到教益时，主观上感到温暖、舒服、愉悦。",
+      "distinctive_feature": "课程强调接受者的主观感受，不是说话者采取柔和批评方式，也不是教育影响过程。",
+      "recognition_cues": ["听其讲话感到温暖舒服", "与人相处产生舒畅感受"],
+      "dimensions": [{"axis": "视角", "judgment": "接受者主观感受。"}, {"axis": "感受", "judgment": "温暖、舒服、愉悦。"}],
+      "comparison_edges": [{"other_term": "和风细雨", "minimum_difference": "如沐春风描述接受者感觉舒服；和风细雨描述说话、批评或处理问题的方式温和。"}, {"other_term": "春风化雨", "minimum_difference": "如沐春风强调当下主观舒适感；春风化雨强调良好教育、教化对人的滋养影响。"}],
+      "misuse_boundary": "题干是在说明批评方式温和或教育效果良好，而非接受者感到舒服时，不宜使用。"
+    },
+    "栩栩如生": {
+      "meaning": "画作、文字等表现的形象生动逼真，像真的活着一样。",
+      "distinctive_feature": "重点是作品中形象本身具有生命力，不要求与某个原型模仿得相像，也不限于神态动作。",
+      "recognition_cues": ["画中人物像活的一样", "文字塑造的形象生动逼真"],
+      "dimensions": [{"axis": "常见载体", "judgment": "画作、文字、雕塑等。"}, {"axis": "表现效果", "judgment": "生动逼真、有生命感。"}],
+      "comparison_edges": [{"other_term": "惟妙惟肖", "minimum_difference": "栩栩如生强调作品形象像活的一样有生命力；惟妙惟肖强调模仿、描写与原对象高度相像。"}, {"other_term": "活灵活现", "minimum_difference": "栩栩如生常用于作品中的形象生动逼真；活灵活现更突出人物、动物神态动作的动态感，也可用于表演。"}],
+      "misuse_boundary": "题干重点是模仿原对象相似度高，或现场表演神态动作灵活，而非作品形象生命感时，应选对应词。"
+    },
+    "稍纵即逝": {
+      "meaning": "机会、时机短暂出现，稍一放松或错过就会消失，难以重来。",
+      "distinctive_feature": "课程强调机会、时机和需要及时抓住的隐含要求，不是任何短暂事物消失。",
+      "recognition_cues": ["机遇出现后必须立即抓住", "时机一旦错过难以重来"],
+      "dimensions": [{"axis": "常见对象", "judgment": "机会、时机。"}, {"axis": "行动要求", "judgment": "及时把握。"}],
+      "comparison_edges": [{"other_term": "转瞬即逝", "minimum_difference": "稍纵即逝更常形容机会、时机，并含应及时把握；转瞬即逝泛指对象存在极短、一瞬间消失。"}],
+      "misuse_boundary": "题干描述景象、表演、灵感瞬间消失，却没有机遇和把握要求时，转瞬即逝更合适。"
+    },
+    "各自为政": {
+      "meaning": "不同地区、部门或权力主体各按自己的政令和利益行事，缺乏统一协调和全局观。",
+      "distinctive_feature": "课程强调政府、政治和部门权责割裂语境，不只是普通个体各干各的。",
+      "recognition_cues": ["多个政府部门各管一摊、不联动", "权责割裂、缺少统一部署"],
+      "dimensions": [{"axis": "常见主体", "judgment": "政府、地区、部门、权力单元。"}, {"axis": "协同状态", "judgment": "各行政令、缺乏联动。"}],
+      "comparison_edges": [{"other_term": "分道扬镳", "minimum_difference": "各自为政强调部门、地区仍处同一体系却各按政令行事；分道扬镳强调原本同行的主体因分歧分开、各走各路。"}],
+      "misuse_boundary": "题干只是个人各按认定方法做事，或合作双方已经分开发展，没有政令、部门协调问题时，不宜使用。"
+    },
+    "厚此薄彼": {
+      "meaning": "重视、优待这一方，却轻视、冷落另一方，作出不公平的差别对待。",
+      "distinctive_feature": "比较中一厚一薄、态度和资源倾斜方向相反，不是平等对待或不分你我。",
+      "recognition_cues": ["优待一个地区、忽视另一个地区", "对两个孩子偏爱一方"],
+      "dimensions": [{"axis": "对待方向", "judgment": "重此轻彼。"}, {"axis": "评价", "judgment": "不公平、有偏向。"}],
+      "comparison_edges": [{"other_term": "不分彼此", "minimum_difference": "厚此薄彼是不公平地重一方、轻一方；不分彼此是不区分你我，平等分享或关系亲密。"}, {"other_term": "一视同仁", "minimum_difference": "厚此薄彼是差别、偏向对待；一视同仁是以公平态度同等对待。"}],
+      "misuse_boundary": "题干只是根据客观差异采取不同措施，没有重视、轻视的价值偏向时，不宜使用。"
+    },
+    "此起彼伏": {
+      "meaning": "这一处起来，那一处落下，多个事物接连、交替出现。",
+      "distinctive_feature": "课程提示最常用于声音，核心是不同地点或对象轮番出现，不是一个变量增加、另一个变量减少。",
+      "recognition_cues": ["叫卖声一阵接一阵", "多处声音、事件交替出现"],
+      "dimensions": [{"axis": "出现方式", "judgment": "接连、交替。"}, {"axis": "常见对象", "judgment": "声音，也可为事件、活动。"}],
+      "comparison_edges": [{"other_term": "此消彼长", "minimum_difference": "此起彼伏强调多个事物轮番、接连出现；此消彼长强调一方消退时另一方增长，存在反向数量变化。"}, {"other_term": "层出不穷", "minimum_difference": "此起彼伏强调不同对象交替起落；层出不穷强调新事物连续不断产生。"}],
+      "misuse_boundary": "题干明确是一方下降、另一方上升的消长关系，或新事物不断产生而非交替时，不宜使用。"
+    },
+    "脍炙人口": {
+      "meaning": "优秀的诗文、歌曲等文艺作品广受称赞、喜爱，并被人们广为传诵。",
+      "distinctive_feature": "课程固定抓‘文艺作品好+广为传颂’，不仅是知晓范围广。",
+      "recognition_cues": ["经典诗歌广受称赞传诵", "优秀文艺作品人人喜爱"],
+      "dimensions": [{"axis": "常见对象", "judgment": "文艺作品。"}, {"axis": "传播评价", "judgment": "广受称赞、传诵。"}],
+      "comparison_edges": [{"other_term": "妇孺皆知", "minimum_difference": "脍炙人口还要求文艺作品优秀、广受称赞传诵；妇孺皆知只强调老人孩子都知道，知晓面广。"}, {"other_term": "家喻户晓", "minimum_difference": "脍炙人口强调作品好且广为传诵；家喻户晓只强调传播到家家户户。"}],
+      "misuse_boundary": "题干是常识、人物事迹人人知道，却没有文艺作品和赞誉传诵属性时，不宜使用。"
+    },
+    "妇孺皆知": {
+      "meaning": "连妇女儿童都知道，形容知晓范围非常广。",
+      "distinctive_feature": "判断点只在受众覆盖广、通俗熟知，不要求对象是优秀文艺作品。",
+      "recognition_cues": ["名言老人孩子都知道", "事情广为大众熟知"],
+      "dimensions": [{"axis": "知晓范围", "judgment": "覆盖普通大众。"}, {"axis": "质量评价", "judgment": "没有必然评价。"}],
+      "comparison_edges": [{"other_term": "脍炙人口", "minimum_difference": "妇孺皆知只说明大众普遍知道；脍炙人口还要求文艺作品优秀、广受称赞和传诵。"}, {"other_term": "家喻户晓", "minimum_difference": "妇孺皆知与家喻户晓都强调知晓广，课程认为多数语境可通用；妇孺皆知从人群覆盖表达，家喻户晓从家庭范围表达。"}],
+      "misuse_boundary": "题干强调诗文作品优秀、受到称赞并广泛流传时，脍炙人口信息更完整。"
+    },
+    "凭空臆造": {
+      "meaning": "没有事实依据，完全依靠主观想象编造事实、数据或内容。",
+      "distinctive_feature": "适用范围较广，直接落在无依据的主观编造；课程不主张与凭空捏造强行细分。",
+      "recognition_cues": ["没有调研就编造数据", "仅凭想象虚构事实"],
+      "dimensions": [{"axis": "证据基础", "judgment": "完全没有依据。"}, {"axis": "生成方式", "judgment": "主观想象编造。"}],
+      "comparison_edges": [{"other_term": "向壁虚构", "minimum_difference": "凭空臆造泛指无依据地靠主观想象编造；向壁虚构多见于文字、言论、历史叙述，文学表达色彩更强。"}, {"other_term": "凭空捏造", "minimum_difference": "课程未给出凭空臆造与凭空捏造的稳定语义差别，都要求毫无根据地编造，做题不应硬分。"}],
+      "misuse_boundary": "题干只是方案脱离实际但没有编造事实、数据或内容时，应使用闭门造车等词。"
+    },
+    "坐享其成": {
+      "meaning": "自己不出力，依赖别人的劳动和付出，直接享受已经形成的成果。",
+      "distinctive_feature": "必须同时有‘不劳动’和‘享用他人成果’，不要求此前有一次偶然获利经验。",
+      "recognition_cues": ["不参与建设却享受收益", "依赖他人付出直接获利"],
+      "dimensions": [{"axis": "自身投入", "judgment": "不出力。"}, {"axis": "收益来源", "judgment": "他人劳动成果。"}],
+      "comparison_edges": [{"other_term": "坐收渔利", "minimum_difference": "坐享其成依赖他人劳动成果而不出力；坐收渔利利用双方争斗或冲突，自己不参与却获得利益。"}, {"other_term": "浑水摸鱼", "minimum_difference": "坐享其成强调不劳动而享用他人成果；浑水摸鱼强调趁混乱环境主动捞取好处。"}],
+      "misuse_boundary": "题干有双方争斗、第三方获利，或主体趁乱主动牟利时，应选对应词。"
+    },
+    "盲人摸象": {
+      "meaning": "只掌握碎片化局部信息，就主观臆断整体，因而认识片面、失真。",
+      "distinctive_feature": "不仅看不到全局，还把接触到的局部误当成整体真相，形成错误判断。",
+      "recognition_cues": ["凭个别案例否定整个行业", "根据一个局部还原整体并得出片面结论"],
+      "dimensions": [{"axis": "信息范围", "judgment": "碎片、局部。"}, {"axis": "判断错误", "judgment": "把局部当整体。"}],
+      "comparison_edges": [{"other_term": "以偏概全", "minimum_difference": "盲人摸象强调认知只及局部并据此误判整体；以偏概全更直接强调用局部材料概括全部的推理动作。"}, {"other_term": "管中窥豹", "minimum_difference": "盲人摸象在贬义下强调只知局部、误判整体；管中窥豹既可贬指只见局部，也可由局部推知全貌，需看语境。"}],
+      "misuse_boundary": "题干从细微信息合理推知整体、趋势，或只是暂时被表象遮挡时，不宜使用。"
+    },
+    "鼠目寸光": {
+      "meaning": "只盯眼前的微小利益，缺乏长远眼光和可持续规划。",
+      "distinctive_feature": "必须有短期与长远的对立，问题在时间视野短浅，不是空间范围小或信息片面。",
+      "recognition_cues": ["追求短期增速、忽视长期生态", "只顾眼前收益、不作长远规划"],
+      "dimensions": [{"axis": "关注时间", "judgment": "眼前、短期。"}, {"axis": "遗漏内容", "judgment": "长期发展、可持续性。"}],
+      "comparison_edges": [{"other_term": "坐井观天", "minimum_difference": "鼠目寸光强调只顾短期、缺乏长远规划；坐井观天强调因环境狭小造成见识和格局局限。"}, {"other_term": "杀鸡取卵", "minimum_difference": "鼠目寸光描述短视的认识和取向；杀鸡取卵还要求为眼前利益实际毁掉长期收益基础。"}],
+      "misuse_boundary": "题干只说认知范围狭窄，或已经实施毁掉长期基础的获利行为时，应选边界更具体的词。"
+    },
+    "弃如敝履": {
+      "meaning": "像扔掉破旧鞋子一样，带着强烈嫌弃和不屑彻底抛弃、不再使用。",
+      "distinctive_feature": "动作程度重，既有嫌弃态度又有实际抛弃结果，不只是忽视、不回应或搁置。",
+      "recognition_cues": ["因极度嫌弃而彻底扔掉", "抛弃后不再使用"],
+      "dimensions": [{"axis": "主体态度", "judgment": "嫌弃、不屑。"}, {"axis": "行为结果", "judgment": "彻底抛弃。"}],
+      "comparison_edges": [{"other_term": "置之不理", "minimum_difference": "弃如敝履带着嫌弃彻底抛弃、不再使用；置之不理只是放在一边不回应、不处理。"}, {"other_term": "束之高阁", "minimum_difference": "弃如敝履是直接抛弃；束之高阁是把理论、物品搁置不用，未必嫌弃或丢掉。"}],
+      "misuse_boundary": "题干只是暂不理会、搁置不用，没有嫌弃和彻底抛弃时，不宜使用。"
+    }
+  }
+}

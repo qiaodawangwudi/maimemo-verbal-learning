@@ -33,7 +33,7 @@ class RegistryReviewTests(unittest.TestCase):
         self.assertEqual(0, report["ready"])
         self.assertGreater(report["hard_errors"], 0)
 
-    def test_real_registry_covers_current_and_missing_terms_without_hiding_pending(self):
+    def test_real_registry_covers_all_current_and_missing_terms_as_reviewed(self):
         root = Path(__file__).parents[2]
         artifact_root = root / "maimemo_learning_rebuild" / "artifacts"
         registry = json.loads(
@@ -46,8 +46,8 @@ class RegistryReviewTests(unittest.TestCase):
         report = review_registry(registry["records"], catalog, groups)
 
         self.assertEqual(621, report["records"])
-        self.assertEqual(435, report["ready"])
-        self.assertEqual(186, report["pending"])
+        self.assertEqual(621, report["ready"])
+        self.assertEqual(0, report["pending"])
         self.assertEqual(0, report["hard_errors"])
         self.assertEqual(621, len({record["term"] for record in registry["records"]}))
 
@@ -58,7 +58,8 @@ class RegistryReviewTests(unittest.TestCase):
         self.assertIn("只阐述", by_term["述而不作"]["meaning"])
         self.assertIn("不提出", by_term["述而不作"]["meaning"])
         self.assertEqual("ready", by_term["事倍功半"]["status"])
-        self.assertEqual("pending", by_term["大而化之"]["status"])
+        self.assertEqual("ready", by_term["大而化之"]["status"])
+        self.assertEqual("secondary_reference", by_term["大而化之"]["source_kind"])
         self.assertEqual("ready", by_term["游刃有余"]["status"])
         self.assertEqual("ready", by_term["举足轻重"]["status"])
         lesson_five = [
@@ -66,11 +67,8 @@ class RegistryReviewTests(unittest.TestCase):
             for record in registry["records"]
             if record.get("provenance", {}).get("batch") == "20260108"
         ]
-        self.assertEqual(142, sum(record["status"] == "ready" for record in lesson_five))
-        self.assertEqual(
-            {"勇立潮头", "空穴来风", "大而化之", "具体而微"},
-            {record["term"] for record in lesson_five if record["status"] != "ready"},
-        )
+        self.assertEqual(146, sum(record["status"] == "ready" for record in lesson_five))
+        self.assertEqual(set(), {record["term"] for record in lesson_five if record["status"] != "ready"})
         self.assertTrue(
             all(
                 not record.get("provenance", {}).get("derived_content_quarantined")

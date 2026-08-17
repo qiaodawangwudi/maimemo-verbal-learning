@@ -65,6 +65,9 @@ def validate_group_semantics(group: dict, records: dict[str, dict]) -> list[str]
     if group.get("status") != "ready":
         return errors
 
+    if len(members) > 6:
+        errors.append(f"comparison group exceeds learning limit: {group_id} {len(members)}")
+
     for member in known_members:
         record = records[member]
         if not str(record.get("meaning") or "").strip():
@@ -73,20 +76,34 @@ def validate_group_semantics(group: dict, records: dict[str, dict]) -> list[str]
             errors.append(f"group member missing distinctive feature: {member}")
 
     member_set = set(known_members)
-    reciprocal_neighbors: dict[str, set[str]] = {member: set() for member in known_members}
-    for member in known_members:
-        targets = _edge_targets(records[member]) & member_set
-        for target in targets:
-            if member not in _edge_targets(records[target]):
-                errors.append(f"missing reciprocal edge: {member} -> {target}")
-            else:
-                reciprocal_neighbors[member].add(target)
-                reciprocal_neighbors[target].add(member)
-
-    if len(members) > 6:
-        for member in known_members:
-            if not reciprocal_neighbors[member]:
-                errors.append(f"mega group has unconnected member: {member}")
+    neighbors: dict[str, set[str]] = {member: set() for member in known_members}
+    seen_pairs: set[tuple[str, str]] = set()
+    for difference in group.get("minimum_differences", []):
+        left = str(difference.get("left") or "")
+        right = str(difference.get("right") or "")
+        text = str(difference.get("text") or "").strip()
+        if left not in member_set or right not in member_set:
+            errors.append(f"minimum difference references nonmember: {group_id} {left} {right}")
+            continue
+        pair = tuple(sorted((left, right)))
+        if pair in seen_pairs:
+            errors.append(f"duplicate minimum difference: {group_id} {left} {right}")
+        seen_pairs.add(pair)
+        if not text:
+            errors.append(f"empty minimum difference: {group_id} {left} {right}")
+        neighbors[left].add(right)
+        neighbors[right].add(left)
+    if known_members:
+        reached = {known_members[0]}
+        pending = [known_members[0]]
+        while pending:
+            pending.extend(sorted(neighbors[pending.pop()] - reached))
+            reached.update(pending)
+        missing = [member for member in known_members if member not in reached]
+        if missing:
+            errors.append(
+                f"disconnected minimum-difference graph: {group_id} {'、'.join(missing)}"
+            )
     return errors
 
 

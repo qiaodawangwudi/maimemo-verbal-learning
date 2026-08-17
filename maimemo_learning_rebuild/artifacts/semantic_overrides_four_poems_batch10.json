@@ -1,0 +1,126 @@
+{
+  "schema_version": 1,
+  "basis": "逐词回到四诗风雅颂逐字稿，重建主观停滞、自我设限、片面认知、畏难退缩、能力边界和不予回应的判断链。",
+  "records": {
+    "裹足不前": {
+      "meaning": "因顾虑、风险恐惧或思想保守，主观上不愿继续前进、尝试或改革。",
+      "distinctive_feature": "课程在并列辨析时突出‘直接不想前进’，不是看到具体困难后想做却不敢。",
+      "recognition_cues": ["面对转型因保守而拒绝迈步", "顾虑重重、主观停止前进"],
+      "dimensions": [{"axis": "心理落点", "judgment": "不愿继续前进。"}, {"axis": "常见原因", "judgment": "顾虑、风险恐惧或保守。"}],
+      "comparison_edges": [{"other_term": "望而却步", "minimum_difference": "裹足不前更偏主观上直接不想前进；望而却步更偏想做，却因看到困难、险境而不敢上前。"}],
+      "misuse_boundary": "题干明确出现具体难度、险境，使主体想做却退缩时，望而却步更精确。"
+    },
+    "画地为牢": {
+      "meaning": "没有外部强制，却主动给自己划定界限，把自己限制在狭小范围内。",
+      "distinctive_feature": "束缚来自自己设定的边界，像主动把活动范围画成牢笼；不只是做事拘谨。",
+      "recognition_cues": ["自行划定不可突破的范围", "没有外部限制却主动设限"],
+      "dimensions": [{"axis": "限制来源", "judgment": "主体自己设置。"}, {"axis": "限制形式", "judgment": "划定范围或边界。"}],
+      "comparison_edges": [{"other_term": "自缚手脚", "minimum_difference": "画地为牢强调自己划定范围、边界；自缚手脚强调自我束缚导致做事不敢放开手脚。"}],
+      "misuse_boundary": "限制明确来自制度、他人或客观条件，而非主体自己设定时，不宜使用。"
+    },
+    "自缚手脚": {
+      "meaning": "自己限制自己的行动和能力，做事不敢放开手脚。",
+      "distinctive_feature": "核心是自我束缚对行动造成妨碍，不含作茧自缚那种自己做坏事最终害到自己的因果。",
+      "recognition_cues": ["过多自设限制导致无法施展", "自己把行动空间束缚住"],
+      "dimensions": [{"axis": "束缚来源", "judgment": "主体自身。"}, {"axis": "直接后果", "judgment": "行动拘束、能力难以发挥。"}],
+      "comparison_edges": [{"other_term": "画地为牢", "minimum_difference": "自缚手脚强调行动受到自我限制；画地为牢强调自己划定不可越出的范围。"}, {"other_term": "作茧自缚", "minimum_difference": "自缚手脚只说明自我限制；作茧自缚还要求自己的行为造成困境，最终反过来害到自己。"}],
+      "misuse_boundary": "题干有明确‘自己造成困境并受害’的因果闭环时，应使用作茧自缚。"
+    },
+    "向壁虚构": {
+      "meaning": "没有事实依据，凭主观想象编造内容或事实。",
+      "distinctive_feature": "课程提示多见于文字、言论创作和历史评价，带有对着墙凭空写造的文学表达色彩。",
+      "recognition_cues": ["无史料依据编造历史", "写作中凭空捏造事实"],
+      "dimensions": [{"axis": "证据基础", "judgment": "没有依据。"}, {"axis": "常见领域", "judgment": "文字、言论、历史叙述。"}],
+      "comparison_edges": [{"other_term": "闭门造车", "minimum_difference": "向壁虚构强调无依据地编造内容、事实；闭门造车强调脱离实际地办事、制定方案。"}],
+      "misuse_boundary": "题干只是方案脱离实际，却没有编造事实或内容的动作时，应使用闭门造车。"
+    },
+    "坐井观天": {
+      "meaning": "因长期身处狭小、单一环境，见识浅薄，眼界和格局狭窄。",
+      "distinctive_feature": "认知局限的原因是所处环境狭小、经验单一，不是眼前障碍临时遮挡视野。",
+      "recognition_cues": ["局限在单一环境而眼界狭窄", "因接触范围小而见识浅"],
+      "dimensions": [{"axis": "局限来源", "judgment": "环境、经验范围狭小。"}, {"axis": "认知结果", "judgment": "眼界、格局狭窄。"}],
+      "comparison_edges": [{"other_term": "一叶障目", "minimum_difference": "坐井观天由所处环境狭小导致眼界窄；一叶障目由眼前局部、表象或客观障碍遮蔽全局。"}, {"other_term": "以偏概全", "minimum_difference": "坐井观天描述见识和眼界局限；以偏概全描述用局部材料概括全部的错误推断动作。"}],
+      "misuse_boundary": "主体掌握局部材料后主动推断整体，或被眼前问题暂时遮蔽时，应选边界更明确的词。"
+    },
+    "一叶障目": {
+      "meaning": "被眼前局部、次要表象或客观障碍遮住视野，因而看不到全局和长远。",
+      "distinctive_feature": "必须有具体遮蔽物或短期局部条件，问题不在主体环境长期狭小，也不一定发生概括推断。",
+      "recognition_cues": ["被阶段性困难遮蔽长期成效", "只见眼前表象、忽略全局"],
+      "dimensions": [{"axis": "局限原因", "judgment": "局部、表象或客观障碍遮挡。"}, {"axis": "遗漏内容", "judgment": "全局、长期。"}],
+      "comparison_edges": [{"other_term": "坐井观天", "minimum_difference": "一叶障目由眼前障碍遮蔽全局；坐井观天由长期身处狭小环境造成眼界狭窄。"}, {"other_term": "以偏概全", "minimum_difference": "一叶障目强调视野被局部遮蔽；以偏概全强调拿局部材料去概括整体。"}],
+      "misuse_boundary": "题干明确出现‘根据一个样本推断全部’的概括动作时，以偏概全更精确。"
+    },
+    "以偏概全": {
+      "meaning": "用局部、个别情况去概括全部、整体，作出片面结论。",
+      "distinctive_feature": "必须有从局部到整体的错误概括动作，不只是了解不全面或视野受遮挡。",
+      "recognition_cues": ["调研一个地区就推断全国", "根据个别案例概括整个群体"],
+      "dimensions": [{"axis": "证据范围", "judgment": "局部、个别。"}, {"axis": "结论范围", "judgment": "全部、整体。"}],
+      "comparison_edges": [{"other_term": "一叶障目", "minimum_difference": "以偏概全强调用局部推出整体的概括动作；一叶障目强调眼前局部或表象遮住全局视野。"}, {"other_term": "坐井观天", "minimum_difference": "以偏概全是推断方式错误；坐井观天是环境狭小造成见识、眼界局限。"}],
+      "misuse_boundary": "题干只说观察范围小、没有形成整体结论时，不宜使用。"
+    },
+    "望而却步": {
+      "meaning": "看到困难、险境或高门槛后产生退缩心理，不敢上前行动。",
+      "distinctive_feature": "课程并列时强调‘想做但不敢’，必须有被看见的困难或风险这一触发。",
+      "recognition_cues": ["看到任务难度后放弃尝试", "面对险境不敢上前"],
+      "dimensions": [{"axis": "触发条件", "judgment": "看到困难、风险或险境。"}, {"axis": "行为结果", "judgment": "退缩、不敢行动。"}],
+      "comparison_edges": [{"other_term": "裹足不前", "minimum_difference": "望而却步更偏想做却因困难而不敢；裹足不前更偏因顾虑、保守而主观上不想前进。"}, {"other_term": "望而生畏", "minimum_difference": "望而却步落点是退缩、不敢行动；望而生畏落点是对象难度或压迫感使人产生恐惧。"}],
+      "misuse_boundary": "只出现恐惧感而没有退缩行为，或只是做事顾虑多时，应分别考虑望而生畏、畏首畏尾。"
+    },
+    "望而生畏": {
+      "meaning": "看到对象难度高、规模大或压迫感强，内心产生畏惧。",
+      "distinctive_feature": "落点是‘生畏’的心理感受，不要求已经停止或退出行动。",
+      "recognition_cues": ["庞大任务让初学者恐惧", "对象气势、难度造成畏惧感"],
+      "dimensions": [{"axis": "对象特征", "judgment": "难度、规模或压迫感强。"}, {"axis": "心理结果", "judgment": "产生恐惧。"}],
+      "comparison_edges": [{"other_term": "望而却步", "minimum_difference": "望而生畏强调看到对象后感到恐惧；望而却步强调因困难、险境而退缩，不敢上前。"}],
+      "misuse_boundary": "题干只说主体停止行动而没有恐惧、压迫感对应点时，不宜使用。"
+    },
+    "畏首畏尾": {
+      "meaning": "做事前后顾虑太多，胆小拘谨，不能放开手脚。",
+      "distinctive_feature": "问题贯穿做事过程，是顾虑过多导致缩手缩脚；不要求先看到一个具体困难。",
+      "recognition_cues": ["干事顾前怕后、顾虑重重", "过分胆小拘谨、放不开手脚"],
+      "dimensions": [{"axis": "顾虑状态", "judgment": "前后顾虑过多。"}, {"axis": "行动表现", "judgment": "拘谨、不能放开手脚。"}],
+      "comparison_edges": [{"other_term": "望而却步", "minimum_difference": "畏首畏尾强调做事过程中顾虑多、放不开手脚；望而却步强调看到困难后退缩、不敢上前。"}, {"other_term": "谨小慎微", "minimum_difference": "畏首畏尾突出前后害怕、顾虑多；谨小慎微突出过分小心细微，因拘束而缺少魄力。"}],
+      "misuse_boundary": "题干只赞扬必要谨慎，或明确是对象压迫感带来恐惧，而非顾虑过多时，不宜使用。"
+    },
+    "望洋兴叹": {
+      "meaning": "面对宏大事物或与强者的巨大差距，感叹自身渺小、能力不足而无可奈何。",
+      "distinctive_feature": "无力感由对象宏大、双方差距悬殊触发，带有看见差距后的感叹，不是泛泛没有办法。",
+      "recognition_cues": ["小企业面对巨型项目只能感叹", "见到宏大目标而感到自身渺小"],
+      "dimensions": [{"axis": "触发对象", "judgment": "宏大事物或悬殊差距。"}, {"axis": "主体反应", "judgment": "感叹渺小、无可奈何。"}],
+      "comparison_edges": [{"other_term": "无能为力", "minimum_difference": "望洋兴叹强调面对宏大对象或悬殊差距而感叹无力；无能为力只说明缺乏解决问题的能力、使不上劲。"}],
+      "misuse_boundary": "题干只说没有能力处理一般问题，没有宏大对象、差距和感叹结构时，无能为力更直接。"
+    },
+    "无能为力": {
+      "meaning": "自身不具备解决问题的能力或力量，想使力却没有办法。",
+      "distinctive_feature": "原因只需能力、力量不足，适用范围最宽；不要求距离、管辖范围或宏大对象。",
+      "recognition_cues": ["缺乏能力、设备而无法解决", "面对问题使不上劲"],
+      "dimensions": [{"axis": "限制来源", "judgment": "自身能力或力量不足。"}, {"axis": "结果", "judgment": "无法处理问题。"}],
+      "comparison_edges": [{"other_term": "望洋兴叹", "minimum_difference": "无能为力泛指能力不足、没有办法；望洋兴叹还要求面对宏大对象或巨大差距而感叹自身渺小。"}, {"other_term": "鞭长莫及", "minimum_difference": "无能为力泛指自身能力不足；鞭长莫及专指距离太远或管辖范围达不到而无法处理。"}],
+      "misuse_boundary": "题干明确因空间距离、管理边界够不到时，鞭长莫及更精确。"
+    },
+    "鞭长莫及": {
+      "meaning": "因空间距离太远或管理、管辖范围达不到，虽然想管也无法发挥作用。",
+      "distinctive_feature": "无力的原因是‘够不到’，不是能力本身弱。",
+      "recognition_cues": ["异地事务超出管辖范围", "距离太远导致无法干预"],
+      "dimensions": [{"axis": "限制来源", "judgment": "距离或管辖范围。"}, {"axis": "主体意愿", "judgment": "想处理但触及不到。"}],
+      "comparison_edges": [{"other_term": "无能为力", "minimum_difference": "鞭长莫及专指距离或管辖范围达不到；无能为力泛指自身能力、力量不足。"}],
+      "misuse_boundary": "问题就在职责和距离范围内，只是主体能力不足时，应使用无能为力。"
+    },
+    "望其项背": {
+      "meaning": "能够看见对方的颈项和后背，比喻有能力追赶或赶得上。",
+      "distinctive_feature": "课程强调通常用于否定结构，如‘难以望其项背’，表示远远赶不上；脱离否定语境容易把方向判断反。",
+      "recognition_cues": ["难以望其项背＝远远赶不上", "尚可望其项背＝有希望追上"],
+      "dimensions": [{"axis": "本义方向", "judgment": "能够追赶、赶上。"}, {"axis": "常见句式", "judgment": "多与难以、不能等否定词搭配。"}],
+      "comparison_edges": [],
+      "misuse_boundary": "不能把‘望其项背’单独理解成赶不上；题干没有否定词时必须重新核对语义方向。"
+    },
+    "置之不理": {
+      "meaning": "把人、意见或事情放在一边，不回应、不搭理，也不作处理。",
+      "distinctive_feature": "直接行为是拒绝回应和处理，适合有请求、意见或事务等待回应的语境；不等于把理论保存起来不用。",
+      "recognition_cues": ["对群众诉求不回应", "把提醒放在一边不处理"],
+      "dimensions": [{"axis": "对象", "judgment": "人、意见、请求或事情。"}, {"axis": "行为", "judgment": "不回应、不处理。"}],
+      "comparison_edges": [{"other_term": "无动于衷", "minimum_difference": "置之不理强调外在不回应、不处理；无动于衷强调内心没有触动、漠不关心。"}],
+      "misuse_boundary": "题干只描述心理上没有触动，或把理论高放不用而非拒绝回应时，不宜使用。"
+    }
+  }
+}

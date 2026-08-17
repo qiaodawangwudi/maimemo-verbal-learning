@@ -1,0 +1,118 @@
+{
+  "schema_version": 1,
+  "basis": "逐词回到四诗风雅颂逐字稿，重建严谨标准、共同谋策、关系密切、危险从容、资源使用、巩固基础、教育滋养、同效同归、差距偏向、增减制衡和常识熟知的判断边界。",
+  "records": {
+    "一丝不苟": {
+      "meaning": "做事认真严谨，连最细小的地方也不马虎、不敷衍。",
+      "distinctive_feature": "标准是认真到细节，不要求成果已经很好后继续提升到更高水平。",
+      "recognition_cues": ["逐字逐句校对、不漏细节", "工作认真严谨、毫不马虎"],
+      "dimensions": [{"axis": "工作态度", "judgment": "认真、严谨。"}, {"axis": "细节处理", "judgment": "不放过细微处。"}],
+      "comparison_edges": [{"other_term": "粗枝大叶", "minimum_difference": "一丝不苟认真严谨、不漏细节；粗枝大叶做事不细致，容易忽略细小问题。"}, {"other_term": "敷衍了事", "minimum_difference": "一丝不苟认真完成、毫不马虎；敷衍了事主观上随便应付、草率交差。"}],
+      "misuse_boundary": "题干强调已有好成果还要继续打磨到极致，而不只是认真细致时，应使用信息更强的词。"
+    },
+    "群策群力": {
+      "meaning": "众人共同出谋划策、共同出力，发挥集体力量解决问题。",
+      "distinctive_feature": "不仅收集意见，还要求大家一起想办法、采取行动和发力。",
+      "recognition_cues": ["多方共同设计解决方案", "集体一起谋划并推动实施"],
+      "dimensions": [{"axis": "参与方式", "judgment": "共同谋策、共同出力。"}, {"axis": "目标", "judgment": "解决问题。"}],
+      "comparison_edges": [{"other_term": "集思广益", "minimum_difference": "群策群力强调众人共同想办法、共同出力；集思广益强调广泛听取、汇集众人的意见智慧。"}, {"other_term": "众志成城", "minimum_difference": "群策群力突出共同谋策和行动；众志成城突出意志一致、团结一心形成凝聚力。"}],
+      "misuse_boundary": "题干只说征集意见或情感、意志团结，没有共同谋策出力时，不宜使用。"
+    },
+    "息息相关": {
+      "meaning": "彼此关系极其密切，常指事物与人们日常生活、切身利益紧密相连。",
+      "distinctive_feature": "课程强调民生、日常生活关联，不表示共同承担祸福，也不要求联系复杂。",
+      "recognition_cues": ["政策与群众就医出行密切相关", "事项直接关联日常生活"],
+      "dimensions": [{"axis": "关系程度", "judgment": "极其密切。"}, {"axis": "常见落点", "judgment": "日常生活、切身利益。"}],
+      "comparison_edges": [{"other_term": "休戚与共", "minimum_difference": "息息相关只说明关系密切、常与日常生活有关；休戚与共强调共同利害、祸福和命运承担。"}, {"other_term": "千丝万缕", "minimum_difference": "息息相关强调关系密切；千丝万缕强调联系数量多、结构复杂。"}],
+      "misuse_boundary": "题干强调命运共同承担或关系网络复杂，而非日常、切身联系密切时，不宜使用。"
+    },
+    "泰然自若": {
+      "meaning": "面对危险、紧急或异常情况，仍然镇定从容，神态如常。",
+      "distinctive_feature": "课程突出危险发生当下的冷静和从容，不要求长期承受困境，也不是只隐藏情绪。",
+      "recognition_cues": ["危急关头仍镇定自若", "面对突发危险神色从容"],
+      "dimensions": [{"axis": "情境", "judgment": "危险、紧急、异常。"}, {"axis": "当下状态", "judgment": "镇定、从容。"}],
+      "comparison_edges": [{"other_term": "安之若素", "minimum_difference": "泰然自若强调危险、紧急当下镇定从容；安之若素强调面对变故、困境仍像平常一样安定。"}, {"other_term": "临危不乱", "minimum_difference": "泰然自若强调神态、心态从容自然；临危不乱强调危险面前保持秩序和判断，不慌乱。"}],
+      "misuse_boundary": "题干明确写内心剧烈波动但不表露，或只强调长期困境中生活如常时，不宜使用。"
+    },
+    "精打细算": {
+      "meaning": "对人力、财力、物力的使用作精细周密安排，力求不浪费。",
+      "distinctive_feature": "重点是资源使用前后的细致计算和安排，不是简单减少消费或把某一物品用尽。",
+      "recognition_cues": ["预算逐项细算、提高资源效率", "一分钱作细致安排使用"],
+      "dimensions": [{"axis": "资源对象", "judgment": "人力、财力、物力。"}, {"axis": "使用方式", "judgment": "精细计划、不浪费。"}],
+      "comparison_edges": [{"other_term": "勤俭节约", "minimum_difference": "精打细算强调资源使用的精细计划和核算；勤俭节约强调勤劳、节俭的生活和行为习惯。"}, {"other_term": "量入为出", "minimum_difference": "精打细算强调怎样细致使用资源；量入为出强调支出总量不能超过收入、承受范围。"}],
+      "misuse_boundary": "题干只说少花钱、节俭生活或按收入限制总支出，没有精细计划核算时，不宜使用。"
+    },
+    "勤俭节约": {
+      "meaning": "勤劳做事，生活、生产中节省资源和开支，反对浪费。",
+      "distinctive_feature": "属于稳定的传统美德和行为作风，范围比预算计算更广。",
+      "recognition_cues": ["反对奢靡攀比、崇尚节俭", "日常生活珍惜资源不浪费"],
+      "dimensions": [{"axis": "品格构成", "judgment": "勤劳、节俭。"}, {"axis": "行为方向", "judgment": "节省、反浪费。"}],
+      "comparison_edges": [{"other_term": "精打细算", "minimum_difference": "勤俭节约强调长期品格、习惯和反浪费；精打细算强调对具体资源进行细致计划、核算。"}, {"other_term": "节衣缩食", "minimum_difference": "勤俭节约是一般节俭作风；节衣缩食是生活上压缩衣食开支，程度更具体、更强。"}],
+      "misuse_boundary": "题干明确出现压缩衣食以节省开支，或强调预算精细核算时，应使用边界更具体的词。"
+    },
+    "固本强基": {
+      "meaning": "巩固现有根本、强化基础，使已有体系更加稳固。",
+      "distinctive_feature": "动作是把已有基础保持、夯实和加强，不含清理问题源头或纠正错误。",
+      "recognition_cues": ["改善基层设备、夯实医疗基础", "巩固已有制度和基层能力"],
+      "dimensions": [{"axis": "作用对象", "judgment": "已有根本、基础。"}, {"axis": "行动方向", "judgment": "巩固、强化。"}],
+      "comparison_edges": [{"other_term": "正本清源", "minimum_difference": "固本强基巩固已有根本、强化基础；正本清源从根源清理、纠正不良事物。"}, {"other_term": "釜底抽薪", "minimum_difference": "固本强基是增强基础能力；釜底抽薪是移除问题赖以存在的根源条件。"}],
+      "misuse_boundary": "题干是在清理源头错误、解决问题根因，而非加强已有基础时，不宜使用。"
+    },
+    "春风化雨": {
+      "meaning": "良好的教育、教化像春风细雨一样温和地滋养、影响人。",
+      "distinctive_feature": "课程提示用法较固定，核心对象是教育和教化，方向是良好影响。",
+      "recognition_cues": ["教师以温和教育滋养学生", "良好教化使人受到熏陶"],
+      "dimensions": [{"axis": "常见领域", "judgment": "教育、教化。"}, {"axis": "影响方向", "judgment": "温和、正面。"}],
+      "comparison_edges": [{"other_term": "潜移默化", "minimum_difference": "春风化雨固定强调良好教育、教化的温和影响；潜移默化泛指不知不觉中的无形影响，可发生在思想、习惯等多种领域。"}, {"other_term": "润物无声", "minimum_difference": "春风化雨强调教育教化；润物无声更广泛强调默默付出、传播和滋养。"}],
+      "misuse_boundary": "题干没有教育教化，只说一般无形影响或默默奉献时，不宜使用。"
+    },
+    "异曲同工": {
+      "meaning": "方法、表现形式不同，却取得同样好或相近的效果。",
+      "distinctive_feature": "既有‘异曲’的方法差异，也有‘同工’的效果相同，课程例子常为不同艺术手法达到相同表现力。",
+      "recognition_cues": ["工笔与写意都展现生命力", "不同办法取得同样效果"],
+      "dimensions": [{"axis": "方法、形式", "judgment": "不同。"}, {"axis": "效果", "judgment": "相同或同样好。"}],
+      "comparison_edges": [{"other_term": "毫无二致", "minimum_difference": "异曲同工的方法、形式不同，只是效果相同；毫无二致是对象本身完全一样、没有区别。"}, {"other_term": "殊途同归", "minimum_difference": "异曲同工强调不同方法、表现产生相同效果；殊途同归更强调不同道路、途径最终到达同一目的地或结果。"}],
+      "misuse_boundary": "题干说明对象从内容到形式完全一致，或突出不同发展道路最终汇合，而非方法效果关系时，不宜使用。"
+    },
+    "殊途同归": {
+      "meaning": "采取不同道路、途径或过程，最终到达相同目的、结果。",
+      "distinctive_feature": "核心是过程、路径不同而终点一致，语义重心在‘归’到共同目标。",
+      "recognition_cues": ["不同发展道路最终实现同一目标", "多种路径最后汇合到相同结果"],
+      "dimensions": [{"axis": "路径", "judgment": "不同。"}, {"axis": "终点", "judgment": "相同。"}],
+      "comparison_edges": [{"other_term": "异曲同工", "minimum_difference": "殊途同归强调不同道路、过程最终达到同一目标；异曲同工强调不同方法、表现取得相同效果。"}, {"other_term": "毫无二致", "minimum_difference": "殊途同归的过程、路径本来不同；毫无二致说明对象本身完全相同。"}],
+      "misuse_boundary": "题干只比较艺术手法、解决方法的效果相同，或对象完全一致时，应选对应词。"
+    },
+    "大相径庭": {
+      "meaning": "两个对象、看法、做法或结果相差很大，偏离明显。",
+      "distinctive_feature": "课程把落点放在差距大、偏离大，不一定达到性质完全不同或相反。",
+      "recognition_cues": ["实际做法与承诺相差甚大", "两个方案效果差距明显"],
+      "dimensions": [{"axis": "比较焦点", "judgment": "距离、偏离程度。"}, {"axis": "差距", "judgment": "很大。"}],
+      "comparison_edges": [{"other_term": "截然不同", "minimum_difference": "大相径庭强调差距、偏离很大；截然不同强调性质、状态完全不同甚至相反。"}, {"other_term": "相去甚远", "minimum_difference": "大相径庭常比较看法、做法、结果的偏离；相去甚远常比较水平、程度或现实与预期之间的距离。"}],
+      "misuse_boundary": "题干明确是性质完全不同，或专门写现实与预期、水平之间相距很远时，应选对应词。"
+    },
+    "不分彼此": {
+      "meaning": "关系亲密或共同使用、分享时不区分你我、此方彼方。",
+      "distinctive_feature": "强调边界消融、像一家人一样，不是按照公平标准分别对待不同对象。",
+      "recognition_cues": ["亲密到不分你我", "资源共同分享、不作彼此区分"],
+      "dimensions": [{"axis": "关系状态", "judgment": "亲密、共同。"}, {"axis": "边界处理", "judgment": "不区分你我。"}],
+      "comparison_edges": [{"other_term": "厚此薄彼", "minimum_difference": "不分彼此是不区分你我、平等分享；厚此薄彼是不公平地重视一方、轻视另一方。"}, {"other_term": "一视同仁", "minimum_difference": "不分彼此强调关系亲密、边界不分；一视同仁强调主体以公平态度同等对待不同对象。"}],
+      "misuse_boundary": "题干强调管理者公平对待不同对象，而不是关系亲密、共同分享时，一视同仁更准确。"
+    },
+    "此消彼长": {
+      "meaning": "一方减少、消退时，另一方相应增加、发展，形成反向变化。",
+      "distinctive_feature": "必须有两个相互制衡、增减互换的变量，不是多个事物轮番出现。",
+      "recognition_cues": ["一方份额下降、另一方上升", "阴阳力量相互消长"],
+      "dimensions": [{"axis": "变量数量", "judgment": "至少两方。"}, {"axis": "变化关系", "judgment": "一消一长、反向制衡。"}],
+      "comparison_edges": [{"other_term": "此起彼伏", "minimum_difference": "此消彼长强调一方下降、另一方增长的反向关系；此起彼伏强调多个事物接连、交替出现。"}],
+      "misuse_boundary": "题干只是声音、事件轮流出现，没有两方数量、力量的反向变化时，应使用此起彼伏。"
+    },
+    "众所周知": {
+      "meaning": "某个事实、常识、道理或规律被大家普遍知道。",
+      "distinctive_feature": "课程强调常识、客观事实和自然规律，重在知识普及，不以故事、人物事迹为典型对象。",
+      "recognition_cues": ["自然规律人人知道", "基础常识广为人知"],
+      "dimensions": [{"axis": "常见对象", "judgment": "常识、事实、规律、道理。"}, {"axis": "知晓范围", "judgment": "普遍。"}],
+      "comparison_edges": [{"other_term": "家喻户晓", "minimum_difference": "众所周知常形容常识、客观事实、规律大家都知道；家喻户晓常形容人物事迹、故事等传播到家家户户。"}, {"other_term": "妇孺皆知", "minimum_difference": "众所周知从事实、常识被普遍知晓的角度表达；妇孺皆知从老人儿童等大众人群覆盖的角度表达。"}],
+      "misuse_boundary": "题干强调优秀文艺作品广受称赞传诵，或具体故事人物传遍家家户户时，不宜使用。"
+    }
+  }
+}

@@ -24,6 +24,26 @@ class PublicQualityGateTests(unittest.TestCase):
 
         self.assertEqual([], errors)
 
+    def test_missing_current_base_is_resolved_by_frozen_create_action(self):
+        errors = evaluate_public_gate(
+            {"records": [{"status": "ready"}]},
+            {
+                "groups": [
+                    {
+                        "status": "ready",
+                        "audit": {"missing_base_terms": ["甲"]},
+                    }
+                ]
+            },
+            {
+                "expected_after": 2,
+                "actions": [{"title": "基础词义｜甲", "action": "create"}],
+            },
+            {"complete": True, "cards": [{}, {}]},
+        )
+
+        self.assertEqual([], errors)
+
 
 if __name__ == "__main__":
     unittest.main()

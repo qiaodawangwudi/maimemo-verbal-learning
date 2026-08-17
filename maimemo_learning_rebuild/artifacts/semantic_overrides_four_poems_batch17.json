@@ -1,0 +1,134 @@
+{
+  "schema_version": 1,
+  "basis": "逐词回到四诗风雅颂逐字稿，重建不在意与不认同、冷漠与无触动、自负不纳谏、团结一心、定制与治病、应付窘迫、局部推知、搁置敷衍和专注时间结构的判断边界。",
+  "records": {
+    "不以为意": {
+      "meaning": "不把某件事放在心上，不在意、不重视，觉得无所谓。",
+      "distinctive_feature": "判断的是重视程度和心理在意与否，不表达对观点正确性的判断。",
+      "recognition_cues": ["对批评毫不在意", "没有把风险提醒放在心上"],
+      "dimensions": [{"axis": "心理态度", "judgment": "不在意、无所谓。"}, {"axis": "真假判断", "judgment": "不涉及是否正确。"}],
+      "comparison_edges": [{"other_term": "不以为然", "minimum_difference": "不以为意是不放在心上、不在意；不以为然是不认为观点、做法正确，表示不认同。"}, {"other_term": "置若罔闻", "minimum_difference": "不以为意强调内心不在意；置若罔闻强调听到意见、提醒却像没听见一样不理。"}],
+      "misuse_boundary": "题干明确说主体认为对方观点错误、表示反对时，应使用不以为然。"
+    },
+    "不以为然": {
+      "meaning": "不认为某种观点、说法或做法是正确的，表示不赞同。",
+      "distinctive_feature": "‘然’指正确，核心是认知否定和不认同，不是觉得事情不重要。",
+      "recognition_cues": ["认为对方批评不正确", "对某种观点明确不赞同"],
+      "dimensions": [{"axis": "判断对象", "judgment": "观点、说法、做法。"}, {"axis": "判断结论", "judgment": "不正确、不认同。"}],
+      "comparison_edges": [{"other_term": "不以为意", "minimum_difference": "不以为然是认为对方不对、不认同；不以为意是不放在心上、不重视。"}],
+      "misuse_boundary": "题干只说不在乎、无所谓，没有正确与错误的评价时，应使用不以为意。"
+    },
+    "漠不关心": {
+      "meaning": "对他人、公共事务或周围处境冷淡，不关心、不放在心上。",
+      "distinctive_feature": "强调长期或一般态度上的冷漠，关注对象常是他人利益、安危或公共问题；不只是一瞬间没被触动。",
+      "recognition_cues": ["只顾自身利益、不管他人安危", "对公共问题态度冷淡"],
+      "dimensions": [{"axis": "关切对象", "judgment": "他人、公共事务、周围处境。"}, {"axis": "态度", "judgment": "冷淡、不关心。"}],
+      "comparison_edges": [{"other_term": "无动于衷", "minimum_difference": "漠不关心强调对人或事长期冷淡、不关心；无动于衷强调面对具体刺激、劝说或事件内心没有触动。"}, {"other_term": "冷眼旁观", "minimum_difference": "漠不关心可以只是一种冷淡态度；冷眼旁观要求看到事情发生却站在一旁不参与、不帮助。"}],
+      "misuse_boundary": "题干有具体事件发生，主体在旁观看却不帮助，或明确说内心毫无触动时，应选边界更具体的词。"
+    },
+    "无动于衷": {
+      "meaning": "面对劝说、刺激或事情，内心没有任何触动，表现得冷漠。",
+      "distinctive_feature": "课程明确为贬义，落点是内心没有反应，不等于已有情绪却不显露。",
+      "recognition_cues": ["对法官劝说毫无触动", "面对他人困境内心没有反应"],
+      "dimensions": [{"axis": "刺激前提", "judgment": "已有劝说、事件或情境。"}, {"axis": "内心反应", "judgment": "没有触动。"}],
+      "comparison_edges": [{"other_term": "不动声色", "minimum_difference": "无动于衷是内心没有触动；不动声色可能内心波涛汹涌，只是不在外表显露。"}, {"other_term": "漠不关心", "minimum_difference": "无动于衷强调面对具体刺激内心不动；漠不关心强调对他人或公共事务的冷淡态度。"}],
+      "misuse_boundary": "题干明确写主体内心紧张、激动，只是外表平静时，必须使用不动声色。"
+    },
+    "自以为是": {
+      "meaning": "总认为自己的看法、做法正确，对别人意见不认同、不愿听取。",
+      "distinctive_feature": "核心是把自己的判断当成正确，带有自负；课程认为程度通常比刚愎自用略轻。",
+      "recognition_cues": ["坚信自己正确、听不得不同意见", "凭个人判断否定他人建议"],
+      "dimensions": [{"axis": "自我判断", "judgment": "认为自己正确。"}, {"axis": "对待意见", "judgment": "不愿接受。"}],
+      "comparison_edges": [{"other_term": "刚愎自用", "minimum_difference": "自以为是突出认定自己正确、比较自负；刚愎自用突出性格倔强狂妄、拒绝意见，程度通常更重。"}, {"other_term": "妄自尊大", "minimum_difference": "自以为是针对自己的看法、做法认定为对；妄自尊大针对自身能力、地位作无根据的过高评价。"}],
+      "misuse_boundary": "题干突出性格极端固执狂妄，或只是无根据地抬高自身地位，而非认定自己的意见正确时，不宜使用。"
+    },
+    "众志成城": {
+      "meaning": "众人意志一致、团结一心，形成像城墙一样强大的集体力量。",
+      "distinctive_feature": "课程强调情感和意志上心往一处想、劲往一处使，不要求题干先出现具体困难。",
+      "recognition_cues": ["各地各部门团结一心攻关", "全体意志一致、齐心协力"],
+      "dimensions": [{"axis": "团结基础", "judgment": "共同意志和情感。"}, {"axis": "情境要求", "judgment": "不以已有困难为必要条件。"}],
+      "comparison_edges": [{"other_term": "和衷共济", "minimum_difference": "众志成城强调众人意志一致、团结一心，不要求已有困难；和衷共济强调面对困难、问题时共同出力克服。"}, {"other_term": "群策群力", "minimum_difference": "众志成城强调团结意志和凝聚力；群策群力强调众人共同想办法、共同出力解决问题。"}],
+      "misuse_boundary": "题干重点是征集意见，或明确各方共同出谋划策解决具体问题，而非意志凝聚时，应选对应词。"
+    },
+    "量体裁衣": {
+      "meaning": "根据对象自身特点、条件和需要，定制与之相适配的方案。",
+      "distinctive_feature": "针对性落在个体差异、定制和适配，不要求对象已经出现病症或问题根源。",
+      "recognition_cues": ["针对不同家庭定制帮扶方案", "依据本地条件选择适合路径"],
+      "dimensions": [{"axis": "决策依据", "judgment": "对象自身特点、条件。"}, {"axis": "方案特征", "judgment": "定制、适配。"}],
+      "comparison_edges": [{"other_term": "对症下药", "minimum_difference": "量体裁衣根据对象特点定制适配方案；对症下药找准具体问题、病根后采取能够解决问题的措施。"}, {"other_term": "因地制宜", "minimum_difference": "量体裁衣可针对个人、组织等对象定制；因地制宜强调依据不同地区、地点的具体条件采取措施。"}],
+      "misuse_boundary": "题干明确查明问题病根并采取解决措施，或只强调地方条件差异时，应选边界更准确的词。"
+    },
+    "对症下药": {
+      "meaning": "找准问题的具体症结、病根，采取有针对性的措施加以解决。",
+      "distinctive_feature": "不仅有针对性，还必须有问题诊断和解决问题两个环节；不是单纯按对象特点定制。",
+      "recognition_cues": ["查明病因后制定治理措施", "针对问题根源采取解决办法"],
+      "dimensions": [{"axis": "前置判断", "judgment": "找准症结、病根。"}, {"axis": "行动目标", "judgment": "解决问题。"}],
+      "comparison_edges": [{"other_term": "量体裁衣", "minimum_difference": "对症下药针对问题症结、病根并以解决为目标；量体裁衣根据对象特点定制适配方案，不要求已有病症。"}, {"other_term": "药到病除", "minimum_difference": "对症下药强调诊断准确、措施针对问题；药到病除还强调措施实施后见效快、问题迅速消除。"}],
+      "misuse_boundary": "题干只说方案适合某类对象，或虽有针对性却没有解决问题的病症结构时，不宜使用。"
+    },
+    "左支右绌": {
+      "meaning": "应付了左边又顾不上右边，处处力不从心、难以周全应对。",
+      "distinctive_feature": "强调在多个方向或问题之间应付困难，既可由资源不足，也可由整体把握、能力不足造成。",
+      "recognition_cues": ["多项事务之间疲于应付", "处理复杂问题时处处力不从心"],
+      "dimensions": [{"axis": "应对范围", "judgment": "多个方向、事务。"}, {"axis": "能力状态", "judgment": "力不从心。"}],
+      "comparison_edges": [{"other_term": "捉襟见肘", "minimum_difference": "左支右绌强调多处应付、顾左失右的力不从心；捉襟见肘更明确强调人财物等资源有限造成窘迫。"}, {"other_term": "顾此失彼", "minimum_difference": "左支右绌突出整体应付困难；顾此失彼突出照顾一方面却遗漏另一面。"}],
+      "misuse_boundary": "题干只说明资源短缺，却没有多向应付困难，或明确顾一失一时，应选更具体的词。"
+    },
+    "凭空捏造": {
+      "meaning": "毫无事实依据地编造事实、数据、内容或说法。",
+      "distinctive_feature": "课程不主张与凭空臆造强行细分，可稳定把握的就是无依据的编造。",
+      "recognition_cues": ["没有证据却编造事实", "虚构不存在的数据和情节"],
+      "dimensions": [{"axis": "证据基础", "judgment": "没有依据。"}, {"axis": "行为", "judgment": "编造、捏造。"}],
+      "comparison_edges": [{"other_term": "凭空臆造", "minimum_difference": "课程未提供凭空捏造与凭空臆造的稳定最小差别，都要求没有任何依据地编造；做题不应硬分。"}, {"other_term": "向壁虚构", "minimum_difference": "凭空捏造可用于广泛事实、数据和内容；向壁虚构多见于文字、言论、历史叙述，文学色彩更强。"}],
+      "misuse_boundary": "题干只是做法、规划脱离现实，但没有编造具体事实或内容时，不宜使用。"
+    },
+    "管中窥豹": {
+      "meaning": "从狭窄视角只能看到事物局部；也可指通过局部迹象推知整体情况。",
+      "distinctive_feature": "课程明确是双向用法：贬义时视野片面，中性时与‘可见一斑’呼应、由局部见整体，必须依语境判方向。",
+      "recognition_cues": ["只见局部、无法看全", "由一斑推知全豹"],
+      "dimensions": [{"axis": "观察范围", "judgment": "局部。"}, {"axis": "语义方向", "judgment": "可片面，也可由小见大。"}],
+      "comparison_edges": [{"other_term": "盲人摸象", "minimum_difference": "管中窥豹既可贬指只见局部，也可中性地由局部推知整体；盲人摸象稳定强调只掌握碎片就误判整体。"}, {"other_term": "见微知著", "minimum_difference": "管中窥豹保留片面和由局部见整体两种可能；见微知著稳定肯定从细节、征兆推知整体、本质或趋势。"}],
+      "misuse_boundary": "不能见到‘局部’就直接判贬义；若题干出现‘可见一斑’或合理推知整体，应采用中性由小见大义。"
+    },
+    "束之高阁": {
+      "meaning": "把本来可以使用的文书、理论、资料或物品封存搁置，不再采用、实践。",
+      "distinctive_feature": "对象通常具有一定价值却被放置不用，落点是封存和不实践，不是对人、请求不回应。",
+      "recognition_cues": ["理论成果被封存、不用于实践", "资料放上高架后长期不用"],
+      "dimensions": [{"axis": "常见对象", "judgment": "理论、文书、资料、物品。"}, {"axis": "处理结果", "judgment": "搁置不用。"}],
+      "comparison_edges": [{"other_term": "置之不理", "minimum_difference": "束之高阁强调把有用的理论、文书或物品封存不用；置之不理泛指对人、意见、事情不回应、不处理。"}, {"other_term": "弃如敝履", "minimum_difference": "束之高阁是搁置、封存不用；弃如敝履带着嫌弃彻底抛弃。"}],
+      "misuse_boundary": "题干是对请求不回应，或带强烈嫌弃直接扔掉，而非把有用对象搁置不用时，不宜使用。"
+    },
+    "敷衍了事": {
+      "meaning": "对事情不认真，只随便应付一下，草率完成、交差。",
+      "distinctive_feature": "课程强调不必是逃避本职责任，只要办理过程随便、潦草即可；比敷衍塞责少了责任归属要求。",
+      "recognition_cues": ["材料随便写写便交差", "任务只草率应付、不认真完成"],
+      "dimensions": [{"axis": "办理态度", "judgment": "不认真、随便。"}, {"axis": "完成质量", "judgment": "草率、应付。"}],
+      "comparison_edges": [{"other_term": "粗枝大叶", "minimum_difference": "敷衍了事强调主观上不认真、随便应付；粗枝大叶强调做事不细致、忽略细节，未必有交差心态。"}],
+      "misuse_boundary": "题干只是由于粗心遗漏细节，却没有随便应付、草率交差的态度时，不宜使用。"
+    },
+    "全神贯注": {
+      "meaning": "全部精神、注意力在当前短时间内高度集中到一件事上。",
+      "distinctive_feature": "课程突出短期、当下的极度专心，适合考试、操作等集中时段。",
+      "recognition_cues": ["考试两小时注意力高度集中", "关键操作时全部精神集中"],
+      "dimensions": [{"axis": "专注程度", "judgment": "极高。"}, {"axis": "时间结构", "judgment": "当前、短期。"}],
+      "comparison_edges": [{"other_term": "专心致志", "minimum_difference": "全神贯注更强调短期内注意力高度集中；专心致志更常强调较长阶段沉下心来专注钻研。"}, {"other_term": "心无旁骛", "minimum_difference": "全神贯注强调注意力集中程度；心无旁骛强调内心没有杂念和外界诱惑干扰。"}],
+      "misuse_boundary": "题干强调长期钻研或排除一切杂念，而非某一时段注意力高度集中时，应选对应词。"
+    },
+    "专心致志": {
+      "meaning": "把心思和志向集中在一件事上，认真专注地投入。",
+      "distinctive_feature": "课程更常用来描述较长阶段沉下心学习、钻研，但并不排斥短期使用。",
+      "recognition_cues": ["一段时期持续专注学习", "沉下心长期钻研事业"],
+      "dimensions": [{"axis": "专注状态", "judgment": "心思、志向集中。"}, {"axis": "常见时间", "judgment": "较长阶段。"}],
+      "comparison_edges": [{"other_term": "全神贯注", "minimum_difference": "专心致志更常强调一段时期持续沉下心；全神贯注更强调当前短时间注意力高度集中。"}, {"other_term": "心无旁骛", "minimum_difference": "专心致志强调专注投入；心无旁骛强调没有其他杂念、诱惑干扰。"}],
+      "misuse_boundary": "题干重点是考试瞬间高度集中，或明确排除所有杂念诱惑，而非持续专注时，应选对应词。"
+    },
+    "心无旁骛": {
+      "meaning": "内心没有其他杂念、牵挂和外界诱惑，能够专注于当前目标。",
+      "distinctive_feature": "专心的原因是干扰被排除、心中无杂念，不特别限定专注时间长短。",
+      "recognition_cues": ["排除生活杂事后专心备考", "不受诱惑干扰、心中只有目标"],
+      "dimensions": [{"axis": "干扰状态", "judgment": "无杂念、无旁的追求。"}, {"axis": "注意方向", "judgment": "集中于唯一目标。"}],
+      "comparison_edges": [{"other_term": "全神贯注", "minimum_difference": "心无旁骛强调没有杂念和外界诱惑；全神贯注强调短期内全部注意力高度集中。"}, {"other_term": "专心致志", "minimum_difference": "心无旁骛突出排除干扰的内心状态；专心致志突出认真、持续地专注投入。"}],
+      "misuse_boundary": "题干只说当前注意力集中或长期认真学习，没有无杂念、无干扰对应点时，不宜使用。"
+    }
+  }
+}

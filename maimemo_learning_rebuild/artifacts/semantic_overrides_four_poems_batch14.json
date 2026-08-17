@@ -1,0 +1,150 @@
+{
+  "schema_version": 1,
+  "basis": "逐词回到四诗风雅颂逐字稿，重建常态戒备、强弱对抗、精准成效、兼顾失败、模仿异化、虚假繁荣、越权、创新速度和守旧推进的判断边界；见兔顾犬因释义证据未完整绑定继续隔离。",
+  "records": {
+    "常备不懈": {
+      "meaning": "长期、持续保持警备和准备状态，任何时候都不松懈。",
+      "distinctive_feature": "课程用‘24小时不松懈’概括，强调常态化、持续性，不是风险来临前临时准备一次。",
+      "recognition_cues": ["长期保持临战状态", "常态化训练、随时能够行动"],
+      "dimensions": [{"axis": "时间状态", "judgment": "持续、常态化。"}, {"axis": "准备程度", "judgment": "警备不松懈。"}],
+      "comparison_edges": [{"other_term": "未雨绸缪", "minimum_difference": "常备不懈强调长期维持警备状态；未雨绸缪强调风险发生前进行筹划、准备。"}, {"other_term": "有备无患", "minimum_difference": "常备不懈突出持续不松懈；有备无患突出事先准备带来免除祸患的结果。"}],
+      "misuse_boundary": "题干只出现一次性预防措施或事后补救，没有持续警备对应点时，不宜使用。"
+    },
+    "以卵击石": {
+      "meaning": "弱小一方主动冲击远比自己强大的对象，结果注定失败甚至自取灭亡。",
+      "distinctive_feature": "除力量悬殊外，还突出主动碰撞和对弱者自身的毁灭性后果。",
+      "recognition_cues": ["弱者主动硬碰强大对手", "力量悬殊的冲击导致自身毁灭"],
+      "dimensions": [{"axis": "力量对比", "judgment": "极度悬殊。"}, {"axis": "行动方式", "judgment": "弱方主动硬碰。"}],
+      "comparison_edges": [{"other_term": "蚍蜉撼树", "minimum_difference": "以卵击石突出弱方主动撞击强者并可能自取灭亡；蚍蜉撼树突出力量小却企图动摇强大事物，重在不自量力。"}],
+      "misuse_boundary": "题干只是弱者试图动摇强者却未强调主动硬碰和自身毁灭后果时，蚍蜉撼树更合适。"
+    },
+    "药到病除": {
+      "meaning": "对策精准对症，实施后很快消除问题，效果直接明显。",
+      "distinctive_feature": "课程给出‘对症+见效快’两个判断点；不等于所有从根源处理的长期治理。",
+      "recognition_cues": ["精准措施实施后迅速解决", "方案对症、立刻见效"],
+      "dimensions": [{"axis": "方法匹配", "judgment": "精准、对症。"}, {"axis": "见效速度", "judgment": "快。"}],
+      "comparison_edges": [{"other_term": "釜底抽薪", "minimum_difference": "药到病除强调对策精准、见效迅速；釜底抽薪强调去除问题赖以存在的根源，不必立刻见效。"}, {"other_term": "行之有效", "minimum_difference": "药到病除强调对症且快速消除问题；行之有效只要求方法经过实践证明有用。"}],
+      "misuse_boundary": "题干只说明长期实践有效，或从根源治理但没有快速见效时，不宜使用。"
+    },
+    "功亏一篑": {
+      "meaning": "事情已接近成功，却因最后一步或收尾阶段失败而前功尽弃。",
+      "distinctive_feature": "必须有前期进展良好和临近完成两个前提，失败点集中在最后阶段。",
+      "recognition_cues": ["收官阶段失误导致失败", "只差最后一步未能成功"],
+      "dimensions": [{"axis": "前期状态", "judgment": "大部分工作已完成。"}, {"axis": "失败位置", "judgment": "最后一步或收尾阶段。"}],
+      "comparison_edges": [{"other_term": "徒劳无功", "minimum_difference": "功亏一篑前期已有有效进展，只在最后一步失败；徒劳无功是付出后整体没有取得成果。"}],
+      "misuse_boundary": "题干没有接近成功、最后阶段等线索，只说所有努力都无效时，应使用徒劳无功。"
+    },
+    "顾此失彼": {
+      "meaning": "照顾、处理了这一方面，却顾不上另一方面，不能同时兼顾。",
+      "distinctive_feature": "必须有至少两个需要兼顾的对象，以及‘管这头丢那头’的取舍结果；不必由资源不足明确触发。",
+      "recognition_cues": ["保障市容却忽略商贩生计", "处理一项事务导致另一项被遗漏"],
+      "dimensions": [{"axis": "对象数量", "judgment": "至少两个方面。"}, {"axis": "处理结果", "judgment": "顾一失一。"}],
+      "comparison_edges": [{"other_term": "捉襟见肘", "minimum_difference": "顾此失彼强调多个方面不能兼顾、顾一失一；捉襟见肘强调资源有限造成整体应付困难。"}, {"other_term": "面面俱到", "minimum_difference": "顾此失彼是不能兼顾各方面；面面俱到是各个方面都照顾到。"}],
+      "misuse_boundary": "题干只说资源短缺、处处窘迫，却没有一个方面被照顾、另一个被遗漏时，不宜使用。"
+    },
+    "东施效颦": {
+      "meaning": "不顾自身条件模仿美好对象，结果不但没有学好，反而显得丑陋、滑稽。",
+      "distinctive_feature": "模仿对象本来美好，负面结果是模仿者出丑；不要求丢失自己原有本领。",
+      "recognition_cues": ["照搬优秀做法反而显得可笑", "模仿美好形式却弄巧成拙"],
+      "dimensions": [{"axis": "模仿对象", "judgment": "原本美好、优秀。"}, {"axis": "模仿结果", "judgment": "变得难看、滑稽。"}],
+      "comparison_edges": [{"other_term": "生搬硬套", "minimum_difference": "东施效颦强调模仿美好对象后反而出丑；生搬硬套强调无视实际条件强行套用经验、方法，不一定出现滑稽结果。"}, {"other_term": "弄巧成拙", "minimum_difference": "东施效颦的坏结果来自不当模仿美好对象；弄巧成拙的坏结果来自耍聪明、投机取巧。"}],
+      "misuse_boundary": "题干只是方法不适配实际，或耍小聪明导致坏结果，没有模仿美好对象时，不宜使用。"
+    },
+    "南橘北枳": {
+      "meaning": "同一事物因所处环境、条件不同而发生本质变化，也说明环境对人或事物影响巨大。",
+      "distinctive_feature": "必须有环境迁移或条件差异，并导致性质改变；不是照搬方法失败。",
+      "recognition_cues": ["同一制度换到不同环境后性质变化", "人在不同环境中发生根本改变"],
+      "dimensions": [{"axis": "变化原因", "judgment": "环境、条件不同。"}, {"axis": "变化程度", "judgment": "性质、本质发生改变。"}],
+      "comparison_edges": [{"other_term": "生搬硬套", "minimum_difference": "南橘北枳描述环境不同使事物性质改变；生搬硬套描述主体无视实际条件强行套用外来经验。"}],
+      "misuse_boundary": "题干只批评不顾实际照搬方法，没有环境改变事物性质的因果时，不宜使用。"
+    },
+    "海市蜃楼": {
+      "meaning": "看似繁荣、美好，实则虚假、短暂、没有真实基础，最终会破灭的景象或幻想。",
+      "distinctive_feature": "课程常用于泡沫繁荣，兼具虚假表象和短暂破灭；不只是方案缺乏落地条件。",
+      "recognition_cues": ["资本泡沫制造虚假繁荣", "看似壮观却很快破灭的幻想"],
+      "dimensions": [{"axis": "真实性", "judgment": "虚假、没有真实基础。"}, {"axis": "持续性", "judgment": "短暂、终将破灭。"}],
+      "comparison_edges": [{"other_term": "空中楼阁", "minimum_difference": "海市蜃楼强调虚假的繁荣、景象或幻想短暂破灭；空中楼阁强调理论、方案、规划脱离现实、缺少基础。"}, {"other_term": "画饼充饥", "minimum_difference": "海市蜃楼描述虚假短暂的繁荣表象；画饼充饥描述用不能兑现的设想、许诺安慰需求。"}],
+      "misuse_boundary": "题干只是规划没有现实支撑，或用空头承诺安慰他人，没有虚假繁荣、短暂破灭时，不宜使用。"
+    },
+    "越俎代庖": {
+      "meaning": "越过自己的职责和权限，代替本应负责的人处理事务。",
+      "distinctive_feature": "课程用‘越权’概括，必须有职责边界和不该由该主体管理的事务；不只是抢风头或成为主导。",
+      "recognition_cues": ["外部势力干涉他国内政", "非责任主体越权代办"],
+      "dimensions": [{"axis": "边界", "judgment": "职责、权限范围。"}, {"axis": "越界动作", "judgment": "代替他人办理。"}],
+      "comparison_edges": [{"other_term": "反客为主", "minimum_difference": "越俎代庖强调越过职责权限代办他人事务；反客为主强调次要、从属一方反而占据主导位置。"}, {"other_term": "喧宾夺主", "minimum_difference": "越俎代庖是越权代办；喧宾夺主是次要部分声势过大、掩盖主体。"}],
+      "misuse_boundary": "题干只说配角抢风头或辅助工具取得主导，没有职责越界、代办行为时，不宜使用。"
+    },
+    "革故鼎新": {
+      "meaning": "改革、废除旧制度、旧秩序或旧体系，建立新的制度和局面。",
+      "distinctive_feature": "比一般创新强度更大、层级更宏观，常涉及制度、格局、政治和体系的变革。",
+      "recognition_cues": ["废除旧制度、建立新制度", "政治格局发生宏观改革"],
+      "dimensions": [{"axis": "变革对象", "judgment": "制度、秩序、格局、体系。"}, {"axis": "变革强度", "judgment": "改革性、宏观。"}],
+      "comparison_edges": [{"other_term": "推陈出新", "minimum_difference": "革故鼎新强调对旧制度、秩序、体系进行宏观改革；推陈出新是一般地去旧出新、创造新内容。"}, {"other_term": "与时俱进", "minimum_difference": "革故鼎新突出改革旧制度、建立新局面；与时俱进突出随着时代变化及时调整发展。"}],
+      "misuse_boundary": "题干只是产品、形式创新或随时代调整，没有制度性、宏观改革时，不宜使用。"
+    },
+    "与时俱进": {
+      "meaning": "随着时代和外部环境的发展变化，及时调整自己并共同向前。",
+      "distinctive_feature": "必须有时代变化和主体响应两层对应，落点是跟上时代，不是主体自身更新频率快。",
+      "recognition_cues": ["政策随时代需求及时调整", "理念跟随社会发展更新"],
+      "dimensions": [{"axis": "外部参照", "judgment": "时代、环境变化。"}, {"axis": "主体动作", "judgment": "相应调整、前进。"}],
+      "comparison_edges": [{"other_term": "日新月异", "minimum_difference": "与时俱进强调跟随时代变化作出调整；日新月异强调事物自身更新频繁、不断出现新面貌。"}, {"other_term": "革故鼎新", "minimum_difference": "与时俱进不要求废除旧制度，只需跟上时代调整；革故鼎新强调宏观改革旧制度、建立新局面。"}],
+      "misuse_boundary": "题干只写某领域自身变化很快，却没有时代参照和跟进调整时，应使用日新月异。"
+    },
+    "日新月异": {
+      "meaning": "事物更新频率很高，每天、每月都有新的变化和面貌。",
+      "distinctive_feature": "重点是自身变化快、更新频繁，不要求以时代为参照，也不一定是飞跃式增长。",
+      "recognition_cues": ["新功能、新模式持续更新", "面貌频繁发生新变化"],
+      "dimensions": [{"axis": "更新频率", "judgment": "高。"}, {"axis": "变化表现", "judgment": "不断出现新面貌。"}],
+      "comparison_edges": [{"other_term": "与时俱进", "minimum_difference": "日新月异描述事物自身频繁更新；与时俱进描述主体随时代变化作出调整。"}, {"other_term": "一日千里", "minimum_difference": "日新月异强调更新频率高、面貌常新；一日千里强调发展速度极快、呈飞跃式进步。"}],
+      "misuse_boundary": "题干只强调发展速度极快、跨越大，却没有频繁出现新面貌时，一日千里更精确。"
+    },
+    "一日千里": {
+      "meaning": "发展、进步的速度极快，短时间内取得飞跃式变化。",
+      "distinctive_feature": "课程用‘飞跃式发展’概括，重点是速度和跨度，不是更新次数多。",
+      "recognition_cues": ["产业短期实现跨越式发展", "技术进步速度极快"],
+      "dimensions": [{"axis": "发展速度", "judgment": "极快。"}, {"axis": "进步幅度", "judgment": "飞跃式。"}],
+      "comparison_edges": [{"other_term": "日新月异", "minimum_difference": "一日千里强调发展速度和进步幅度极大；日新月异强调更新频繁、不断出现新面貌。"}, {"other_term": "蒸蒸日上", "minimum_difference": "一日千里强调速度极快、飞跃发展；蒸蒸日上只说明持续一天比一天好。"}],
+      "misuse_boundary": "题干只说持续向好或更新频繁，没有极快、飞跃式对应点时，不宜使用。"
+    },
+    "一成不变": {
+      "meaning": "政策、模式、思维或做法长期保持原样，不发生改变。",
+      "distinctive_feature": "适用于一般时间范围内的主客观不变，不含从古至今的漫长历史尺度。",
+      "recognition_cues": ["市场变化但经营思路始终不改", "政策、模式长期保持原样"],
+      "dimensions": [{"axis": "常见对象", "judgment": "政策、模式、思维、做法。"}, {"axis": "变化状态", "judgment": "不改变。"}],
+      "comparison_edges": [{"other_term": "亘古不变", "minimum_difference": "一成不变泛指较长时间保持原样；亘古不变强调从古至今跨越漫长历史仍不改变。"}, {"other_term": "因循守旧", "minimum_difference": "一成不变只描述不变状态；因循守旧带有贬义，强调思想沿袭旧风气、旧传统，不愿革新。"}],
+      "misuse_boundary": "题干明确强调自古以来不变，或批评思想守旧、不愿创新时，应选边界更准确的词。"
+    },
+    "亘古不变": {
+      "meaning": "从古至今经历极其漫长时间始终没有改变。",
+      "distinctive_feature": "‘古今’历史时间性是必要条件，不用于一般政策、思路短期没有调整。",
+      "recognition_cues": ["自古以来始终如此", "跨越漫长历史仍未改变"],
+      "dimensions": [{"axis": "时间跨度", "judgment": "从古至今。"}, {"axis": "变化状态", "judgment": "始终不变。"}],
+      "comparison_edges": [{"other_term": "一成不变", "minimum_difference": "亘古不变要求从古至今的漫长时间尺度；一成不变泛指政策、模式、思维等保持原样。"}],
+      "misuse_boundary": "题干是当前经营模式、政策思路没有调整，没有古今跨度时，应使用一成不变。"
+    },
+    "因循守旧": {
+      "meaning": "沿袭旧思想、旧风气、旧传统，不愿改革创新。",
+      "distinctive_feature": "课程把对象重点放在思想和风气上的守旧，贬义明确；不等于中性地按步骤办事。",
+      "recognition_cues": ["思想沿袭旧传统、不愿创新", "受旧风气束缚、拒绝改革"],
+      "dimensions": [{"axis": "守旧对象", "judgment": "思想、风气、传统。"}, {"axis": "创新态度", "judgment": "拒绝、不愿。"}],
+      "comparison_edges": [{"other_term": "循规蹈矩", "minimum_difference": "因循守旧强调思想、风气和传统上的沿袭、不愿革新；循规蹈矩强调按既有规矩行事，现代语境常含拘泥。"}, {"other_term": "按部就班", "minimum_difference": "因循守旧贬斥思想沿旧、不愿创新；按部就班中性地说明依照步骤稳步推进。"}],
+      "misuse_boundary": "题干只是依照计划、步骤推进，没有守旧和拒绝创新评价时，不宜使用。"
+    },
+    "按部就班": {
+      "meaning": "按照既定步骤、层次和程序，有次序地稳步推进。",
+      "distinctive_feature": "课程按中性词掌握，落点是依步骤执行，不自动包含死板、守旧的贬义。",
+      "recognition_cues": ["工程按照计划逐步推进", "文章依结构层次展开"],
+      "dimensions": [{"axis": "行动依据", "judgment": "既定步骤、程序。"}, {"axis": "推进状态", "judgment": "有次序、稳步。"}],
+      "comparison_edges": [{"other_term": "循序渐进", "minimum_difference": "按部就班中性地强调遵照既定程序、步骤；循序渐进褒义地强调遵循事物规律，由浅入深稳步提高。"}, {"other_term": "因循守旧", "minimum_difference": "按部就班不必含守旧评价；因循守旧明确批评沿袭旧思想、旧风气而不愿革新。"}],
+      "misuse_boundary": "题干强调学习提高遵循规律、由浅入深时，循序渐进更精确；批评守旧时不能用中性义替代。"
+    },
+    "循序渐进": {
+      "meaning": "按照合理次序和事物发展规律，由浅入深、一步一步稳步推进。",
+      "distinctive_feature": "课程明确为褒义，除步骤性外还强调尊重规律、不急于求成，常用于学习和成长。",
+      "recognition_cues": ["学习由基础到提高逐步进行", "按规律稳步推进、不急于求成"],
+      "dimensions": [{"axis": "推进顺序", "judgment": "由浅入深、逐步。"}, {"axis": "依据", "judgment": "事物发展规律。"}],
+      "comparison_edges": [{"other_term": "按部就班", "minimum_difference": "循序渐进褒义地强调遵循规律、由浅入深；按部就班中性地强调按照既定程序和步骤办事。"}, {"other_term": "有条不紊", "minimum_difference": "循序渐进强调随阶段逐步发展；有条不紊强调当前做事条理清楚、不混乱。"}],
+      "misuse_boundary": "题干只说工作安排有序或机械按程序推进，没有由浅入深和规律性时，不宜使用。"
+    }
+  }
+}

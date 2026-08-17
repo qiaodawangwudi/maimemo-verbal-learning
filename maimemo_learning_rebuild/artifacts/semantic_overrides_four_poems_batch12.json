@@ -1,0 +1,110 @@
+{
+  "schema_version": 1,
+  "basis": "逐词回到四诗风雅颂逐字稿，重建谨慎程度、协作方式、关系结构、相互增益和情绪控制的判断边界；互通有无因当前记录未绑定到直接释义段，继续隔离。",
+  "records": {
+    "如履薄冰": {
+      "meaning": "像走在薄冰上一样，时刻担心出问题，行事极其小心谨慎。",
+      "distinctive_feature": "谨慎来自对风险、红线的清醒畏惧，课程按中性理解；不等于因恐惧而心神慌乱。",
+      "recognition_cues": ["面对纪律红线每一步都谨慎", "高风险岗位时刻警惕出错"],
+      "dimensions": [{"axis": "风险意识", "judgment": "强烈、持续。"}, {"axis": "行动状态", "judgment": "极度谨慎。"}],
+      "comparison_edges": [{"other_term": "战战兢兢", "minimum_difference": "如履薄冰强调面对风险保持高度谨慎；战战兢兢强调内心恐惧、心惊胆战地做事。"}, {"other_term": "谨小慎微", "minimum_difference": "如履薄冰可肯定对重大风险的审慎；谨小慎微是过分拘谨，因小心过度而缺少魄力。"}],
+      "misuse_boundary": "题干批评主体畏缩保守、因过分小心错失机会时，应使用谨小慎微。"
+    },
+    "战战兢兢": {
+      "meaning": "因内心恐惧、害怕出事而小心谨慎，处于心惊胆战的状态。",
+      "distinctive_feature": "课程强调这是消极的小心，心理恐惧比客观审慎更突出。",
+      "recognition_cues": ["初次负责大项目时心惊胆战", "害怕出错而紧张核对"],
+      "dimensions": [{"axis": "心理状态", "judgment": "恐惧、紧张。"}, {"axis": "外在表现", "judgment": "小心翼翼。"}],
+      "comparison_edges": [{"other_term": "如履薄冰", "minimum_difference": "战战兢兢突出内心恐惧和紧张；如履薄冰突出面对风险、红线时保持高度谨慎。"}, {"other_term": "谨小慎微", "minimum_difference": "战战兢兢的根源是害怕出事；谨小慎微的缺点是小心过度、拘束保守、缺少魄力。"}],
+      "misuse_boundary": "题干赞扬主体对重大风险保持清醒谨慎，没有恐惧、慌张色彩时，不宜使用。"
+    },
+    "谨小慎微": {
+      "meaning": "做事在细小处也过分小心，显得拘束保守、缺乏魄力。",
+      "distinctive_feature": "课程明确按贬义掌握，问题不是‘谨慎’本身，而是程度过头妨碍行动和突破。",
+      "recognition_cues": ["改革中因过分小心不敢突破", "拘束保守、错失发展机会"],
+      "dimensions": [{"axis": "谨慎程度", "judgment": "过度。"}, {"axis": "负面结果", "judgment": "拘束、缺少魄力。"}],
+      "comparison_edges": [{"other_term": "如履薄冰", "minimum_difference": "谨小慎微贬斥小心过度、拘束保守；如履薄冰可描述面对风险红线时必要的高度谨慎。"}, {"other_term": "畏首畏尾", "minimum_difference": "谨小慎微突出小处也过分谨慎而少魄力；畏首畏尾突出前后顾虑多、胆小而放不开手脚。"}],
+      "misuse_boundary": "题干是面对高风险必须严谨，且没有保守拘束、错失机会的后果时，不宜使用。"
+    },
+    "集思广益": {
+      "meaning": "广泛汇集众人的意见和智慧，用来改进认识或决策。",
+      "distinctive_feature": "课程把动作概括为‘听意见’，重点是让多方表达后吸收智慧，不等于全体一起执行。",
+      "recognition_cues": ["广泛听取各方建议", "发扬民主汇集众人智慧"],
+      "dimensions": [{"axis": "信息来源", "judgment": "众人的意见和智慧。"}, {"axis": "核心动作", "judgment": "汇集、听取。"}],
+      "comparison_edges": [{"other_term": "博采众长", "minimum_difference": "集思广益汇集众人的意见、智慧来决策；博采众长广泛吸收各方面已有的优点和长处。"}, {"other_term": "和衷共济", "minimum_difference": "集思广益处在征求意见、汇集智慧阶段；和衷共济强调面对困难时同心协力、共同克服。"}],
+      "misuse_boundary": "题干强调共同出力克服现实困难，而非征集意见时，应使用和衷共济等行动词。"
+    },
+    "和衷共济": {
+      "meaning": "面对困难、问题时同心协力，共同设法克服。",
+      "distinctive_feature": "困难或问题是重要语境条件，团结是为了共同渡过难关；不只是意见收集。",
+      "recognition_cues": ["面对经济困境共同应对", "各方同心渡过难关"],
+      "dimensions": [{"axis": "情境", "judgment": "已有困难、问题。"}, {"axis": "协作动作", "judgment": "同心协力克服。"}],
+      "comparison_edges": [{"other_term": "集思广益", "minimum_difference": "和衷共济强调面对困难共同出力；集思广益强调广泛听取意见、汇集智慧。"}],
+      "misuse_boundary": "题干只写开会征求建议、汇集观点，没有共同应对困难的行动时，不宜使用。"
+    },
+    "互为表里": {
+      "meaning": "两个事物分别构成外在表现和内在实质，彼此对应、相互关联。",
+      "distinctive_feature": "关系不是一般密切，而是一个表现于外、一个藏于内的表里结构。",
+      "recognition_cues": ["外在作风问题与内在腐败根源相连", "一个是表现、一个是实质"],
+      "dimensions": [{"axis": "关系角色", "judgment": "外在表现与内在实质。"}, {"axis": "关联方式", "judgment": "表里对应。"}],
+      "comparison_edges": [{"other_term": "千丝万缕", "minimum_difference": "互为表里要求外在表现与内在实质的对应结构；千丝万缕只说明多个对象之间联系复杂、紧密。"}, {"other_term": "休戚与共", "minimum_difference": "互为表里描述表象与本质关系；休戚与共描述利益、祸福和命运共同承担。"}],
+      "misuse_boundary": "题干只说联系紧密或命运相连，却没有外表与内里关系时，不宜使用。"
+    },
+    "休戚与共": {
+      "meaning": "彼此具有共同利害关系，忧喜、祸福共同承担，命运紧密相连。",
+      "distinctive_feature": "课程用‘命运共同体’概括，必须落在共同利益和共同后果，不只是空间接近或联系复杂。",
+      "recognition_cues": ["双方利益与命运捆绑", "共同承担福祸和成败"],
+      "dimensions": [{"axis": "关系基础", "judgment": "共同利害。"}, {"axis": "承担内容", "judgment": "忧喜、祸福、命运。"}],
+      "comparison_edges": [{"other_term": "千丝万缕", "minimum_difference": "休戚与共强调共同利害、福祸和命运；千丝万缕强调联系数量多、关系复杂紧密。"}, {"other_term": "和衷共济", "minimum_difference": "休戚与共描述长期的共同利害关系；和衷共济描述面对具体困难时共同出力。"}],
+      "misuse_boundary": "题干只说关系很多、合作一次或地理接近，没有共同利害和命运承担时，不宜使用。"
+    },
+    "千丝万缕": {
+      "meaning": "两个或多个对象之间存在大量、复杂而紧密的联系。",
+      "distinctive_feature": "复杂性落在对象之间的联系网络，不是一个事物自身结构盘绕复杂。",
+      "recognition_cues": ["多个现象之间联系繁复", "两类问题有许多关联线索"],
+      "dimensions": [{"axis": "描述对象", "judgment": "对象之间的联系。"}, {"axis": "联系特征", "judgment": "多、复杂、紧密。"}],
+      "comparison_edges": [{"other_term": "互为表里", "minimum_difference": "千丝万缕只要求联系复杂紧密；互为表里要求形成外在表现与内在实质的对应关系。"}, {"other_term": "休戚与共", "minimum_difference": "千丝万缕描述复杂联系；休戚与共描述共同利害和命运承担。"}],
+      "misuse_boundary": "题干强调一个对象内部线路、结构盘绕复杂，或双方共同承担祸福时，不宜使用。"
+    },
+    "相辅相成": {
+      "meaning": "两个方面相互辅助、补充和成就，配合后共同形成完整效果。",
+      "distinctive_feature": "课程强调互补和缺一不可，重点是功能配合，不要求组成双方本来都优秀。",
+      "recognition_cues": ["两项措施互补、缺一不可", "不同方面配合形成完整体系"],
+      "dimensions": [{"axis": "作用方式", "judgment": "相互辅助、补充。"}, {"axis": "必要程度", "judgment": "共同完成时缺一不可。"}],
+      "comparison_edges": [{"other_term": "珠联璧合", "minimum_difference": "相辅相成强调不同功能相互补充、缺一不可；珠联璧合强调优秀、美好的对象组合在一起，是好上加好。"}, {"other_term": "交相辉映", "minimum_difference": "相辅相成强调功能互补；交相辉映强调美好事物相互映照、衬托得更加美好。"}],
+      "misuse_boundary": "题干只赞扬两个优秀对象组合或景物彼此映衬，没有功能互补关系时，不宜使用。"
+    },
+    "珠联璧合": {
+      "meaning": "美好、杰出或优秀的对象组合在一起，形成好上加好的搭配。",
+      "distinctive_feature": "组成双方本身都具有优秀、美好属性；不是一方弥补另一方缺陷。",
+      "recognition_cues": ["两位杰出人才合作", "优秀作品与优秀表演结合"],
+      "dimensions": [{"axis": "成员质量", "judgment": "双方都优秀、美好。"}, {"axis": "组合结果", "judgment": "强强结合。"}],
+      "comparison_edges": [{"other_term": "相辅相成", "minimum_difference": "珠联璧合强调优秀对象强强结合；相辅相成强调不同方面功能互补、缺一不可。"}, {"other_term": "交相辉映", "minimum_difference": "珠联璧合强调优秀对象组合；交相辉映强调光彩、景物或成果相互映照衬托。"}],
+      "misuse_boundary": "题干只说两方面互补，或景物相互映照，却不能证明组成对象本身都优秀时，不宜使用。"
+    },
+    "交相辉映": {
+      "meaning": "美好的事物、光彩或景象相互映照、衬托，使彼此显得更加美好。",
+      "distinctive_feature": "需要相互照耀、衬托的表现关系，课程强调美好性；不只是放在一起或功能互补。",
+      "recognition_cues": ["晚霞与湖面相互映照", "传统与现代成果彼此衬托"],
+      "dimensions": [{"axis": "相互作用", "judgment": "映照、衬托。"}, {"axis": "结果", "judgment": "彼此更加美好。"}],
+      "comparison_edges": [{"other_term": "珠联璧合", "minimum_difference": "交相辉映强调相互映照、衬托；珠联璧合强调美好、优秀对象组合成强强搭配。"}, {"other_term": "相辅相成", "minimum_difference": "交相辉映强调美感和光彩的相互衬托；相辅相成强调功能互补、共同完成效果。"}],
+      "misuse_boundary": "题干只是两个优秀对象合作，或两个措施功能互补，没有映照衬托关系时，不宜使用。"
+    },
+    "安之若素": {
+      "meaning": "面对变故、困境或异常情况，仍像平常一样安定从容。",
+      "distinctive_feature": "强调强大心态和承受力使外在状态维持如常，不等于内心剧烈波动但刻意不表露。",
+      "recognition_cues": ["身处困境仍从容如常", "面对变故心态稳定"],
+      "dimensions": [{"axis": "外部情境", "judgment": "变故、困境。"}, {"axis": "主体状态", "judgment": "安定、像平常一样。"}],
+      "comparison_edges": [{"other_term": "不动声色", "minimum_difference": "安之若素强调面对变故时内外都能安定如常；不动声色允许内心强烈波动，只是不把情绪显露出来。"}],
+      "misuse_boundary": "题干明确写内心紧张、激动，只是外表没有表现时，应使用不动声色。"
+    },
+    "不动声色": {
+      "meaning": "内心可能已有强烈情绪或意图，却不在声音、表情和行动姿态上显露出来。",
+      "distinctive_feature": "内外状态可以不一致，核心是隐藏情绪和意图；课程按中性词处理。",
+      "recognition_cues": ["内心紧张却外表平静", "暗中采取行动而不显露意图"],
+      "dimensions": [{"axis": "内心状态", "judgment": "可能强烈波动。"}, {"axis": "外在表现", "judgment": "不显露。"}],
+      "comparison_edges": [{"other_term": "安之若素", "minimum_difference": "不动声色强调隐藏内心情绪或意图；安之若素强调面对变故仍真正安定、像平常一样。"}, {"other_term": "无动于衷", "minimum_difference": "不动声色可能内心已受触动但不表现；无动于衷是内心没有触动、漠不关心。"}],
+      "misuse_boundary": "题干明确说主体内心毫无触动、对事情漠不关心时，应使用无动于衷。"
+    }
+  }
+}

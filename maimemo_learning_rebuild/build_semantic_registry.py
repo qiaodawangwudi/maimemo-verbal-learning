@@ -28,6 +28,8 @@ LESSON_FIVE_REQUIRED_OVERRIDE_FIELDS = {
     "misuse_boundary",
 }
 
+FOUR_POEMS_REQUIRED_OVERRIDE_FIELDS = LESSON_FIVE_REQUIRED_OVERRIDE_FIELDS
+
 
 def apply_lesson_five_override(
     record: dict, override: dict, batch_name: str
@@ -49,6 +51,10 @@ def apply_lesson_five_override(
             record["review_blockers"].append(blocker)
         return record
     record.update({field: override[field] for field in LESSON_FIVE_REQUIRED_OVERRIDE_FIELDS})
+    if "source_kind" in override:
+        record["source_kind"] = override["source_kind"]
+    if "evidence" in override:
+        record["evidence"] = override["evidence"]
     record["status"] = "ready"
     record["typical_contexts"] = override.get("typical_contexts", [])
     record.pop("candidate", None)
@@ -56,6 +62,34 @@ def apply_lesson_five_override(
     provenance = record.setdefault("provenance", {})
     provenance.pop("derived_content_quarantined", None)
     provenance["manual_semantic_review"] = batch_name
+    return record
+
+
+def apply_four_poems_override(record: dict, override: dict, batch_name: str) -> dict:
+    """Apply a complete reviewed meaning and, when supplied, its exact source evidence."""
+    missing = sorted(
+        field
+        for field in FOUR_POEMS_REQUIRED_OVERRIDE_FIELDS
+        if field not in override or override[field] in (None, "")
+    )
+    if missing:
+        blocker = "人工覆盖缺少完整学习字段"
+        if blocker not in record.setdefault("review_blockers", []):
+            record["review_blockers"].append(blocker)
+        return record
+    record.update({field: override[field] for field in FOUR_POEMS_REQUIRED_OVERRIDE_FIELDS})
+    if "source_kind" in override:
+        record["source_kind"] = override["source_kind"]
+    if "evidence" in override:
+        record["evidence"] = override["evidence"]
+    record["status"] = "ready"
+    record["typical_contexts"] = override.get("typical_contexts", [])
+    record.pop("candidate", None)
+    record.pop("review_blockers", None)
+    record["provenance"] = {
+        "batch": "four-poems",
+        "manual_semantic_review": batch_name,
+    }
     return record
 
 
@@ -308,24 +342,7 @@ def build_registry(source_root: Path, catalog: dict) -> tuple[dict, list[dict]]:
             override_entry = four_poems_overrides.get(term)
             if override_entry:
                 override, batch_name = override_entry
-                record.update(
-                    {
-                        "status": "ready",
-                        "meaning": override["meaning"],
-                        "distinctive_feature": override["distinctive_feature"],
-                        "recognition_cues": override["recognition_cues"],
-                        "dimensions": override["dimensions"],
-                        "comparison_edges": override["comparison_edges"],
-                        "misuse_boundary": override["misuse_boundary"],
-                        "typical_contexts": [],
-                    }
-                )
-                record.pop("candidate", None)
-                record.pop("review_blockers", None)
-                record["provenance"] = {
-                    "batch": "four-poems",
-                    "manual_semantic_review": batch_name,
-                }
+                record = apply_four_poems_override(record, override, batch_name)
             provenance = {
                 "tier": (
                     "manually_reviewed_from_transcript"
