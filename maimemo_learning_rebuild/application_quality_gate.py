@@ -8,6 +8,8 @@ import json
 from collections import Counter
 from pathlib import Path
 
+from .application_blind_review import blind_review_hash, evaluate_blind_reviews
+
 
 SUBJECT_TYPES = {"semantic", "comparison_group"}
 DECISIONS = {"create", "not_needed"}
@@ -111,6 +113,7 @@ def evaluate_application_gate(
     review: dict,
     final_cards: dict,
     plan: dict,
+    blind_review: dict | None = None,
 ) -> list[str]:
     """Require complete review coverage and useful cards for every create decision."""
 
@@ -184,6 +187,12 @@ def evaluate_application_gate(
     actual_titles = set(title_counts)
     if plan.get("application_review_hash") != application_review_hash(review):
         errors.append("action plan is not bound to current application review")
+    if blind_review is not None:
+        errors.extend(evaluate_blind_reviews(final_cards, blind_review))
+        if not isinstance(blind_review, dict) or plan.get(
+            "blind_review_hash"
+        ) != blind_review_hash(blind_review):
+            errors.append("action plan is not bound to current blind review")
     planned_titles = {
         _text(action.get("title")) for action in plan.get("actions", [])
     }
@@ -215,6 +224,7 @@ def main() -> int:
         load("application_review.json"),
         load("final_cards.json"),
         load("action_plan.json"),
+        load("application_blind_review.json"),
     )
     print(json.dumps({"ok": not errors, "errors": errors}, ensure_ascii=False))
     return 0 if not errors else 1

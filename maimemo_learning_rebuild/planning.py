@@ -8,6 +8,7 @@ import json
 from collections import Counter
 from pathlib import Path
 
+from .application_blind_review import blind_review_hash
 from .application_quality_gate import application_review_hash
 from .markji import parse_card
 from .models import validate_action_record
@@ -34,6 +35,7 @@ def build_action_plan(
     registry: list[dict],
     groups: list[dict],
     application_review: dict | None = None,
+    blind_review: dict | None = None,
 ) -> tuple[dict, list[dict]]:
     parsed = [parse_card(card) for card in snapshot.get("cards", [])]
     base_by_term = {card.term: card for card in parsed if card.card_type == "base"}
@@ -240,11 +242,18 @@ def build_action_plan(
     }
     if application_review is not None:
         plan["application_review_hash"] = application_review_hash(application_review)
+    if blind_review is not None:
+        plan["blind_review_hash"] = blind_review_hash(blind_review)
     plan["plan_hash"] = _plan_hash(plan)
     return plan, final_cards
 
 
-def validate_action_plan(plan: dict, snapshot: dict) -> list[str]:
+def validate_action_plan(
+    plan: dict,
+    snapshot: dict,
+    application_review: dict | None = None,
+    blind_review: dict | None = None,
+) -> list[str]:
     errors: list[str] = []
     parsed = [parse_card(card) for card in snapshot.get("cards", [])]
     existing_titles = {card.title for card in parsed}
@@ -267,6 +276,21 @@ def validate_action_plan(plan: dict, snapshot: dict) -> list[str]:
         errors.append("plan before count differs from snapshot")
     if plan.get("snapshot_hash") and plan.get("snapshot_hash") != snapshot_hash(snapshot):
         errors.append("snapshot hash mismatch")
+    if "application_review_hash" in plan and application_review is None:
+        errors.append("current application review is missing")
+    elif application_review is not None and (
+        not isinstance(application_review, dict)
+        or plan.get("application_review_hash")
+        != application_review_hash(application_review)
+    ):
+        errors.append("action plan is not bound to current application review")
+    if "blind_review_hash" in plan and blind_review is None:
+        errors.append("current blind review is missing")
+    elif blind_review is not None and (
+        not isinstance(blind_review, dict)
+        or plan.get("blind_review_hash") != blind_review_hash(blind_review)
+    ):
+        errors.append("action plan is not bound to current blind review")
     if plan.get("plan_hash") and plan.get("plan_hash") != _plan_hash(plan):
         errors.append("plan hash mismatch")
     return errors
@@ -303,6 +327,7 @@ def main() -> int:
     parser.add_argument("--registry", type=Path, required=True)
     parser.add_argument("--groups", type=Path, required=True)
     parser.add_argument("--applications", type=Path)
+    parser.add_argument("--blind-review", type=Path)
     parser.add_argument("--output-dir", type=Path, default=Path(__file__).parent / "artifacts")
     args = parser.parse_args()
     snapshot = json.loads(args.snapshot.read_text(encoding="utf-8-sig"))
@@ -313,10 +338,17 @@ def main() -> int:
         if args.applications
         else None
     )
-    plan, final_cards = build_action_plan(
-        snapshot, registry, groups, application_review
+    blind_review = (
+        json.loads(args.blind_review.read_text(encoding="utf-8-sig"))
+        if args.blind_review
+        else None
     )
-    errors = validate_action_plan(plan, snapshot)
+    plan, final_cards = build_action_plan(
+        snapshot, registry, groups, application_review, blind_review
+    )
+    errors = validate_action_plan(
+        plan, snapshot, application_review, blind_review
+    )
     if errors:
         for error in errors:
             print(error)

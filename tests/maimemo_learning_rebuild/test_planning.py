@@ -1,7 +1,10 @@
+import copy
 import unittest
 import json
 from pathlib import Path
 
+from maimemo_learning_rebuild.application_blind_review import blind_review_hash
+from maimemo_learning_rebuild.application_quality_gate import application_review_hash
 from maimemo_learning_rebuild.planning import build_action_plan, validate_action_plan
 
 
@@ -39,6 +42,103 @@ def semantic(term, status="ready"):
 
 
 class PlanningTests(unittest.TestCase):
+    def test_plan_binds_application_and_blind_reviews(self):
+        snapshot = {"cards": []}
+        registry = [semantic("甲")]
+        application_review = {"complete": True, "applications": []}
+        blind_review = {"complete": True, "reviews": []}
+
+        plan, _ = build_action_plan(
+            snapshot,
+            registry,
+            [],
+            application_review,
+            blind_review,
+        )
+
+        self.assertEqual(
+            application_review_hash(application_review),
+            plan["application_review_hash"],
+        )
+        self.assertEqual(blind_review_hash(blind_review), plan["blind_review_hash"])
+        self.assertEqual(
+            [],
+            validate_action_plan(
+                plan,
+                snapshot,
+                application_review,
+                blind_review,
+            ),
+        )
+
+    def test_validation_rejects_changed_application_or_blind_review(self):
+        snapshot = {"cards": []}
+        registry = [semantic("甲")]
+        application_review = {"complete": True, "applications": []}
+        blind_review = {"complete": True, "reviews": []}
+        plan, _ = build_action_plan(
+            snapshot,
+            registry,
+            [],
+            application_review,
+            blind_review,
+        )
+        changed_application_review = copy.deepcopy(application_review)
+        changed_application_review["complete"] = False
+        changed_blind_review = copy.deepcopy(blind_review)
+        changed_blind_review["complete"] = False
+
+        application_errors = validate_action_plan(
+            plan,
+            snapshot,
+            changed_application_review,
+            blind_review,
+        )
+        blind_errors = validate_action_plan(
+            plan,
+            snapshot,
+            application_review,
+            changed_blind_review,
+        )
+        malformed_blind_errors = validate_action_plan(
+            plan,
+            snapshot,
+            application_review,
+            [],
+        )
+
+        self.assertIn(
+            "action plan is not bound to current application review",
+            application_errors,
+        )
+        self.assertIn(
+            "action plan is not bound to current blind review",
+            blind_errors,
+        )
+        self.assertIn(
+            "action plan is not bound to current blind review",
+            malformed_blind_errors,
+        )
+
+    def test_validation_fails_closed_when_bound_reviews_are_not_supplied(self):
+        snapshot = {"cards": []}
+        registry = [semantic("甲")]
+        application_review = {"complete": True, "applications": []}
+        blind_review = {"complete": True, "reviews": []}
+        plan, _ = build_action_plan(
+            snapshot,
+            registry,
+            [],
+            application_review,
+            blind_review,
+        )
+
+        errors = validate_action_plan(plan, snapshot)
+
+        self.assertIn("current application review is missing", errors)
+        self.assertIn("current blind review is missing", errors)
+
+
     def test_new_deck_uses_runtime_root_placeholder_for_created_comparison(self):
         snapshot = {"cards": []}
         registry = [semantic("甲"), semantic("乙")]
