@@ -62,13 +62,14 @@ class ProtectedReleaseWorkflowTests(unittest.TestCase):
         self.assertIn("actions/setup-python@v5", prepare)
         self.assertIn("origin/main", prepare)
         self.assertIn("refs/heads/main", prepare)
-        self.assertIn("releases", prepare)
+        self.assertIn("validate_release_directory", prepare)
         self.assertIn("_load_frozen_release", prepare)
         self.assertIn("inputs.release_hash", prepare)
         self.assertIn("unittest discover", prepare)
         self.assertIn("public_quality_gate", prepare)
         self.assertIn("application_quality_gate", prepare)
         self.assertIn("validate_source_inventory", prepare)
+        self.assertIn("release_quality_gate", prepare)
         self.assertIn("GATE_ARTIFACT_DIR", prepare)
         self.assertIn("master_semantic_registry.json", prepare)
         self.assertIn("application_blind_review.json", prepare)
@@ -110,8 +111,29 @@ class ProtectedReleaseWorkflowTests(unittest.TestCase):
         self.assertIn("python -m maimemo_learning_rebuild.release_writer", secret_step)
         self.assertIn("if: always()", writer)
         self.assertIn("journal.jsonl", writer)
-        self.assertIn("touch release-reports/journal.jsonl", writer)
         self.assertIn("readback-report.json", writer)
+
+    def test_writer_initializes_and_synthesizes_reports_around_all_failure_points(self):
+        writer = extract_job(load_workflow_text(), "write-release")
+
+        initialize = writer.index("Initialize non-secret result files")
+        checkout = writer.index("Check out the exact approved commit")
+        recheck = writer.index("Recheck current main and the exact frozen release")
+        synthesize = writer.index("Synthesize non-secret result files")
+        upload = writer.index("Upload non-secret journal and readback report")
+        self.assertRegex(
+            writer,
+            r"(?m)^    steps:\s*$\n      - name: Initialize non-secret result files$",
+        )
+        self.assertLess(initialize, checkout)
+        self.assertLess(checkout, recheck)
+        self.assertLess(recheck, synthesize)
+        self.assertLess(synthesize, upload)
+        self.assertIn("$RUNNER_TEMP/maimemo-release-results", writer)
+        self.assertGreaterEqual(writer.count("if: always()"), 2)
+        self.assertIn('"status":"not_started"', writer)
+        self.assertIn('"status":"failed_before_readback"', writer)
+        self.assertIn("if-no-files-found: error", writer)
 
     def test_workflow_permissions_are_read_only(self):
         workflow = load_workflow_text()

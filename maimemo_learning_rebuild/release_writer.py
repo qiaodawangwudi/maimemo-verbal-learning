@@ -9,6 +9,7 @@ import json
 import os
 from pathlib import Path
 import re
+import stat
 import sys
 from datetime import datetime, timezone
 
@@ -876,12 +877,83 @@ def execute_release(client, manifest, cards, journal, wait_policy):
         journal.release()
 
 
+def _is_link_or_reparse(path):
+    path = Path(path)
+    try:
+        metadata = os.lstat(path)
+    except OSError:
+        return path.is_symlink()
+    attributes = getattr(metadata, "st_file_attributes", 0)
+    reparse_flag = getattr(stat, "FILE_ATTRIBUTE_REPARSE_POINT", 0x400)
+    return path.is_symlink() or bool(attributes & reparse_flag)
+
+
+def _reject_link_components(path):
+    absolute = Path(os.path.abspath(os.fspath(path)))
+    for component in reversed((absolute, *absolute.parents)):
+        if component == Path(component.anchor):
+            continue
+        if _is_link_or_reparse(component):
+            raise RuntimeError(f"frozen release path contains a symbolic link or reparse point")
+    return absolute
+
+
+def _canonical_release_dir(release_dir):
+    lexical = _reject_link_components(release_dir)
+    try:
+        canonical = lexical.resolve(strict=True)
+    except OSError as error:
+        raise RuntimeError("frozen release directory is missing") from error
+    if canonical != lexical or not canonical.is_dir():
+        raise RuntimeError("frozen release directory is not a canonical directory")
+    return canonical
+
+
+def validate_release_directory(repository, release_path):
+    """Return one non-linked release directory strictly below checkout/releases."""
+
+    checkout = _reject_link_components(repository)
+    try:
+        checkout = checkout.resolve(strict=True)
+    except OSError as error:
+        raise RuntimeError("canonical checkout is missing") from error
+    releases_root = _reject_link_components(checkout / "releases")
+    candidate = _reject_link_components(checkout / Path(release_path))
+    try:
+        relative = candidate.relative_to(releases_root)
+    except ValueError as error:
+        raise RuntimeError("release_path must resolve under releases/") from error
+    if not relative.parts:
+        raise RuntimeError("release_path must name one release directory under releases/")
+    canonical = _canonical_release_dir(candidate)
+    try:
+        canonical.relative_to(checkout)
+        canonical.relative_to(releases_root)
+    except ValueError as error:
+        raise RuntimeError("frozen release escaped the canonical checkout") from error
+    return canonical
+
+
+def _safe_release_file(release_dir, path, label):
+    release_dir = _canonical_release_dir(release_dir)
+    lexical = _reject_link_components(path)
+    try:
+        canonical = lexical.resolve(strict=True)
+        canonical.relative_to(release_dir)
+    except (OSError, ValueError) as error:
+        raise RuntimeError(f"frozen release file escaped its directory: {label}") from error
+    if canonical != lexical or not canonical.is_file():
+        raise RuntimeError(f"frozen release file is not canonical: {label}")
+    return canonical
+
+
 def _artifact_path(release_dir, key):
-    matches = [
-        release_dir / name
-        for name in ARTIFACT_FILENAMES[key]
-        if (release_dir / name).is_file()
-    ]
+    release_dir = _canonical_release_dir(release_dir)
+    matches = []
+    for name in ARTIFACT_FILENAMES[key]:
+        candidate = release_dir / name
+        if candidate.exists() or _is_link_or_reparse(candidate):
+            matches.append(_safe_release_file(release_dir, candidate, key))
     if len(matches) != 1:
         raise RuntimeError(f"frozen release artifact must exist exactly once: {key}")
     return matches[0]
@@ -889,10 +961,12 @@ def _artifact_path(release_dir, key):
 
 def _load_frozen_release(release_dir):
     """Load exact bytes, validate every bound hash, then expose execution inputs."""
-    release_dir = Path(release_dir)
-    manifest_path = release_dir / "release_manifest.json"
-    if not manifest_path.is_file():
-        raise RuntimeError("frozen release manifest is missing")
+    release_dir = _canonical_release_dir(release_dir)
+    manifest_path = _safe_release_file(
+        release_dir,
+        release_dir / "release_manifest.json",
+        "release_manifest",
+    )
     manifest = load_release_manifest_file(manifest_path)
     artifacts = {
         key: _artifact_path(release_dir, key).read_bytes() for key in ARTIFACT_KEYS

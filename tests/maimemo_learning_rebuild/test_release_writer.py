@@ -4,6 +4,7 @@ import os
 import tempfile
 import unittest
 from pathlib import Path
+from types import SimpleNamespace
 from contextlib import redirect_stderr, redirect_stdout
 from io import StringIO
 from unittest.mock import patch
@@ -14,6 +15,7 @@ from maimemo_learning_rebuild.api import (
 )
 from maimemo_learning_rebuild.release_writer import (
     TYPE_PREFIXES,
+    _is_link_or_reparse,
     _load_frozen_release,
     execute_release,
     main,
@@ -30,6 +32,30 @@ ROUTES = {
     "base": "chapter-base",
     "application": "chapter-application",
 }
+
+FROZEN_FILENAMES = {
+    "source_inventory": "source_inventory.json",
+    "semantic_registry": "semantic_registry.json",
+    "group_registry": "group_registry.json",
+    "application_review": "application_review.json",
+    "blind_review": "blind_review.json",
+    "final_cards": "final_cards.json",
+    "snapshot": "snapshot.json",
+    "action_plan": "action_plan.json",
+    "quality_reports": "quality_reports.json",
+    "engine_tree": "engine_tree.bin",
+    "skill_tree": "skill_tree.bin",
+}
+
+
+def write_frozen_release(release_dir):
+    release_dir.mkdir(parents=True)
+    current_artifacts = release_artifacts()
+    (release_dir / "release_manifest.json").write_text(
+        json.dumps(complete_manifest(), ensure_ascii=False), encoding="utf-8"
+    )
+    for key, raw in current_artifacts.items():
+        (release_dir / FROZEN_FILENAMES[key]).write_bytes(raw)
 
 
 def card(title, card_type, content, *, action="create", card_id=""):
@@ -216,6 +242,78 @@ def no_wait(seconds=0):
 
 
 class ReleaseWriterTests(unittest.TestCase):
+    def test_windows_reparse_metadata_is_treated_as_link(self):
+        with (
+            patch(
+                "maimemo_learning_rebuild.release_writer.os.lstat",
+                return_value=SimpleNamespace(st_file_attributes=0x400),
+            ),
+            patch.object(Path, "is_symlink", return_value=False),
+        ):
+            self.assertTrue(_is_link_or_reparse(Path("release-junction")))
+
+    def test_loader_checks_release_root_and_artifact_for_reparse_points(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            release_dir = root / "releases" / "release-1"
+            write_frozen_release(release_dir)
+            real_check = _is_link_or_reparse
+
+            for blocked_name in ("releases", "final_cards.json"):
+                with self.subTest(blocked_name=blocked_name), patch(
+                    "maimemo_learning_rebuild.release_writer._is_link_or_reparse",
+                    side_effect=lambda path, blocked_name=blocked_name: (
+                        Path(path).name == blocked_name or real_check(path)
+                    ),
+                ), self.assertRaisesRegex(
+                    RuntimeError, "symbolic link|reparse point"
+                ):
+                    _load_frozen_release(release_dir)
+
+    def _symlink_or_skip(self, target, link, *, directory=False):
+        try:
+            link.symlink_to(target, target_is_directory=directory)
+        except (NotImplementedError, OSError) as error:
+            self.skipTest(f"symbolic links unavailable: {error}")
+
+    def test_frozen_loader_rejects_symlinked_releases_root(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            outside = root / "outside"
+            write_frozen_release(outside / "release-1")
+            repository = root / "repository"
+            repository.mkdir()
+            self._symlink_or_skip(outside, repository / "releases", directory=True)
+
+            with self.assertRaisesRegex(RuntimeError, "symbolic link|reparse point"):
+                _load_frozen_release(repository / "releases" / "release-1")
+
+    def test_frozen_loader_rejects_artifact_symlink_escape(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            release_dir = root / "releases" / "release-1"
+            write_frozen_release(release_dir)
+            artifact = release_dir / "final_cards.json"
+            outside = root / "outside-final-cards.json"
+            artifact.replace(outside)
+            self._symlink_or_skip(outside, artifact)
+
+            with self.assertRaisesRegex(RuntimeError, "symbolic link|reparse point"):
+                _load_frozen_release(release_dir)
+
+    def test_frozen_loader_rejects_manifest_symlink_escape(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            release_dir = root / "releases" / "release-1"
+            write_frozen_release(release_dir)
+            manifest = release_dir / "release_manifest.json"
+            outside = root / "outside-release-manifest.json"
+            manifest.replace(outside)
+            self._symlink_or_skip(outside, manifest)
+
+            with self.assertRaisesRegex(RuntimeError, "symbolic link|reparse point"):
+                _load_frozen_release(release_dir)
+
     def test_final_readback_rejects_root_drift_after_base_write(self):
         comparison_title = "近义辨析｜甲、乙"
         comparison_content = "[P#H1#近义辨析｜甲、乙]\n---\n辨析"

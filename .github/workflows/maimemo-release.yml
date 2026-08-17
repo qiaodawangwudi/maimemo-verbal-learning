@@ -65,6 +65,7 @@ jobs:
           from maimemo_learning_rebuild.release_writer import (
               _artifact_path,
               _load_frozen_release,
+              validate_release_directory,
           )
 
           raw_path = os.environ["RELEASE_PATH_INPUT"]
@@ -73,15 +74,7 @@ jobs:
               raise SystemExit("release_path contains a line break")
           if re.fullmatch(r"[0-9a-f]{64}", expected_hash) is None:
               raise SystemExit("release_hash must be a lowercase SHA-256 digest")
-          repository = Path.cwd().resolve()
-          releases_root = (repository / "releases").resolve()
-          release_dir = (repository / raw_path).resolve()
-          try:
-              relative = release_dir.relative_to(releases_root)
-          except ValueError as exc:
-              raise SystemExit("release_path must resolve under releases/") from exc
-          if not relative.parts or not release_dir.is_dir():
-              raise SystemExit("release_path must name one release directory under releases/")
+          release_dir = validate_release_directory(Path.cwd(), raw_path)
           manifest, _cards = _load_frozen_release(release_dir)
           if manifest["release_hash"] != expected_hash:
               raise SystemExit("release_hash does not match the frozen manifest")
@@ -110,6 +103,10 @@ jobs:
       - name: Run every repository test module
         shell: bash
         run: python -m unittest discover -s tests -t . -p 'test_*.py' -q
+
+      - name: Run independently bound learning quality gate
+        shell: bash
+        run: python -m maimemo_learning_rebuild.release_quality_gate --release-dir "$RELEASE_DIR"
 
       - name: Run public learning quality gate
         shell: bash
@@ -227,6 +224,18 @@ jobs:
       cancel-in-progress: false
     runs-on: ubuntu-latest
     steps:
+      - name: Initialize non-secret result files
+        shell: bash
+        run: |
+          set -euo pipefail
+          result_dir="$RUNNER_TEMP/maimemo-release-results"
+          mkdir -p "$result_dir"
+          printf 'RESULT_DIR=%s\n' "$result_dir" >> "$GITHUB_ENV"
+          printf '%s\n' '{"action":"phase","outcome":"not_started","title":"workflow_initialization"}' \
+            > "$result_dir/journal.jsonl"
+          printf '%s\n' '{"ok":false,"status":"not_started"}' \
+            > "$result_dir/readback-report.json"
+
       - name: Check out the exact approved commit
         uses: actions/checkout@v4
         with:
@@ -259,7 +268,10 @@ jobs:
           import re
           from pathlib import Path
 
-          from maimemo_learning_rebuild.release_writer import _load_frozen_release
+          from maimemo_learning_rebuild.release_writer import (
+              _load_frozen_release,
+              validate_release_directory,
+          )
 
           raw_path = os.environ["RELEASE_PATH_INPUT"]
           expected_hash = os.environ["EXPECTED_RELEASE_HASH"]
@@ -267,20 +279,11 @@ jobs:
               raise SystemExit("release_path contains a line break")
           if re.fullmatch(r"[0-9a-f]{64}", expected_hash) is None:
               raise SystemExit("release_hash must be a lowercase SHA-256 digest")
-          repository = Path.cwd().resolve()
-          releases_root = (repository / "releases").resolve()
-          release_dir = (repository / raw_path).resolve()
-          try:
-              relative = release_dir.relative_to(releases_root)
-          except ValueError as exc:
-              raise SystemExit("release_path must resolve under releases/") from exc
-          if not relative.parts or not release_dir.is_dir():
-              raise SystemExit("release_path must name one release directory under releases/")
+          release_dir = validate_release_directory(Path.cwd(), raw_path)
           manifest, _cards = _load_frozen_release(release_dir)
           if manifest["release_hash"] != expected_hash:
               raise SystemExit("release_hash does not match the frozen manifest")
-          report_dir = Path("release-reports")
-          report_dir.mkdir(exist_ok=True)
+          report_dir = Path(os.environ["RESULT_DIR"])
           receipt = {
               "schema_version": 2,
               "receipt_type": "github_protected_release",
@@ -304,7 +307,6 @@ jobs:
           with Path(os.environ["GITHUB_ENV"]).open("a", encoding="utf-8") as stream:
               stream.write(f"RELEASE_DIR={release_dir}\n")
           PY
-          touch release-reports/journal.jsonl
 
       - name: Execute protected writer
         shell: bash
@@ -318,16 +320,38 @@ jobs:
           set +e
           python -m maimemo_learning_rebuild.release_writer \
             --release-dir "$RELEASE_DIR" \
-            --approval-receipt release-reports/approval-receipt.json \
-            --journal release-reports/journal.jsonl \
-            > release-reports/readback-report.json
+            --approval-receipt "$RESULT_DIR/approval-receipt.json" \
+            --journal "$RESULT_DIR/journal.jsonl" \
+            > "$RESULT_DIR/readback-report.json"
           writer_status=$?
           set -e
-          if [[ ! -s release-reports/readback-report.json ]]; then
+          if [[ ! -s "$RESULT_DIR/readback-report.json" ]]; then
             printf '%s\n' '{"error":"protected release failed [REDACTED]","ok":false}' \
-              > release-reports/readback-report.json
+              > "$RESULT_DIR/readback-report.json"
           fi
           exit "$writer_status"
+
+      - name: Synthesize non-secret result files
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          result_dir="$RUNNER_TEMP/maimemo-release-results"
+          mkdir -p "$result_dir"
+          initial_journal='{"action":"phase","outcome":"not_started","title":"workflow_initialization"}'
+          if [[ ! -s "$result_dir/journal.jsonl" ]] || \
+             { [[ "$(wc -l < "$result_dir/journal.jsonl")" -eq 1 ]] && \
+               grep -Fqx -- "$initial_journal" "$result_dir/journal.jsonl"; }; then
+            printf '%s\n' '{"action":"phase","outcome":"failed","title":"workflow_prewrite_failure"}' \
+              > "$result_dir/journal.jsonl"
+          fi
+          initial_readback='{"ok":false,"status":"not_started"}'
+          if [[ ! -s "$result_dir/readback-report.json" ]] || \
+             { [[ "$(wc -l < "$result_dir/readback-report.json")" -eq 1 ]] && \
+               grep -Fqx -- "$initial_readback" "$result_dir/readback-report.json"; }; then
+            printf '%s\n' '{"ok":false,"status":"failed_before_readback"}' \
+              > "$result_dir/readback-report.json"
+          fi
 
       - name: Upload non-secret journal and readback report
         if: always()
@@ -335,7 +359,7 @@ jobs:
         with:
           name: maimemo-release-result-${{ github.run_id }}
           path: |
-            release-reports/journal.jsonl
-            release-reports/readback-report.json
-          if-no-files-found: warn
+            ${{ runner.temp }}/maimemo-release-results/journal.jsonl
+            ${{ runner.temp }}/maimemo-release-results/readback-report.json
+          if-no-files-found: error
           retention-days: 30
