@@ -1048,6 +1048,10 @@ def _release_environment_module():
     return importlib.import_module(".release_environment", __package__)
 
 
+def _release_quality_gate_module():
+    return importlib.import_module(".release_quality_gate", __package__)
+
+
 def _validate_release_environment(manifest, receipt_path):
     module = _release_environment_module()
     validator = getattr(module, "validate_release_environment", None)
@@ -1080,13 +1084,33 @@ def _validate_release_environment(manifest, receipt_path):
     return result
 
 
-def _create_protected_client(manifest, validation):
+def _validate_protected_release_quality(release_dir):
+    module = _release_quality_gate_module()
+    opener = getattr(module, "open_protected_quality_capability", None)
+    runner = getattr(module, "run_release_quality_gate", None)
+    if not callable(opener) or not callable(runner):
+        raise RuntimeError("protected current-environment review capability required")
+    capability = opener(release_dir)
+    errors = runner(release_dir, capability)
+    if errors:
+        raise RuntimeError(errors[0])
+    return capability
+
+
+def _create_protected_client(manifest, validation, quality_capability=None):
     module = _release_environment_module()
     factory = getattr(module, "open_protected_client", None)
     capability_reader = getattr(module, "_capability_for_validation", None)
     if not callable(factory) or not callable(capability_reader):
         raise RuntimeError("GitHub release environment receipt is not approved")
     capability = capability_reader(validation)
+    quality_module = _release_quality_gate_module()
+    quality_reader = getattr(
+        quality_module, "_revalidate_protected_quality_capability", None
+    )
+    if not callable(quality_reader):
+        raise RuntimeError("protected current-environment review capability required")
+    quality_reader(quality_capability)
     return factory(capability)
 
 
@@ -1109,7 +1133,10 @@ def main(argv=None):
     try:
         manifest, cards = _load_frozen_release(args.release_dir)
         validation = _validate_release_environment(manifest, args.approval_receipt)
-        client = _create_protected_client(manifest, validation)
+        quality_capability = _validate_protected_release_quality(args.release_dir)
+        client = _create_protected_client(
+            manifest, validation, quality_capability
+        )
         result = execute_release(
             client,
             manifest,

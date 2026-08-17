@@ -106,7 +106,7 @@ jobs:
 
       - name: Run independently bound learning quality gate
         shell: bash
-        run: python -m maimemo_learning_rebuild.release_quality_gate --release-dir "$RELEASE_DIR"
+        run: python -m maimemo_learning_rebuild.release_quality_gate --release-dir "$RELEASE_DIR" --precheck
 
       - name: Run public learning quality gate
         shell: bash
@@ -308,12 +308,22 @@ jobs:
               stream.write(f"RELEASE_DIR={release_dir}\n")
           PY
 
+      - name: Run protected current-environment learning quality gate
+        shell: bash
+        env:
+          GITHUB_ENVIRONMENT: maimemo-final-release
+          GITHUB_DEPLOYMENT_STATUS: success
+          RELEASE_HASH: ${{ inputs.release_hash }}
+          APPROVED_COMMIT_SHA: ${{ inputs.commit_sha }}
+        run: python -m maimemo_learning_rebuild.release_quality_gate --release-dir "$RELEASE_DIR"
+
       - name: Execute protected writer
         shell: bash
         env:
           GITHUB_ENVIRONMENT: maimemo-final-release
           GITHUB_DEPLOYMENT_STATUS: success
           RELEASE_HASH: ${{ inputs.release_hash }}
+          APPROVED_COMMIT_SHA: ${{ inputs.commit_sha }}
           MAIMEMO_API_TOKEN: ${{ secrets.MAIMEMO_TOKEN }}
         run: |
           set -euo pipefail

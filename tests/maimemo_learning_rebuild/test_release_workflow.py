@@ -70,6 +70,7 @@ class ProtectedReleaseWorkflowTests(unittest.TestCase):
         self.assertIn("application_quality_gate", prepare)
         self.assertIn("validate_source_inventory", prepare)
         self.assertIn("release_quality_gate", prepare)
+        self.assertIn("release_quality_gate --release-dir \"$RELEASE_DIR\" --precheck", prepare)
         self.assertIn("GATE_ARTIFACT_DIR", prepare)
         self.assertIn("master_semantic_registry.json", prepare)
         self.assertIn("application_blind_review.json", prepare)
@@ -95,6 +96,8 @@ class ProtectedReleaseWorkflowTests(unittest.TestCase):
         writer = extract_job(workflow, "write-release")
 
         self.assertEqual(1, workflow.count("secrets.MAIMEMO_TOKEN"))
+        self.assertEqual(1, workflow.count("environment: maimemo-final-release"))
+        self.assertNotIn("maimemo-independent-comparison-review", workflow)
         self.assertNotIn("secrets.MAIMEMO_TOKEN", prepare)
         self.assertIn("environment: maimemo-final-release", writer)
         self.assertRegex(writer, r"(?m)^\s+needs: prepare-release\s*$")
@@ -107,6 +110,21 @@ class ProtectedReleaseWorkflowTests(unittest.TestCase):
         self.assertIn("_load_frozen_release", writer)
         self.assertIn("python -m maimemo_learning_rebuild.release_writer", writer)
         self.assertIn("MAIMEMO_API_TOKEN: ${{ secrets.MAIMEMO_TOKEN }}", writer)
+        quality_step = "Run protected current-environment learning quality gate"
+        self.assertIn(quality_step, writer)
+        protected_quality = writer.index(quality_step)
+        secret_position = writer.index(
+            "MAIMEMO_API_TOKEN: ${{ secrets.MAIMEMO_TOKEN }}"
+        )
+        self.assertLess(protected_quality, secret_position)
+        quality_block = writer[
+            protected_quality : writer.index("Execute protected writer")
+        ]
+        self.assertIn("python -m maimemo_learning_rebuild.release_quality_gate", quality_block)
+        self.assertIn("GITHUB_ENVIRONMENT: maimemo-final-release", quality_block)
+        self.assertIn("GITHUB_DEPLOYMENT_STATUS: success", quality_block)
+        self.assertIn("APPROVED_COMMIT_SHA: ${{ inputs.commit_sha }}", quality_block)
+        self.assertNotIn("secrets.", quality_block)
         secret_step = writer[writer.index("MAIMEMO_API_TOKEN: ${{ secrets.MAIMEMO_TOKEN }}") :]
         self.assertIn("python -m maimemo_learning_rebuild.release_writer", secret_step)
         self.assertIn("if: always()", writer)
@@ -154,6 +172,7 @@ class ProtectedReleaseWorkflowTests(unittest.TestCase):
             "/.github/workflows/maimemo-release.yml",
             "/maimemo_learning_rebuild/api.py",
             "/maimemo_learning_rebuild/release_environment.py",
+            "/maimemo_learning_rebuild/release_quality_gate.py",
             "/maimemo_learning_rebuild/release_writer.py",
             "/maimemo_learning_rebuild/release_manifest.py",
             "/.github/CODEOWNERS",

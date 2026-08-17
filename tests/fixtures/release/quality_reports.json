@@ -17,17 +17,8 @@
     "resolutions": [],
     "edge_reviews": [],
     "comparison_reviews": [],
-    "review_receipt": {
-      "schema_version": 1,
-      "receipt_type": "github_protected_independent_comparison_review",
-      "review_baseline_hash": "22ae0f083546a84fae03ceb7fd33690c22f554de4334de2e6f39a2402c6127eb",
-      "approved_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-      "github_run_id": "9001",
-      "github_environment": "maimemo-independent-comparison-review",
-      "deployment_status": "success"
-    },
     "semantic_registry_hash": "0fceade4212557bcdda14382349bbfcfba3cfbe7428c108de229360fbc89c03f",
     "group_registry_hash": "1b7db55132f85b6a735dcd34a71a462d5b9b7485d766eec89ccc1dae6d804387",
-    "review_hash": "b530d7e814110e1c8190054ab0ff9c41eec82cbbcd622d5847513bfa54eedcc3"
+    "review_hash": "60324851e888a9f1242dd14ee7c0b8e072a7e9580e7cec587337e58abc6117f6"
   }
 }

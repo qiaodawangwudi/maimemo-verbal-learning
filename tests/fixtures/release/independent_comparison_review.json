@@ -30,14 +30,5 @@
         "edge-v1-150b19a4fd0dbf5054722e4c29aa3b3faedb9abc0c910ae090ab1415894ac5a4"
       ]
     }
-  ],
-  "review_receipt": {
-    "schema_version": 1,
-    "receipt_type": "github_protected_independent_comparison_review",
-    "review_baseline_hash": "741915a504b804ec808b94709003f3f459edef80f91b9da82cbc72e3e024f50c",
-    "approved_sha": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
-    "github_run_id": "9002",
-    "github_environment": "maimemo-independent-comparison-review",
-    "deployment_status": "success"
-  }
+  ]
 }

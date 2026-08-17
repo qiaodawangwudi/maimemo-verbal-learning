@@ -5,8 +5,13 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import os
+import re
+import weakref
 from collections import Counter
+from collections.abc import Mapping
 from pathlib import Path
+from typing import NamedTuple
 
 from .groups import validate_group_registry
 from .learning_quality import (
@@ -33,11 +38,130 @@ INDEPENDENT_REVIEW_FIELDS = {
     "resolutions",
     "edge_reviews",
     "comparison_reviews",
-    "review_receipt",
     "semantic_registry_hash",
     "group_registry_hash",
     "review_hash",
 }
+PROTECTED_QUALITY_ENVIRONMENT = "maimemo-final-release"
+_QUALITY_CAPABILITY_KEY = object()
+
+
+class _ProtectedQualityEnvironment(NamedTuple):
+    github_actions: str
+    github_ref: str
+    github_sha: str
+    github_run_id: str
+    github_environment: str
+    deployment_status: str
+    github_event_name: str
+    github_head_ref: str
+    github_base_ref: str
+    github_workflow_ref: str
+    approved_commit_sha: str
+    release_hash: str
+
+
+def _lower_digest(value: object, length: int) -> bool:
+    return (
+        type(value) is str
+        and len(value) == length
+        and all(character in "0123456789abcdef" for character in value)
+    )
+
+
+def _positive_run_id(value: object) -> bool:
+    return (
+        type(value) is str
+        and value.isascii()
+        and value.isdigit()
+        and bool(value.strip("0"))
+    )
+
+
+def _protected_quality_environment(
+    mapping: Mapping[str, str], release_hash: str
+) -> _ProtectedQualityEnvironment:
+    if not isinstance(mapping, Mapping) or mapping.get("GITHUB_ACTIONS") != "true":
+        raise RuntimeError("protected GitHub Actions review environment required")
+    github_ref = mapping.get("GITHUB_REF")
+    if github_ref != "refs/heads/main":
+        raise RuntimeError("exact main review ref required")
+    event = mapping.get("GITHUB_EVENT_NAME")
+    head_ref = mapping.get("GITHUB_HEAD_REF", "")
+    base_ref = mapping.get("GITHUB_BASE_REF", "")
+    if event != "workflow_dispatch" or head_ref or base_ref:
+        raise RuntimeError("workflow_dispatch review context required")
+    github_sha = mapping.get("GITHUB_SHA")
+    approved_sha = mapping.get("APPROVED_COMMIT_SHA")
+    if (
+        not _lower_digest(github_sha, 40)
+        or not _lower_digest(approved_sha, 40)
+        or github_sha != approved_sha
+    ):
+        raise RuntimeError("exact approved review SHA required")
+    run_id = mapping.get("GITHUB_RUN_ID")
+    if not _positive_run_id(run_id):
+        raise RuntimeError("valid GitHub review run id required")
+    workflow_ref = mapping.get("GITHUB_WORKFLOW_REF")
+    if not isinstance(workflow_ref, str) or re.fullmatch(
+        r"[^/\s]+/[^/\s]+/\.github/workflows/maimemo-release\.yml@refs/heads/main",
+        workflow_ref,
+    ) is None:
+        raise RuntimeError("exact protected release workflow required")
+    environment = mapping.get("GITHUB_ENVIRONMENT")
+    if environment != PROTECTED_QUALITY_ENVIRONMENT:
+        raise RuntimeError("exact protected review environment required")
+    deployment_status = mapping.get("GITHUB_DEPLOYMENT_STATUS")
+    if deployment_status != "success":
+        raise RuntimeError("successful protected review deployment required")
+    current_release_hash = mapping.get("RELEASE_HASH")
+    if not _lower_digest(current_release_hash, 64) or current_release_hash != release_hash:
+        raise RuntimeError("protected review release hash mismatch")
+    return _ProtectedQualityEnvironment(
+        "true",
+        github_ref,
+        github_sha,
+        run_id,
+        environment,
+        deployment_status,
+        event,
+        head_ref,
+        base_ref,
+        workflow_ref,
+        approved_sha,
+        current_release_hash,
+    )
+
+
+class _ProtectedQualityCapability:
+    __slots__ = ("__weakref__",)
+
+    def __new__(cls, key=None):
+        if key is not _QUALITY_CAPABILITY_KEY:
+            raise TypeError("protected review capability cannot be constructed")
+        return super().__new__(cls)
+
+    def __copy__(self):
+        raise TypeError("protected review capability cannot be copied")
+
+    def __deepcopy__(self, memo):
+        raise TypeError("protected review capability cannot be copied")
+
+    def __reduce__(self):
+        raise TypeError("protected review capability cannot be serialized")
+
+    def __reduce_ex__(self, protocol):
+        raise TypeError("protected review capability cannot be serialized")
+
+
+class _ProtectedQualityBinding(NamedTuple):
+    environment_mapping: Mapping[str, str]
+    environment: _ProtectedQualityEnvironment
+    release_dir: Path
+    release_hash: str
+
+
+_QUALITY_CAPABILITIES: weakref.WeakKeyDictionary = weakref.WeakKeyDictionary()
 
 
 def _digest(raw: bytes) -> str:
@@ -221,14 +345,111 @@ def evaluate_frozen_release_quality(release_dir: Path | str) -> list[str]:
     return list(dict.fromkeys(errors))
 
 
+def _canonical_quality_release(release_dir: Path | str) -> tuple[Path, dict]:
+    manifest, _cards = _load_frozen_release(release_dir)
+    try:
+        canonical = Path(release_dir).resolve(strict=True)
+    except OSError as error:
+        raise RuntimeError("protected review release directory is missing") from error
+    return canonical, manifest
+
+
+def open_protected_quality_capability(
+    release_dir: Path | str,
+) -> _ProtectedQualityCapability:
+    """Authorize exact frozen quality only in the current protected release job."""
+
+    canonical, manifest = _canonical_quality_release(release_dir)
+    release_hash = manifest.get("release_hash")
+    if not _lower_digest(release_hash, 64):
+        raise RuntimeError("protected review release hash is invalid")
+    mapping = os.environ
+    environment = _protected_quality_environment(mapping, release_hash)
+    errors = evaluate_frozen_release_quality(canonical)
+    if errors:
+        raise RuntimeError("protected learning quality gate failed: " + "; ".join(errors))
+    if os.environ is not mapping:
+        raise RuntimeError("protected review environment mapping changed")
+    if _protected_quality_environment(mapping, release_hash) != environment:
+        raise RuntimeError("protected review environment changed during validation")
+    current_canonical, current_manifest = _canonical_quality_release(canonical)
+    if (
+        current_canonical != canonical
+        or current_manifest.get("release_hash") != release_hash
+    ):
+        raise RuntimeError("protected review release changed during validation")
+    capability = _ProtectedQualityCapability(_QUALITY_CAPABILITY_KEY)
+    _QUALITY_CAPABILITIES[capability] = _ProtectedQualityBinding(
+        mapping,
+        environment,
+        canonical,
+        release_hash,
+    )
+    return capability
+
+
+def _revalidate_protected_quality_capability(
+    capability: object, release_dir: Path | str | None = None
+) -> None:
+    if type(capability) is not _ProtectedQualityCapability:
+        raise RuntimeError("protected current-environment review capability required")
+    binding = _QUALITY_CAPABILITIES.get(capability)
+    if binding is None:
+        raise RuntimeError("protected current-environment review capability required")
+    mapping = os.environ
+    if mapping is not binding.environment_mapping:
+        raise RuntimeError("protected review environment mapping changed")
+    if _protected_quality_environment(mapping, binding.release_hash) != binding.environment:
+        raise RuntimeError("protected review environment changed after validation")
+    expected_dir = binding.release_dir
+    if release_dir is not None:
+        try:
+            supplied_dir = Path(release_dir).resolve(strict=True)
+        except OSError as error:
+            raise RuntimeError("protected review release directory is missing") from error
+        if supplied_dir != expected_dir:
+            raise RuntimeError("protected review release directory mismatch")
+    errors = evaluate_frozen_release_quality(expected_dir)
+    if errors:
+        raise RuntimeError("protected learning quality gate failed: " + "; ".join(errors))
+    if os.environ is not mapping:
+        raise RuntimeError("protected review environment mapping changed")
+    if _protected_quality_environment(mapping, binding.release_hash) != binding.environment:
+        raise RuntimeError("protected review environment changed during revalidation")
+    current_dir, manifest = _canonical_quality_release(expected_dir)
+    if current_dir != expected_dir or manifest.get("release_hash") != binding.release_hash:
+        raise RuntimeError("protected review release changed after validation")
+
+
+def run_release_quality_gate(
+    release_dir: Path | str, capability: object
+) -> list[str]:
+    """Consume a live opaque authority; JSON review files alone never authorize."""
+
+    try:
+        _revalidate_protected_quality_capability(capability, release_dir)
+    except (KeyError, OSError, RuntimeError, TypeError, ValueError) as error:
+        return [str(error)]
+    return []
+
+
 def main(argv=None) -> int:
     parser = argparse.ArgumentParser(
         description="Validate one independently reviewed frozen release"
     )
     parser.add_argument("--release-dir", type=Path, required=True)
+    parser.add_argument(
+        "--precheck",
+        action="store_true",
+        help="run structural checks only; never authorizes a protected write",
+    )
     args = parser.parse_args(argv)
     try:
-        errors = evaluate_frozen_release_quality(args.release_dir)
+        if args.precheck:
+            errors = evaluate_frozen_release_quality(args.release_dir)
+        else:
+            capability = open_protected_quality_capability(args.release_dir)
+            errors = run_release_quality_gate(args.release_dir, capability)
     except (KeyError, OSError, RuntimeError, TypeError, ValueError) as error:
         errors = [str(error)]
     print(

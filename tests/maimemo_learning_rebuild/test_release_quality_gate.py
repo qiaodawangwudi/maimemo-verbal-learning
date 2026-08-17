@@ -149,6 +149,7 @@ def run_gate(release_dir):
             "maimemo_learning_rebuild.release_quality_gate",
             "--release-dir",
             str(release_dir),
+            "--precheck",
         ],
         cwd=REPO_ROOT,
         capture_output=True,

@@ -69,18 +69,6 @@ COMPARISON_REVIEW_FIELDS = frozenset(
         "edge_subject_ids",
     }
 )
-REVIEW_RECEIPT_FIELDS = frozenset(
-    {
-        "schema_version",
-        "receipt_type",
-        "review_baseline_hash",
-        "approved_sha",
-        "github_run_id",
-        "github_environment",
-        "deployment_status",
-    }
-)
-REVIEW_ENVIRONMENT = "maimemo-independent-comparison-review"
 INDEPENDENT_REVIEW_BASE_FIELDS = frozenset(
     {
         "complete",
@@ -88,7 +76,6 @@ INDEPENDENT_REVIEW_BASE_FIELDS = frozenset(
         "resolutions",
         "edge_reviews",
         "comparison_reviews",
-        "review_receipt",
     }
 )
 INDEPENDENT_REVIEW_FIELD_SETS = frozenset(
@@ -136,17 +123,6 @@ def _canonical_hash(value: object) -> str:
     return hashlib.sha256(canonical.encode("utf-8")).hexdigest()
 
 
-def comparison_review_baseline_hash(review: dict) -> str:
-    """Hash only externally authored comparison-review evidence."""
-
-    return _canonical_hash(
-        {
-            "edge_reviews": review.get("edge_reviews"),
-            "comparison_reviews": review.get("comparison_reviews"),
-        }
-    )
-
-
 def comparison_review_subject_id(binding: dict) -> str:
     """Return a collision-safe identity for one exact reviewed card output."""
 
@@ -175,36 +151,6 @@ def comparison_review_subject_id(binding: dict) -> str:
     return "comparison-v1-" + _canonical_hash(
         {"kind": "comparison_card", "version": 1, **values}
     )
-
-
-def _review_receipt_errors(review: dict) -> list[str]:
-    receipt = review.get("review_receipt")
-    if (
-        not isinstance(receipt, dict)
-        or set(receipt) != REVIEW_RECEIPT_FIELDS
-        or type(receipt.get("schema_version")) is not int
-        or receipt.get("schema_version") != 1
-        or receipt.get("receipt_type")
-        != "github_protected_independent_comparison_review"
-        or type(receipt.get("review_baseline_hash")) is not str
-        or not re.fullmatch(r"[0-9a-f]{64}", receipt["review_baseline_hash"])
-        or type(receipt.get("approved_sha")) is not str
-        or not re.fullmatch(r"[0-9a-f]{40}", receipt["approved_sha"])
-        or type(receipt.get("github_run_id")) is not str
-        or not receipt["github_run_id"].isascii()
-        or not receipt["github_run_id"].isdigit()
-        or not receipt["github_run_id"].strip("0")
-        or receipt.get("github_environment") != REVIEW_ENVIRONMENT
-        or receipt.get("deployment_status") != "success"
-    ):
-        return ["protected independent comparison review receipt required"]
-    try:
-        baseline_hash = comparison_review_baseline_hash(review)
-    except (OverflowError, RecursionError, TypeError, ValueError):
-        return ["independent learning review is incomplete"]
-    if receipt["review_baseline_hash"] != baseline_hash:
-        return ["independent comparison review receipt baseline mismatch"]
-    return []
 
 
 def _normalize_for_flagging(value: object) -> str:
@@ -350,7 +296,6 @@ def validate_independent_review(independent_review: object) -> list[str]:
         errors.append("independent learning review is not context-isolated")
     if any(not _resolution_schema_is_valid(resolution) for resolution in resolutions):
         errors.append("independent learning review is incomplete")
-    errors.extend(_review_receipt_errors(independent_review))
     edge_reviews = independent_review.get("edge_reviews")
     if not isinstance(edge_reviews, list) or any(
         not isinstance(edge_review, dict) for edge_review in edge_reviews or []

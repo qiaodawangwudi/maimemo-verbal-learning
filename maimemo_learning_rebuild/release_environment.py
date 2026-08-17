@@ -188,6 +188,7 @@ class _ReleaseCapability:
 
 
 class _CapabilityBinding(NamedTuple):
+    environment_mapping: Mapping[str, str]
     environment: _EnvironmentSnapshot
     release_id: str
     release_hash: str
@@ -325,6 +326,7 @@ def validate_github_receipt(receipt: object, manifest: object) -> _ReleaseCapabi
 
     capability = _ReleaseCapability(_CAPABILITY_KEY)
     _CAPABILITIES[capability] = _CapabilityBinding(
+        mapping,
         environment,
         release_id,
         release_hash,
@@ -364,6 +366,8 @@ def open_protected_client(capability: object):
         raise RuntimeError("validated GitHub receipt required")
 
     current_mapping = os.environ
+    if current_mapping is not binding.environment_mapping:
+        raise RuntimeError("protected release environment mapping changed")
     current = ReleaseEnvironment.from_mapping(current_mapping)
     if current != binding.environment:
         raise RuntimeError("protected release environment changed after validation")

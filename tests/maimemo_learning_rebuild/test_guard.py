@@ -66,17 +66,6 @@ def safe_fixture():
         "resolutions": [],
         "edge_reviews": [],
         "comparison_reviews": [],
-        "review_receipt": {
-            "schema_version": 1,
-            "receipt_type": "github_protected_independent_comparison_review",
-            "review_baseline_hash": (
-                "22ae0f083546a84fae03ceb7fd33690c22f554de4334de2e6f39a2402c6127eb"
-            ),
-            "approved_sha": "a" * 40,
-            "github_run_id": "9001",
-            "github_environment": "maimemo-independent-comparison-review",
-            "deployment_status": "success",
-        },
     }
     independent_review["review_hash"] = learning_review_hash(independent_review)
     approval = {
@@ -107,17 +96,6 @@ def reviewed_fixture(record, resolution):
         ],
         "edge_reviews": [],
         "comparison_reviews": [],
-        "review_receipt": {
-            "schema_version": 1,
-            "receipt_type": "github_protected_independent_comparison_review",
-            "review_baseline_hash": (
-                "22ae0f083546a84fae03ceb7fd33690c22f554de4334de2e6f39a2402c6127eb"
-            ),
-            "approved_sha": "a" * 40,
-            "github_run_id": "9001",
-            "github_environment": "maimemo-independent-comparison-review",
-            "deployment_status": "success",
-        },
     }
     independent_review["review_hash"] = learning_review_hash(independent_review)
     approval = {

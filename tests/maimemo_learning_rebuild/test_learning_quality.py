@@ -100,25 +100,6 @@ STANDARD_COMPARISON_REVIEW = {
     ),
     "edge_subject_ids": [STANDARD_EDGE_REVIEW["subject_id"]],
 }
-EMPTY_REVIEW_RECEIPT = {
-    "schema_version": 1,
-    "receipt_type": "github_protected_independent_comparison_review",
-    "review_baseline_hash": (
-        "22ae0f083546a84fae03ceb7fd33690c22f554de4334de2e6f39a2402c6127eb"
-    ),
-    "approved_sha": "a" * 40,
-    "github_run_id": "9001",
-    "github_environment": "maimemo-independent-comparison-review",
-    "deployment_status": "success",
-}
-STANDARD_REVIEW_RECEIPT = {
-    **EMPTY_REVIEW_RECEIPT,
-    "review_baseline_hash": (
-        "d07a8e79c4d3ffb8e6b603401ad01118f9b54d6404c96b646e4b1db698acedda"
-    ),
-}
-
-
 def edge_review():
     return copy.deepcopy(STANDARD_EDGE_REVIEW)
 
@@ -127,7 +108,7 @@ def comparison_review():
     return copy.deepcopy(STANDARD_COMPARISON_REVIEW)
 
 
-def empty_review(edge_reviews=None, comparison_reviews=None, review_receipt=None):
+def empty_review(edge_reviews=None, comparison_reviews=None):
     has_edges = edge_reviews is not None
     return {
         "complete": True,
@@ -138,11 +119,6 @@ def empty_review(edge_reviews=None, comparison_reviews=None, review_receipt=None
             comparison_reviews
             if comparison_reviews is not None
             else ([comparison_review()] if has_edges else [])
-        ),
-        "review_receipt": copy.deepcopy(
-            review_receipt
-            if review_receipt is not None
-            else (STANDARD_REVIEW_RECEIPT if has_edges else EMPTY_REVIEW_RECEIPT)
         ),
     }
 
@@ -183,12 +159,6 @@ class LearningQualityTests(unittest.TestCase):
             }
         )
         review = empty_review([copied])
-        review.pop("review_receipt")
-
-        self.assertIn(
-            "protected independent comparison review receipt required",
-            validate_independent_review(review),
-        )
         self.assertIn(
             "comparison edge review lacks source anchors: "
             + STANDARD_EDGE_REVIEW["subject_id"],
@@ -229,22 +199,26 @@ class LearningQualityTests(unittest.TestCase):
             with self.subTest(group=group, edge=edge):
                 self.assertEqual("", comparison_edge_subject_id(group, edge))
 
-    def test_external_review_receipt_binds_exact_review_baseline(self):
-        review = empty_review([edge_review()])
-        self.assertEqual([], validate_independent_review(review))
+    def test_review_json_cannot_claim_protected_github_authority(self):
+        legacy = empty_review()
+        structural = dict(legacy)
+        self.assertEqual([], validate_independent_review(structural))
 
-        changed = copy.deepcopy(review)
-        changed["edge_reviews"][0]["left_focus"] += "（同生成器改写）"
-        self.assertIn(
-            "independent comparison review receipt baseline mismatch",
-            validate_independent_review(changed),
-        )
-
-        self_certified = copy.deepcopy(review)
-        self_certified["same_builder_attests_independence"] = True
+        forged_authority = {
+            **structural,
+            "review_receipt": {
+                "schema_version": 1,
+                "receipt_type": "github_protected_independent_comparison_review",
+                "review_baseline_hash": "f" * 64,
+                "approved_sha": "f" * 40,
+                "github_run_id": "999999",
+                "github_environment": "maimemo-independent-comparison-review",
+                "deployment_status": "success",
+            },
+        }
         self.assertIn(
             "independent learning review is incomplete",
-            validate_independent_review(self_certified),
+            validate_independent_review(forged_authority),
         )
 
     def test_flags_paraphrased_meaning_and_feature(self):

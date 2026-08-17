@@ -220,12 +220,31 @@ class ReleaseEnvironmentTests(unittest.TestCase):
 
     def test_task7_opens_client_from_the_validated_environment_only(self):
         env = TrackingEnvironment(complete_environment())
-        with patch.object(os, "environ", env):
+        with patch.object(os, "environ", env), patch(
+            "maimemo_learning_rebuild.release_quality_gate."
+            "_revalidate_protected_quality_capability",
+            return_value=None,
+        ):
             validation = validate_release_environment(manifest(), receipt())
-            client = _create_protected_client(manifest(), validation)
+            client = _create_protected_client(manifest(), validation, object())
 
         self.assertEqual("MAIMEMO_API_TOKEN", env.reads[-1])
         self.assertEqual(manifest()["deck"]["id"], client.deck_id)
+
+    def test_invalid_quality_capability_blocks_before_token_lookup(self):
+        env = TrackingEnvironment(complete_environment())
+        with patch.object(os, "environ", env):
+            validation = validate_release_environment(manifest(), receipt())
+            try:
+                _create_protected_client(manifest(), validation, object())
+            except Exception as error:
+                caught = error
+            else:
+                self.fail("unprotected quality input opened the client")
+
+        self.assertIsInstance(caught, RuntimeError)
+        self.assertIn("protected current-environment review", str(caught))
+        self.assertNotIn("MAIMEMO_API_TOKEN", env.reads)
 
     def test_inputs_are_copied_before_client_is_opened(self):
         approved = receipt()
@@ -322,7 +341,22 @@ class ReleaseEnvironmentTests(unittest.TestCase):
             capability = validate_github_receipt(receipt(current), current)
 
         with patch.object(os, "environ", replacement), self.assertRaisesRegex(
-            RuntimeError, "protected GitHub Actions environment required"
+            RuntimeError, "protected release environment mapping changed"
+        ):
+            open_protected_client(capability)
+
+        self.assertNotIn("MAIMEMO_API_TOKEN", original.reads)
+        self.assertNotIn("MAIMEMO_API_TOKEN", replacement.reads)
+
+    def test_same_content_environment_mapping_replacement_is_not_authority(self):
+        current = manifest()
+        original = TrackingEnvironment(complete_environment(current))
+        replacement = TrackingEnvironment(complete_environment(current))
+        with patch.object(os, "environ", original):
+            capability = validate_github_receipt(receipt(current), current)
+
+        with patch.object(os, "environ", replacement), self.assertRaisesRegex(
+            RuntimeError, "protected release environment mapping changed"
         ):
             open_protected_client(capability)
 

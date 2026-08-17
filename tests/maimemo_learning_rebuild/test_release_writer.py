@@ -372,7 +372,11 @@ class ReleaseWriterTests(unittest.TestCase):
             events.append("validated")
             return {"ok": True}
 
-        def construct(manifest_value, validation):
+        def validate_quality(release_dir):
+            events.append("quality")
+            return object()
+
+        def construct(manifest_value, validation, quality_capability):
             events.append("client")
             return object()
 
@@ -386,6 +390,11 @@ class ReleaseWriterTests(unittest.TestCase):
                 side_effect=validate,
             ),
             patch(
+                "maimemo_learning_rebuild.release_writer._validate_protected_release_quality",
+                side_effect=validate_quality,
+                create=True,
+            ),
+            patch(
                 "maimemo_learning_rebuild.release_writer._create_protected_client",
                 side_effect=construct,
             ),
@@ -397,7 +406,7 @@ class ReleaseWriterTests(unittest.TestCase):
         ):
             exit_code = main(arguments)
 
-        self.assertEqual(["validated", "client"], events)
+        self.assertEqual(["validated", "quality", "client"], events)
         self.assertEqual(1, exit_code)
 
     def test_cli_validation_failure_never_constructs_client_and_redacts_token(self):
@@ -431,6 +440,39 @@ class ReleaseWriterTests(unittest.TestCase):
         construct.assert_not_called()
         self.assertNotIn("secret-token", error_output.getvalue())
         self.assertIn("[REDACTED]", error_output.getvalue())
+
+    def test_quality_authorization_failure_never_constructs_client(self):
+        arguments = [
+            "--release-dir",
+            "release",
+            "--approval-receipt",
+            "receipt.json",
+            "--journal",
+            "journal.jsonl",
+        ]
+        with (
+            patch(
+                "maimemo_learning_rebuild.release_writer._load_frozen_release",
+                return_value=({"release_hash": "a" * 64}, []),
+            ),
+            patch(
+                "maimemo_learning_rebuild.release_writer._validate_release_environment",
+                return_value={"ok": True},
+            ),
+            patch(
+                "maimemo_learning_rebuild.release_writer._validate_protected_release_quality",
+                side_effect=RuntimeError("forged review authority"),
+                create=True,
+            ),
+            patch(
+                "maimemo_learning_rebuild.release_writer._create_protected_client"
+            ) as construct,
+            redirect_stderr(StringIO()),
+        ):
+            exit_code = main(arguments)
+
+        self.assertEqual(1, exit_code)
+        construct.assert_not_called()
 
     def test_frozen_loader_rejects_byte_drift(self):
         file_names = {
