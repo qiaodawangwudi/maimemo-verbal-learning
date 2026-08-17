@@ -53,6 +53,16 @@ class PlanningTests(unittest.TestCase):
                 "投鼠忌器": "投鼠忌器要求顾忌行动会伤及关联对象，题干没有关联对象。"
             },
             "transfer_rule": "先判断是停止必要行动，还是因顾忌关联对象而不敢行动。",
+            "uniqueness_rationale": "停止必要行动是决定性线索，只支持因噎废食。",
+            "construction": {
+                "mode": "authored",
+                "semantic_basis": [
+                    "因噎废食::课程义::001",
+                    "投鼠忌器::课程义::001",
+                ],
+                "source_basis": [],
+                "construction_note": "依据核定词义和最小差别自主创作。",
+            },
         }
         review = {"complete": True, "applications": [application]}
 

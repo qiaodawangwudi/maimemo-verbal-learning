@@ -23,6 +23,13 @@ class LayeredRenderTests(unittest.TestCase):
                 "投鼠忌器": "投鼠忌器要求顾忌行动会牵连旁人旁物，题干不存在被牵连的关联对象。"
             },
             "transfer_rule": "先找行为结果；停止必要行动对应因噎废食，因顾忌关联对象而不敢行动对应投鼠忌器。",
+            "uniqueness_rationale": "停止本应继续的改革是决定性线索，只有因噎废食符合。",
+            "construction": {
+                "mode": "authored",
+                "semantic_basis": ["因噎废食::课程义::001"],
+                "source_basis": [],
+                "construction_note": "依据核定词义与辨析边界自主创作。",
+            },
         }
 
         rendered = render_application_card(application)
@@ -37,6 +44,8 @@ class LayeredRenderTests(unittest.TestCase):
         self.assertIn("【为什么匹配】", back)
         self.assertIn("【排除投鼠忌器】", back)
         self.assertIn("【迁移规则】", back)
+        self.assertIn("【答案唯一性】", back)
+        self.assertIn("【题目性质】]自主创作", back)
 
     def test_frozen_examples_cover_the_three_approved_groups(self):
         path = (

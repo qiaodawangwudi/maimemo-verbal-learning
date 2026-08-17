@@ -50,6 +50,16 @@ def render_application_card(application: dict) -> str:
         [
             "",
             _line("【迁移规则】", str(application["transfer_rule"])),
+            "",
+            _line("【答案唯一性】", str(application["uniqueness_rationale"])),
+            "",
+            _line(
+                "【题目性质】",
+                {
+                    "authored": "自主创作",
+                    "adapted": "原题改编",
+                }[application["construction"]["mode"]],
+            ),
         ]
     )
     return "\n".join(lines).rstrip()

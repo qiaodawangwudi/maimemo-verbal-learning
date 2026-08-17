@@ -24,6 +24,8 @@ class ApplicationCandidateTests(unittest.TestCase):
         self.assertEqual("因噎废食", candidates[0]["answer"])
         self.assertEqual("课程原文", candidates[0]["source"])
         self.assertEqual("P17", candidates[0]["location"])
+        self.assertTrue(candidates[0]["source_material_only"])
+        self.assertFalse(candidates[0]["formal_prompt_eligible"])
 
     def test_rejects_definition_lecture_and_sentences_leaking_another_option(self):
         record = {

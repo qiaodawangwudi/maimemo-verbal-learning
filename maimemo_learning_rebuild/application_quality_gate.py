@@ -11,6 +11,17 @@ from pathlib import Path
 
 SUBJECT_TYPES = {"semantic", "comparison_group"}
 DECISIONS = {"create", "not_needed"}
+CONSTRUCTION_MODES = {"authored", "adapted"}
+CLASSROOM_SPEECH = (
+    "咱们",
+    "同学们",
+    "对不对",
+    "来看一下",
+    "可以吧",
+    "可以吗",
+    "这个词",
+    "选项的侧重点",
+)
 
 
 def _text(value: object) -> str:
@@ -44,7 +55,7 @@ def _expected_subjects(registry: dict, groups: dict) -> dict[str, set[str]]:
     }
 
 
-def _validate_application_card(card: dict) -> list[str]:
+def _validate_application_card(card: dict, source_quotes: set[str]) -> list[str]:
     errors: list[str] = []
     title = _text(card.get("title"))
     payload = card.get("application") or {}
@@ -53,11 +64,17 @@ def _validate_application_card(card: dict) -> list[str]:
     answer = _text(payload.get("answer"))
     clues = [_text(clue) for clue in payload.get("clue_extraction", []) if _text(clue)]
     rejections = payload.get("distractor_rejections") or {}
+    construction = payload.get("construction") or {}
 
     if not title.startswith("语境应用｜"):
         errors.append(f"application card has invalid title: {title}")
     if len(prompt) < 18:
         errors.append(f"application card lacks usable context: {title}")
+    if any(marker in prompt for marker in CLASSROOM_SPEECH):
+        errors.append(f"application card contains classroom speech: {title}")
+    normalized_prompt = "".join(prompt.split())
+    if normalized_prompt and normalized_prompt in source_quotes:
+        errors.append(f"application card copies source wording: {title}")
     if len(options) < 2 or len(set(options)) != len(options):
         errors.append(f"application card lacks valid options: {title}")
     if not answer or answer not in options:
@@ -71,6 +88,20 @@ def _validate_application_card(card: dict) -> list[str]:
         errors.append(f"application card lacks distractor rejection: {title}")
     if len(_text(payload.get("transfer_rule"))) < 12:
         errors.append(f"application card lacks transfer rule: {title}")
+    if len(_text(payload.get("uniqueness_rationale"))) < 12:
+        errors.append(f"application card lacks uniqueness rationale: {title}")
+    mode = _text(construction.get("mode"))
+    if mode not in CONSTRUCTION_MODES:
+        errors.append(f"application card uses unsupported construction mode: {title}")
+    semantic_basis = [
+        _text(item) for item in construction.get("semantic_basis", []) if _text(item)
+    ]
+    if not semantic_basis:
+        errors.append(f"application card lacks semantic construction basis: {title}")
+    if len(_text(construction.get("construction_note"))) < 12:
+        errors.append(f"application card lacks construction note: {title}")
+    if mode == "adapted" and not construction.get("source_basis"):
+        errors.append(f"adapted application card lacks source basis: {title}")
     return errors
 
 
@@ -85,6 +116,12 @@ def evaluate_application_gate(
 
     errors: list[str] = []
     expected = _expected_subjects(registry, groups)
+    source_quotes = {
+        "".join(_text(evidence.get("quote")).split())
+        for record in registry.get("records", [])
+        for evidence in record.get("evidence", [])
+        if _text(evidence.get("quote"))
+    }
     decisions = review.get("decisions", []) if isinstance(review, dict) else []
 
     if not review.get("complete"):
@@ -157,7 +194,7 @@ def evaluate_application_gate(
     for title in sorted(actual_titles - create_titles):
         errors.append(f"application card has no approved decision: {title}")
     for card in application_cards:
-        errors.extend(_validate_application_card(card))
+        errors.extend(_validate_application_card(card, source_quotes))
     return errors
 
 

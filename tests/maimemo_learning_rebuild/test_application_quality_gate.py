@@ -28,6 +28,16 @@ def application_card(title: str) -> dict:
                 "投鼠忌器": "投鼠忌器要求顾忌行动会伤及关联对象，题干没有关联对象。"
             },
             "transfer_rule": "先判断结果是停止必要行动，还是因顾忌关联对象而不敢行动。",
+            "uniqueness_rationale": "停止全部必要行动是决定性线索，只支持因噎废食。",
+            "construction": {
+                "mode": "authored",
+                "semantic_basis": [
+                    "因噎废食::课程义::001",
+                    "投鼠忌器::课程义::001",
+                ],
+                "source_basis": [],
+                "construction_note": "依据核定词义和最小差别自主创作书面语境。",
+            },
         },
     }
 
@@ -154,6 +164,94 @@ class ApplicationQualityGateTests(unittest.TestCase):
         self.assertIn(f"application card lacks fit reasoning: {title}", errors)
         self.assertIn(f"application card lacks distractor rejection: {title}", errors)
         self.assertIn(f"application card lacks transfer rule: {title}", errors)
+
+    def test_rejects_raw_spoken_prompt_and_unsupported_construction_mode(self):
+        title = "语境应用｜因噎废食、投鼠忌器｜风险触发"
+        review = {
+            "complete": True,
+            "decisions": [
+                {
+                    "subject_type": "semantic",
+                    "subject_id": "因噎废食::课程义::001",
+                    "decision": "not_needed",
+                    "reason": "该词的独立误用边界已由同组语境训练覆盖，无需重复建卡。",
+                },
+                {
+                    "subject_type": "semantic",
+                    "subject_id": "投鼠忌器::课程义::001",
+                    "decision": "not_needed",
+                    "reason": "该词的独立误用边界已由同组语境训练覆盖，无需重复建卡。",
+                },
+                {
+                    "subject_type": "comparison_group",
+                    "subject_id": "g-risk",
+                    "decision": "create",
+                    "reason": "只有放进风险触发和关联对象不同的语境，才能训练二者的选择。",
+                    "training_goal": "区分停止必要行动与顾忌关联对象。",
+                    "card_title": title,
+                },
+            ],
+        }
+        card = application_card(title)
+        card["application"]["prompt"] = "同学们，咱们来看一下，这道题选因噎废食对不对？"
+        card["application"]["construction"]["mode"] = "raw_transcript"
+
+        errors = evaluate_application_gate(
+            self.registry,
+            self.groups,
+            review,
+            {"cards": [card]},
+            bound_plan(review, [title]),
+        )
+
+        self.assertIn(f"application card uses unsupported construction mode: {title}", errors)
+        self.assertIn(f"application card contains classroom speech: {title}", errors)
+
+    def test_rejects_unadapted_source_sentence_and_missing_uniqueness_rationale(self):
+        title = "语境应用｜因噎废食、投鼠忌器｜风险触发"
+        source_sentence = "某地因担心改革出错，索性停止本应继续推进的改革。"
+        self.registry["records"][0]["evidence"] = [
+            {"source": "原题", "location": "P1", "quote": source_sentence}
+        ]
+        review = {
+            "complete": True,
+            "decisions": [
+                {
+                    "subject_type": "semantic",
+                    "subject_id": "因噎废食::课程义::001",
+                    "decision": "not_needed",
+                    "reason": "该词的独立误用边界已由同组语境训练覆盖，无需重复建卡。",
+                },
+                {
+                    "subject_type": "semantic",
+                    "subject_id": "投鼠忌器::课程义::001",
+                    "decision": "not_needed",
+                    "reason": "该词的独立误用边界已由同组语境训练覆盖，无需重复建卡。",
+                },
+                {
+                    "subject_type": "comparison_group",
+                    "subject_id": "g-risk",
+                    "decision": "create",
+                    "reason": "只有放进风险触发和关联对象不同的语境，才能训练二者的选择。",
+                    "training_goal": "区分停止必要行动与顾忌关联对象。",
+                    "card_title": title,
+                },
+            ],
+        }
+        card = application_card(title)
+        card["application"]["prompt"] = source_sentence
+        card["application"]["uniqueness_rationale"] = ""
+
+        errors = evaluate_application_gate(
+            self.registry,
+            self.groups,
+            review,
+            {"cards": [card]},
+            bound_plan(review, [title]),
+        )
+
+        self.assertIn(f"application card copies source wording: {title}", errors)
+        self.assertIn(f"application card lacks uniqueness rationale: {title}", errors)
 
     def test_accepts_complete_review_and_explanatory_application_card(self):
         title = "语境应用｜因噎废食、投鼠忌器｜风险触发"

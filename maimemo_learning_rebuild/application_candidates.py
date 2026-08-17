@@ -63,6 +63,8 @@ def extract_context_candidates(record: dict, option_terms: list[str]) -> list[di
                 {
                     "candidate_id": candidate_id,
                     "status": "pending",
+                    "source_material_only": True,
+                    "formal_prompt_eligible": False,
                     "prompt": prompt,
                     "answer": term,
                     "options": list(option_terms),
@@ -128,7 +130,7 @@ def build_candidate_queue(registry: dict, groups: dict) -> dict:
     return {
         "schema_version": 1,
         "complete": False,
-        "warning": "机器提取结果只能进入待审队列，禁止直接生成正式应用卡。",
+        "warning": "这是原始语境素材索引，不是应用题候选成品；必须理解词义后自主创作或深度改编，禁止直接生成正式应用卡。",
         "totals": {
             "comparison_groups": len(group_queue),
             "comparison_groups_with_candidates": sum(
