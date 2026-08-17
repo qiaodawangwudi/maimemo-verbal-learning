@@ -5,6 +5,7 @@ from __future__ import annotations
 import hashlib
 import json
 import re
+from collections import Counter
 from difflib import SequenceMatcher
 
 from .groups import comparison_edge_subject_id, has_reviewed_contrast_contract
@@ -39,6 +40,18 @@ _DISCOURSE_FILLERS = (
     "并且",
     "并",
 )
+_COPY_CONCEPT_EQUIVALENCE_GROUPS = (
+    ("害怕", "担心", "惧怕", "畏惧"),
+    ("停止", "终止", "中止", "停下"),
+    ("本来", "原本", "本应"),
+    ("顾忌", "顾虑"),
+    ("伤及", "伤害", "牵连"),
+    ("采取", "实施", "进行"),
+    ("行动", "动作", "举措"),
+    ("关联对象", "相关对象", "关联事物"),
+    ("继续", "持续", "推进"),
+)
+_COPY_NGRAM_COVERAGE = ((1, 0.85), (2, 0.75), (3, 0.65))
 
 
 def _text(value: object) -> str:
@@ -76,14 +89,50 @@ def _near_duplicate(left: object, right: object) -> bool:
     return SequenceMatcher(None, normalized_left, normalized_right).ratio() >= 0.8
 
 
+def _normalize_copy_concepts(value: object) -> str:
+    """Apply the explicit, reviewable equivalence lexicon used by copy checks."""
+
+    normalized = _normalize_for_flagging(value)
+    for group in _COPY_CONCEPT_EQUIVALENCE_GROUPS:
+        canonical = group[0]
+        for variant in sorted(group[1:], key=len, reverse=True):
+            normalized = normalized.replace(variant, canonical)
+    return normalized
+
+
+def _ngram_multiset_coverage(required: str, observed: str, width: int) -> float:
+    """Return order-insensitive coverage of required n-grams in observed text."""
+
+    if len(required) < width or len(observed) < width:
+        return 0.0
+    required_counts = Counter(
+        required[index : index + width]
+        for index in range(len(required) - width + 1)
+    )
+    observed_counts = Counter(
+        observed[index : index + width]
+        for index in range(len(observed) - width + 1)
+    )
+    matched = sum((required_counts & observed_counts).values())
+    return matched / sum(required_counts.values())
+
+
 def _copies_definition(edge_text: object, definition: object) -> bool:
     """Detect a definition copied whole or with only a small local rewrite."""
 
-    normalized_edge = _normalize_for_flagging(edge_text)
-    normalized_definition = _normalize_for_flagging(definition)
+    normalized_edge = _normalize_copy_concepts(edge_text)
+    normalized_definition = _normalize_copy_concepts(definition)
     if len(normalized_definition) < 6 or not normalized_edge:
         return False
     if normalized_definition in normalized_edge:
+        return True
+    if all(
+        _ngram_multiset_coverage(
+            normalized_definition, normalized_edge, width
+        )
+        >= threshold
+        for width, threshold in _COPY_NGRAM_COVERAGE
+    ):
         return True
 
     matcher = SequenceMatcher(None, normalized_definition, normalized_edge)

@@ -241,6 +241,38 @@ class ReleaseMutationTests(unittest.TestCase):
                 "也就是说，因顾忌伤关联对象不敢采取行动。",
             ),
             (
+                "left definition with two synonym substitutions",
+                "因担心出问题而终止本来应该继续的行动。",
+            ),
+            (
+                "left definition with three synonym substitutions",
+                "因担心出问题而终止原本应该继续的行动。",
+            ),
+            (
+                "reordered left definition",
+                "本来应该继续的行动因害怕出问题而停止。",
+            ),
+            (
+                "rephrased reordered left definition",
+                "停止本来应该继续的行动，原因是害怕出问题。",
+            ),
+            (
+                "wrapped left synonyms and reorder",
+                "二者差异在于：原本应该继续的行动因担心出问题而终止。",
+            ),
+            (
+                "right definition with synonym substitutions",
+                "因顾虑伤害关联对象而不敢实施行动。",
+            ),
+            (
+                "reordered right definition",
+                "不敢采取行动，是因顾忌伤及关联对象。",
+            ),
+            (
+                "wrapped right synonyms and reorder",
+                "也就是说，不敢实施行动是因顾虑伤害关联对象。",
+            ),
+            (
                 "concatenated features",
                 "结果是把必要行动整体停止；顾忌点落在行动可能牵连的对象。",
             ),
@@ -265,6 +297,21 @@ class ReleaseMutationTests(unittest.TestCase):
                 "shared concern vocabulary with two objects",
                 "二词都含有因顾虑而停止动作；因噎废食落在本应继续的事项被放弃，"
                 "投鼠忌器落在保护可能被牵连的对象。",
+            ),
+            (
+                "synonym-heavy but explicit two landings",
+                "二词都源于担心后果；因噎废食终止的是必要行动本身，"
+                "投鼠忌器保护的是会被伤害的关联对象。",
+            ),
+            (
+                "shared stopping action but different cause objects",
+                "停止行动只是共同表象；因噎废食把小风险当成放弃必要事项的理由，"
+                "投鼠忌器则顾虑实施行动会伤及特定对象。",
+            ),
+            (
+                "compact contrast retaining key definition phrase",
+                "因噎废食会停止本来应该继续的行动，落点是必要事项被放弃；"
+                "投鼠忌器即使暂不行动，落点仍是避免牵连关联对象。",
             ),
         )
         for label, text in genuine_cases:
