@@ -1006,6 +1006,16 @@ def _load_frozen_release(release_dir):
                 raise RuntimeError(
                     f"frozen action binding drift: {frozen.get('stable_card_key', '')}"
                 )
+        content = frozen.get("content")
+        expected_content_hash = (
+            hashlib.sha256(content.encode("utf-8")).hexdigest()
+            if isinstance(content, str)
+            else ""
+        )
+        if action.get("content_hash") != expected_content_hash:
+            raise RuntimeError(
+                f"frozen action content drift: {frozen.get('stable_card_key', '')}"
+            )
         cards.append(dict(frozen))
     return manifest, FrozenCards(cards, snapshot)
 

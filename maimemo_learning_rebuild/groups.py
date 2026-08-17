@@ -3,7 +3,9 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
+import re
 from pathlib import Path
 
 from .models import validate_group_record
@@ -26,12 +28,27 @@ _OBJECT_LEVEL_CONTRAST_FIELDS = (
 
 
 def comparison_edge_subject_id(group: dict, edge: dict) -> str:
-    group_id = str(group.get("group_id") or "").strip()
-    left = str(edge.get("left") or "").strip()
-    right = str(edge.get("right") or "").strip()
-    if not group_id or not left or not right:
+    components = {
+        "group_id": group.get("group_id"),
+        "left": edge.get("left"),
+        "right": edge.get("right"),
+    }
+    if any(
+        type(value) is not str
+        or not value
+        or value != value.strip()
+        or len(value) > 256
+        or re.search(r"[\x00-\x1f\x7f]", value)
+        for value in components.values()
+    ):
         return ""
-    return f"{group_id}:{left}:{right}"
+    canonical = json.dumps(
+        {"kind": "comparison_edge", "version": 1, **components},
+        ensure_ascii=False,
+        sort_keys=True,
+        separators=(",", ":"),
+    )
+    return "edge-v1-" + hashlib.sha256(canonical.encode("utf-8")).hexdigest()
 
 
 def has_reviewed_contrast_contract(edge: dict) -> bool:

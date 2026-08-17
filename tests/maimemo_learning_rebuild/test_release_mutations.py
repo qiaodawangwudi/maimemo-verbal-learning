@@ -23,6 +23,7 @@ from maimemo_learning_rebuild.release_writer import (
     execute_release,
 )
 from tests.maimemo_learning_rebuild.test_learning_quality import (
+    STANDARD_EDGE_REVIEW,
     edge_review,
     empty_review,
     ready_group,
@@ -129,7 +130,7 @@ def _comparison_quality(text: str) -> list[str]:
     group = ready_group()
     group["minimum_differences"][0]["text"] = text
     return evaluate_learning_quality(
-        [left, right], [group], empty_review([edge_review(group)])
+        [left, right], [group], empty_review([edge_review()])
     )
 
 
@@ -214,7 +215,7 @@ class ReleaseMutationTests(unittest.TestCase):
         )
         omitted_error = (
             "minimum difference omits reviewed observation: "
-            "g-risk:因噎废食:投鼠忌器.contrast_axis"
+            f"{STANDARD_EDGE_REVIEW['subject_id']}.contrast_axis"
         )
         copied_cases = (
             (

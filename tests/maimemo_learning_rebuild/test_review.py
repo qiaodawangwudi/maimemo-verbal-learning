@@ -69,6 +69,18 @@ class RegistryReviewTests(unittest.TestCase):
             "reviewer_context_isolated": True,
             "resolutions": [],
             "edge_reviews": [],
+            "comparison_reviews": [],
+            "review_receipt": {
+                "schema_version": 1,
+                "receipt_type": "github_protected_independent_comparison_review",
+                "review_baseline_hash": (
+                    "22ae0f083546a84fae03ceb7fd33690c22f554de4334de2e6f39a2402c6127eb"
+                ),
+                "approved_sha": "a" * 40,
+                "github_run_id": "9001",
+                "github_environment": "maimemo-independent-comparison-review",
+                "deployment_status": "success",
+            },
         }
 
         report = review_registry([], {"sources": []}, [group], review)

@@ -32,6 +32,8 @@ INDEPENDENT_REVIEW_FIELDS = {
     "reviewer_context_isolated",
     "resolutions",
     "edge_reviews",
+    "comparison_reviews",
+    "review_receipt",
     "semantic_registry_hash",
     "group_registry_hash",
     "review_hash",
@@ -76,11 +78,71 @@ def _quality_report_errors(quality_reports: object) -> list[str]:
     return errors
 
 
+def _frozen_comparison_review_errors(
+    cards: list[dict], manifest: dict, review: dict
+) -> list[str]:
+    errors: list[str] = []
+    final_comparisons = [
+        card
+        for card in cards
+        if isinstance(card, dict) and card.get("card_type") == "comparison"
+    ]
+    comparison_reviews = review.get("comparison_reviews")
+    if not isinstance(comparison_reviews, list):
+        comparison_reviews = []
+    reviews_by_key: dict[str, list[dict]] = {}
+    for comparison_review in comparison_reviews:
+        if not isinstance(comparison_review, dict):
+            continue
+        stable_key = comparison_review.get("stable_card_key")
+        if isinstance(stable_key, str) and stable_key:
+            reviews_by_key.setdefault(stable_key, []).append(comparison_review)
+    frozen_keys: set[str] = set()
+    route = manifest.get("chapter_routes", {}).get("comparison", {})
+    for card in final_comparisons:
+        stable_key = card.get("stable_card_key")
+        if not isinstance(stable_key, str) or not stable_key:
+            continue
+        frozen_keys.add(stable_key)
+        matches = reviews_by_key.get(stable_key, [])
+        if len(matches) != 1:
+            errors.append(
+                f"frozen comparison missing independent review: {stable_key}"
+            )
+            continue
+        comparison_review = matches[0]
+        content = card.get("content")
+        content_digest = (
+            hashlib.sha256(content.encode("utf-8")).hexdigest()
+            if isinstance(content, str)
+            else ""
+        )
+        expected = {
+            "stable_card_key": stable_key,
+            "card_type": "comparison",
+            "route_id": route.get("id"),
+            "route_name": route.get("name"),
+            "title": card.get("title"),
+            "final_content_hash": content_digest,
+        }
+        if any(
+            comparison_review.get(field) != value
+            for field, value in expected.items()
+        ):
+            errors.append(f"reviewed comparison output mismatch: {stable_key}")
+    for stable_key in reviews_by_key:
+        if stable_key not in frozen_keys:
+            errors.append(
+                f"independent comparison review has no frozen card: {stable_key}"
+            )
+    return errors
+
+
 def evaluate_frozen_release_quality(release_dir: Path | str) -> list[str]:
     """Validate bound review evidence and recompute every Task 3 quality check."""
 
     release_dir = Path(release_dir)
-    manifest, _cards = _load_frozen_release(release_dir)
+    manifest, frozen_cards = _load_frozen_release(release_dir)
     semantic_raw, semantic_payload = _payload(release_dir, "semantic_registry")
     group_raw, group_payload = _payload(release_dir, "group_registry")
     _quality_raw, quality_reports = _payload(release_dir, "quality_reports")
@@ -147,6 +209,9 @@ def evaluate_frozen_release_quality(release_dir: Path | str) -> list[str]:
     errors.extend(validate_group_registry(typed_groups, records_by_term))
     if isinstance(review, dict):
         errors.extend(evaluate_learning_quality(typed_records, typed_groups, review))
+        errors.extend(
+            _frozen_comparison_review_errors(list(frozen_cards), manifest, review)
+        )
 
     expected_hashes = manifest.get("artifact_hashes", {})
     if expected_hashes.get("semantic_registry") != _digest(semantic_raw):

@@ -59,7 +59,8 @@
       "route_id": "chapter-comparison",
       "route_name": "近义辨析",
       "action": "create",
-      "card_id": ""
+      "card_id": "",
+      "content_hash": "c271f2bb931810eef633f7c736d1dd934fbd6ed5f62ac8d8ea39ade811190622"
     },
     {
       "stable_card_key": "base:甲",
@@ -68,7 +69,8 @@
       "route_id": "chapter-base",
       "route_name": "基础词义",
       "action": "update",
-      "card_id": "base-1"
+      "card_id": "base-1",
+      "content_hash": "37dcf7a8031fb6b0a0a0f5fb32cf1806ef6fb343ab45167682e556ae70a90ca1"
     },
     {
       "stable_card_key": "base:乙",
@@ -77,7 +79,8 @@
       "route_id": "chapter-base",
       "route_name": "基础词义",
       "action": "unchanged",
-      "card_id": "base-2"
+      "card_id": "base-2",
+      "content_hash": "f76ef0a6a81cc3b3b8cbccc35b99bc0b375b8d3cff224e257d0fbc1f727bca3e"
     },
     {
       "stable_card_key": "application:甲、乙:差别",
@@ -86,7 +89,8 @@
       "route_id": "chapter-application",
       "route_name": "语境应用",
       "action": "create",
-      "card_id": ""
+      "card_id": "",
+      "content_hash": "1fe289205936c3fdb61158223892c7a8bee6ff4dfa085ea1c094ce0294e32114"
     }
   ]
 }

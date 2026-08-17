@@ -187,6 +187,20 @@ def replace_json_artifact(manifest, current_artifacts, key, payload):
 
 
 class ReleaseManifestTests(unittest.TestCase):
+    def test_action_plan_binds_exact_frozen_content_hash(self):
+        current_artifacts = artifacts()
+        manifest = complete_manifest()
+        plan = json.loads(current_artifacts["action_plan"].decode("utf-8"))
+        plan["actions"][0]["content_hash"] = hashlib.sha256(
+            b"recomputed attacker comparison"
+        ).hexdigest()
+        replace_json_artifact(manifest, current_artifacts, "action_plan", plan)
+
+        self.assertIn(
+            "frozen card content hash mismatch: comparison:甲、乙",
+            validate_release_manifest(manifest, current_artifacts),
+        )
+
     def test_authorized_envelope_validator_requires_strict_marker_lineage_and_self_hash(self):
         authorized, _ = release_at("authorized")
 

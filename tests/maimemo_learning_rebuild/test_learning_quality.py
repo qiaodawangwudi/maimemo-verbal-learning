@@ -6,6 +6,7 @@ from maimemo_learning_rebuild.learning_quality import (
     learning_review_hash,
     validate_independent_review,
 )
+from maimemo_learning_rebuild.groups import comparison_edge_subject_id
 
 
 def ready_record(
@@ -23,12 +24,16 @@ def ready_record(
 
 
 def ready_group():
-    axis = "因噎废食看必要行动是否被放弃；投鼠忌器看是否顾忌牵连对象"
-    left_focus = "因噎废食落点：因小风险放弃必要行动"
-    right_focus = "投鼠忌器落点：为避免牵连特定对象而不行动"
-    selection = "题干强调放弃必要事项选因噎废食；强调保护牵连对象选投鼠忌器"
+    axis = "因噎废食看必要行动整体停止；投鼠忌器看行动可能牵连的对象"
+    left_focus = "因噎废食落点：必要行动整体停止"
+    right_focus = "投鼠忌器落点：行动可能牵连的对象"
+    selection = (
+        "题干强调必要行动整体停止选因噎废食；"
+        "强调行动可能牵连的对象选投鼠忌器"
+    )
     return {
         "group_id": "g-risk",
+        "title": "近义辨析｜因噎废食、投鼠忌器",
         "status": "ready",
         "members": ["因噎废食", "投鼠忌器"],
         "minimum_differences": [
@@ -48,29 +53,200 @@ def ready_group():
     }
 
 
-def edge_review(group=None):
-    group = group or ready_group()
-    edge = group["minimum_differences"][0]
-    return {
-        "subject_id": f"{group['group_id']}:{edge['left']}:{edge['right']}",
-        "contrast_axis": edge["axis"],
-        "left_focus": edge["left_landing"],
-        "right_focus": edge["right_landing"],
-        "question_selection_condition": edge["question_selection_condition"],
-        "reviewer_context_isolated": True,
-    }
+def ready_comparison_records():
+    return [
+        ready_record(
+            term="因噎废食",
+            meaning="因害怕出问题而停止本来应该继续的行动。",
+            distinctive_feature="结果是把必要行动整体停止。",
+        ),
+        ready_record(
+            term="投鼠忌器",
+            meaning="因顾忌伤及关联对象而不敢采取行动。",
+            distinctive_feature="顾忌点落在行动可能牵连的对象。",
+        ),
+    ]
 
 
-def empty_review(edge_reviews=None):
+STANDARD_EDGE_REVIEW = {
+    "subject_id": "edge-v1-d80aa611a12c4a4d637815dfcf83760c803a6ca44a7cd51fbbf31a1c68082942",
+    "comparison_subject_id": (
+        "comparison-v1-03b2f06165f8779a628672bad5e7c44a75429d7625c3ba5e389f08ab76a85efb"
+    ),
+    "group_id": "g-risk",
+    "left": "因噎废食",
+    "right": "投鼠忌器",
+    "left_observation": "必要行动整体停止",
+    "right_observation": "行动可能牵连的对象",
+    "contrast_axis": "因噎废食看必要行动整体停止；投鼠忌器看行动可能牵连的对象",
+    "left_focus": "因噎废食落点：必要行动整体停止",
+    "right_focus": "投鼠忌器落点：行动可能牵连的对象",
+    "question_selection_condition": (
+        "题干强调必要行动整体停止选因噎废食；"
+        "强调行动可能牵连的对象选投鼠忌器"
+    ),
+}
+STANDARD_COMPARISON_REVIEW = {
+    "comparison_subject_id": (
+        "comparison-v1-03b2f06165f8779a628672bad5e7c44a75429d7625c3ba5e389f08ab76a85efb"
+    ),
+    "stable_card_key": "comparison:因噎废食、投鼠忌器",
+    "card_type": "comparison",
+    "route_id": "chapter-comparison",
+    "route_name": "近义辨析",
+    "title": "近义辨析｜因噎废食、投鼠忌器",
+    "final_content_hash": (
+        "94e4c9f96a380b27724c0a0846d3bdfb03a36215ec8f2ae88d67957a463573f1"
+    ),
+    "edge_subject_ids": [STANDARD_EDGE_REVIEW["subject_id"]],
+}
+EMPTY_REVIEW_RECEIPT = {
+    "schema_version": 1,
+    "receipt_type": "github_protected_independent_comparison_review",
+    "review_baseline_hash": (
+        "22ae0f083546a84fae03ceb7fd33690c22f554de4334de2e6f39a2402c6127eb"
+    ),
+    "approved_sha": "a" * 40,
+    "github_run_id": "9001",
+    "github_environment": "maimemo-independent-comparison-review",
+    "deployment_status": "success",
+}
+STANDARD_REVIEW_RECEIPT = {
+    **EMPTY_REVIEW_RECEIPT,
+    "review_baseline_hash": (
+        "d07a8e79c4d3ffb8e6b603401ad01118f9b54d6404c96b646e4b1db698acedda"
+    ),
+}
+
+
+def edge_review():
+    return copy.deepcopy(STANDARD_EDGE_REVIEW)
+
+
+def comparison_review():
+    return copy.deepcopy(STANDARD_COMPARISON_REVIEW)
+
+
+def empty_review(edge_reviews=None, comparison_reviews=None, review_receipt=None):
+    has_edges = edge_reviews is not None
     return {
         "complete": True,
         "reviewer_context_isolated": True,
         "resolutions": [],
         "edge_reviews": list(edge_reviews or []),
+        "comparison_reviews": list(
+            comparison_reviews
+            if comparison_reviews is not None
+            else ([comparison_review()] if has_edges else [])
+        ),
+        "review_receipt": copy.deepcopy(
+            review_receipt
+            if review_receipt is not None
+            else (STANDARD_REVIEW_RECEIPT if has_edges else EMPTY_REVIEW_RECEIPT)
+        ),
     }
 
 
 class LearningQualityTests(unittest.TestCase):
+    def test_self_certified_content_free_edge_review_is_rejected(self):
+        group = ready_group()
+        edge = group["minimum_differences"][0]
+        edge.update(
+            {
+                "axis": "因噎废食与投鼠忌器的辨析轴就是词语不同",
+                "left_landing": "因噎废食的判断落点就是因噎废食本身",
+                "right_landing": "投鼠忌器的判断落点就是投鼠忌器本身",
+                "question_selection_condition": (
+                    "题干出现因噎废食就选因噎废食；"
+                    "出现投鼠忌器就选投鼠忌器"
+                ),
+            }
+        )
+        edge["text"] = "；".join(
+            edge[field]
+            for field in (
+                "axis",
+                "left_landing",
+                "right_landing",
+                "question_selection_condition",
+            )
+        )
+        copied = edge_review()
+        copied.update(
+            {
+                "contrast_axis": edge["axis"],
+                "left_focus": edge["left_landing"],
+                "right_focus": edge["right_landing"],
+                "question_selection_condition": edge[
+                    "question_selection_condition"
+                ],
+            }
+        )
+        review = empty_review([copied])
+        review.pop("review_receipt")
+
+        self.assertIn(
+            "protected independent comparison review receipt required",
+            validate_independent_review(review),
+        )
+        self.assertIn(
+            "comparison edge review lacks source anchors: "
+            + STANDARD_EDGE_REVIEW["subject_id"],
+            evaluate_learning_quality(
+                [
+                    ready_record("因噎废食", "因小失大。", "必要行动被放弃。"),
+                    ready_record("投鼠忌器", "有所顾忌。", "避免牵连对象。"),
+                ],
+                [group],
+                review,
+            ),
+        )
+
+    def test_structured_edge_subject_is_collision_safe_for_colons(self):
+        first = comparison_edge_subject_id(
+            {"group_id": "g"}, {"left": "甲", "right": "乙:丙"}
+        )
+        second = comparison_edge_subject_id(
+            {"group_id": "g:甲"}, {"left": "乙", "right": "丙"}
+        )
+
+        self.assertNotEqual(first, second)
+        self.assertNotIn(":", first)
+        self.assertNotIn(":", second)
+        reversed_edge = comparison_edge_subject_id(
+            {"group_id": "g"}, {"left": "乙:丙", "right": "甲"}
+        )
+        self.assertNotEqual(first, reversed_edge)
+
+        invalid_components = (
+            ({"group_id": ""}, {"left": "甲", "right": "乙"}),
+            ({"group_id": " g"}, {"left": "甲", "right": "乙"}),
+            ({"group_id": "g\x00"}, {"left": "甲", "right": "乙"}),
+            ({"group_id": 1}, {"left": "甲", "right": "乙"}),
+            ({"group_id": "g"}, {"left": "甲", "right": "x" * 257}),
+        )
+        for group, edge in invalid_components:
+            with self.subTest(group=group, edge=edge):
+                self.assertEqual("", comparison_edge_subject_id(group, edge))
+
+    def test_external_review_receipt_binds_exact_review_baseline(self):
+        review = empty_review([edge_review()])
+        self.assertEqual([], validate_independent_review(review))
+
+        changed = copy.deepcopy(review)
+        changed["edge_reviews"][0]["left_focus"] += "（同生成器改写）"
+        self.assertIn(
+            "independent comparison review receipt baseline mismatch",
+            validate_independent_review(changed),
+        )
+
+        self_certified = copy.deepcopy(review)
+        self_certified["same_builder_attests_independence"] = True
+        self.assertIn(
+            "independent learning review is incomplete",
+            validate_independent_review(self_certified),
+        )
+
     def test_flags_paraphrased_meaning_and_feature(self):
         record = ready_record(
             term="固本强基",
@@ -304,26 +480,15 @@ class LearningQualityTests(unittest.TestCase):
         self.assertEqual(
             [],
             evaluate_learning_quality(
-                [], [group], empty_review([edge_review(group)])
+                ready_comparison_records(), [group], empty_review([edge_review()])
             ),
         )
 
     def test_ready_edge_requires_exact_independent_object_review_and_observations(self):
         group = ready_group()
-        subject = "g-risk:因噎废食:投鼠忌器"
-        records = [
-            ready_record(
-                term="因噎废食",
-                meaning="因害怕出问题而停止本来应该继续的行动。",
-                distinctive_feature="结果是把必要行动整体停止。",
-            ),
-            ready_record(
-                term="投鼠忌器",
-                meaning="因顾忌伤及关联对象而不敢采取行动。",
-                distinctive_feature="顾忌点落在行动可能牵连的对象。",
-            ),
-        ]
-        valid_review = empty_review([edge_review(group)])
+        subject = STANDARD_EDGE_REVIEW["subject_id"]
+        records = ready_comparison_records()
+        valid_review = empty_review([edge_review()])
 
         self.assertEqual(
             [], evaluate_learning_quality(records, [group], valid_review)
@@ -333,7 +498,7 @@ class LearningQualityTests(unittest.TestCase):
             evaluate_learning_quality(records, [group], empty_review()),
         )
 
-        mismatched = empty_review([edge_review(group)])
+        mismatched = empty_review([edge_review()])
         mismatched["edge_reviews"][0]["left_focus"] += "（被改动）"
         self.assertIn(
             f"comparison edge independent review mismatch: {subject}.left_focus",
@@ -434,10 +599,11 @@ class LearningQualityTests(unittest.TestCase):
                         "question_selection_condition",
                     )
                 )
-                review = empty_review([edge_review(group)])
+                current_edge_review = edge_review()
+                current_edge_review[review_field] = copied_value
+                review = empty_review([current_edge_review])
                 self.assertIn(
-                    "comparison edge observation copies definition: "
-                    f"g-risk:因噎废食:投鼠忌器.{review_field}",
+                    f"comparison edge review lacks source anchors: {STANDARD_EDGE_REVIEW['subject_id']}",
                     evaluate_learning_quality(records, [group], review),
                 )
 

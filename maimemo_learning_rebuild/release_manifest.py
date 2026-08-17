@@ -196,6 +196,7 @@ ACTION_FIELDS = {
     "route_name",
     "action",
     "card_id",
+    "content_hash",
 }
 ACTION_PLAN_FIELDS = {
     "schema_version",
@@ -372,6 +373,13 @@ def _plan_action_bindings(
             errors.append(f"action card_id is required: {stable_key}")
         if value == "create" and card_id != "":
             errors.append(f"create action card_id must be empty: {stable_key}")
+        content_digest = action.get("content_hash")
+        if (
+            not isinstance(content_digest, str)
+            or len(content_digest) != 64
+            or any(character not in "0123456789abcdef" for character in content_digest)
+        ):
+            errors.append(f"action content_hash is invalid: {stable_key}")
         counts[route][value] += 1
         counts[route]["after"] += 1
         action_counts[value] += 1
@@ -424,6 +432,14 @@ def _release_plan_errors(
         for field in ("title", "card_id"):
             if action.get(field) != card.get(field):
                 errors.append(f"frozen card binding mismatch: {stable_key}.{field}")
+        content = card.get("content")
+        expected_content_hash = (
+            hashlib.sha256(content.encode("utf-8")).hexdigest()
+            if isinstance(content, str)
+            else ""
+        )
+        if action.get("content_hash") != expected_content_hash:
+            errors.append(f"frozen card content hash mismatch: {stable_key}")
     return plan_counts, actual_action_counts, errors
 
 
