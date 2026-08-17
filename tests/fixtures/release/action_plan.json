@@ -23,6 +23,29 @@
     "base": 2,
     "application": 0
   },
+  "route_counts": {
+    "comparison": {
+      "before": 0,
+      "create": 1,
+      "update": 0,
+      "unchanged": 0,
+      "after": 1
+    },
+    "base": {
+      "before": 2,
+      "create": 0,
+      "update": 1,
+      "unchanged": 1,
+      "after": 2
+    },
+    "application": {
+      "before": 0,
+      "create": 1,
+      "update": 0,
+      "unchanged": 0,
+      "after": 1
+    }
+  },
   "action_counts": {
     "create": 2,
     "update": 1,
@@ -30,20 +53,40 @@
   },
   "actions": [
     {
+      "stable_card_key": "comparison:甲、乙",
       "title": "近义辨析｜甲、乙",
-      "action": "create"
+      "card_type": "comparison",
+      "route_id": "chapter-comparison",
+      "route_name": "近义辨析",
+      "action": "create",
+      "card_id": ""
     },
     {
+      "stable_card_key": "base:甲",
       "title": "基础词义｜甲",
-      "action": "update"
+      "card_type": "base",
+      "route_id": "chapter-base",
+      "route_name": "基础词义",
+      "action": "update",
+      "card_id": "base-1"
     },
     {
+      "stable_card_key": "base:乙",
       "title": "基础词义｜乙",
-      "action": "unchanged"
+      "card_type": "base",
+      "route_id": "chapter-base",
+      "route_name": "基础词义",
+      "action": "unchanged",
+      "card_id": "base-2"
     },
     {
+      "stable_card_key": "application:甲、乙:差别",
       "title": "语境应用｜甲、乙｜差别",
-      "action": "create"
+      "card_type": "application",
+      "route_id": "chapter-application",
+      "route_name": "语境应用",
+      "action": "create",
+      "card_id": ""
     }
   ]
 }

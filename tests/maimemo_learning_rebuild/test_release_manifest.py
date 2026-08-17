@@ -1,15 +1,29 @@
 import copy
 import hashlib
 import json
+import tempfile
 import unittest
 from pathlib import Path
 
 
+from maimemo_learning_rebuild import release_manifest as release_manifest_module
 from maimemo_learning_rebuild.release_manifest import (
     build_release_manifest,
     release_hash,
     transition_release_state,
     validate_release_manifest,
+)
+
+
+load_release_manifest_bytes = getattr(
+    release_manifest_module,
+    "load_release_manifest_bytes",
+    lambda raw: {},
+)
+load_release_manifest_file = getattr(
+    release_manifest_module,
+    "load_release_manifest_file",
+    lambda path: {},
 )
 
 
@@ -29,7 +43,39 @@ ARTIFACT_KEYS = (
     "skill_tree",
 )
 ROUTE_KEYS = ("comparison", "base", "application")
-COUNT_KEYS = ("create", "update", "unchanged", "after")
+COUNT_KEYS = ("before", "create", "update", "unchanged", "after")
+PROTECTED_FIELDS = (
+    "schema_version",
+    "release_id",
+    "deck",
+    "chapter_routes",
+    "card_counts",
+    "action_counts",
+    "artifact_hashes",
+)
+STATE_SEQUENCE = (
+    "draft",
+    "plan_frozen",
+    "ci_verified",
+    "awaiting_user_authorization",
+    "authorized",
+    "applied",
+    "verified",
+)
+RECEIPT_KEYS = {
+    "ci_verified": "ci_receipt",
+    "awaiting_user_authorization": "awaiting_user_authorization_receipt",
+    "authorized": "authorization_receipt",
+    "applied": "applied_receipt",
+    "verified": "verification_receipt",
+}
+RECEIPT_TYPES = {
+    "ci_verified": "ci_verified",
+    "awaiting_user_authorization": "awaiting_user_authorization",
+    "authorized": "authorization",
+    "applied": "applied",
+    "verified": "verification",
+}
 
 
 def fixture_bytes(name):
@@ -69,6 +115,65 @@ def refresh_self_hash(manifest):
     return manifest
 
 
+def canonical_bytes(value):
+    return json.dumps(
+        value,
+        ensure_ascii=False,
+        sort_keys=True,
+        separators=(",", ":"),
+        allow_nan=False,
+    ).encode("utf-8")
+
+
+def protected_payload_hash(manifest):
+    payload = {key: manifest[key] for key in PROTECTED_FIELDS}
+    return hashlib.sha256(canonical_bytes(payload)).hexdigest()
+
+
+def frozen_baseline(manifest):
+    return {
+        "receipt_type": "verified_frozen_baseline",
+        "verified": True,
+        "release_id": manifest["release_id"],
+        "protected_payload_hash": protected_payload_hash(manifest),
+        "subject_state": "draft",
+        "subject_release_hash": manifest["release_hash"],
+    }
+
+
+def state_receipt(manifest, target_state):
+    return {
+        "receipt_type": RECEIPT_TYPES[target_state],
+        "verified": True,
+        "release_id": manifest["release_id"],
+        "protected_payload_hash": protected_payload_hash(manifest),
+        "subject_state": manifest["state"],
+        "subject_release_hash": manifest["release_hash"],
+    }
+
+
+def advance_release(manifest, target_state, baseline):
+    evidence = {"frozen_baseline": baseline}
+    if target_state != "plan_frozen":
+        evidence[RECEIPT_KEYS[target_state]] = state_receipt(manifest, target_state)
+    return transition_release_state(manifest, target_state, evidence)
+
+
+def release_at(target_state):
+    manifest = complete_manifest()
+    baseline = frozen_baseline(manifest)
+    for state in STATE_SEQUENCE[1 : STATE_SEQUENCE.index(target_state) + 1]:
+        manifest = advance_release(manifest, state, baseline)
+    return manifest, baseline
+
+
+def replace_json_artifact(manifest, current_artifacts, key, payload):
+    raw = json.dumps(payload, ensure_ascii=False).encode("utf-8")
+    current_artifacts[key] = raw
+    manifest["artifact_hashes"][key] = hashlib.sha256(raw).hexdigest()
+    refresh_self_hash(manifest)
+
+
 class ReleaseManifestTests(unittest.TestCase):
     def test_builds_v2_manifest_with_exact_routes_and_counts(self):
         manifest = complete_manifest()
@@ -81,19 +186,19 @@ class ReleaseManifestTests(unittest.TestCase):
                     "id": "chapter-comparison",
                     "name": "近义辨析",
                     "type": "comparison",
-                    "counts": {"create": 1, "update": 0, "unchanged": 0, "after": 1},
+                    "counts": {"before": 0, "create": 1, "update": 0, "unchanged": 0, "after": 1},
                 },
                 "base": {
                     "id": "chapter-base",
                     "name": "基础词义",
                     "type": "base",
-                    "counts": {"create": 0, "update": 1, "unchanged": 1, "after": 2},
+                    "counts": {"before": 2, "create": 0, "update": 1, "unchanged": 1, "after": 2},
                 },
                 "application": {
                     "id": "chapter-application",
                     "name": "语境应用",
                     "type": "application",
-                    "counts": {"create": 1, "update": 0, "unchanged": 0, "after": 1},
+                    "counts": {"before": 0, "create": 1, "update": 0, "unchanged": 0, "after": 1},
                 },
             },
             manifest["chapter_routes"],
@@ -221,7 +326,8 @@ class ReleaseManifestTests(unittest.TestCase):
             for count_key in COUNT_KEYS:
                 with self.subTest(route=route_key, count=count_key):
                     manifest = complete_manifest()
-                    manifest["chapter_routes"][route_key]["counts"][count_key] += 1
+                    counts = manifest["chapter_routes"][route_key]["counts"]
+                    counts[count_key] = counts.get(count_key, 0) + 1
                     refresh_self_hash(manifest)
                     self.assertIn(
                         f"chapter route count mismatch: {route_key}.{count_key}",
@@ -268,6 +374,98 @@ class ReleaseManifestTests(unittest.TestCase):
             errors,
         )
 
+    def test_equal_count_card_type_swap_cannot_cross_frozen_routes(self):
+        changed_artifacts = artifacts()
+        cards = json.loads(changed_artifacts["final_cards"].decode("utf-8"))
+        comparison = cards["cards"][0]
+        application = cards["cards"][3]
+        comparison["card_type"], application["card_type"] = (
+            application["card_type"],
+            comparison["card_type"],
+        )
+        manifest = complete_manifest()
+        replace_json_artifact(manifest, changed_artifacts, "final_cards", cards)
+
+        errors = validate_release_manifest(manifest, changed_artifacts)
+
+        self.assertIn(
+            "frozen card route binding mismatch: comparison:甲、乙",
+            errors,
+        )
+        self.assertIn(
+            "frozen card route binding mismatch: application:甲、乙:差别",
+            errors,
+        )
+
+    def test_rejects_orphan_duplicate_unknown_and_unidentified_plan_actions(self):
+        cases = []
+        orphan = json.loads(fixture_bytes("action_plan").decode("utf-8"))
+        orphan["actions"].append(
+            {
+                "stable_card_key": "base:孤立",
+                "title": "基础词义｜孤立",
+                "card_type": "base",
+                "route_id": "chapter-base",
+                "route_name": "基础词义",
+                "action": "create",
+                "card_id": "",
+            }
+        )
+        cases.append((orphan, "orphan action plan card: base:孤立"))
+        duplicate = json.loads(fixture_bytes("action_plan").decode("utf-8"))
+        duplicate["actions"][1]["stable_card_key"] = "comparison:甲、乙"
+        cases.append((duplicate, "duplicate action plan stable_card_key: comparison:甲、乙"))
+        unknown = json.loads(fixture_bytes("action_plan").decode("utf-8"))
+        unknown["actions"][0]["action"] = "manual-review"
+        cases.append((unknown, "unknown release action: manual-review"))
+        missing_id = json.loads(fixture_bytes("action_plan").decode("utf-8"))
+        missing_id["actions"][1]["card_id"] = ""
+        cases.append((missing_id, "action card_id is required: base:甲"))
+
+        for plan, expected in cases:
+            with self.subTest(expected=expected):
+                changed_artifacts = artifacts()
+                manifest = complete_manifest()
+                replace_json_artifact(manifest, changed_artifacts, "action_plan", plan)
+                self.assertIn(
+                    expected,
+                    validate_release_manifest(manifest, changed_artifacts),
+                )
+
+    def test_action_counts_are_recomputed_from_action_list(self):
+        changed_artifacts = artifacts()
+        plan = json.loads(changed_artifacts["action_plan"].decode("utf-8"))
+        plan["actions"].append(
+            {
+                "stable_card_key": "application:孤立",
+                "title": "语境应用｜孤立",
+                "card_type": "application",
+                "route_id": "chapter-application",
+                "route_name": "语境应用",
+                "action": "create",
+                "card_id": "",
+            }
+        )
+        manifest = complete_manifest()
+        replace_json_artifact(manifest, changed_artifacts, "action_plan", plan)
+
+        errors = validate_release_manifest(manifest, changed_artifacts)
+
+        self.assertIn("action plan declared count mismatch: create", errors)
+
+    def test_route_expectations_come_from_independent_frozen_plan(self):
+        changed_artifacts = artifacts()
+        plan = json.loads(changed_artifacts["action_plan"].decode("utf-8"))
+        plan["route_counts"]["comparison"]["create"] = 0
+        plan["route_counts"]["comparison"]["after"] = 0
+        manifest = complete_manifest()
+        replace_json_artifact(manifest, changed_artifacts, "action_plan", plan)
+
+        errors = validate_release_manifest(manifest, changed_artifacts)
+
+        self.assertIn("action plan route count mismatch: comparison.create", errors)
+        self.assertIn("chapter route count mismatch: comparison.create", errors)
+
     def test_rejects_changed_artifact_bytes_and_self_hash_mismatch(self):
         changed_artifacts = artifacts()
         changed_artifacts["source_inventory"] += b"\n"
@@ -297,100 +495,212 @@ class ReleaseManifestTests(unittest.TestCase):
                     validate_release_manifest(complete_manifest(), changed),
                 )
 
+    def test_strict_manifest_bytes_and_file_loaders_feed_validation(self):
+        manifest = complete_manifest()
+        raw = json.dumps(manifest, ensure_ascii=False).encode("utf-8")
+
+        loaded = load_release_manifest_bytes(raw)
+        self.assertEqual(manifest, loaded)
+        self.assertEqual([], validate_release_manifest(raw, artifacts()))
+        with tempfile.TemporaryDirectory() as temporary:
+            path = Path(temporary) / "release_manifest.json"
+            path.write_bytes(raw)
+            self.assertEqual(manifest, load_release_manifest_file(path))
+
+    def test_strict_manifest_loader_rejects_duplicate_nan_and_invalid_utf8(self):
+        malformed = {
+            "duplicate-key": b'{"schema_version":2,"schema_version":2}',
+            "non-finite": b'{"schema_version":2,"score":NaN}',
+            "invalid-utf8": b'{"schema_version":2,"note":"\xff"}',
+        }
+
+        for label, raw in malformed.items():
+            with self.subTest(label=label):
+                with self.assertRaisesRegex(ValueError, "strict release manifest JSON"):
+                    load_release_manifest_bytes(raw)
+                self.assertIn(
+                    "release manifest is not strict JSON",
+                    validate_release_manifest(raw, artifacts()),
+                )
+
+    def test_manifest_exact_schema_rejects_unknown_and_git_receipt_fields(self):
+        cases = []
+        unknown = complete_manifest()
+        unknown["note"] = "extra"
+        cases.append((unknown, "release manifest fields mismatch"))
+        nested_commit = complete_manifest()
+        nested_commit["deployment"] = {"commit_sha": "a" * 40}
+        cases.append((nested_commit, "prohibited Git receipt field: commit_sha"))
+        merged_sha = complete_manifest()
+        merged_sha["merged_sha"] = "b" * 40
+        cases.append((merged_sha, "prohibited Git receipt field: merged_sha"))
+        nested_unknown = complete_manifest()
+        nested_unknown["chapter_routes"]["base"]["unexpected"] = True
+        cases.append((nested_unknown, "chapter route fields mismatch: base"))
+
+        for manifest, expected in cases:
+            with self.subTest(expected=expected):
+                refresh_self_hash(manifest)
+                self.assertIn(
+                    expected,
+                    validate_release_manifest(manifest, artifacts()),
+                )
+
+    def test_malformed_protected_manifest_fails_closed_without_exception(self):
+        authorized, _ = release_at("authorized")
+        authorized.pop("deck")
+        refresh_self_hash(authorized)
+
+        try:
+            errors = validate_release_manifest(authorized, artifacts())
+        except (TypeError, ValueError, KeyError) as exc:
+            errors = [f"unexpected exception: {type(exc).__name__}"]
+
+        self.assertIn("release manifest fields mismatch", errors)
+        self.assertIn("release state evidence lineage incomplete: authorized", errors)
+
     def test_release_hash_rejects_non_json_values(self):
         with self.assertRaisesRegex(ValueError, "strict JSON"):
             release_hash({"value": float("nan")})
         with self.assertRaisesRegex(ValueError, "strict JSON"):
             release_hash({"value": b"bytes"})
 
-    def test_plan_frozen_cannot_skip_authorization_gates_without_evidence(self):
-        frozen = transition_release_state(
-            complete_manifest(),
-            "plan_frozen",
-            {"plan_frozen": "frozen-plan-receipt"},
-        )
-        original = copy.deepcopy(frozen)
+    def test_every_target_state_requires_its_own_verified_receipt(self):
+        current = complete_manifest()
+        baseline = frozen_baseline(current)
 
-        with self.assertRaisesRegex(
-            ValueError,
-            "missing release state evidence: ci_verified, awaiting_user_authorization",
+        for target in STATE_SEQUENCE[1:]:
+            with self.subTest(target=target):
+                incomplete = {} if target == "plan_frozen" else {
+                    "frozen_baseline": baseline
+                }
+                with self.assertRaisesRegex(
+                    ValueError,
+                    "missing required transition evidence",
+                ):
+                    transition_release_state(current, target, incomplete)
+                current = advance_release(current, target, baseline)
+                self.assertEqual([], validate_release_manifest(current, artifacts()))
+
+    def test_validator_rejects_forged_authorized_state_and_incomplete_lineage(self):
+        forged = complete_manifest()
+        forged["state"] = "authorized"
+        refresh_self_hash(forged)
+
+        errors = validate_release_manifest(forged, artifacts())
+
+        self.assertIn("release state evidence lineage incomplete: authorized", errors)
+        baseline = frozen_baseline(complete_manifest())
+        with self.assertRaisesRegex(ValueError, "current release state lineage is invalid"):
+            transition_release_state(
+                forged,
+                "applied",
+                {
+                    "frozen_baseline": baseline,
+                    "applied_receipt": state_receipt(forged, "applied"),
+                },
+            )
+
+        authorized, _ = release_at("authorized")
+        authorized["state_evidence"].pop("ci_receipt")
+        refresh_self_hash(authorized)
+        self.assertIn(
+            "release state evidence lineage incomplete: authorized",
+            validate_release_manifest(authorized, artifacts()),
+        )
+
+    def test_receipts_bind_verified_flag_release_payload_hash_and_prior_state(self):
+        draft = complete_manifest()
+        bad_baselines = []
+        for field, value in (
+            ("verified", False),
+            ("release_id", "other-release"),
+            ("protected_payload_hash", "0" * 64),
+            ("subject_state", "authorized"),
+            ("subject_release_hash", "1" * 64),
         ):
-            transition_release_state(frozen, "authorized", {})
+            receipt = frozen_baseline(draft)
+            receipt[field] = value
+            bad_baselines.append(receipt)
 
-        authorized = transition_release_state(
-            frozen,
-            "authorized",
-            {
-                "ci_verified": "ci-receipt",
-                "awaiting_user_authorization": "authorization-request-receipt",
-            },
-        )
+        for receipt in bad_baselines:
+            with self.subTest(receipt=receipt):
+                with self.assertRaisesRegex(ValueError, "invalid verified frozen baseline"):
+                    transition_release_state(
+                        draft,
+                        "plan_frozen",
+                        {"frozen_baseline": receipt},
+                    )
 
-        self.assertEqual("authorized", authorized["state"])
-        self.assertEqual(release_hash(authorized), authorized["release_hash"])
-        self.assertEqual(original, frozen)
+        baseline = frozen_baseline(draft)
+        frozen = advance_release(draft, "plan_frozen", baseline)
+        for field, value in (
+            ("verified", False),
+            ("release_id", "other-release"),
+            ("protected_payload_hash", "2" * 64),
+            ("subject_state", "draft"),
+            ("subject_release_hash", "3" * 64),
+        ):
+            receipt = state_receipt(frozen, "ci_verified")
+            receipt[field] = value
+            with self.subTest(field=field):
+                with self.assertRaisesRegex(ValueError, "invalid ci receipt"):
+                    transition_release_state(
+                        frozen,
+                        "ci_verified",
+                        {
+                            "frozen_baseline": baseline,
+                            "ci_receipt": receipt,
+                        },
+                    )
 
-    def test_protected_artifact_change_forks_new_draft_without_mutating_authorized(self):
-        frozen = transition_release_state(complete_manifest(), "plan_frozen", {})
-        authorized = transition_release_state(
-            frozen,
-            "authorized",
-            {"ci_verified": True, "awaiting_user_authorization": True},
-        )
-        original = copy.deepcopy(authorized)
-        changed_hashes = copy.deepcopy(authorized["artifact_hashes"])
-        changed_hashes["final_cards"] = "f" * 64
+    def test_protected_transition_requires_external_verified_baseline_each_time(self):
+        draft = complete_manifest()
+        baseline = frozen_baseline(draft)
+        frozen = advance_release(draft, "plan_frozen", baseline)
+
+        with self.assertRaisesRegex(ValueError, "missing verified frozen baseline"):
+            transition_release_state(
+                frozen,
+                "ci_verified",
+                {"ci_receipt": state_receipt(frozen, "ci_verified")},
+            )
+
+    def test_rehashed_protected_change_forks_against_external_baseline(self):
+        draft = complete_manifest()
+        baseline = frozen_baseline(draft)
+        frozen = advance_release(draft, "plan_frozen", baseline)
+        original = copy.deepcopy(frozen)
+        frozen["artifact_hashes"]["final_cards"] = "d" * 64
+        refresh_self_hash(frozen)
 
         fork = transition_release_state(
-            authorized,
-            "authorized",
+            frozen,
+            "ci_verified",
             {
-                "protected_artifact_hashes": changed_hashes,
+                "frozen_baseline": baseline,
+                "ci_receipt": state_receipt(frozen, "ci_verified"),
                 "new_release_id": "release-2026-08-17-002",
             },
         )
 
         self.assertEqual("draft", fork["state"])
         self.assertEqual("release-2026-08-17-002", fork["release_id"])
-        self.assertEqual("f" * 64, fork["artifact_hashes"]["final_cards"])
+        self.assertEqual("d" * 64, fork["artifact_hashes"]["final_cards"])
         self.assertEqual({}, fork["state_evidence"])
         self.assertEqual(release_hash(fork), fork["release_hash"])
-        self.assertEqual(original, authorized)
+        self.assertEqual("plan_frozen", original["state"])
 
-    def test_direct_change_to_authorized_artifact_hash_also_forks_draft(self):
-        frozen = transition_release_state(complete_manifest(), "plan_frozen", {})
-        authorized = transition_release_state(
-            frozen,
-            "authorized",
-            {"ci_verified": True, "awaiting_user_authorization": True},
-        )
-        changed = copy.deepcopy(authorized)
-        changed["artifact_hashes"]["final_cards"] = "e" * 64
-
-        fork = transition_release_state(changed, "applied", {})
-
-        self.assertEqual("draft", fork["state"])
-        self.assertNotEqual(authorized["release_id"], fork["release_id"])
-        self.assertEqual("e" * 64, fork["artifact_hashes"]["final_cards"])
-        self.assertEqual(release_hash(fork), fork["release_hash"])
-        self.assertEqual("authorized", authorized["state"])
-
-    def test_direct_change_after_plan_freeze_forks_draft(self):
-        frozen = transition_release_state(complete_manifest(), "plan_frozen", {})
-        frozen["artifact_hashes"]["final_cards"] = "d" * 64
-
-        fork = transition_release_state(frozen, "ci_verified", {})
-
-        self.assertEqual("draft", fork["state"])
-        self.assertNotEqual(frozen["release_id"], fork["release_id"])
-        self.assertEqual(release_hash(fork), fork["release_hash"])
-
-    def test_state_machine_rejects_backward_and_unknown_transitions(self):
-        frozen = transition_release_state(complete_manifest(), "plan_frozen", {})
-        for target in ("draft", "not-a-state"):
+    def test_state_machine_rejects_skip_backward_and_unknown_transitions(self):
+        frozen, baseline = release_at("plan_frozen")
+        for target in ("draft", "authorized", "not-a-state"):
             with self.subTest(target=target):
                 with self.assertRaisesRegex(ValueError, "invalid release state transition"):
-                    transition_release_state(frozen, target, {})
+                    transition_release_state(
+                        frozen,
+                        target,
+                        {"frozen_baseline": baseline},
+                    )
 
 
 if __name__ == "__main__":
