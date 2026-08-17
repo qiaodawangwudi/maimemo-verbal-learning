@@ -101,6 +101,30 @@ class SkillHashTests(unittest.TestCase):
             with self.assertRaisesRegex(RuntimeError, "symlink or reparse point"):
                 self.module.compute_skill_hash(skill)
 
+    def test_hash_rejects_casefold_portability_collisions(self):
+        tested = False
+        for first, second in (("A.txt", "a.txt"), ("straße.txt", "STRASSE.txt")):
+            with tempfile.TemporaryDirectory() as temporary:
+                root = Path(temporary)
+                (root / first).write_bytes(b"first")
+                (root / second).write_bytes(b"second")
+                if len(list(root.iterdir())) == 2:
+                    with self.assertRaisesRegex(RuntimeError, "portable path collision"):
+                        self.module.compute_skill_hash(root)
+                    tested = True
+                    break
+        self.assertTrue(tested, "no casefold collision fixture was representable")
+
+    def test_hash_rejects_nfc_portability_collision(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            (root / "é.txt").write_bytes(b"first")
+            (root / "e\u0301.txt").write_bytes(b"second")
+            if len(list(root.iterdir())) != 2:
+                self.skipTest("filesystem collapsed the NFC collision fixture")
+            with self.assertRaisesRegex(RuntimeError, "portable path collision"):
+                self.module.compute_skill_hash(root)
+
 
 class SkillInstallTests(unittest.TestCase):
     def setUp(self):
@@ -121,6 +145,10 @@ class SkillInstallTests(unittest.TestCase):
                     "installed_hash",
                     "merged_commit",
                     "source_identity",
+                    "backup_retained",
+                    "backup_path",
+                    "backup_installed_hash",
+                    "directory_flush_mode",
                 },
                 set(receipt),
             )
@@ -128,6 +156,10 @@ class SkillInstallTests(unittest.TestCase):
             self.assertEqual(expected_hash, receipt["installed_hash"])
             self.assertEqual(str(source.resolve()), receipt["source_identity"])
             self.assertIsNone(receipt["merged_commit"])
+            self.assertFalse(receipt["backup_retained"])
+            self.assertIsNone(receipt["backup_path"])
+            self.assertIsNone(receipt["backup_installed_hash"])
+            self.assertIn(receipt["directory_flush_mode"], {"required", "best_effort"})
             self.assertEqual(
                 receipt,
                 json.loads((target / RECEIPT_NAME).read_text(encoding="utf-8")),
@@ -202,7 +234,9 @@ class SkillInstallTests(unittest.TestCase):
                 return real_replace(src, dst)
 
             with mock.patch.object(self.module.os, "replace", side_effect=fail_second_replace):
-                with self.assertRaisesRegex(RuntimeError, "installation failed; original restored"):
+                with self.assertRaisesRegex(
+                    RuntimeError, "installation failed; original restored"
+                ):
                     self.module.install(source, target)
 
             self.assertEqual(old_skill, (target / "SKILL.md").read_bytes())
@@ -214,6 +248,109 @@ class SkillInstallTests(unittest.TestCase):
                 if path.name.startswith((target.name + ".staging-", target.name + ".backup-"))
             ]
             self.assertEqual([], leftovers)
+
+    def test_first_install_collision_preserves_foreign_target_byte_for_byte(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            source, target = prepared_skill_dirs(Path(temporary))
+            foreign_bytes = b"foreign user data\x00\xff"
+
+            def collide_without_moving_stage(src, dst):
+                Path(dst).mkdir()
+                (Path(dst) / "user.bin").write_bytes(foreign_bytes)
+                raise OSError("simulated Windows destination collision")
+
+            with mock.patch.object(
+                self.module.os, "replace", side_effect=collide_without_moving_stage
+            ):
+                with self.assertRaisesRegex(RuntimeError, "foreign target preserved"):
+                    self.module.install(source, target)
+
+            self.assertEqual(foreign_bytes, (target / "user.bin").read_bytes())
+            self.assertEqual(
+                [],
+                [
+                    path.name
+                    for path in target.parent.iterdir()
+                    if path.name.startswith(
+                        (target.name + ".staging-", target.name + ".failed-")
+                    )
+                ],
+            )
+
+    def test_replacement_collision_preserves_foreign_target_and_recorded_backup(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            source, target = prepared_skill_dirs(Path(temporary))
+            self.module.install(source, target)
+            old_skill = (target / "SKILL.md").read_bytes()
+            (source / "SKILL.md").write_text("replacement\n", encoding="utf-8")
+            real_replace = os.replace
+            calls = 0
+
+            def collide_after_backup(src, dst):
+                nonlocal calls
+                calls += 1
+                if calls == 1:
+                    return real_replace(src, dst)
+                Path(dst).mkdir()
+                (Path(dst) / "user.bin").write_bytes(b"foreign replacement target")
+                raise OSError("simulated Windows destination collision")
+
+            with mock.patch.object(
+                self.module.os, "replace", side_effect=collide_after_backup
+            ):
+                with self.assertRaisesRegex(RuntimeError, "foreign target preserved"):
+                    self.module.install(source, target)
+
+            self.assertEqual(
+                b"foreign replacement target", (target / "user.bin").read_bytes()
+            )
+            backups = [
+                path
+                for path in target.parent.iterdir()
+                if path.name.startswith(target.name + ".backup-")
+            ]
+            self.assertEqual(1, len(backups))
+            self.assertEqual(old_skill, (backups[0] / "SKILL.md").read_bytes())
+
+    def test_rollback_rename_race_restores_foreign_target_to_exact_path(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            source, target = prepared_skill_dirs(Path(temporary))
+            self.module.install(source, target)
+            (source / "SKILL.md").write_text("replacement\n", encoding="utf-8")
+            real_replace = os.replace
+            replace_calls = 0
+            captured_install = target.parent / "captured-installed-tree"
+
+            def swap_foreign_target_at_rollback_rename(src, dst):
+                nonlocal replace_calls
+                replace_calls += 1
+                if replace_calls == 3:
+                    real_replace(target, captured_install)
+                    target.mkdir()
+                    (target / "user.bin").write_bytes(b"foreign at rollback boundary")
+                return real_replace(src, dst)
+
+            with mock.patch.object(
+                self.module.os,
+                "replace",
+                side_effect=swap_foreign_target_at_rollback_rename,
+            ), mock.patch.object(
+                self.module,
+                "verify_install",
+                side_effect=RuntimeError("force rollback"),
+            ):
+                with self.assertRaisesRegex(RuntimeError, "foreign target preserved"):
+                    self.module.install(source, target)
+
+            self.assertEqual(
+                b"foreign at rollback boundary", (target / "user.bin").read_bytes()
+            )
+            backups = [
+                path
+                for path in target.parent.iterdir()
+                if path.name.startswith(target.name + ".backup-")
+            ]
+            self.assertEqual(1, len(backups))
 
     def test_target_change_during_swap_is_detected_and_restored(self):
         with tempfile.TemporaryDirectory() as temporary:
@@ -245,48 +382,89 @@ class SkillInstallTests(unittest.TestCase):
                 "concurrent local change", (target / "SKILL.md").read_text(encoding="utf-8")
             )
 
-    def test_changed_backup_is_preserved_instead_of_deleted(self):
+    def test_successful_upgrade_retains_and_reports_verified_backup(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            source, target = prepared_skill_dirs(Path(temporary))
+            first = self.module.install(source, target)
+            old_skill = (target / "SKILL.md").read_bytes()
+            (source / "SKILL.md").write_text("replacement\n", encoding="utf-8")
+
+            second = self.module.install(source, target)
+
+            backup = Path(second["backup_path"])
+            self.assertTrue(second["backup_retained"])
+            self.assertEqual(first["installed_hash"], second["backup_installed_hash"])
+            self.assertTrue(backup.is_dir())
+            self.assertEqual(target.parent, backup.parent)
+            self.assertEqual(old_skill, (backup / "SKILL.md").read_bytes())
+
+    def test_change_after_final_backup_assertion_survives_successful_upgrade(self):
         with tempfile.TemporaryDirectory() as temporary:
             source, target = prepared_skill_dirs(Path(temporary))
             self.module.install(source, target)
             (source / "SKILL.md").write_text("replacement\n", encoding="utf-8")
-            real_replace = os.replace
-            calls = 0
+            real_assert = self.module._assert_recorded_target
+            backup_assertions = 0
+            injected = False
 
-            def change_backup_after_new_target_arrives(src, dst):
-                nonlocal calls
-                calls += 1
-                result = real_replace(src, dst)
-                if calls == 2:
-                    backup = next(
-                        path
-                        for path in target.parent.iterdir()
-                        if path.name.startswith(target.name + ".backup-")
-                    )
-                    (backup / "SKILL.md").write_text(
-                        "late local change", encoding="utf-8"
-                    )
+            def inject_after_assert(path, *args, **kwargs):
+                nonlocal backup_assertions, injected
+                result = real_assert(path, *args, **kwargs)
+                if Path(path).name.startswith(target.name + ".backup-"):
+                    backup_assertions += 1
+                    if backup_assertions == 3:
+                        (Path(path) / "late-user-data.txt").write_text(
+                            "must survive", encoding="utf-8"
+                        )
+                        injected = True
                 return result
 
             with mock.patch.object(
-                self.module.os,
-                "replace",
-                side_effect=change_backup_after_new_target_arrives,
+                self.module, "_assert_recorded_target", side_effect=inject_after_assert
             ):
-                with self.assertRaisesRegex(RuntimeError, "changed backup preserved"):
+                receipt = self.module.install(source, target)
+
+            self.assertTrue(injected)
+            backup = Path(receipt["backup_path"])
+            self.assertEqual(
+                "must survive",
+                (backup / "late-user-data.txt").read_text(encoding="utf-8"),
+            )
+
+    def test_change_before_final_backup_assertion_is_preserved_and_reported(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            source, target = prepared_skill_dirs(Path(temporary))
+            self.module.install(source, target)
+            (source / "SKILL.md").write_text("replacement\n", encoding="utf-8")
+            real_assert = self.module._assert_recorded_target
+            backup_assertions = 0
+            changed_backup = None
+
+            def inject_before_assert(path, *args, **kwargs):
+                nonlocal backup_assertions, changed_backup
+                if Path(path).name.startswith(target.name + ".backup-"):
+                    backup_assertions += 1
+                    if backup_assertions == 3:
+                        changed_backup = Path(path)
+                        (changed_backup / "late-user-data.txt").write_text(
+                            "must survive failure", encoding="utf-8"
+                        )
+                return real_assert(path, *args, **kwargs)
+
+            with mock.patch.object(
+                self.module, "_assert_recorded_target", side_effect=inject_before_assert
+            ):
+                with self.assertRaisesRegex(
+                    RuntimeError, "changed backup preserved at"
+                ):
                     self.module.install(source, target)
 
-            self.assertEqual("replacement\n", (target / "SKILL.md").read_text())
-            backups = [
-                path
-                for path in target.parent.iterdir()
-                if path.name.startswith(target.name + ".backup-")
-            ]
-            self.assertEqual(1, len(backups))
+            self.assertIsNotNone(changed_backup)
             self.assertEqual(
-                "late local change",
-                (backups[0] / "SKILL.md").read_text(encoding="utf-8"),
+                "must survive failure",
+                (changed_backup / "late-user-data.txt").read_text(encoding="utf-8"),
             )
+            self.assertEqual("replacement\n", (target / "SKILL.md").read_text())
 
     def test_refuses_fake_home_workspace_root_and_overlapping_paths(self):
         with tempfile.TemporaryDirectory() as temporary:
@@ -368,6 +546,61 @@ class SkillVerifyAndCliTests(unittest.TestCase):
             with self.assertRaisesRegex(RuntimeError, "canonical install receipt required"):
                 self.module.verify_install(source, target)
 
+    def test_receipt_path_swap_cannot_substitute_valid_bytes_for_malformed_path(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            source, target = prepared_skill_dirs(Path(temporary))
+            self.module.install(source, target)
+            receipt_path = target / RECEIPT_NAME
+            valid_bytes = receipt_path.read_bytes()
+            malformed_bytes = b"not-json"
+            receipt_path.write_bytes(malformed_bytes)
+            real_read_bytes = self.module.Path.read_bytes
+
+            def substitute_only_while_reading(path):
+                if Path(path) != receipt_path:
+                    return real_read_bytes(path)
+                receipt_path.write_bytes(valid_bytes)
+                try:
+                    return real_read_bytes(path)
+                finally:
+                    receipt_path.write_bytes(malformed_bytes)
+
+            with mock.patch.object(
+                self.module.Path, "read_bytes", substitute_only_while_reading
+            ):
+                with self.assertRaisesRegex(RuntimeError, "strict install receipt required"):
+                    self.module.verify_install(source, target)
+
+            self.assertEqual(malformed_bytes, receipt_path.read_bytes())
+
+    def test_verify_rereads_receipt_at_final_boundary(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            source, target = prepared_skill_dirs(Path(temporary))
+            self.module.install(source, target)
+            receipt_path = target / RECEIPT_NAME
+            malformed_bytes = b"changed-after-first-read"
+            real_read = self.module._read_receipt
+            target_reads = 0
+
+            def corrupt_after_first_target_read(path, *args, **kwargs):
+                nonlocal target_reads
+                if Path(path) == target:
+                    target_reads += 1
+                result = real_read(path, *args, **kwargs)
+                if Path(path) == target:
+                    if target_reads == 1:
+                        receipt_path.write_bytes(malformed_bytes)
+                return result
+
+            with mock.patch.object(
+                self.module, "_read_receipt", side_effect=corrupt_after_first_target_read
+            ):
+                with self.assertRaisesRegex(RuntimeError, "strict install receipt required"):
+                    self.module.verify_install(source, target)
+
+            self.assertGreaterEqual(target_reads, 2)
+            self.assertEqual(malformed_bytes, receipt_path.read_bytes())
+
     def test_cli_modes_are_required_mutually_exclusive_and_fail_closed(self):
         cases = (
             [],
@@ -405,6 +638,44 @@ class SkillVerifyAndCliTests(unittest.TestCase):
             )
 
             self.assertEqual(json.loads(installed.stdout), json.loads(verified.stdout))
+
+
+class DirectoryFlushContractTests(unittest.TestCase):
+    def setUp(self):
+        self.module = load_installer()
+
+    def test_windows_directory_flush_failure_is_reported_as_best_effort(self):
+        flush = getattr(self.module, "_flush_directory", None)
+        self.assertTrue(callable(flush), "stable directory flush contract is absent")
+        with tempfile.TemporaryDirectory() as temporary, mock.patch.object(
+            self.module, "_IS_WINDOWS", True
+        ), mock.patch.object(
+            self.module.os, "open", side_effect=PermissionError("directory open denied")
+        ):
+            self.assertFalse(flush(Path(temporary)))
+
+    def test_posix_directory_flush_failure_fails_closed(self):
+        flush = getattr(self.module, "_flush_directory", None)
+        self.assertTrue(callable(flush), "stable directory flush contract is absent")
+        with tempfile.TemporaryDirectory() as temporary, mock.patch.object(
+            self.module, "_IS_WINDOWS", False
+        ), mock.patch.object(
+            self.module.os, "open", side_effect=OSError("directory open failed")
+        ):
+            with self.assertRaisesRegex(RuntimeError, "directory flush failed"):
+                flush(Path(temporary))
+
+    def test_posix_directory_fsync_failure_fails_closed(self):
+        flush = self.module._flush_directory
+        with tempfile.TemporaryDirectory() as temporary, mock.patch.object(
+            self.module, "_IS_WINDOWS", False
+        ), mock.patch.object(
+            self.module.os, "open", return_value=17
+        ), mock.patch.object(
+            self.module.os, "fsync", side_effect=OSError("directory fsync failed")
+        ), mock.patch.object(self.module.os, "close"):
+            with self.assertRaisesRegex(RuntimeError, "directory flush failed"):
+                flush(Path(temporary))
 
 
 if __name__ == "__main__":

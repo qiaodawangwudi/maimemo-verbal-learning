@@ -24,12 +24,18 @@ RECEIPT_FIELDS = {
     "installed_hash",
     "merged_commit",
     "source_identity",
+    "backup_retained",
+    "backup_path",
+    "backup_installed_hash",
+    "directory_flush_mode",
 }
 CACHE_DIRECTORY_NAMES = {"__pycache__", ".pytest_cache", ".mypy_cache", ".ruff_cache"}
 CACHE_FILE_SUFFIXES = {".pyc", ".pyo"}
 HASH_PREAMBLE = b"skill-hash-v1\0"
 _DIGEST = re.compile(r"[0-9a-f]{64}\Z")
 _COMMIT = re.compile(r"[0-9a-f]{40,64}\Z")
+_IS_WINDOWS = os.name == "nt"
+DIRECTORY_FLUSH_MODE = "best_effort" if _IS_WINDOWS else "required"
 
 
 def _lexists(path):
@@ -141,7 +147,7 @@ def _read_regular_file(path):
 def _snapshot_skill(root):
     root = _validate_source(root)
     snapshot = []
-    normalized_paths = set()
+    portable_paths = {}
 
     def walk(directory):
         try:
@@ -165,9 +171,13 @@ def _snapshot_skill(root):
             if entry.name == RECEIPT_NAME or path.suffix.lower() in CACHE_FILE_SUFFIXES:
                 continue
             relative = _normalized_relative(path, root)
-            if relative in normalized_paths:
-                raise RuntimeError(f"duplicate normalized skill path: {relative}")
-            normalized_paths.add(relative)
+            collision_key = unicodedata.normalize("NFC", relative.casefold())
+            if collision_key in portable_paths:
+                raise RuntimeError(
+                    "portable path collision: "
+                    f"{portable_paths[collision_key]} and {relative}"
+                )
+            portable_paths[collision_key] = relative
             snapshot.append((relative, _read_regular_file(path)))
 
     walk(root)
@@ -205,7 +215,76 @@ def _unique_object(pairs):
     return result
 
 
+def _metadata_identity(metadata):
+    return (metadata.st_dev, metadata.st_ino)
+
+
+def _metadata_signature(metadata):
+    return (
+        metadata.st_dev,
+        metadata.st_ino,
+        stat.S_IFMT(metadata.st_mode),
+        metadata.st_size,
+        getattr(metadata, "st_mtime_ns", None),
+    )
+
+
+def _read_stable_receipt_bytes(receipt_path):
+    flags = os.O_RDONLY | getattr(os, "O_BINARY", 0)
+    flags |= getattr(os, "O_NOFOLLOW", 0)
+    descriptor = None
+    try:
+        path_before = receipt_path.lstat()
+        if _is_reparse(path_before) or not stat.S_ISREG(path_before.st_mode):
+            raise RuntimeError("strict install receipt required")
+        descriptor = os.open(receipt_path, flags)
+        opened_before = os.fstat(descriptor)
+        if (
+            _is_reparse(opened_before)
+            or not stat.S_ISREG(opened_before.st_mode)
+            or _metadata_signature(path_before) != _metadata_signature(opened_before)
+        ):
+            raise RuntimeError("strict install receipt required")
+        chunks = []
+        while True:
+            chunk = os.read(descriptor, 1024 * 1024)
+            if not chunk:
+                break
+            chunks.append(chunk)
+        opened_after = os.fstat(descriptor)
+        path_after = receipt_path.lstat()
+        if (
+            _is_reparse(path_after)
+            or not stat.S_ISREG(path_after.st_mode)
+            or _metadata_signature(opened_before) != _metadata_signature(opened_after)
+            or _metadata_signature(opened_after) != _metadata_signature(path_after)
+        ):
+            raise RuntimeError("strict install receipt required")
+        raw = b"".join(chunks)
+        if len(raw) != opened_before.st_size:
+            raise RuntimeError("strict install receipt required")
+        return raw
+    except RuntimeError:
+        raise
+    except OSError as error:
+        raise RuntimeError("strict install receipt required") from error
+    finally:
+        if descriptor is not None:
+            os.close(descriptor)
+
+
 def _validate_receipt(value):
+    backup_valid = (
+        value.get("backup_retained") is False
+        and value.get("backup_path") is None
+        and value.get("backup_installed_hash") is None
+    ) or (
+        value.get("backup_retained") is True
+        and isinstance(value.get("backup_path"), str)
+        and bool(value["backup_path"])
+        and isinstance(value.get("backup_installed_hash"), str)
+        and bool(_DIGEST.fullmatch(value["backup_installed_hash"]))
+    )
     valid = (
         isinstance(value, dict)
         and set(value) == RECEIPT_FIELDS
@@ -226,6 +305,9 @@ def _validate_receipt(value):
         and isinstance(value.get("source_identity"), str)
         and bool(value["source_identity"])
         and "\x00" not in value["source_identity"]
+        and type(value.get("backup_retained")) is bool
+        and backup_valid
+        and value.get("directory_flush_mode") in {"required", "best_effort"}
     )
     if not valid:
         raise RuntimeError("strict install receipt required")
@@ -237,10 +319,7 @@ def _read_receipt(target, *, with_bytes=False):
     if not _lexists(receipt_path):
         raise RuntimeError("existing target has no valid receipt")
     try:
-        metadata = receipt_path.lstat()
-        if _is_reparse(metadata) or not stat.S_ISREG(metadata.st_mode):
-            raise RuntimeError("strict install receipt required")
-        raw = receipt_path.read_bytes()
+        raw = _read_stable_receipt_bytes(receipt_path)
         value = json.loads(
             raw.decode("utf-8"),
             object_pairs_hook=_unique_object,
@@ -271,6 +350,23 @@ def _assert_recorded_target(target, source_identity, *, expected_receipt_bytes=N
     return receipt, receipt_bytes
 
 
+def _verify_retained_backup(receipt, target):
+    if not receipt["backup_retained"]:
+        return None
+    backup = _resolve_path(receipt["backup_path"], "retained backup", must_exist=True)
+    if (
+        not _same_identity(str(backup), receipt["backup_path"])
+        or backup.parent != target.parent
+        or not backup.name.startswith(target.name + ".backup-")
+        or backup == target
+    ):
+        raise RuntimeError("retained backup path mismatch")
+    backup_receipt, _ = _assert_recorded_target(backup, receipt["source_identity"])
+    if backup_receipt["installed_hash"] != receipt["backup_installed_hash"]:
+        raise RuntimeError("retained backup hash mismatch")
+    return backup
+
+
 def verify_install(source, target):
     """Fail closed unless target exactly matches its source-bound receipt."""
     source = _validate_source(source)
@@ -278,7 +374,7 @@ def verify_install(source, target):
     if not _lexists(target):
         raise RuntimeError(f"installed target does not exist: {target}")
     _reject_reparse_components(target, "target")
-    receipt = _read_receipt(target)
+    receipt, receipt_bytes = _read_receipt(target, with_bytes=True)
     if not _same_identity(receipt["source_identity"], str(source)):
         raise RuntimeError("installed skill source identity mismatch")
     if receipt["merged_commit"] != _merged_commit(source):
@@ -291,7 +387,11 @@ def verify_install(source, target):
         raise RuntimeError("installed skill has unrecorded changes")
     if canonical_hash != installed_hash:
         raise RuntimeError("installed skill hash does not match canonical source")
-    return receipt
+    _verify_retained_backup(receipt, target)
+    final_receipt, final_bytes = _read_receipt(target, with_bytes=True)
+    if final_bytes != receipt_bytes or final_receipt != receipt:
+        raise RuntimeError("installed receipt changed during verification")
+    return final_receipt
 
 
 def _merged_commit(source):
@@ -325,17 +425,22 @@ def _write_fsynced(path, data):
         os.close(descriptor)
 
 
-def _fsync_directory(path):
+def _flush_directory(path):
     flags = os.O_RDONLY | getattr(os, "O_DIRECTORY", 0)
     try:
         descriptor = os.open(path, flags)
-    except OSError:
-        return
+    except OSError as error:
+        if _IS_WINDOWS:
+            return False
+        raise RuntimeError(f"directory flush failed: {path}") from error
     try:
         try:
             os.fsync(descriptor)
-        except OSError:
-            pass
+        except OSError as error:
+            if _IS_WINDOWS:
+                return False
+            raise RuntimeError(f"directory flush failed: {path}") from error
+        return True
     finally:
         os.close(descriptor)
 
@@ -352,7 +457,7 @@ def _stage_snapshot(snapshot, stage):
             directories.add(current)
             current = current.parent
     for directory in sorted(directories, key=lambda item: len(item.parts), reverse=True):
-        _fsync_directory(directory)
+        _flush_directory(directory)
 
 
 def _receipt_bytes(receipt):
@@ -372,7 +477,33 @@ def _owned_sibling(target, purpose):
     return target.parent / f"{target.name}.{purpose}-{uuid.uuid4().hex}"
 
 
-def _remove_owned_tree(path, target, purpose):
+def _directory_identity(path, label):
+    try:
+        metadata = Path(path).lstat()
+    except OSError as error:
+        raise RuntimeError(f"cannot inspect {label}: {path}") from error
+    if _is_reparse(metadata) or not stat.S_ISDIR(metadata.st_mode):
+        raise RuntimeError(f"{label} is not an owned regular directory: {path}")
+    return _metadata_identity(metadata)
+
+
+def _matches_directory_identity(path, expected_identity):
+    if not _lexists(path):
+        return False
+    try:
+        metadata = Path(path).lstat()
+    except OSError:
+        return False
+    return (
+        not _is_reparse(metadata)
+        and stat.S_ISDIR(metadata.st_mode)
+        and _metadata_identity(metadata) == expected_identity
+    )
+
+
+def _remove_owned_tree(path, target, purpose, expected_identity):
+    if purpose not in {"staging", "failed"}:
+        raise RuntimeError(f"refusing to remove non-generated {purpose} tree")
     expected_prefix = f"{target.name}.{purpose}-"
     resolved_parent = target.parent.resolve()
     candidate = Path(os.path.abspath(os.fspath(path)))
@@ -383,64 +514,85 @@ def _remove_owned_tree(path, target, purpose):
     if not _lexists(candidate):
         return
     _reject_reparse_components(candidate, f"owned {purpose} path")
-    if candidate.is_dir():
-        _snapshot_skill(candidate)
-        shutil.rmtree(candidate)
+    if not _matches_directory_identity(candidate, expected_identity):
+        raise RuntimeError(f"owned {purpose} identity changed; tree preserved at {candidate}")
+    _snapshot_skill(candidate)
+    if not _matches_directory_identity(candidate, expected_identity):
+        raise RuntimeError(f"owned {purpose} identity changed; tree preserved at {candidate}")
+    shutil.rmtree(candidate)
+
+
+def _restore_backup(target, backup):
+    if _lexists(target):
+        return False
+    if backup is None or not _lexists(backup):
+        raise RuntimeError("rollback backup disappeared")
+    os.replace(backup, target)
+    _flush_directory(target.parent)
+    return True
+
+
+def _rollback_owned_target(target, target_identity, backup):
+    if not _matches_directory_identity(target, target_identity):
+        return False
+    failed = _owned_sibling(target, "failed")
+    os.replace(target, failed)
+    if not _matches_directory_identity(failed, target_identity):
+        if not _lexists(target):
+            os.replace(failed, target)
+            _flush_directory(target.parent)
+        return False
+    if backup is not None:
+        if not _restore_backup(target, backup):
+            return False
     else:
-        candidate.unlink()
-
-
-def _rollback(target, stage, backup, had_target):
-    try:
-        if _lexists(target):
-            if _lexists(stage):
-                displaced = _owned_sibling(target, "failed")
-                os.replace(target, displaced)
-                _remove_owned_tree(displaced, target, "failed")
-            else:
-                os.replace(target, stage)
-        if had_target:
-            if not _lexists(backup):
-                raise RuntimeError("rollback backup disappeared")
-            os.replace(backup, target)
-        _fsync_directory(target.parent)
-    except Exception as error:
-        backup_note = str(backup) if _lexists(backup) else "unavailable"
-        raise RuntimeError(f"installation rollback failed; backup preserved at {backup_note}") from error
+        _flush_directory(target.parent)
+    _remove_owned_tree(failed, target, "failed", target_identity)
+    return True
 
 
 def install(source, target):
-    """Install through a verified sibling stage and rollback-safe directory swap."""
+    """Install through a file-fsynced stage and ownership-safe namespace swap."""
     source = _validate_source(source)
     target = _validate_target(target, source)
     source_identity = str(source)
     had_target = _lexists(target)
+    previous_receipt = None
     previous_receipt_bytes = None
     if had_target:
         _reject_reparse_components(target, "target")
-        _, previous_receipt_bytes = _assert_recorded_target(target, source_identity)
+        previous_receipt, previous_receipt_bytes = _assert_recorded_target(
+            target, source_identity
+        )
 
     snapshot = _snapshot_skill(source)
     canonical_hash = _hash_snapshot(snapshot)
+    backup = _owned_sibling(target, "backup") if had_target else None
     receipt = {
         "schema_version": 1,
         "canonical_hash": canonical_hash,
         "installed_hash": canonical_hash,
         "merged_commit": _merged_commit(source),
         "source_identity": source_identity,
+        "backup_retained": had_target,
+        "backup_path": str(backup) if had_target else None,
+        "backup_installed_hash": (
+            previous_receipt["installed_hash"] if had_target else None
+        ),
+        "directory_flush_mode": DIRECTORY_FLUSH_MODE,
     }
     _validate_receipt(receipt)
 
     stage = Path(
         tempfile.mkdtemp(prefix=f"{target.name}.staging-", dir=target.parent)
     ).resolve()
-    backup = _owned_sibling(target, "backup")
+    stage_identity = _directory_identity(stage, "staging directory")
     stage_owned = True
-    swapped = False
+    backup_moved = False
     try:
         _stage_snapshot(snapshot, stage)
         _write_fsynced(stage / RECEIPT_NAME, _receipt_bytes(receipt))
-        _fsync_directory(stage)
+        _flush_directory(stage)
         if compute_skill_hash(stage) != canonical_hash:
             raise RuntimeError("staged skill hash does not match canonical source")
         if _read_receipt(stage) != receipt:
@@ -456,6 +608,7 @@ def install(source, target):
                 expected_receipt_bytes=previous_receipt_bytes,
             )
             os.replace(target, backup)
+            backup_moved = True
             try:
                 _assert_recorded_target(
                     backup,
@@ -468,25 +621,63 @@ def install(source, target):
                         f"target changed during swap; original preserved at {backup}"
                     )
                 os.replace(backup, target)
-                _fsync_directory(target.parent)
+                backup_moved = False
+                _flush_directory(target.parent)
                 raise
         elif _lexists(target):
             raise RuntimeError("target appeared during installation")
 
         try:
             os.replace(stage, target)
+        except Exception as error:
+            if _matches_directory_identity(stage, stage_identity):
+                if _lexists(target):
+                    backup_note = (
+                        f"; recorded backup preserved at {backup}" if backup_moved else ""
+                    )
+                    raise RuntimeError(
+                        f"installation failed; foreign target preserved{backup_note}"
+                    ) from error
+                if backup_moved:
+                    _restore_backup(target, backup)
+                    backup_moved = False
+                    raise RuntimeError("installation failed; original restored") from error
+                raise RuntimeError("installation failed; no target retained") from error
             stage_owned = False
-            swapped = True
-            _fsync_directory(target.parent)
+            if _matches_directory_identity(target, stage_identity):
+                rollback_backup = backup if backup_moved else None
+                if _rollback_owned_target(target, stage_identity, rollback_backup):
+                    backup_moved = False
+                    if had_target:
+                        raise RuntimeError("installation failed; original restored") from error
+                    raise RuntimeError("installation failed; no target retained") from error
+            backup_note = f"; recorded backup preserved at {backup}" if backup_moved else ""
+            raise RuntimeError(
+                f"installation failed; foreign target preserved{backup_note}"
+            ) from error
+
+        stage_owned = False
+        if not _matches_directory_identity(target, stage_identity):
+            backup_note = f"; recorded backup preserved at {backup}" if backup_moved else ""
+            raise RuntimeError(
+                f"installed target identity changed; foreign target preserved{backup_note}"
+            )
+
+        try:
+            _flush_directory(target.parent)
             verified = verify_install(source, target)
             if verified != receipt:
                 raise RuntimeError("installed receipt changed during verification")
         except Exception as error:
-            _rollback(target, stage, backup, had_target)
-            stage_owned = _lexists(stage)
-            if had_target:
-                raise RuntimeError("installation failed; original restored") from error
-            raise RuntimeError("installation failed; no target retained") from error
+            if _rollback_owned_target(target, stage_identity, backup if backup_moved else None):
+                backup_moved = False
+                if had_target:
+                    raise RuntimeError("installation failed; original restored") from error
+                raise RuntimeError("installation failed; no target retained") from error
+            backup_note = f"; recorded backup preserved at {backup}" if backup_moved else ""
+            raise RuntimeError(
+                f"installation failed; foreign target preserved{backup_note}"
+            ) from error
 
         if had_target:
             try:
@@ -499,15 +690,10 @@ def install(source, target):
                 raise RuntimeError(
                     f"installation completed; changed backup preserved at {backup}"
                 ) from error
-            _remove_owned_tree(backup, target, "backup")
-            _fsync_directory(target.parent)
         return receipt
     finally:
         if stage_owned and _lexists(stage):
-            _remove_owned_tree(stage, target, "staging")
-        if not swapped and _lexists(backup) and not _lexists(target):
-            os.replace(backup, target)
-            _fsync_directory(target.parent)
+            _remove_owned_tree(stage, target, "staging", stage_identity)
 
 
 def main(argv=None):
