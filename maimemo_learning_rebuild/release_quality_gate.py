@@ -31,6 +31,7 @@ INDEPENDENT_REVIEW_FIELDS = {
     "complete",
     "reviewer_context_isolated",
     "resolutions",
+    "edge_reviews",
     "semantic_registry_hash",
     "group_registry_hash",
     "review_hash",

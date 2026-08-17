@@ -68,6 +68,7 @@ class RegistryReviewTests(unittest.TestCase):
             "complete": True,
             "reviewer_context_isolated": True,
             "resolutions": [],
+            "edge_reviews": [],
         }
 
         report = review_registry([], {"sources": []}, [group], review)

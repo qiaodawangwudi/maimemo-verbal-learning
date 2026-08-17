@@ -63,7 +63,10 @@ class GroupGraphTests(unittest.TestCase):
 
         result = synthesize_group_review(group, records)
 
-        self.assertEqual("ready", result["status"])
+        self.assertEqual("pending", result["status"])
+        self.assertEqual(
+            "independent comparison edge review required", result["pending_reason"]
+        )
         self.assertEqual(
             [("甲", "乙"), ("乙", "丙")],
             [(item["left"], item["right"]) for item in result["minimum_differences"]],
@@ -255,6 +258,7 @@ class GroupGraphTests(unittest.TestCase):
         self.assertEqual(terms[1:7], result["members"])
         self.assertEqual([terms[0], terms[7]], result["excluded_members"])
         self.assertEqual("repurpose", result["decision"])
+        self.assertEqual("pending", result["status"])
         self.assertEqual([], validate_group_semantics(result, records))
 
     def test_pending_group_preserves_structural_decision_without_fake_semantics(self):

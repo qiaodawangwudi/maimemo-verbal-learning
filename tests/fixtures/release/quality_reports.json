@@ -15,8 +15,9 @@
     "complete": true,
     "reviewer_context_isolated": true,
     "resolutions": [],
+    "edge_reviews": [],
     "semantic_registry_hash": "0fceade4212557bcdda14382349bbfcfba3cfbe7428c108de229360fbc89c03f",
     "group_registry_hash": "1b7db55132f85b6a735dcd34a71a462d5b9b7485d766eec89ccc1dae6d804387",
-    "review_hash": "e071209adb0394322306e4e3c54d9e0175ad0291d2ee5acf7f7eecc94f9a569c"
+    "review_hash": "338f004486ec487606f8aa813e6b1736ae3912873b3cf85a644c38735864f23c"
   }
 }

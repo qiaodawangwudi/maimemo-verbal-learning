@@ -40,18 +40,23 @@ _DISCOURSE_FILLERS = (
     "并且",
     "并",
 )
-_COPY_CONCEPT_EQUIVALENCE_GROUPS = (
-    ("害怕", "担心", "惧怕", "畏惧"),
-    ("停止", "终止", "中止", "停下"),
-    ("本来", "原本", "本应"),
-    ("顾忌", "顾虑"),
-    ("伤及", "伤害", "牵连"),
-    ("采取", "实施", "进行"),
-    ("行动", "动作", "举措"),
-    ("关联对象", "相关对象", "关联事物"),
-    ("继续", "持续", "推进"),
-)
 _COPY_NGRAM_COVERAGE = ((1, 0.85), (2, 0.75), (3, 0.65))
+EDGE_REVIEW_FIELDS = frozenset(
+    {
+        "subject_id",
+        "contrast_axis",
+        "left_focus",
+        "right_focus",
+        "question_selection_condition",
+        "reviewer_context_isolated",
+    }
+)
+EDGE_REVIEW_OBSERVATIONS = (
+    ("contrast_axis", "axis"),
+    ("left_focus", "left_landing"),
+    ("right_focus", "right_landing"),
+    ("question_selection_condition", "question_selection_condition"),
+)
 
 
 def _text(value: object) -> str:
@@ -89,15 +94,10 @@ def _near_duplicate(left: object, right: object) -> bool:
     return SequenceMatcher(None, normalized_left, normalized_right).ratio() >= 0.8
 
 
-def _normalize_copy_concepts(value: object) -> str:
-    """Apply the explicit, reviewable equivalence lexicon used by copy checks."""
+def _normalize_copy_text(value: object) -> str:
+    """Normalize characters for the supplementary copy heuristic only."""
 
-    normalized = _normalize_for_flagging(value)
-    for group in _COPY_CONCEPT_EQUIVALENCE_GROUPS:
-        canonical = group[0]
-        for variant in sorted(group[1:], key=len, reverse=True):
-            normalized = normalized.replace(variant, canonical)
-    return normalized
+    return _normalize_for_flagging(value)
 
 
 def _ngram_multiset_coverage(required: str, observed: str, width: int) -> float:
@@ -120,8 +120,8 @@ def _ngram_multiset_coverage(required: str, observed: str, width: int) -> float:
 def _copies_definition(edge_text: object, definition: object) -> bool:
     """Detect a definition copied whole or with only a small local rewrite."""
 
-    normalized_edge = _normalize_copy_concepts(edge_text)
-    normalized_definition = _normalize_copy_concepts(definition)
+    normalized_edge = _normalize_copy_text(edge_text)
+    normalized_definition = _normalize_copy_text(definition)
     if len(normalized_definition) < 6 or not normalized_edge:
         return False
     if normalized_definition in normalized_edge:
@@ -218,6 +218,34 @@ def validate_independent_review(independent_review: object) -> list[str]:
         errors.append("independent learning review is not context-isolated")
     if any(not _resolution_schema_is_valid(resolution) for resolution in resolutions):
         errors.append("independent learning review is incomplete")
+    edge_reviews = independent_review.get("edge_reviews")
+    if not isinstance(edge_reviews, list) or any(
+        not isinstance(edge_review, dict) for edge_review in edge_reviews or []
+    ):
+        errors.append("independent learning review is incomplete")
+        edge_reviews = []
+    subject_ids: list[str] = []
+    for edge_review in edge_reviews:
+        if set(edge_review) != EDGE_REVIEW_FIELDS:
+            errors.append("independent learning review is incomplete")
+            continue
+        subject_id = _strict_text(edge_review.get("subject_id"))
+        observations = [
+            _strict_text(edge_review.get(review_field))
+            for review_field, _ in EDGE_REVIEW_OBSERVATIONS
+        ]
+        if (
+            not subject_id
+            or any(not observation for observation in observations)
+            or len({_normalize_for_flagging(value) for value in observations})
+            != len(observations)
+        ):
+            errors.append("independent learning review is incomplete")
+        subject_ids.append(subject_id)
+        if edge_review.get("reviewer_context_isolated") is not True:
+            errors.append("independent learning review is not context-isolated")
+    if len(subject_ids) != len(set(subject_ids)):
+        errors.append("independent learning review is incomplete")
     return list(dict.fromkeys(errors))
 
 
@@ -243,6 +271,17 @@ def evaluate_learning_quality(
         for record in records
         if _text(record.get("term"))
     }
+    edge_reviews = independent_review.get("edge_reviews", [])
+    if not isinstance(edge_reviews, list):
+        edge_reviews = []
+    reviews_by_subject: dict[str, list[dict]] = {}
+    for review in edge_reviews:
+        if not isinstance(review, dict):
+            continue
+        subject_id = _strict_text(review.get("subject_id"))
+        if subject_id:
+            reviews_by_subject.setdefault(subject_id, []).append(review)
+    ready_subjects: set[str] = set()
     for group in groups:
         if group.get("status") != "ready":
             continue
@@ -250,9 +289,35 @@ def evaluate_learning_quality(
             if not has_reviewed_contrast_contract(edge):
                 errors.append("comparison edge lacks reviewed contrast contract")
                 continue
-            if not comparison_edge_subject_id(group, edge):
+            subject_id = comparison_edge_subject_id(group, edge)
+            if not subject_id:
                 errors.append("comparison edge lacks reviewed contrast contract")
                 continue
+            ready_subjects.add(subject_id)
+            matching_reviews = reviews_by_subject.get(subject_id, [])
+            if len(matching_reviews) != 1:
+                errors.append(
+                    f"comparison edge lacks independent contrast review: {subject_id}"
+                )
+                continue
+            edge_review = matching_reviews[0]
+            observations_match = True
+            for review_field, edge_field in EDGE_REVIEW_OBSERVATIONS:
+                reviewed_value = _strict_text(edge_review.get(review_field))
+                edge_value = _strict_text(edge.get(edge_field))
+                if reviewed_value != edge_value:
+                    errors.append(
+                        "comparison edge independent review mismatch: "
+                        f"{subject_id}.{review_field}"
+                    )
+                    observations_match = False
+                    continue
+                if reviewed_value not in _strict_text(edge.get("text")):
+                    errors.append(
+                        "minimum difference omits reviewed observation: "
+                        f"{subject_id}.{review_field}"
+                    )
+                    observations_match = False
             definitions = tuple(
                 record.get(field)
                 for term in (edge.get("left"), edge.get("right"))
@@ -260,7 +325,17 @@ def evaluate_learning_quality(
                 if record is not None
                 for field in ("meaning", "distinctive_feature")
             )
-            if any(
+            for review_field, edge_field in EDGE_REVIEW_OBSERVATIONS:
+                observation = edge.get(edge_field)
+                if any(
+                    _copies_definition(observation, definition)
+                    for definition in definitions
+                ):
+                    errors.append(
+                        "comparison edge observation copies definition: "
+                        f"{subject_id}.{review_field}"
+                    )
+            if not observations_match and any(
                 _copies_definition(edge.get("text"), definition)
                 for definition in definitions
             ):
@@ -269,5 +344,11 @@ def evaluate_learning_quality(
                     f"{_text(group.get('group_id'))} "
                     f"{_text(edge.get('left'))} {_text(edge.get('right'))}"
                 )
+
+    for subject_id in reviews_by_subject:
+        if subject_id not in ready_subjects:
+            errors.append(
+                f"independent contrast review has no ready edge: {subject_id}"
+            )
 
     return list(dict.fromkeys(errors))

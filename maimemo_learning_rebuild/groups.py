@@ -15,6 +15,13 @@ REVIEWED_CONTRAST_FIELDS = (
     "axis",
     "left_landing",
     "right_landing",
+    "question_selection_condition",
+)
+_OBJECT_LEVEL_CONTRAST_FIELDS = (
+    "axis",
+    "left_landing",
+    "right_landing",
+    "question_selection_condition",
 )
 
 
@@ -33,6 +40,27 @@ def has_reviewed_contrast_contract(edge: dict) -> bool:
     if any(
         not isinstance(edge.get(field), str) or not edge[field].strip()
         for field in REVIEWED_CONTRAST_FIELDS
+    ):
+        return False
+    observations = [
+        "".join(edge[field].split()).casefold()
+        for field in _OBJECT_LEVEL_CONTRAST_FIELDS
+    ]
+    if len(set(observations)) != len(observations):
+        return False
+    left = str(edge.get("left") or "").strip()
+    right = str(edge.get("right") or "").strip()
+    if not left or not right:
+        return False
+    if left not in edge["axis"] or right not in edge["axis"]:
+        return False
+    if left not in edge["left_landing"]:
+        return False
+    if right not in edge["right_landing"]:
+        return False
+    if (
+        left not in edge["question_selection_condition"]
+        or right not in edge["question_selection_condition"]
     ):
         return False
     evidence_ids = edge.get("evidence_ids")
@@ -125,6 +153,8 @@ def validate_group_semantics(group: dict, records: dict[str, dict]) -> list[str]
         seen_pairs.add(pair)
         if not text:
             errors.append(f"empty minimum difference: {group_id} {left} {right}")
+        if not has_reviewed_contrast_contract(difference):
+            errors.append("comparison edge lacks reviewed contrast contract")
         neighbors[left].add(right)
         neighbors[right].add(left)
     if known_members:

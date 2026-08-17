@@ -23,6 +23,7 @@ from maimemo_learning_rebuild.release_writer import (
     execute_release,
 )
 from tests.maimemo_learning_rebuild.test_learning_quality import (
+    edge_review,
     empty_review,
     ready_group,
     ready_record,
@@ -127,7 +128,20 @@ def _comparison_quality(text: str) -> list[str]:
     )
     group = ready_group()
     group["minimum_differences"][0]["text"] = text
-    return evaluate_learning_quality([left, right], [group], empty_review())
+    return evaluate_learning_quality(
+        [left, right], [group], empty_review([edge_review(group)])
+    )
+
+
+def _reviewed_contrast_text(extra: str) -> str:
+    edge = ready_group()["minimum_differences"][0]
+    observations = (
+        edge["axis"],
+        edge["left_landing"],
+        edge["right_landing"],
+        edge["question_selection_condition"],
+    )
+    return "；".join((*observations, extra))
 
 
 def _copied_minimum_difference() -> list[str]:
@@ -197,6 +211,10 @@ class ReleaseMutationTests(unittest.TestCase):
     def test_copied_definition_wrappers_and_concatenations_fail_without_blocking_real_contrast(self):
         copied_error = (
             "minimum difference copies definition: g-risk 因噎废食 投鼠忌器"
+        )
+        omitted_error = (
+            "minimum difference omits reviewed observation: "
+            "g-risk:因噎废食:投鼠忌器.contrast_axis"
         )
         copied_cases = (
             (
@@ -273,6 +291,34 @@ class ReleaseMutationTests(unittest.TestCase):
                 "也就是说，不敢实施行动是因顾虑伤害关联对象。",
             ),
             (
+                "unlisted fear and stop synonyms",
+                "因恐惧出问题而放弃本来应该继续的行动。",
+            ),
+            (
+                "unlisted error and obligation synonyms",
+                "因害怕发生差错而停止本来应当继续的行动。",
+            ),
+            (
+                "unlisted original and action synonyms",
+                "因害怕出问题而停止原先应该继续的行为。",
+            ),
+            (
+                "unlisted left synonyms with reorder",
+                "本来应该继续的行为因恐惧出问题而放弃。",
+            ),
+            (
+                "unlisted harm and take-action synonyms",
+                "因顾忌损害关联对象而不敢开展行动。",
+            ),
+            (
+                "unlisted object and action synonyms",
+                "因顾忌伤及相关事物而不敢采取行为。",
+            ),
+            (
+                "unlisted right synonyms with reorder",
+                "不敢开展行动，是因为顾忌损害关联对象。",
+            ),
+            (
                 "concatenated features",
                 "结果是把必要行动整体停止；顾忌点落在行动可能牵连的对象。",
             ),
@@ -280,38 +326,50 @@ class ReleaseMutationTests(unittest.TestCase):
         for label, text in copied_cases:
             with self.subTest(copied_form=label):
                 errors = _comparison_quality(text)
-                self.assertIn(copied_error, errors, errors)
+                self.assertIn(omitted_error, errors, errors)
 
         genuine_cases = (
             (
                 "distinct result and concern",
-                "因噎废食的决定性结果是放弃必要行动；"
-                "投鼠忌器的决定性顾虑是行动会牵连特定对象。",
+                _reviewed_contrast_text(
+                    "因噎废食的决定性结果是放弃必要行动；"
+                    "投鼠忌器的决定性顾虑是行动会牵连特定对象。"
+                ),
             ),
             (
                 "shared inaction vocabulary with two landings",
-                "二词都可能表现为不采取行动；因噎废食是因小风险放弃必要事项，"
-                "投鼠忌器是因会牵连特定对象而暂不行动。",
+                _reviewed_contrast_text(
+                    "二词都可能表现为不采取行动；因噎废食是因小风险放弃必要事项，"
+                    "投鼠忌器是因会牵连特定对象而暂不行动。"
+                ),
             ),
             (
                 "shared concern vocabulary with two objects",
-                "二词都含有因顾虑而停止动作；因噎废食落在本应继续的事项被放弃，"
-                "投鼠忌器落在保护可能被牵连的对象。",
+                _reviewed_contrast_text(
+                    "二词都含有因顾虑而停止动作；因噎废食落在本应继续的事项被放弃，"
+                    "投鼠忌器落在保护可能被牵连的对象。"
+                ),
             ),
             (
                 "synonym-heavy but explicit two landings",
-                "二词都源于担心后果；因噎废食终止的是必要行动本身，"
-                "投鼠忌器保护的是会被伤害的关联对象。",
+                _reviewed_contrast_text(
+                    "二词都源于担心后果；因噎废食终止的是必要行动本身，"
+                    "投鼠忌器保护的是会被伤害的关联对象。"
+                ),
             ),
             (
                 "shared stopping action but different cause objects",
-                "停止行动只是共同表象；因噎废食把小风险当成放弃必要事项的理由，"
-                "投鼠忌器则顾虑实施行动会伤及特定对象。",
+                _reviewed_contrast_text(
+                    "停止行动只是共同表象；因噎废食把小风险当成放弃必要事项的理由，"
+                    "投鼠忌器则顾虑实施行动会伤及特定对象。"
+                ),
             ),
             (
                 "compact contrast retaining key definition phrase",
-                "因噎废食会停止本来应该继续的行动，落点是必要事项被放弃；"
-                "投鼠忌器即使暂不行动，落点仍是避免牵连关联对象。",
+                _reviewed_contrast_text(
+                    "因噎废食会停止本来应该继续的行动，落点是必要事项被放弃；"
+                    "投鼠忌器即使暂不行动，落点仍是避免牵连关联对象。"
+                ),
             ),
         )
         for label, text in genuine_cases:

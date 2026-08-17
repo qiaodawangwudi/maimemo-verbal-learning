@@ -23,6 +23,10 @@ def ready_record(
 
 
 def ready_group():
+    axis = "因噎废食看必要行动是否被放弃；投鼠忌器看是否顾忌牵连对象"
+    left_focus = "因噎废食落点：因小风险放弃必要行动"
+    right_focus = "投鼠忌器落点：为避免牵连特定对象而不行动"
+    selection = "题干强调放弃必要事项选因噎废食；强调保护牵连对象选投鼠忌器"
     return {
         "group_id": "g-risk",
         "status": "ready",
@@ -31,11 +35,12 @@ def ready_group():
             {
                 "left": "因噎废食",
                 "right": "投鼠忌器",
-                "text": "因噎废食停止必要行动；投鼠忌器顾忌牵连对象。",
+                "text": "；".join((axis, left_focus, right_focus, selection)),
                 "shared_basis": "面对行动风险时是否继续行动",
-                "axis": "顾忌对象与行动结果",
-                "left_landing": "因风险而停止本应继续的行动",
-                "right_landing": "因担心牵连关联对象而不敢行动",
+                "axis": axis,
+                "left_landing": left_focus,
+                "right_landing": right_focus,
+                "question_selection_condition": selection,
                 "evidence_ids": ["ev-risk-001", "ev-risk-002"],
                 "review_status": "pass",
             }
@@ -43,11 +48,25 @@ def ready_group():
     }
 
 
-def empty_review():
+def edge_review(group=None):
+    group = group or ready_group()
+    edge = group["minimum_differences"][0]
+    return {
+        "subject_id": f"{group['group_id']}:{edge['left']}:{edge['right']}",
+        "contrast_axis": edge["axis"],
+        "left_focus": edge["left_landing"],
+        "right_focus": edge["right_landing"],
+        "question_selection_condition": edge["question_selection_condition"],
+        "reviewer_context_isolated": True,
+    }
+
+
+def empty_review(edge_reviews=None):
     return {
         "complete": True,
         "reviewer_context_isolated": True,
         "resolutions": [],
+        "edge_reviews": list(edge_reviews or []),
     }
 
 
@@ -281,10 +300,68 @@ class LearningQualityTests(unittest.TestCase):
         )
 
     def test_complete_reviewed_edge_passes_learning_quality_gate(self):
+        group = ready_group()
         self.assertEqual(
             [],
-            evaluate_learning_quality([], [ready_group()], empty_review()),
+            evaluate_learning_quality(
+                [], [group], empty_review([edge_review(group)])
+            ),
         )
+
+    def test_ready_edge_requires_exact_independent_object_review_and_observations(self):
+        group = ready_group()
+        subject = "g-risk:因噎废食:投鼠忌器"
+        records = [
+            ready_record(
+                term="因噎废食",
+                meaning="因害怕出问题而停止本来应该继续的行动。",
+                distinctive_feature="结果是把必要行动整体停止。",
+            ),
+            ready_record(
+                term="投鼠忌器",
+                meaning="因顾忌伤及关联对象而不敢采取行动。",
+                distinctive_feature="顾忌点落在行动可能牵连的对象。",
+            ),
+        ]
+        valid_review = empty_review([edge_review(group)])
+
+        self.assertEqual(
+            [], evaluate_learning_quality(records, [group], valid_review)
+        )
+        self.assertIn(
+            f"comparison edge lacks independent contrast review: {subject}",
+            evaluate_learning_quality(records, [group], empty_review()),
+        )
+
+        mismatched = empty_review([edge_review(group)])
+        mismatched["edge_reviews"][0]["left_focus"] += "（被改动）"
+        self.assertIn(
+            f"comparison edge independent review mismatch: {subject}.left_focus",
+            evaluate_learning_quality(records, [group], mismatched),
+        )
+
+        omitted = copy.deepcopy(group)
+        omitted["minimum_differences"][0]["text"] = (
+            "因恐惧出问题而放弃本来应该继续的行动。"
+        )
+        self.assertIn(
+            f"minimum difference omits reviewed observation: {subject}.contrast_axis",
+            evaluate_learning_quality(records, [omitted], valid_review),
+        )
+
+        for field in (
+            "axis",
+            "left_landing",
+            "right_landing",
+            "question_selection_condition",
+        ):
+            with self.subTest(missing_contract_field=field):
+                malformed = copy.deepcopy(group)
+                malformed["minimum_differences"][0][field] = ""
+                self.assertIn(
+                    "comparison edge lacks reviewed contrast contract",
+                    evaluate_learning_quality(records, [malformed], valid_review),
+                )
 
     def test_every_ready_edge_contract_field_and_evidence_id_must_be_string(self):
         invalid_fields = {
@@ -292,6 +369,7 @@ class LearningQualityTests(unittest.TestCase):
             "axis": ["动作结果"],
             "left_landing": {"value": "停止行动"},
             "right_landing": ["顾忌对象"],
+            "question_selection_condition": {"if": "题干落点"},
         }
         for field, value in invalid_fields.items():
             with self.subTest(field=field):
@@ -309,6 +387,58 @@ class LearningQualityTests(unittest.TestCase):
                 self.assertIn(
                     "comparison edge lacks reviewed contrast contract",
                     evaluate_learning_quality([], [group], empty_review()),
+                )
+
+    def test_independently_reviewed_observations_cannot_copy_member_definitions(self):
+        records = [
+            ready_record(
+                term="因噎废食",
+                meaning="因害怕出问题而停止本来应该继续的行动。",
+                distinctive_feature="结果是把必要行动整体停止。",
+            ),
+            ready_record(
+                term="投鼠忌器",
+                meaning="因顾忌伤及关联对象而不敢采取行动。",
+                distinctive_feature="顾忌点落在行动可能牵连的对象。",
+            ),
+        ]
+        replacements = {
+            "contrast_axis": (
+                "因噎废食：因害怕出问题而停止本来应该继续的行动；"
+                "投鼠忌器：因顾忌伤及关联对象而不敢采取行动"
+            ),
+            "left_focus": "因噎废食：因害怕出问题而停止本来应该继续的行动",
+            "right_focus": "投鼠忌器：因顾忌伤及关联对象而不敢采取行动",
+            "question_selection_condition": (
+                "题干符合因害怕出问题而停止本来应该继续的行动选因噎废食；"
+                "符合因顾忌伤及关联对象而不敢采取行动选投鼠忌器"
+            ),
+        }
+        edge_fields = {
+            "contrast_axis": "axis",
+            "left_focus": "left_landing",
+            "right_focus": "right_landing",
+            "question_selection_condition": "question_selection_condition",
+        }
+        for review_field, copied_value in replacements.items():
+            with self.subTest(review_field=review_field):
+                group = ready_group()
+                edge = group["minimum_differences"][0]
+                edge[edge_fields[review_field]] = copied_value
+                edge["text"] = "；".join(
+                    edge[field]
+                    for field in (
+                        "axis",
+                        "left_landing",
+                        "right_landing",
+                        "question_selection_condition",
+                    )
+                )
+                review = empty_review([edge_review(group)])
+                self.assertIn(
+                    "comparison edge observation copies definition: "
+                    f"g-risk:因噎废食:投鼠忌器.{review_field}",
+                    evaluate_learning_quality(records, [group], review),
                 )
 
     def test_each_ready_edge_is_checked_for_reviewed_contract(self):
@@ -348,6 +478,12 @@ class LearningQualityTests(unittest.TestCase):
         changed = copy.deepcopy(stored)
         changed["resolutions"][0]["feature_observation"] = "强化已有基础"
         self.assertNotEqual(digest, learning_review_hash(changed))
+
+        edge_bound = empty_review([edge_review()])
+        edge_digest = learning_review_hash(edge_bound)
+        changed_edge = copy.deepcopy(edge_bound)
+        changed_edge["edge_reviews"][0]["contrast_axis"] += "（改动）"
+        self.assertNotEqual(edge_digest, learning_review_hash(changed_edge))
 
 
 if __name__ == "__main__":

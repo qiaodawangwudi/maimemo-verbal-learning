@@ -41,10 +41,39 @@ def canonical_bytes(value):
 
 
 def independent_quality_report(semantic_raw, group_raw):
+    group_payload = json.loads(group_raw.decode("utf-8"))
+    edge_reviews = []
+    for group in group_payload.get("groups", []):
+        if group.get("status") != "ready":
+            continue
+        for edge in group.get("minimum_differences", []):
+            required_fields = (
+                "axis",
+                "left_landing",
+                "right_landing",
+                "question_selection_condition",
+            )
+            if any(not isinstance(edge.get(field), str) for field in required_fields):
+                continue
+            edge_reviews.append(
+                {
+                    "subject_id": (
+                        f"{group['group_id']}:{edge['left']}:{edge['right']}"
+                    ),
+                    "contrast_axis": edge["axis"],
+                    "left_focus": edge["left_landing"],
+                    "right_focus": edge["right_landing"],
+                    "question_selection_condition": edge[
+                        "question_selection_condition"
+                    ],
+                    "reviewer_context_isolated": True,
+                }
+            )
     independent_review = {
         "complete": True,
         "reviewer_context_isolated": True,
         "resolutions": [],
+        "edge_reviews": edge_reviews,
         "semantic_registry_hash": hashlib.sha256(semantic_raw).hexdigest(),
         "group_registry_hash": hashlib.sha256(group_raw).hexdigest(),
     }

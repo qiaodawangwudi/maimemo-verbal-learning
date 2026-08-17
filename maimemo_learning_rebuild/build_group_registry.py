@@ -161,7 +161,11 @@ def synthesize_group_review(group: dict, records: dict[str, dict]) -> dict:
     reviewed.update(
         {
             "members": members,
-            "status": "ready",
+            # Generated prose is a review candidate, not independent evidence.
+            # Only an explicit override carrying the object-level comparison
+            # contract may promote this group to ready later in the pipeline.
+            "status": "pending",
+            "pending_reason": "independent comparison edge review required",
             "title": f"近义辨析｜{'、'.join(members)}",
             "purpose": "依据准确词义、特别之处和题干判断维度，区分组内词语的最小差别。",
             "minimum_differences": differences,

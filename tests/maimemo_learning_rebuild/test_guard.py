@@ -64,6 +64,7 @@ def safe_fixture():
         "complete": True,
         "reviewer_context_isolated": True,
         "resolutions": [],
+        "edge_reviews": [],
     }
     independent_review["review_hash"] = learning_review_hash(independent_review)
     approval = {
@@ -92,6 +93,7 @@ def reviewed_fixture(record, resolution):
                 **resolution,
             }
         ],
+        "edge_reviews": [],
     }
     independent_review["review_hash"] = learning_review_hash(independent_review)
     approval = {
