@@ -1,5 +1,6 @@
 import unittest
 
+from maimemo_learning_rebuild.application_blind_review import blind_review_hash
 from maimemo_learning_rebuild.application_quality_gate import (
     application_review_hash,
     evaluate_application_gate,
@@ -42,9 +43,32 @@ def application_card(title: str) -> dict:
     }
 
 
+def blind_review(titles: list[str]) -> dict:
+    return {
+        "complete": True,
+        "reviews": [
+            {
+                "card_title": title,
+                "status": "pass",
+                "selected_answer": "因噎废食",
+                "viable_options": ["因噎废食"],
+                "decisive_clues": ["担心出错后停止本应继续的必要行动"],
+                "distractor_rejections": {
+                    "投鼠忌器": "投鼠忌器要求顾忌会伤及关联对象，题干没有这种对象。"
+                },
+                "reviewer_context_isolated": True,
+                "expected_answer_seen": False,
+            }
+            for title in titles
+        ],
+    }
+
+
 def bound_plan(review: dict, titles: list[str]) -> dict:
+    current_blind_review = blind_review(titles)
     return {
         "application_review_hash": application_review_hash(review),
+        "blind_review_hash": blind_review_hash(current_blind_review),
         "actions": [{"title": title} for title in titles],
     }
 
@@ -68,11 +92,28 @@ class ApplicationQualityGateTests(unittest.TestCase):
             {},
             {"cards": []},
             {},
+            blind_review([]),
         )
 
         self.assertIn("application review is not marked complete", errors)
         self.assertIn("application review missing semantic decisions: 2", errors)
         self.assertIn("application review missing comparison-group decisions: 1", errors)
+
+    def test_missing_blind_review_blocks_release(self):
+        review = {"complete": True, "decisions": []}
+
+        errors = evaluate_application_gate(
+            {},
+            {},
+            review,
+            {"cards": []},
+            {
+                "application_review_hash": application_review_hash(review),
+                "actions": [],
+            },
+        )
+
+        self.assertIn("missing blind review", errors)
 
     def test_create_decision_requires_a_matching_application_card(self):
         review = {
@@ -107,6 +148,7 @@ class ApplicationQualityGateTests(unittest.TestCase):
             review,
             {"cards": []},
             bound_plan(review, []),
+            blind_review([]),
         )
 
         self.assertIn(
@@ -157,6 +199,7 @@ class ApplicationQualityGateTests(unittest.TestCase):
             review,
             {"cards": [weak_card]},
             bound_plan(review, [title]),
+            blind_review([title]),
         )
 
         self.assertIn(f"application card lacks usable context: {title}", errors)
@@ -202,6 +245,7 @@ class ApplicationQualityGateTests(unittest.TestCase):
             review,
             {"cards": [card]},
             bound_plan(review, [title]),
+            blind_review([title]),
         )
 
         self.assertIn(f"application card uses unsupported construction mode: {title}", errors)
@@ -248,6 +292,7 @@ class ApplicationQualityGateTests(unittest.TestCase):
             review,
             {"cards": [card]},
             bound_plan(review, [title]),
+            blind_review([title]),
         )
 
         self.assertIn(f"application card copies source wording: {title}", errors)
@@ -287,6 +332,7 @@ class ApplicationQualityGateTests(unittest.TestCase):
             review,
             {"cards": [application_card(title)]},
             bound_plan(review, [title]),
+            blind_review([title]),
         )
 
         self.assertEqual([], errors)
@@ -324,7 +370,12 @@ class ApplicationQualityGateTests(unittest.TestCase):
             self.groups,
             review,
             {"cards": [application_card(title)]},
-            {"application_review_hash": "stale", "actions": []},
+            {
+                "application_review_hash": "stale",
+                "blind_review_hash": blind_review_hash(blind_review([title])),
+                "actions": [],
+            },
+            blind_review([title]),
         )
 
         self.assertIn("action plan is not bound to current application review", errors)

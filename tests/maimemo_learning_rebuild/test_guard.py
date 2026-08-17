@@ -1,12 +1,24 @@
 import copy
 import unittest
 
-from maimemo_learning_rebuild.guard import evaluate_guard
+from maimemo_learning_rebuild.guard import evaluate_guard as _evaluate_guard
 from maimemo_learning_rebuild.learning_quality import (
     evaluate_learning_quality,
     learning_review_hash,
 )
 from maimemo_learning_rebuild.planning import build_action_plan
+
+
+APPLICATION_REVIEW = {"complete": True, "applications": []}
+BLIND_REVIEW = {"complete": True, "reviews": []}
+
+
+def evaluate_guard(**kwargs):
+    return _evaluate_guard(
+        application_review=APPLICATION_REVIEW,
+        blind_review=BLIND_REVIEW,
+        **kwargs,
+    )
 
 
 def ready_record(term="甲"):
@@ -40,7 +52,9 @@ def safe_fixture():
         ],
     }
     registry = [ready_record()]
-    plan, cards = build_action_plan(snapshot, registry, [])
+    plan, cards = build_action_plan(
+        snapshot, registry, [], APPLICATION_REVIEW, BLIND_REVIEW
+    )
     independent_review = {
         "complete": True,
         "reviewer_context_isolated": True,
@@ -59,7 +73,9 @@ def safe_fixture():
 def reviewed_fixture(record, resolution):
     snapshot, _, groups, _, _, _, _ = safe_fixture()
     registry = [record]
-    plan, cards = build_action_plan(snapshot, registry, groups)
+    plan, cards = build_action_plan(
+        snapshot, registry, groups, APPLICATION_REVIEW, BLIND_REVIEW
+    )
     independent_review = {
         "complete": True,
         "reviewer_context_isolated": True,

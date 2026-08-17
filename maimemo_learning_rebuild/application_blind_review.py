@@ -4,7 +4,9 @@ from __future__ import annotations
 
 import hashlib
 import json
+import math
 from collections import Counter
+from pathlib import Path
 
 
 GENERIC_REVIEW_PHRASES = (
@@ -21,8 +23,71 @@ def _nonempty_string(value: object) -> bool:
     return isinstance(value, str) and bool(value.strip())
 
 
-def _normalized_reason(value: str) -> str:
-    return "".join(character for character in value if character.isalnum())
+def strict_json_error(value: object) -> str | None:
+    """Return a reason when *value* is not representable by strict JSON."""
+
+    def visit(current: object, seen: set[int]) -> str | None:
+        if current is None or isinstance(current, (bool, str, int)):
+            return None
+        if isinstance(current, float):
+            return None if math.isfinite(current) else "non-finite number"
+        if isinstance(current, list):
+            identity = id(current)
+            if identity in seen:
+                return "cyclic list"
+            seen.add(identity)
+            for item in current:
+                error = visit(item, seen)
+                if error:
+                    return error
+            seen.remove(identity)
+            return None
+        if isinstance(current, dict):
+            identity = id(current)
+            if identity in seen:
+                return "cyclic object"
+            seen.add(identity)
+            for key, item in current.items():
+                if not isinstance(key, str):
+                    return "non-string object key"
+                error = visit(item, seen)
+                if error:
+                    return error
+            seen.remove(identity)
+            return None
+        return f"unsupported type: {type(current).__name__}"
+
+    return visit(value, set())
+
+
+def _reject_json_constant(value: str) -> object:
+    raise ValueError(f"non-finite JSON number: {value}")
+
+
+def load_strict_json(path: Path) -> object:
+    """Load a file using strict RFC-compatible JSON scalar rules."""
+
+    value = json.loads(
+        path.read_text(encoding="utf-8-sig"),
+        parse_constant=_reject_json_constant,
+    )
+    error = strict_json_error(value)
+    if error:
+        raise ValueError(error)
+    return value
+
+
+def _normalized_reason(value: str, variables: list[str]) -> str:
+    normalized = value
+    for variable in sorted(
+        {item for item in variables if item}, key=len, reverse=True
+    ):
+        normalized = normalized.replace(variable, "")
+    return "".join(
+        character
+        for character in normalized
+        if character.isalnum() and not character.isdigit()
+    )
 
 
 def _application_cards(final_cards: dict) -> tuple[list[dict], list[str]]:
@@ -159,7 +224,14 @@ def _validate_entry(review: dict, card: dict) -> tuple[list[str], list[str]]:
             errors.append(f"blind review lacks distractor rejection: {label}:{distractor}")
             continue
         reason = reason.strip()
-        normalized = _normalized_reason(reason.replace(distractor, ""))
+        variables = [
+            label,
+            *options,
+            str(card.get("card_id") or ""),
+            str(card.get("id") or ""),
+            str(card.get("root_id") or ""),
+        ]
+        normalized = _normalized_reason(reason, variables)
         repeated_reason_candidates.append(normalized)
         if distractor not in reason or any(
             phrase in reason for phrase in GENERIC_REVIEW_PHRASES
@@ -178,17 +250,34 @@ def evaluate_blind_reviews(final_cards: dict, blind_review: dict) -> list[str]:
 
     if not isinstance(blind_review, dict):
         return ["blind review must be an object"]
+    if strict_json_error(blind_review):
+        return ["blind review is not strict JSON"]
+    if isinstance(final_cards, dict) and strict_json_error(final_cards):
+        return ["final cards are not strict JSON"]
     application_cards, errors = _application_cards(final_cards)
     entries, review_errors = _review_entries(blind_review)
     errors.extend(review_errors)
 
     cards_by_title: dict[str, dict] = {}
+    card_titles: list[str] = []
+    card_ids: list[str] = []
     for card in application_cards:
         title = card.get("title")
         if not _nonempty_string(title):
             errors.append("application card title must be a string")
             continue
-        cards_by_title[title.strip()] = card
+        title = title.strip()
+        card_titles.append(title)
+        cards_by_title.setdefault(title, card)
+        card_id = card.get("card_id") or card.get("id")
+        if _nonempty_string(card_id):
+            card_ids.append(card_id.strip())
+    for title, count in sorted(Counter(card_titles).items()):
+        if count > 1:
+            errors.append(f"duplicate application card title: {title}")
+    for card_id, count in sorted(Counter(card_ids).items()):
+        if count > 1:
+            errors.append(f"duplicate application card id: {card_id}")
 
     entry_titles = [
         entry.get("card_title").strip()
@@ -232,6 +321,8 @@ def blind_review_hash(review: dict) -> str:
 
     if not isinstance(review, dict):
         raise TypeError("blind review must be an object")
+    if strict_json_error(review):
+        raise ValueError("blind review is not strict JSON")
     payload = {key: value for key, value in review.items() if key != "review_hash"}
     canonical = json.dumps(
         payload,

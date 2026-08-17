@@ -1,5 +1,10 @@
 import copy
+import json
+import subprocess
+import sys
+import tempfile
 import unittest
+from pathlib import Path
 
 from maimemo_learning_rebuild.application_blind_review import (
     blind_review_hash,
@@ -14,11 +19,12 @@ from maimemo_learning_rebuild.application_quality_gate import (
 TITLE = "语境应用｜甲、乙｜行动取舍"
 
 
-def final_cards(*, title=TITLE, answer="甲", distractor="乙"):
+def final_cards(*, title=TITLE, answer="甲", distractor="乙", card_id=""):
     return {
         "cards": [
             {
                 "title": title,
+                "card_id": card_id,
                 "card_type": "application",
                 "application": {
                     "prompt": "面对可能出现的小问题，负责人索性停止了本来必须继续推进的工作。",
@@ -204,6 +210,126 @@ class ApplicationBlindReviewTests(unittest.TestCase):
             any(error.startswith("blind review repeats generic reason:") for error in errors),
             errors,
         )
+
+    def test_rejects_generic_template_when_answer_distractor_title_and_id_change(self):
+        second_title = "语境应用｜丙、丁｜行动取舍"
+        cards = final_cards(card_id="card-101")
+        cards["cards"].append(
+            final_cards(
+                title=second_title,
+                answer="丙",
+                distractor="丁",
+                card_id="card-202",
+            )["cards"][0]
+        )
+        review = {
+            "complete": True,
+            "reviews": [
+                review_entry(
+                    distractor_rejections={
+                        "乙": f"乙只因与甲相比不具备被选中的条件，所以本题应当排除乙。{TITLE}，编号101。"
+                    }
+                ),
+                review_entry(
+                    title=second_title,
+                    selected_answer="丙",
+                    viable_options=["丙"],
+                    distractor_rejections={
+                        "丁": f"丁只因与丙相比不具备被选中的条件，所以本题应当排除丁。{second_title}，编号202。"
+                    },
+                ),
+            ],
+        }
+
+        errors = evaluate_blind_reviews(cards, review)
+
+        self.assertTrue(
+            any(error.startswith("blind review repeats generic reason:") for error in errors),
+            errors,
+        )
+
+    def test_rejects_duplicate_application_card_identity_itself(self):
+        cards = final_cards(card_id="same-card")
+        cards["cards"].append(copy.deepcopy(cards["cards"][0]))
+
+        errors = evaluate_blind_reviews(cards, blind_review())
+
+        self.assertIn(f"duplicate application card title: {TITLE}", errors)
+        self.assertIn("duplicate application card id: same-card", errors)
+
+    def test_rejects_nan_and_nested_non_json_values_without_raising(self):
+        for malformed in (
+            {"complete": True, "reviews": [], "score": float("nan")},
+            {"complete": True, "reviews": [], "extra": ("tuple",)},
+            {"complete": True, "reviews": [], 1: "non-string-key"},
+        ):
+            with self.subTest(malformed=malformed):
+                errors = evaluate_blind_reviews({"cards": []}, malformed)
+                self.assertIn("blind review is not strict JSON", errors)
+
+        final_card_errors = evaluate_blind_reviews(
+            {"cards": [], "score": float("inf")},
+            {"complete": True, "reviews": []},
+        )
+        self.assertIn("final cards are not strict JSON", final_card_errors)
+
+    def test_application_gate_rejects_scalar_top_level_inputs_without_raising(self):
+        valid_review = {"complete": True, "decisions": []}
+        valid_blind = {"complete": True, "reviews": []}
+        valid_plan = {
+            "application_review_hash": application_review_hash(valid_review),
+            "blind_review_hash": blind_review_hash(valid_blind),
+            "actions": [],
+        }
+        fixtures = (
+            ([], {}, valid_review, {"cards": []}, valid_plan, valid_blind),
+            ({}, 1, valid_review, {"cards": []}, valid_plan, valid_blind),
+            ({}, {}, "review", {"cards": []}, valid_plan, valid_blind),
+            ({}, {}, valid_review, "cards", valid_plan, valid_blind),
+            ({}, {}, valid_review, {"cards": []}, [], valid_blind),
+            ({}, {}, valid_review, {"cards": []}, valid_plan, float("nan")),
+        )
+
+        for args in fixtures:
+            with self.subTest(args=args):
+                errors = evaluate_application_gate(*args)
+                self.assertTrue(errors)
+
+    def test_application_gate_cli_rejects_broken_json_without_traceback(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            artifact_dir = Path(temporary)
+            payloads = {
+                "master_semantic_registry.json": {"records": []},
+                "group_registry.json": {"groups": []},
+                "application_review.json": {"complete": True, "decisions": []},
+                "final_cards.json": {"cards": []},
+                "action_plan.json": {"actions": []},
+            }
+            for name, payload in payloads.items():
+                (artifact_dir / name).write_text(
+                    json.dumps(payload, ensure_ascii=False), encoding="utf-8"
+                )
+            (artifact_dir / "application_blind_review.json").write_text(
+                '{"complete": true, "reviews": [}', encoding="utf-8"
+            )
+
+            result = subprocess.run(
+                [
+                    sys.executable,
+                    "-m",
+                    "maimemo_learning_rebuild.application_quality_gate",
+                    "--artifact-dir",
+                    str(artifact_dir),
+                ],
+                cwd=Path(__file__).parents[2],
+                capture_output=True,
+                text=True,
+                encoding="utf-8",
+            )
+
+        self.assertNotEqual(0, result.returncode)
+        self.assertNotIn("Traceback", result.stderr)
+        self.assertIn("invalid strict JSON", result.stdout)
 
     def test_accepts_complete_card_specific_blind_review(self):
         self.assertEqual([], evaluate_blind_reviews(final_cards(), blind_review()))

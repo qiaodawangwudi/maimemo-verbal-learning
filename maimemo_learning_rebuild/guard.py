@@ -7,6 +7,7 @@ import json
 from dataclasses import dataclass
 from pathlib import Path
 
+from .application_blind_review import load_strict_json
 from .groups import validate_group_registry
 from .learning_quality import learning_review_hash
 from .planning import content_hash, validate_action_plan
@@ -34,11 +35,20 @@ def evaluate_guard(
     approval: dict | None,
     target_chapter_id: str,
     independent_review: dict | None = None,
+    application_review: dict | None = None,
+    blind_review: dict | None = None,
 ) -> GuardResult:
     errors: list[str] = []
     plan_hash = str(plan.get("plan_hash") or "")
     current_learning_review_hash = ""
-    errors.extend(validate_action_plan(plan, snapshot))
+    errors.extend(
+        validate_action_plan(
+            plan,
+            snapshot,
+            application_review,
+            blind_review,
+        )
+    )
 
     if isinstance(independent_review, dict):
         current_learning_review_hash = learning_review_hash(independent_review)
@@ -133,13 +143,15 @@ def main() -> int:
     parser.add_argument("--sources", type=Path, required=True)
     parser.add_argument("--approval", type=Path)
     parser.add_argument("--independent-review", type=Path)
+    parser.add_argument("--application-review", type=Path, required=True)
+    parser.add_argument("--blind-review", type=Path, required=True)
     parser.add_argument("--target-chapter-id", required=True)
     args = parser.parse_args()
-    snapshot = json.loads(args.snapshot.read_text(encoding="utf-8-sig"))
-    registry = json.loads(args.registry.read_text(encoding="utf-8-sig"))["records"]
-    groups = json.loads(args.groups.read_text(encoding="utf-8-sig"))["groups"]
-    cards = json.loads(args.cards.read_text(encoding="utf-8-sig"))["cards"]
-    plan = json.loads(args.plan.read_text(encoding="utf-8-sig"))
+    snapshot = load_strict_json(args.snapshot)
+    registry = load_strict_json(args.registry)["records"]
+    groups = load_strict_json(args.groups)["groups"]
+    cards = load_strict_json(args.cards)["cards"]
+    plan = load_strict_json(args.plan)
     catalog = load_source_catalog(args.sources)
     approval = (
         json.loads(args.approval.read_text(encoding="utf-8-sig"))
@@ -147,10 +159,12 @@ def main() -> int:
         else None
     )
     independent_review = (
-        json.loads(args.independent_review.read_text(encoding="utf-8-sig"))
+        load_strict_json(args.independent_review)
         if args.independent_review
         else None
     )
+    application_review = load_strict_json(args.application_review)
+    blind_review = load_strict_json(args.blind_review)
     result = evaluate_guard(
         snapshot=snapshot,
         registry=registry,
@@ -161,6 +175,8 @@ def main() -> int:
         approval=approval,
         target_chapter_id=args.target_chapter_id,
         independent_review=independent_review,
+        application_review=application_review,
+        blind_review=blind_review,
     )
     print(
         json.dumps(

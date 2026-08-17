@@ -8,7 +8,12 @@ import json
 from collections import Counter
 from pathlib import Path
 
-from .application_blind_review import blind_review_hash
+from .application_blind_review import (
+    blind_review_hash,
+    evaluate_blind_reviews,
+    load_strict_json,
+    strict_json_error,
+)
 from .application_quality_gate import application_review_hash
 from .markji import parse_card
 from .models import validate_action_record
@@ -20,8 +25,16 @@ def content_hash(content: str) -> str:
 
 
 def _plan_hash(plan: dict) -> str:
+    if not isinstance(plan, dict) or strict_json_error(plan):
+        raise ValueError("action plan is not strict JSON")
     payload = {key: value for key, value in plan.items() if key != "plan_hash"}
-    canonical = json.dumps(payload, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
+    canonical = json.dumps(
+        payload,
+        ensure_ascii=False,
+        sort_keys=True,
+        separators=(",", ":"),
+        allow_nan=False,
+    )
     return content_hash(canonical)
 
 
@@ -37,7 +50,30 @@ def build_action_plan(
     application_review: dict | None = None,
     blind_review: dict | None = None,
 ) -> tuple[dict, list[dict]]:
-    parsed = [parse_card(card) for card in snapshot.get("cards", [])]
+    if application_review is None:
+        raise ValueError("application review is required")
+    if not isinstance(application_review, dict) or strict_json_error(application_review):
+        raise ValueError("application review must be a strict JSON object")
+    if application_review.get("complete") is not True or not isinstance(
+        application_review.get("applications"), list
+    ):
+        raise ValueError("application review is incomplete")
+    if blind_review is None:
+        raise ValueError("blind review is required")
+    if not isinstance(blind_review, dict) or strict_json_error(blind_review):
+        raise ValueError("blind review must be a strict JSON object")
+
+    if not isinstance(snapshot, dict) or strict_json_error(snapshot):
+        raise ValueError("snapshot must be a strict JSON object")
+    raw_cards = snapshot.get("cards", [])
+    if not isinstance(raw_cards, list) or any(
+        not isinstance(card, dict) for card in raw_cards
+    ):
+        raise ValueError("snapshot cards must be a list of objects")
+    try:
+        parsed = [parse_card(card) for card in raw_cards]
+    except (KeyError, TypeError, ValueError) as exc:
+        raise ValueError(f"invalid snapshot card: {exc}") from exc
     base_by_term = {card.term: card for card in parsed if card.card_type == "base"}
     comparison_by_id = {
         card.card_id: card for card in parsed if card.card_type == "comparison"
@@ -177,7 +213,9 @@ def build_action_plan(
             )
 
     handled_application_titles: set[str] = set()
-    for application in (application_review or {}).get("applications", []):
+    for application in application_review.get("applications", []):
+        if not isinstance(application, dict):
+            raise ValueError("application review applications must contain objects")
         title = str(application["title"])
         handled_application_titles.add(title)
         existing = application_by_title.get(title)
@@ -240,10 +278,11 @@ def build_action_plan(
         "action_counts": dict(sorted(action_counts.items())),
         "actions": actions,
     }
-    if application_review is not None:
-        plan["application_review_hash"] = application_review_hash(application_review)
-    if blind_review is not None:
-        plan["blind_review_hash"] = blind_review_hash(blind_review)
+    blind_errors = evaluate_blind_reviews({"cards": final_cards}, blind_review)
+    if blind_errors:
+        raise ValueError("invalid blind review: " + "; ".join(blind_errors))
+    plan["application_review_hash"] = application_review_hash(application_review)
+    plan["blind_review_hash"] = blind_review_hash(blind_review)
     plan["plan_hash"] = _plan_hash(plan)
     return plan, final_cards
 
@@ -255,11 +294,37 @@ def validate_action_plan(
     blind_review: dict | None = None,
 ) -> list[str]:
     errors: list[str] = []
-    parsed = [parse_card(card) for card in snapshot.get("cards", [])]
+    if not isinstance(plan, dict):
+        return ["action plan must be an object"]
+    if strict_json_error(plan):
+        return ["action plan is not strict JSON"]
+    if not isinstance(snapshot, dict):
+        return ["snapshot must be an object"]
+    if strict_json_error(snapshot):
+        return ["snapshot is not strict JSON"]
+    raw_cards = snapshot.get("cards", [])
+    if not isinstance(raw_cards, list):
+        errors.append("snapshot cards must be a list")
+        raw_cards = []
+    parsed = []
+    for index, card in enumerate(raw_cards):
+        if not isinstance(card, dict):
+            errors.append(f"snapshot card must be an object: {index}")
+            continue
+        try:
+            parsed.append(parse_card(card))
+        except (KeyError, TypeError, ValueError) as exc:
+            errors.append(f"invalid snapshot card: {index}: {exc}")
     existing_titles = {card.title for card in parsed}
     existing_ids = {card.card_id for card in parsed}
     actions = plan.get("actions", [])
+    if not isinstance(actions, list):
+        errors.append("action plan actions must be a list")
+        actions = []
     for action in actions:
+        if not isinstance(action, dict):
+            errors.append("action plan action must be an object")
+            continue
         errors.extend(validate_action_record(action))
         title = str(action.get("title") or "")
         value = action.get("action")
@@ -270,29 +335,62 @@ def validate_action_plan(
         if action.get("record_status") != "ready" and value != "manual-review":
             errors.append(f"pending record has mutating action: {title}")
     create_count = sum(action.get("action") == "create" for action in actions)
-    if plan.get("before") + create_count != plan.get("expected_after"):
+    before = plan.get("before")
+    expected_after = plan.get("expected_after")
+    if type(before) is not int or type(expected_after) is not int:
+        errors.append("action plan counts must be integers")
+    elif before + create_count != expected_after:
         errors.append("action count equation mismatch")
-    if plan.get("before") != len(parsed):
+    if type(before) is not int or before != len(parsed):
         errors.append("plan before count differs from snapshot")
     if plan.get("snapshot_hash") and plan.get("snapshot_hash") != snapshot_hash(snapshot):
         errors.append("snapshot hash mismatch")
-    if "application_review_hash" in plan and application_review is None:
+    stored_application_hash = plan.get("application_review_hash")
+    if not isinstance(stored_application_hash, str) or not stored_application_hash:
+        errors.append("action plan is missing application review hash")
+    if application_review is None:
         errors.append("current application review is missing")
-    elif application_review is not None and (
-        not isinstance(application_review, dict)
-        or plan.get("application_review_hash")
-        != application_review_hash(application_review)
-    ):
+    elif not isinstance(application_review, dict) or strict_json_error(application_review):
         errors.append("action plan is not bound to current application review")
-    if "blind_review_hash" in plan and blind_review is None:
+    else:
+        applications = application_review.get("applications")
+        if (
+            application_review.get("complete") is not True
+            or not isinstance(applications, list)
+            or any(not isinstance(item, dict) for item in applications)
+        ):
+            errors.append("current application review is invalid")
+        try:
+            if stored_application_hash != application_review_hash(application_review):
+                errors.append("action plan is not bound to current application review")
+        except (TypeError, ValueError, OverflowError, RecursionError):
+            errors.append("action plan is not bound to current application review")
+    stored_blind_hash = plan.get("blind_review_hash")
+    if not isinstance(stored_blind_hash, str) or not stored_blind_hash:
+        errors.append("action plan is missing blind review hash")
+    if blind_review is None:
         errors.append("current blind review is missing")
-    elif blind_review is not None and (
-        not isinstance(blind_review, dict)
-        or plan.get("blind_review_hash") != blind_review_hash(blind_review)
-    ):
+    elif not isinstance(blind_review, dict) or strict_json_error(blind_review):
         errors.append("action plan is not bound to current blind review")
-    if plan.get("plan_hash") and plan.get("plan_hash") != _plan_hash(plan):
-        errors.append("plan hash mismatch")
+    else:
+        reviews = blind_review.get("reviews")
+        if (
+            blind_review.get("complete") is not True
+            or not isinstance(reviews, list)
+            or any(not isinstance(item, dict) for item in reviews)
+        ):
+            errors.append("current blind review is invalid")
+        try:
+            if stored_blind_hash != blind_review_hash(blind_review):
+                errors.append("action plan is not bound to current blind review")
+        except (TypeError, ValueError, OverflowError, RecursionError):
+            errors.append("action plan is not bound to current blind review")
+    if plan.get("plan_hash"):
+        try:
+            if plan.get("plan_hash") != _plan_hash(plan):
+                errors.append("plan hash mismatch")
+        except (TypeError, ValueError, OverflowError, RecursionError):
+            errors.append("plan hash mismatch")
     return errors
 
 
@@ -326,26 +424,32 @@ def main() -> int:
     parser.add_argument("--snapshot", type=Path, required=True)
     parser.add_argument("--registry", type=Path, required=True)
     parser.add_argument("--groups", type=Path, required=True)
-    parser.add_argument("--applications", type=Path)
-    parser.add_argument("--blind-review", type=Path)
+    parser.add_argument("--applications", type=Path, required=True)
+    parser.add_argument("--blind-review", type=Path, required=True)
     parser.add_argument("--output-dir", type=Path, default=Path(__file__).parent / "artifacts")
     args = parser.parse_args()
-    snapshot = json.loads(args.snapshot.read_text(encoding="utf-8-sig"))
-    registry = json.loads(args.registry.read_text(encoding="utf-8-sig"))["records"]
-    groups = json.loads(args.groups.read_text(encoding="utf-8-sig"))["groups"]
-    application_review = (
-        json.loads(args.applications.read_text(encoding="utf-8-sig"))
-        if args.applications
-        else None
-    )
-    blind_review = (
-        json.loads(args.blind_review.read_text(encoding="utf-8-sig"))
-        if args.blind_review
-        else None
-    )
-    plan, final_cards = build_action_plan(
-        snapshot, registry, groups, application_review, blind_review
-    )
+    try:
+        snapshot_payload = load_strict_json(args.snapshot)
+        registry_payload = load_strict_json(args.registry)
+        groups_payload = load_strict_json(args.groups)
+        application_review = load_strict_json(args.applications)
+        blind_review = load_strict_json(args.blind_review)
+        if not all(
+            isinstance(payload, dict)
+            for payload in (snapshot_payload, registry_payload, groups_payload)
+        ):
+            raise ValueError("planning inputs must be JSON objects")
+        snapshot = snapshot_payload
+        registry = registry_payload.get("records")
+        groups = groups_payload.get("groups")
+        if not isinstance(registry, list) or not isinstance(groups, list):
+            raise ValueError("registry records and group registry groups must be lists")
+        plan, final_cards = build_action_plan(
+            snapshot, registry, groups, application_review, blind_review
+        )
+    except (OSError, UnicodeError, json.JSONDecodeError, ValueError) as exc:
+        print(json.dumps({"ok": False, "errors": [f"invalid strict JSON: {exc}"]}))
+        return 1
     errors = validate_action_plan(
         plan, snapshot, application_review, blind_review
     )
