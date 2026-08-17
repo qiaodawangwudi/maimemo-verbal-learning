@@ -1,8 +1,10 @@
 import unittest
 import json
+import subprocess
+import sys
 from pathlib import Path
 
-from maimemo_learning_rebuild.review import review_registry
+from maimemo_learning_rebuild.review import review_registry, review_registry_precheck
 from maimemo_learning_rebuild.sources import load_source_catalog
 
 
@@ -22,13 +24,72 @@ def ready(term="因噎废食"):
 
 
 class RegistryReviewTests(unittest.TestCase):
+    def test_missing_independent_review_is_a_learning_quality_hard_error(self):
+        report = review_registry([ready()], {"sources": []}, [])
+
+        self.assertGreater(report["hard_errors"], 0)
+        self.assertIn(
+            "missing independent learning review",
+            report["learning_quality_errors"],
+        )
+
+    def test_ready_group_without_reviewed_edge_contract_is_a_hard_error(self):
+        group = {
+            "group_id": "g-risk",
+            "status": "ready",
+            "minimum_differences": [
+                {
+                    "left": "因噎废食",
+                    "right": "投鼠忌器",
+                    "text": "二者含义不同。",
+                }
+            ],
+        }
+        review = {
+            "complete": True,
+            "reviewer_context_isolated": True,
+            "resolutions": [],
+        }
+
+        report = review_registry([], {"sources": []}, [group], review)
+
+        self.assertGreater(report["hard_errors"], 0)
+        self.assertIn(
+            "comparison edge lacks reviewed contrast contract",
+            report["learning_quality_errors"],
+        )
+
+    def test_review_cli_without_independent_review_exits_nonzero(self):
+        root = Path(__file__).parents[2]
+        artifact_root = root / "maimemo_learning_rebuild" / "artifacts"
+        result = subprocess.run(
+            [
+                sys.executable,
+                "-m",
+                "maimemo_learning_rebuild.review",
+                "--registry",
+                str(artifact_root / "master_semantic_registry.json"),
+                "--sources",
+                str(artifact_root / "source_catalog.json"),
+                "--groups",
+                str(artifact_root / "group_registry.json"),
+            ],
+            cwd=root,
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+
+        self.assertEqual(1, result.returncode, result.stdout + result.stderr)
+        self.assertIn("missing independent learning review", result.stdout)
+
     def test_quarantined_derived_content_can_never_count_as_ready(self):
         artifact_root = Path(__file__).parents[2] / "maimemo_learning_rebuild" / "artifacts"
         catalog = load_source_catalog(artifact_root / "source_catalog.json")
         item = ready("甲")
         item["provenance"] = {"derived_content_quarantined": True}
 
-        report = review_registry([item], catalog, [])
+        report = review_registry_precheck([item], catalog, [])
 
         self.assertEqual(0, report["ready"])
         self.assertGreater(report["hard_errors"], 0)
@@ -43,7 +104,7 @@ class RegistryReviewTests(unittest.TestCase):
         groups = json.loads(
             (artifact_root / "group_registry.json").read_text(encoding="utf-8")
         )["groups"]
-        report = review_registry(registry["records"], catalog, groups)
+        report = review_registry_precheck(registry["records"], catalog, groups)
 
         self.assertEqual(621, report["records"])
         self.assertEqual(621, report["ready"])
@@ -92,7 +153,7 @@ class RegistryReviewTests(unittest.TestCase):
         second["meaning"] = second["distinctive_feature"]
         second["misuse_boundary"] = "需结合题干逻辑对应点使用，不把课堂高频用法当作固定语境。"
 
-        report = review_registry([first, second], {"sources": []}, [])
+        report = review_registry_precheck([first, second], {"sources": []}, [])
 
         self.assertEqual(1, report["duplicate_keys"])
         self.assertEqual(1, report["repeated_fields"])
@@ -109,7 +170,7 @@ class RegistryReviewTests(unittest.TestCase):
             item["meaning"] = meaning
             fragments.append(item)
 
-        report = review_registry(fragments, {"sources": []}, [])
+        report = review_registry_precheck(fragments, {"sources": []}, [])
 
         self.assertEqual(2, report["suspicious_fragments"])
         self.assertEqual(0, report["ready"])
@@ -120,7 +181,7 @@ class RegistryReviewTests(unittest.TestCase):
             {"other_term": "不存在词", "minimum_difference": "两词不同。"}
         ]
 
-        report = review_registry([item], {"sources": []}, [])
+        report = review_registry_precheck([item], {"sources": []}, [])
 
         self.assertEqual(1, report["broken_edges"])
 
@@ -133,7 +194,7 @@ class RegistryReviewTests(unittest.TestCase):
         }
         conflict = dict(pending, term="冲突词", sense_id="冲突词::待核::001", status="conflict")
 
-        report = review_registry([pending, conflict], {"sources": []}, [])
+        report = review_registry_precheck([pending, conflict], {"sources": []}, [])
 
         self.assertEqual(1, report["pending"])
         self.assertEqual(1, report["conflict"])

@@ -10,7 +10,7 @@ from pathlib import Path
 
 from .markji import parse_card
 from .models import validate_semantic_record
-from .review import review_registry
+from .review import review_registry_precheck
 from .sources import (
     _docx_locations,
     _transcript_locations,
@@ -408,7 +408,9 @@ def main() -> int:
     catalog = load_source_catalog(args.sources)
     group_payload = json.loads(args.groups.read_text(encoding="utf-8-sig"))
     registry, log = build_registry(args.source_root, catalog)
-    report = review_registry(registry["records"], catalog, group_payload.get("groups", []))
+    report = review_registry_precheck(
+        registry["records"], catalog, group_payload.get("groups", [])
+    )
     if report["hard_errors"]:
         for detail in report["details"]:
             print(json.dumps(detail, ensure_ascii=False))

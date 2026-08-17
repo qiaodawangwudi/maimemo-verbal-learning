@@ -7,7 +7,7 @@ import json
 from collections import Counter
 from pathlib import Path
 
-from .learning_quality import evaluate_learning_quality
+from .learning_quality import evaluate_learning_quality, validate_independent_review
 from .models import validate_semantic_record
 from .sources import load_source_catalog, validate_evidence
 
@@ -25,11 +25,13 @@ SUSPICIOUS_EXACT = {
 }
 
 
-def review_registry(
+def _review_registry(
     records: list[dict],
     catalog: dict,
     groups: list[dict],
-    independent_review: dict | None = None,
+    independent_review: object,
+    *,
+    require_independent_review: bool,
 ) -> dict:
     key_counts = Counter(
         (str(record.get("term") or ""), str(record.get("sense_id") or ""))
@@ -87,11 +89,14 @@ def review_registry(
             hard_errors += len(errors)
             details.append({"term": term, "errors": errors})
 
-    learning_quality_errors = (
-        evaluate_learning_quality(records, groups, independent_review)
-        if independent_review is not None
-        else []
-    )
+    learning_quality_errors: list[str] = []
+    if require_independent_review:
+        learning_quality_errors.extend(validate_independent_review(independent_review))
+        if isinstance(independent_review, dict):
+            learning_quality_errors.extend(
+                evaluate_learning_quality(records, groups, independent_review)
+            )
+    learning_quality_errors = list(dict.fromkeys(learning_quality_errors))
     hard_errors += len(learning_quality_errors)
     return {
         "records": len(records),
@@ -112,17 +117,57 @@ def review_registry(
     }
 
 
+def review_registry(
+    records: list[dict],
+    catalog: dict,
+    groups: list[dict],
+    independent_review: object = None,
+) -> dict:
+    """Run the complete review, including mandatory independent learning review."""
+
+    return _review_registry(
+        records,
+        catalog,
+        groups,
+        independent_review,
+        require_independent_review=True,
+    )
+
+
+def review_registry_precheck(
+    records: list[dict], catalog: dict, groups: list[dict]
+) -> dict:
+    """Run only build-time semantic structure checks before independent review."""
+
+    return _review_registry(
+        records,
+        catalog,
+        groups,
+        None,
+        require_independent_review=False,
+    )
+
+
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--registry", type=Path, required=True)
     parser.add_argument("--sources", type=Path, required=True)
     parser.add_argument("--groups", type=Path, required=True)
+    parser.add_argument("--independent-review", type=Path)
     args = parser.parse_args()
     registry = json.loads(args.registry.read_text(encoding="utf-8-sig"))
     catalog = load_source_catalog(args.sources)
     group_payload = json.loads(args.groups.read_text(encoding="utf-8-sig"))
+    independent_review = (
+        json.loads(args.independent_review.read_text(encoding="utf-8-sig"))
+        if args.independent_review
+        else None
+    )
     report = review_registry(
-        registry.get("records", []), catalog, group_payload.get("groups", [])
+        registry.get("records", []),
+        catalog,
+        group_payload.get("groups", []),
+        independent_review,
     )
     print(json.dumps({key: value for key, value in report.items() if key != "details"}, ensure_ascii=False, sort_keys=True))
     if report["hard_errors"]:

@@ -176,6 +176,32 @@ class WriteGuardTests(unittest.TestCase):
 
         self.assertIn("independent learning review is incomplete", result.errors)
 
+    def test_resolutions_must_exist_and_be_a_list_of_objects(self):
+        for malformed in ("missing", None, {}, "not-a-list", [1]):
+            with self.subTest(malformed=malformed):
+                snapshot, registry, groups, cards, plan, approval, review = safe_fixture()
+                review.pop("review_hash")
+                if malformed == "missing":
+                    review.pop("resolutions")
+                else:
+                    review["resolutions"] = malformed
+                approval["learning_review_hash"] = learning_review_hash(review)
+
+                result = evaluate_guard(
+                    snapshot=snapshot,
+                    registry=registry,
+                    groups=groups,
+                    final_cards=cards,
+                    plan=plan,
+                    catalog={"sources": []},
+                    approval=approval,
+                    target_chapter_id="chapter",
+                    independent_review=review,
+                )
+
+                self.assertFalse(result.ok)
+                self.assertIn("independent learning review is incomplete", result.errors)
+
     def test_changed_incomplete_and_non_isolated_reviews_are_blocked(self):
         snapshot, registry, groups, cards, plan, approval, review = safe_fixture()
         review["complete"] = False

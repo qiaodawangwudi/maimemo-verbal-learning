@@ -11,6 +11,19 @@ from .groups import comparison_edge_subject_id, has_reviewed_contrast_contract
 
 
 NEAR_DUPLICATE_ISSUE = "meaning and feature are near-duplicates"
+RESOLUTION_DECISIONS = frozenset({"rewrite_required", "rewrite_not_required"})
+_PLACEHOLDER_REASONS = frozenset(
+    {
+        "不同",
+        "已经审查",
+        "人工确认",
+        "人工确认没有问题",
+        "已经人工审查确认没有问题",
+        "理由充分",
+        "无需修改",
+        "通过",
+    }
+)
 _EQUIVALENT_PHRASES = (
     ("根基", "基础"),
     ("牢固", "基础"),
@@ -30,6 +43,10 @@ _DISCOURSE_FILLERS = (
 
 def _text(value: object) -> str:
     return str(value or "").strip()
+
+
+def _strict_text(value: object) -> str:
+    return value.strip() if isinstance(value, str) else ""
 
 
 def learning_review_hash(review: dict) -> str:
@@ -59,6 +76,60 @@ def _near_duplicate(left: object, right: object) -> bool:
     return SequenceMatcher(None, normalized_left, normalized_right).ratio() >= 0.8
 
 
+def _is_repeated_text(value: str) -> bool:
+    for width in range(1, len(value) // 2 + 1):
+        if len(value) % width == 0 and value == value[:width] * (len(value) // width):
+            return True
+    return False
+
+
+def _reason_is_specific(value: object) -> bool:
+    reason = _strict_text(value)
+    normalized = re.sub(r"[^0-9a-z\u4e00-\u9fff]", "", reason.lower())
+    return (
+        len(normalized) >= 12
+        and normalized not in _PLACEHOLDER_REASONS
+        and not _is_repeated_text(normalized)
+    )
+
+
+def _resolution_schema_is_valid(resolution: dict) -> bool:
+    return (
+        bool(_strict_text(resolution.get("subject_id")))
+        and bool(_strict_text(resolution.get("issue")))
+        and _strict_text(resolution.get("decision")) in RESOLUTION_DECISIONS
+        and _reason_is_specific(resolution.get("reason"))
+        and resolution.get("reviewer_context_isolated") is True
+    )
+
+
+def validate_independent_review(independent_review: object) -> list[str]:
+    """Validate the independent-review artifact itself, fail-closed."""
+
+    if independent_review is None:
+        return ["missing independent learning review"]
+    if not isinstance(independent_review, dict):
+        return ["independent learning review is incomplete"]
+
+    errors: list[str] = []
+    if independent_review.get("complete") is not True:
+        errors.append("independent learning review is incomplete")
+    resolutions = independent_review.get("resolutions")
+    if not isinstance(resolutions, list) or any(
+        not isinstance(resolution, dict) for resolution in resolutions or []
+    ):
+        errors.append("independent learning review is incomplete")
+        resolutions = []
+    if independent_review.get("reviewer_context_isolated") is not True or any(
+        resolution.get("reviewer_context_isolated") is not True
+        for resolution in resolutions
+    ):
+        errors.append("independent learning review is not context-isolated")
+    if any(not _resolution_schema_is_valid(resolution) for resolution in resolutions):
+        errors.append("independent learning review is incomplete")
+    return list(dict.fromkeys(errors))
+
+
 def _resolution_is_valid(
     resolution: dict,
     *,
@@ -66,11 +137,10 @@ def _resolution_is_valid(
     issue: str,
 ) -> bool:
     return (
-        _text(resolution.get("subject_id")) == subject_id
-        and _text(resolution.get("issue")) == issue
-        and bool(_text(resolution.get("decision")))
-        and len(_text(resolution.get("reason"))) >= 12
-        and resolution.get("reviewer_context_isolated") is True
+        _resolution_schema_is_valid(resolution)
+        and _strict_text(resolution.get("subject_id")) == subject_id
+        and _strict_text(resolution.get("issue")) == issue
+        and _strict_text(resolution.get("decision")) == "rewrite_not_required"
     )
 
 
@@ -82,11 +152,12 @@ def evaluate_learning_quality(
     """Return unresolved learning-quality flags; never infer semantic approval."""
 
     errors: list[str] = []
-    resolutions = (
-        independent_review.get("resolutions", [])
+    raw_resolutions = (
+        independent_review.get("resolutions")
         if isinstance(independent_review, dict)
-        else []
+        else None
     )
+    resolutions = raw_resolutions if isinstance(raw_resolutions, list) else []
     for record in records:
         if record.get("status") != "ready":
             continue

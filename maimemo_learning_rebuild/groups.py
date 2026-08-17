@@ -30,12 +30,18 @@ def comparison_edge_subject_id(group: dict, edge: dict) -> str:
 def has_reviewed_contrast_contract(edge: dict) -> bool:
     if not isinstance(edge, dict):
         return False
-    if any(not str(edge.get(field) or "").strip() for field in REVIEWED_CONTRAST_FIELDS):
+    if any(
+        not isinstance(edge.get(field), str) or not edge[field].strip()
+        for field in REVIEWED_CONTRAST_FIELDS
+    ):
         return False
     evidence_ids = edge.get("evidence_ids")
     if not isinstance(evidence_ids, list) or not evidence_ids:
         return False
-    if any(not str(evidence_id or "").strip() for evidence_id in evidence_ids):
+    if any(
+        not isinstance(evidence_id, str) or not evidence_id.strip()
+        for evidence_id in evidence_ids
+    ):
         return False
     return edge.get("review_status") == "pass"
 

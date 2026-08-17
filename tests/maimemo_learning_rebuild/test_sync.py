@@ -20,6 +20,57 @@ class FakeTransport:
 
 
 class ApiIsolationTests(unittest.TestCase):
+    def test_legacy_guard_without_learning_review_hash_cannot_call_write_api(self):
+        transport = FakeTransport()
+        client = MaimemoClient(transport, token="secret", deck_id="deck")
+        legacy_guard = GuardResult(True, (), "legacy-plan-hash")
+
+        for operation in (
+            lambda: client.update_card("c1", "content", legacy_guard),
+            lambda: client.create_card("chapter", "content", legacy_guard),
+        ):
+            with self.subTest(operation=operation):
+                with self.assertRaisesRegex(RuntimeError, "learning review"):
+                    operation()
+
+        self.assertEqual([], transport.calls)
+
+    def test_legacy_guard_without_learning_review_hash_cannot_apply_plan(self):
+        transport = FakeTransport()
+        client = MaimemoClient(transport, token="secret", deck_id="deck")
+
+        with self.assertRaisesRegex(RuntimeError, "learning review"):
+            apply_plan(
+                client,
+                GuardResult(True, (), "legacy-plan-hash"),
+                {"chapter_id": "chapter", "actions": []},
+                [],
+                "chapter",
+                pause=lambda: None,
+            )
+
+        self.assertEqual([], transport.calls)
+
+    def test_legacy_guard_without_learning_review_hash_cannot_apply_routed_plan(self):
+        transport = FakeTransport()
+        client = MaimemoClient(transport, token="secret", deck_id="deck")
+
+        with self.assertRaisesRegex(RuntimeError, "learning review"):
+            apply_plan_to_chapters(
+                client,
+                GuardResult(True, (), "legacy-plan-hash"),
+                {"actions": []},
+                [],
+                {
+                    "comparison": "comparison",
+                    "base": "base",
+                    "application": "application",
+                },
+                pause=lambda: None,
+            )
+
+        self.assertEqual([], transport.calls)
+
     def test_routed_sync_resumes_matching_creates_without_duplicates(self):
         group_content = "[P#H1#近义辨析｜甲、乙]\n---\n辨析"
         base_template = (
@@ -49,7 +100,7 @@ class ApiIsolationTests(unittest.TestCase):
         }
         transport = FakeTransport([live_data, live_data, {"data": {"id": "a1"}}])
         client = MaimemoClient(transport, token="secret", deck_id="deck")
-        guard = GuardResult(True, (), "hash")
+        guard = GuardResult(True, (), "hash", "learning-review-hash")
         plan = {
             "actions": [
                 {"title": "近义辨析｜甲、乙", "action": "create", "content_hash": content_hash(group_content)},
@@ -114,7 +165,7 @@ class ApiIsolationTests(unittest.TestCase):
             ]
         )
         client = MaimemoClient(transport, token="secret", deck_id="deck")
-        guard = GuardResult(True, (), "hash")
+        guard = GuardResult(True, (), "hash", "learning-review-hash")
         plan = {
             "actions": [
                 {"title": "近义辨析｜甲、乙", "action": "create", "content_hash": content_hash(group_content)},
@@ -168,7 +219,7 @@ class ApiIsolationTests(unittest.TestCase):
             ]
         )
         client = MaimemoClient(transport, token="secret", deck_id="deck")
-        guard = GuardResult(True, (), "hash")
+        guard = GuardResult(True, (), "hash", "learning-review-hash")
         plan = {
             "chapter_id": "chapter",
             "actions": [
@@ -235,7 +286,7 @@ class ApiIsolationTests(unittest.TestCase):
             ]
         )
         client = MaimemoClient(transport, token="secret", deck_id="deck")
-        guard = GuardResult(True, (), "hash")
+        guard = GuardResult(True, (), "hash", "learning-review-hash")
         plan = {
             "chapter_id": "chapter",
             "actions": [

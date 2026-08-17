@@ -86,6 +86,11 @@ def apply_plan(
 ) -> dict:
     if not guard.ok:
         raise RuntimeError("sync requires approved guard")
+    if (
+        not isinstance(guard.learning_review_hash, str)
+        or not guard.learning_review_hash.strip()
+    ):
+        raise RuntimeError("sync requires approved guard with learning review")
     if chapter_id != plan.get("chapter_id"):
         raise RuntimeError("sync target chapter differs from approved plan")
     wait = pause or (lambda: time.sleep(1.6))
@@ -157,6 +162,11 @@ def apply_plan_to_chapters(
 
     if not guard.ok:
         raise RuntimeError("sync requires approved guard")
+    if (
+        not isinstance(guard.learning_review_hash, str)
+        or not guard.learning_review_hash.strip()
+    ):
+        raise RuntimeError("sync requires approved guard with learning review")
     required_routes = {"comparison", "base", "application"}
     if set(chapter_routes) != required_routes or not all(chapter_routes.values()):
         raise RuntimeError("three complete chapter routes are required")

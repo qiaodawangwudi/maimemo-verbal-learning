@@ -104,6 +104,64 @@ class LearningQualityTests(unittest.TestCase):
             evaluate_learning_quality([record], [], review),
         )
 
+    def test_non_string_resolution_fields_cannot_clear_flag(self):
+        record = ready_record(
+            term="固本强基",
+            meaning="基础已经牢固，并进一步得到强化。",
+            distinctive_feature="巩固原有根基，同时强化既有基础。",
+        )
+        valid = {
+            "subject_id": record["sense_id"],
+            "issue": "meaning and feature are near-duplicates",
+            "decision": "rewrite_not_required",
+            "reason": "词义说明状态变化，特征说明两个不同的动作落点。",
+            "reviewer_context_isolated": True,
+        }
+        malformed_values = {
+            "subject_id": [record["sense_id"]],
+            "issue": {"value": "meaning and feature are near-duplicates"},
+            "decision": {"value": "rewrite_not_required"},
+            "reason": {"detail": "词义和特征确实存在不同的动作落点"},
+        }
+
+        for field, value in malformed_values.items():
+            with self.subTest(field=field):
+                resolution = {**valid, field: value}
+                review = {**empty_review(), "resolutions": [resolution]}
+                self.assertIn(
+                    "meaning and feature are near-duplicates: 固本强基",
+                    evaluate_learning_quality([record], [], review),
+                )
+
+    def test_unknown_decision_or_placeholder_reason_cannot_clear_flag(self):
+        record = ready_record(
+            term="固本强基",
+            meaning="基础已经牢固，并进一步得到强化。",
+            distinctive_feature="巩固原有根基，同时强化既有基础。",
+        )
+        invalid_pairs = (
+            ("pass", "词义说明状态变化，特征说明两个不同的动作落点。"),
+            ("rewrite_not_required", "不同不同不同不同不同不同"),
+            ("rewrite_not_required", "已经人工审查确认没有问题"),
+        )
+
+        for decision, reason in invalid_pairs:
+            with self.subTest(decision=decision, reason=reason):
+                review = empty_review()
+                review["resolutions"] = [
+                    {
+                        "subject_id": record["sense_id"],
+                        "issue": "meaning and feature are near-duplicates",
+                        "decision": decision,
+                        "reason": reason,
+                        "reviewer_context_isolated": True,
+                    }
+                ]
+                self.assertIn(
+                    "meaning and feature are near-duplicates: 固本强基",
+                    evaluate_learning_quality([record], [], review),
+                )
+
     def test_edge_requires_shared_basis_axis_and_both_landings(self):
         group = ready_group()
         group["minimum_differences"][0] = {
@@ -121,6 +179,45 @@ class LearningQualityTests(unittest.TestCase):
         self.assertEqual(
             [],
             evaluate_learning_quality([], [ready_group()], empty_review()),
+        )
+
+    def test_every_ready_edge_contract_field_and_evidence_id_must_be_string(self):
+        invalid_fields = {
+            "shared_basis": 1,
+            "axis": ["动作结果"],
+            "left_landing": {"value": "停止行动"},
+            "right_landing": ["顾忌对象"],
+        }
+        for field, value in invalid_fields.items():
+            with self.subTest(field=field):
+                group = ready_group()
+                group["minimum_differences"][0][field] = value
+                self.assertIn(
+                    "comparison edge lacks reviewed contrast contract",
+                    evaluate_learning_quality([], [group], empty_review()),
+                )
+
+        for evidence_id in (1, {"id": "ev-risk-001"}, ["ev-risk-001"]):
+            with self.subTest(evidence_id=evidence_id):
+                group = ready_group()
+                group["minimum_differences"][0]["evidence_ids"] = [evidence_id]
+                self.assertIn(
+                    "comparison edge lacks reviewed contrast contract",
+                    evaluate_learning_quality([], [group], empty_review()),
+                )
+
+    def test_each_ready_edge_is_checked_for_reviewed_contract(self):
+        group = ready_group()
+        second = copy.deepcopy(group["minimum_differences"][0])
+        second["left"] = "投鼠忌器"
+        second["right"] = "削足适履"
+        second["evidence_ids"] = ["ev-risk-003"]
+        second["axis"] = 7
+        group["minimum_differences"].append(second)
+
+        self.assertIn(
+            "comparison edge lacks reviewed contrast contract",
+            evaluate_learning_quality([], [group], empty_review()),
         )
 
     def test_review_hash_is_canonical_and_detects_content_change(self):

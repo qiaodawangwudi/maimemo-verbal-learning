@@ -38,32 +38,16 @@ def evaluate_guard(
     errors: list[str] = []
     plan_hash = str(plan.get("plan_hash") or "")
     current_learning_review_hash = ""
-    review_for_quality: dict | None = None
     errors.extend(validate_action_plan(plan, snapshot))
 
-    if independent_review is None:
-        errors.append("missing independent learning review")
-    elif not isinstance(independent_review, dict):
-        errors.append("independent learning review is incomplete")
-    else:
-        review_for_quality = independent_review
+    if isinstance(independent_review, dict):
         current_learning_review_hash = learning_review_hash(independent_review)
-        stored_review_hash = str(independent_review.get("review_hash") or "")
-        if stored_review_hash and stored_review_hash != current_learning_review_hash:
-            errors.append("independent learning review hash mismatch")
-        if independent_review.get("complete") is not True:
-            errors.append("independent learning review is incomplete")
-        resolutions = independent_review.get("resolutions")
-        resolution_isolation_failed = isinstance(resolutions, list) and any(
-            not isinstance(resolution, dict)
-            or resolution.get("reviewer_context_isolated") is not True
-            for resolution in resolutions
-        )
-        if (
-            independent_review.get("reviewer_context_isolated") is not True
-            or resolution_isolation_failed
+        stored_review_hash = independent_review.get("review_hash")
+        if stored_review_hash is not None and (
+            not isinstance(stored_review_hash, str)
+            or stored_review_hash.strip() != current_learning_review_hash
         ):
-            errors.append("independent learning review is not context-isolated")
+            errors.append("independent learning review hash mismatch")
 
     snapshot_report = audit_snapshot(snapshot)
     if snapshot_report["missing_reference_targets"]:
@@ -73,7 +57,7 @@ def evaluate_guard(
     if snapshot_report["duplicate_titles"]:
         errors.append(f"snapshot has duplicate titles: {len(snapshot_report['duplicate_titles'])}")
 
-    review = review_registry(registry, catalog, groups, review_for_quality)
+    review = review_registry(registry, catalog, groups, independent_review)
     for detail in review["details"]:
         for error in detail["errors"]:
             errors.append(f"semantic error {detail['term']}: {error}")

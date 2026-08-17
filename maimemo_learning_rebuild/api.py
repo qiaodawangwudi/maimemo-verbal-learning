@@ -63,6 +63,11 @@ class MaimemoClient:
     def _require_guard(guard: GuardResult) -> None:
         if not guard.ok:
             raise RuntimeError("write requires approved guard")
+        if (
+            not isinstance(guard.learning_review_hash, str)
+            or not guard.learning_review_hash.strip()
+        ):
+            raise RuntimeError("write requires approved guard with learning review")
 
     def update_card(self, card_id: str, content: str, guard: GuardResult) -> dict:
         self._require_guard(guard)
