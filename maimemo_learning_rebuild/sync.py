@@ -68,6 +68,9 @@ def apply_plan(
         title for title, card in cards.items() if card.get("card_type") == "comparison"
     ]
     base_titles = [title for title, card in cards.items() if card.get("card_type") == "base"]
+    application_titles = [
+        title for title, card in cards.items() if card.get("card_type") == "application"
+    ]
     counts = {"create": 0, "update": 0, "repurpose": 0, "unchanged": 0}
     for index, title in enumerate(comparison_titles):
         action = actions[title]
@@ -97,5 +100,11 @@ def apply_plan(
         _apply_action(client, guard, action, content, chapter_id)
         counts[action["action"]] += 1
         if action["action"] != "unchanged" and index < len(base_titles) - 1:
+            wait()
+    for index, title in enumerate(application_titles):
+        action = actions[title]
+        _apply_action(client, guard, action, cards[title]["content"], chapter_id)
+        counts[action["action"]] += 1
+        if action["action"] != "unchanged" and index < len(application_titles) - 1:
             wait()
     return counts

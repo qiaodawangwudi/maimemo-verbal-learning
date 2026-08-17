@@ -108,6 +108,7 @@ class ApiIsolationTests(unittest.TestCase):
                     }
                 },
                 {"data": {"id": "b1"}},
+                {"data": {"id": "a1"}},
             ]
         )
         client = MaimemoClient(transport, token="secret", deck_id="deck")
@@ -117,11 +118,13 @@ class ApiIsolationTests(unittest.TestCase):
             "actions": [
                 {"title": "近义辨析｜甲、乙", "card_id": "g1", "action": "update"},
                 {"title": "基础词义｜甲", "card_id": "b1", "action": "update"},
+                {"title": "语境应用｜甲、乙｜差别", "action": "create"},
             ],
         }
         cards = [
             {"title": "基础词义｜甲", "card_type": "base", "content": "base"},
             {"title": "近义辨析｜甲、乙", "card_type": "comparison", "content": "group"},
+            {"title": "语境应用｜甲、乙｜差别", "card_type": "application", "content": "app"},
         ]
 
         apply_plan(client, guard, plan, cards, "chapter", pause=lambda: None)
@@ -130,6 +133,7 @@ class ApiIsolationTests(unittest.TestCase):
         self.assertIn("/cards/g1", methods_and_urls[0][1])
         self.assertEqual("GET", methods_and_urls[1][0])
         self.assertIn("/cards/b1", methods_and_urls[2][1])
+        self.assertIn("/chapters/chapter/cards", methods_and_urls[3][1])
 
         bad_plan = {"chapter_id": "chapter", "actions": []}
         bad_cards = [{"title": "基础词义｜丙", "card_type": "base", "content": "new"}]

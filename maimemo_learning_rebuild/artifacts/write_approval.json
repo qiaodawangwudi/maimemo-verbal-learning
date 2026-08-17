@@ -1,0 +1,14 @@
+{
+  "approved_at": "2026-08-17T12:33:53+08:00",
+  "approved_by": "repository_owner",
+  "deck_id": "mkjd_ORs2Bradwz8eLH8ZFVNMf4hFpJL9eh_Dd7ryPK6T28pxIKJC6o9ll7YN0xiYKiqz",
+  "deck_name": "公考成语积累辨析",
+  "chapter_id": "mkjch_ORs2Bradwz8eLH8ZFVNMf4hFpJL9eh_Dd7ryPK6T28oIcLd9I.qEtcJNoHyuLlGk",
+  "chapter_name": "默认章节",
+  "plan_hash": "fe0ea3c515404d394fc4079ef4b27b9a6e5a619f0678ac581ba2b20d8f7aa6e3",
+  "action_counts": {
+    "create": 869
+  },
+  "expected_after": 869,
+  "authorization_text": "我批准将计划哈希 fe0ea3c515404d394fc4079ef4b27b9a6e5a619f0678ac581ba2b20d8f7aa6e3 按 create 869 写入‘公考成语积累辨析’卡组的‘默认章节’，写后目标 869 张。"
+}
