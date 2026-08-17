@@ -1,0 +1,6 @@
+/.github/workflows/maimemo-release.yml @qiaodawangwudi
+/maimemo_learning_rebuild/api.py @qiaodawangwudi
+/maimemo_learning_rebuild/release_environment.py @qiaodawangwudi
+/maimemo_learning_rebuild/release_writer.py @qiaodawangwudi
+/maimemo_learning_rebuild/release_manifest.py @qiaodawangwudi
+/.github/CODEOWNERS @qiaodawangwudi

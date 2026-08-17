@@ -1,6 +1,6 @@
 name: Learning quality gate
 
-on:
+"on":
   pull_request:
   push:
     branches: [main]
@@ -18,20 +18,7 @@ jobs:
         with:
           python-version: "3.10"
       - name: Run repository-portable tests
-        run: >-
-          python -m unittest -v
-          tests.maimemo_learning_rebuild.test_application_candidates
-          tests.maimemo_learning_rebuild.test_groups
-          tests.maimemo_learning_rebuild.test_guard
-          tests.maimemo_learning_rebuild.test_application_quality_gate
-          tests.maimemo_learning_rebuild.test_markji
-          tests.maimemo_learning_rebuild.test_models
-          tests.maimemo_learning_rebuild.test_planning
-          tests.maimemo_learning_rebuild.test_public_quality_gate
-          tests.maimemo_learning_rebuild.test_readback
-          tests.maimemo_learning_rebuild.test_render
-          tests.maimemo_learning_rebuild.test_sources
-          tests.maimemo_learning_rebuild.test_sync
+        run: python -m unittest discover -s tests -t . -p 'test_*.py' -q
 
   learning-quality-gate:
     name: Learning quality gate

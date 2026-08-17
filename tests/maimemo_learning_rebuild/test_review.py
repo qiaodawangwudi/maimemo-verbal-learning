@@ -1,11 +1,30 @@
 import unittest
 import json
+import os
 import subprocess
 import sys
+import tempfile
 from pathlib import Path
 
 from maimemo_learning_rebuild.review import review_registry, review_registry_precheck
 from maimemo_learning_rebuild.sources import load_source_catalog
+
+
+REPO_ROOT = Path(__file__).parents[2]
+REVIEW_FIXTURE = REPO_ROOT / "tests" / "fixtures" / "review" / "teacher-evidence.txt"
+
+
+def fixture_catalog():
+    return {
+        "sources": [
+            {
+                "source_id": "review-teacher-fixture",
+                "path": str(REVIEW_FIXTURE),
+                "name": "review-teacher-fixture",
+                "trust_role": "teacher_evidence",
+            }
+        ]
+    }
 
 
 def ready(term="因噎废食"):
@@ -60,28 +79,63 @@ class RegistryReviewTests(unittest.TestCase):
         )
 
     def test_review_cli_without_independent_review_exits_nonzero(self):
-        root = Path(__file__).parents[2]
-        artifact_root = root / "maimemo_learning_rebuild" / "artifacts"
-        result = subprocess.run(
-            [
-                sys.executable,
-                "-m",
-                "maimemo_learning_rebuild.review",
-                "--registry",
-                str(artifact_root / "master_semantic_registry.json"),
-                "--sources",
-                str(artifact_root / "source_catalog.json"),
-                "--groups",
-                str(artifact_root / "group_registry.json"),
-            ],
-            cwd=root,
-            capture_output=True,
-            text=True,
-            check=False,
-        )
+        with tempfile.TemporaryDirectory() as temporary:
+            fixture_root = Path(temporary)
+            registry_path = fixture_root / "registry.json"
+            source_path = fixture_root / "sources.json"
+            groups_path = fixture_root / "groups.json"
+            registry_path.write_text(
+                json.dumps({"records": [ready()]}, ensure_ascii=False),
+                encoding="utf-8",
+            )
+            source_path.write_text(
+                json.dumps({"sources": []}, ensure_ascii=False),
+                encoding="utf-8",
+            )
+            groups_path.write_text(
+                json.dumps({"groups": []}, ensure_ascii=False),
+                encoding="utf-8",
+            )
+            result = subprocess.run(
+                [
+                    sys.executable,
+                    "-m",
+                    "maimemo_learning_rebuild.review",
+                    "--registry",
+                    str(registry_path),
+                    "--sources",
+                    str(source_path),
+                    "--groups",
+                    str(groups_path),
+                ],
+                cwd=REPO_ROOT,
+                capture_output=True,
+                text=True,
+                check=False,
+            )
 
         self.assertEqual(1, result.returncode, result.stdout + result.stderr)
         self.assertIn("missing independent learning review", result.stdout)
+
+    def test_teacher_evidence_uses_independent_fixture_and_rejects_wrong_quote(self):
+        item = ready("证据测试词")
+        item["source_kind"] = "teacher_transcript"
+        item["evidence"] = [
+            {
+                "source": "review-teacher-fixture",
+                "location": "P0001",
+                "quote": "因害怕出问题而停止本应继续的行动。",
+            }
+        ]
+
+        accepted = review_registry_precheck([item], fixture_catalog(), [])
+        self.assertEqual(0, accepted["missing_evidence"])
+        self.assertEqual(0, accepted["hard_errors"])
+
+        item["evidence"][0]["quote"] = "被改写的错误引文。"
+        rejected = review_registry_precheck([item], fixture_catalog(), [])
+        self.assertEqual(1, rejected["missing_evidence"])
+        self.assertGreater(rejected["hard_errors"], 0)
 
     def test_quarantined_derived_content_can_never_count_as_ready(self):
         artifact_root = Path(__file__).parents[2] / "maimemo_learning_rebuild" / "artifacts"
@@ -95,12 +149,25 @@ class RegistryReviewTests(unittest.TestCase):
         self.assertGreater(report["hard_errors"], 0)
 
     def test_real_registry_covers_all_current_and_missing_terms_as_reviewed(self):
-        root = Path(__file__).parents[2]
-        artifact_root = root / "maimemo_learning_rebuild" / "artifacts"
+        if os.environ.get("MAIMEMO_RUN_LOCAL_SOURCE_INTEGRATION") != "1":
+            self.skipTest(
+                "set MAIMEMO_RUN_LOCAL_SOURCE_INTEGRATION=1 to audit private source files"
+            )
+        artifact_root = REPO_ROOT / "maimemo_learning_rebuild" / "artifacts"
         registry = json.loads(
             (artifact_root / "master_semantic_registry.json").read_text(encoding="utf-8")
         )
         catalog = load_source_catalog(artifact_root / "source_catalog.json")
+        missing_sources = [
+            source["path"]
+            for source in catalog.get("sources", [])
+            if not Path(source["path"]).is_file()
+        ]
+        if missing_sources:
+            self.skipTest(
+                "private source files are unavailable for local integration audit: "
+                + ", ".join(missing_sources[:3])
+            )
         groups = json.loads(
             (artifact_root / "group_registry.json").read_text(encoding="utf-8")
         )["groups"]
