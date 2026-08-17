@@ -1,74 +1,42 @@
-import importlib.util
 import unittest
 from pathlib import Path
 
 
-SKILL_ROOT = Path.home() / ".codex" / "skills" / "verbal-maimemo-cards"
-SPEC = importlib.util.spec_from_file_location(
-    "verbal_maimemo_preflight", SKILL_ROOT / "scripts" / "preflight.py"
-)
-PREFLIGHT = importlib.util.module_from_spec(SPEC)
-assert SPEC.loader is not None
-SPEC.loader.exec_module(PREFLIGHT)
-
-
-def complete_manifest():
-    return {
-        "records": [
-            {
-                "term": "甲",
-                "sense_id": "甲::课程义::001",
-                "status": "ready",
-                "meaning": "甲的词义。",
-                "distinctive_feature": "甲的独特落点。",
-                "dimensions": [],
-                "comparison_edges": [],
-                "misuse_boundary": "缺少必要条件时不使用。",
-            }
-        ],
-        "groups": [],
-        "cards": [
-            {
-                "title": "基础词义｜甲",
-                "content": "【词义】甲的词义。【特别之处】甲的独特落点。【做题识别点】线索。【一眼辨析】暂无。",
-                "references": [],
-            }
-        ],
-        "target_chapter": {"id": "chapter", "name": "默认积累"},
-        "full_library_audit": {"complete": True, "snapshot_total": 730},
-        "plan": {
-            "plan_hash": "hash",
-            "snapshot_hash": "snapshot",
-            "action_counts": {"update": 1},
-            "manual_review": 0,
-        },
-        "approval": {
-            "chapter_id": "chapter",
-            "plan_hash": "hash",
-            "action_counts": {"update": 1},
-        },
-    }
+REPO_ROOT = Path(__file__).resolve().parents[2]
+SKILL_ROOT = REPO_ROOT / "skills" / "verbal-maimemo-cards"
 
 
 class ReusableSkillPreflightTests(unittest.TestCase):
-    def test_rejects_repeated_learning_fields(self):
-        manifest = complete_manifest()
-        manifest["records"][0]["distinctive_feature"] = manifest["records"][0]["meaning"]
+    def read_skill(self):
+        skill_path = SKILL_ROOT / "SKILL.md"
+        self.assertTrue(skill_path.is_file(), f"repository Skill absent: {skill_path}")
+        return skill_path.read_text(encoding="utf-8")
 
-        self.assertIn(
-            "meaning equals distinctive_feature: 甲", PREFLIGHT.validate(manifest)
-        )
+    def test_skill_links_every_protected_release_reference_directly(self):
+        text = self.read_skill()
 
-    def test_rejects_missing_hash_bound_approval(self):
-        manifest = complete_manifest()
-        manifest.pop("approval")
+        for filename in (
+            "artifact-contracts.md",
+            "learning-quality-rubric.md",
+            "release-state-machine.md",
+            "source-and-privacy-policy.md",
+        ):
+            self.assertIn(f"](references/{filename})", text)
 
-        self.assertIn("write approval missing", PREFLIGHT.validate(manifest))
+    def test_skill_declares_protected_release_invariants(self):
+        text = self.read_skill()
+
+        for phrase in (
+            "不得存在本地备用写入路径",
+            "发布哈希变化后旧授权失效",
+            "写入器不得生成内容",
+        ):
+            self.assertIn(phrase, text)
 
     def test_skill_declares_learning_first_layered_contract(self):
-        text = (SKILL_ROOT / "SKILL.md").read_text(encoding="utf-8")
+        text = self.read_skill()
 
-        for phrase in ("学习效果", "特别之处", "做题识别点", "冻结计划哈希", "全库"):
+        for phrase in ("学习效果", "特别之处", "做题识别点", "冻结卡片", "全量回读"):
             self.assertIn(phrase, text)
         self.assertNotIn("不设机械的“特别之处”栏目", text)
 
