@@ -20,6 +20,7 @@ jobs:
       - name: Run repository-portable tests
         run: >-
           python -m unittest -v
+          tests.maimemo_learning_rebuild.test_application_candidates
           tests.maimemo_learning_rebuild.test_groups
           tests.maimemo_learning_rebuild.test_guard
           tests.maimemo_learning_rebuild.test_application_quality_gate
