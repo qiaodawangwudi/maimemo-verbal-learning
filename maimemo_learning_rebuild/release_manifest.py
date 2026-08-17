@@ -197,6 +197,17 @@ ACTION_FIELDS = {
     "action",
     "card_id",
 }
+ACTION_PLAN_FIELDS = {
+    "schema_version",
+    "deck",
+    "chapter_routes",
+    "before_counts",
+    "route_counts",
+    "action_counts",
+    "actions",
+}
+DECK_FIELDS = {"id", "name"}
+PLANNED_ROUTE_FIELDS = {"id", "name"}
 
 
 def _empty_route_counts() -> dict[str, dict[str, int]]:
@@ -218,6 +229,7 @@ def _final_card_bindings(
     if not isinstance(cards, list):
         return counts, bindings, ["final cards cards must be a list"]
     card_ids: list[str] = []
+    titles: list[str] = []
     for index, card in enumerate(cards):
         if not isinstance(card, dict):
             errors.append(f"frozen card must be an object: {index}")
@@ -230,6 +242,11 @@ def _final_card_bindings(
             errors.append(f"duplicate frozen card stable_card_key: {stable_key}")
             continue
         bindings[stable_key] = card
+        title = card.get("title")
+        if not isinstance(title, str) or not title:
+            errors.append(f"frozen card title is invalid: {stable_key}")
+        else:
+            titles.append(title)
         route = card.get("card_type")
         action = card.get("action")
         if route not in ROUTE_KEYS:
@@ -250,6 +267,8 @@ def _final_card_bindings(
         counts[route]["before"] = counts[route]["after"] - counts[route]["create"]
     for duplicate in sorted(key for key, count in Counter(card_ids).items() if count > 1):
         errors.append(f"duplicate frozen card id: {duplicate}")
+    for duplicate in sorted(key for key, count in Counter(titles).items() if count > 1):
+        errors.append(f"duplicate frozen card title: {duplicate}")
     return counts, bindings, errors
 
 
@@ -259,6 +278,10 @@ def _expected_plan_metadata(
     errors: list[str] = []
     if not isinstance(action_plan, dict):
         return {}, {}, {}, {}, {}, ["action plan must be an object"]
+    if set(action_plan) != ACTION_PLAN_FIELDS:
+        errors.append("action plan fields mismatch")
+    if action_plan.get("schema_version") != 2:
+        errors.append("action plan schema version mismatch")
     deck = action_plan.get("deck")
     routes = action_plan.get("chapter_routes")
     before_counts = action_plan.get("before_counts")
@@ -267,6 +290,8 @@ def _expected_plan_metadata(
     if not isinstance(deck, dict):
         errors.append("action plan deck must be an object")
         deck = {}
+    elif set(deck) != DECK_FIELDS:
+        errors.append("action plan deck fields mismatch")
     if not isinstance(routes, dict) or set(routes) != set(ROUTE_KEYS):
         errors.append("action plan chapter route keys mismatch")
         routes = routes if isinstance(routes, dict) else {}
@@ -280,6 +305,11 @@ def _expected_plan_metadata(
         errors.append("action plan route count keys mismatch")
         route_counts = route_counts if isinstance(route_counts, dict) else {}
     for route in ROUTE_KEYS:
+        planned_route = routes.get(route)
+        if not isinstance(planned_route, dict):
+            errors.append(f"action plan chapter route must be an object: {route}")
+        elif set(planned_route) != PLANNED_ROUTE_FIELDS:
+            errors.append(f"action plan chapter route fields mismatch: {route}")
         counts = route_counts.get(route)
         if not isinstance(counts, dict) or set(counts) != set(ROUTE_COUNT_KEYS):
             errors.append(f"action plan route count fields mismatch: {route}")
@@ -298,6 +328,7 @@ def _plan_action_bindings(
     action_counts = {action: 0 for action in ACTION_KEYS}
     bindings: dict[str, dict] = {}
     errors: list[str] = []
+    titles: list[str] = []
     actions = action_plan.get("actions") if isinstance(action_plan, dict) else None
     if not isinstance(actions, list):
         return counts, bindings, action_counts, ["action plan actions must be a list"]
@@ -315,6 +346,11 @@ def _plan_action_bindings(
             errors.append(f"duplicate action plan stable_card_key: {stable_key}")
             continue
         bindings[stable_key] = action
+        title = action.get("title")
+        if not isinstance(title, str) or not title:
+            errors.append(f"action title is invalid: {stable_key}")
+        else:
+            titles.append(title)
         route = action.get("card_type")
         value = action.get("action")
         if route not in ROUTE_KEYS:
@@ -341,6 +377,8 @@ def _plan_action_bindings(
         action_counts[value] += 1
     for route in ROUTE_KEYS:
         counts[route]["before"] = counts[route]["after"] - counts[route]["create"]
+    for duplicate in sorted(key for key, count in Counter(titles).items() if count > 1):
+        errors.append(f"duplicate action plan title: {duplicate}")
     return counts, bindings, action_counts, errors
 
 
@@ -524,6 +562,7 @@ def build_release_manifest(inputs: dict) -> dict:
     payloads = _artifact_payloads(artifacts)
     action_plan = payloads["action_plan"]
     final_cards = payloads["final_cards"]
+    prohibited_input_fields = _prohibited_git_fields(action_plan)
     (
         deck,
         planned_routes,
@@ -542,7 +581,7 @@ def build_release_manifest(inputs: dict) -> dict:
         declared_action_counts,
         declared_route_counts,
     )
-    errors = metadata_errors + plan_errors
+    errors = prohibited_input_fields + metadata_errors + plan_errors
     if errors:
         raise ValueError("invalid release inputs: " + "; ".join(errors))
 
@@ -595,6 +634,11 @@ def build_release_manifest(inputs: dict) -> dict:
         },
     })
     manifest["release_hash"] = release_hash(manifest)
+    post_build_errors = validate_release_manifest(manifest, artifacts)
+    if post_build_errors:
+        raise ValueError(
+            "built release manifest is invalid: " + "; ".join(post_build_errors)
+        )
     return manifest
 
 
@@ -767,31 +811,16 @@ def validate_release_manifest(manifest: dict | bytes | Path, artifacts: dict) ->
 
 def _fork_draft(
     manifest: dict,
-    artifact_hashes: dict,
-    requested_release_id: object,
+    frozen_release_id: str,
+    changed_payload_hash: str,
 ) -> dict:
-    if isinstance(requested_release_id, str) and requested_release_id:
-        new_release_id = requested_release_id
-    else:
-        seed = json.dumps(
-            {
-                "release_id": manifest.get("release_id"),
-                "artifact_hashes": artifact_hashes,
-            },
-            ensure_ascii=False,
-            sort_keys=True,
-            separators=(",", ":"),
-            allow_nan=False,
-        )
-        suffix = hashlib.sha256(seed.encode("utf-8")).hexdigest()[:12]
-        new_release_id = f"{manifest.get('release_id', 'release')}-draft-{suffix}"
-    if new_release_id == manifest.get("release_id"):
-        raise ValueError("changed protected release requires a new release id")
+    """Fork by frozen identity plus the pre-fork protected-payload digest."""
+
+    new_release_id = f"{frozen_release_id}-draft-{changed_payload_hash[:12]}"
     fork = copy.deepcopy(manifest)
     fork["release_id"] = new_release_id
     fork["state"] = "draft"
     fork["state_evidence"] = {}
-    fork["artifact_hashes"] = copy.deepcopy(artifact_hashes)
     fork["release_hash"] = release_hash(fork)
     return fork
 
@@ -838,7 +867,7 @@ def transition_release_state(
     required_keys = {"frozen_baseline"}
     if target_receipt_key:
         required_keys.add(target_receipt_key)
-    allowed_keys = required_keys | {"new_release_id"}
+    allowed_keys = required_keys
     if not required_keys.issubset(evidence) or not set(evidence).issubset(allowed_keys):
         raise ValueError("missing required transition evidence")
 
@@ -862,9 +891,14 @@ def transition_release_state(
             if isinstance(stored_evidence, dict)
             else None
         )
+        frozen_release_id = (
+            stored_baseline.get("release_id")
+            if isinstance(stored_baseline, dict)
+            else None
+        )
         if (
             not _external_baseline_is_structurally_verified(
-                baseline, manifest.get("release_id")
+                baseline, frozen_release_id
             )
             or baseline != stored_baseline
         ):
@@ -873,13 +907,10 @@ def transition_release_state(
             raise ValueError("invalid verified frozen baseline")
         current_payload_hash = _protected_payload_hash(manifest)
         if current_payload_hash != baseline["protected_payload_hash"]:
-            artifact_hashes = manifest.get("artifact_hashes")
-            if not isinstance(artifact_hashes, dict) or set(artifact_hashes) != set(ARTIFACT_KEYS):
-                raise ValueError("protected artifact hash keys mismatch")
             return _fork_draft(
                 manifest,
-                artifact_hashes,
-                evidence.get("new_release_id"),
+                frozen_release_id,
+                current_payload_hash,
             )
         if (
             _state_lineage_errors(manifest)

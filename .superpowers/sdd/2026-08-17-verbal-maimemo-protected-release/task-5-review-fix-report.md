@@ -88,4 +88,39 @@ Implemented all requested C1-C3 and I1-I3 corrections from `task-5-review.md`.
 - `tests/fixtures/release/final_cards.json`
 - `.superpowers/sdd/2026-08-17-verbal-maimemo-protected-release/task-5-review-fix-report.md`
 
-Planned commit message: `fix: harden release manifest trust boundaries`
+First review-fix commit: `de4d8e7096cd0a819d19394d8ecd8b3de5bca753` (`fix: harden release manifest trust boundaries`).
+
+## Second re-review fixes
+
+Base reviewed commit: `de4d8e7096cd0a819d19394d8ecd8b3de5bca753`.
+
+### Protected-field matrix, including release ID
+
+- Protected-state transitions now validate the supplied external baseline against the original frozen baseline identity before comparing the current protected payload.
+- Any change to one of the seven protected fields, including `release_id`, returns a new draft without mutating the supplied manifest.
+- Fork IDs use one deterministic rule: `<frozen-release-id>-draft-<first-12-hex-of-pre-fork-protected-payload-hash>`.
+- Caller-selected `new_release_id` evidence is no longer accepted, so identical protected changes always derive the same new draft identity.
+
+### Title identity gates
+
+- Action-plan and final-card titles must each be nonempty strings.
+- Each side independently rejects duplicate titles, including duplicate display titles attached to different stable card keys.
+- Empty strings, nulls, lists, and objects are covered by adversarial validation tests.
+
+### Builder exact-schema consistency
+
+- The action plan now has exact top-level, deck, route, route-count, and action field sets before construction.
+- The builder recursively rejects prohibited Git receipt fields in the action plan, including nested `commit_sha` and `merged_sha`.
+- Every completed builder candidate is passed through `validate_release_manifest` before it can be returned.
+- A direct builder-to-validator consistency test requires every successful builder output to validate with no errors.
+
+### Second re-review TDD and verification evidence
+
+- RED: the expanded 31-test release-manifest suite produced 16 expected assertion failures across the protected-field matrix, malformed/duplicate titles, and builder input probes.
+- GREEN: `python -m unittest tests.maimemo_learning_rebuild.test_release_manifest -v` ran 31 tests; all 31 passed.
+- Full suite: `python -m unittest discover -v` ran 192 tests; 190 passed, with the same unrelated 1 failure and 1 error caused by the missing repository-external desktop DOCX.
+- `python -m py_compile maimemo_learning_rebuild\release_manifest.py tests\maimemo_learning_rebuild\test_release_manifest.py` exited 0.
+- `git diff --check` exited 0 apart from checkout line-ending warnings.
+- The Task 5 baseline diff for `test_review.py`, `review.py`, and `sources.py` is empty; no external source path or user DOCX was changed or moved.
+
+Second review-fix commit message: `fix: close release manifest rereview gaps`.

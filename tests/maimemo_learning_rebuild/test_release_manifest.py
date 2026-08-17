@@ -130,6 +130,13 @@ def protected_payload_hash(manifest):
     return hashlib.sha256(canonical_bytes(payload)).hexdigest()
 
 
+def deterministic_fork_release_id(baseline, changed_manifest):
+    return (
+        f"{baseline['release_id']}-draft-"
+        f"{protected_payload_hash(changed_manifest)[:12]}"
+    )
+
+
 def frozen_baseline(manifest):
     return {
         "receipt_type": "verified_frozen_baseline",
@@ -218,6 +225,35 @@ class ReleaseManifestTests(unittest.TestCase):
 
         with self.assertRaisesRegex(ValueError, "new release must start in draft"):
             build_release_manifest(inputs)
+
+    def test_builder_rejects_unknown_and_nested_git_fields_before_output(self):
+        cases = (
+            ("commit_sha", {"commit_sha": "a" * 40}),
+            ("merged_sha", {"merged_sha": "b" * 40}),
+            ("nested commit_sha", {"metadata": {"commit_sha": "c" * 40}}),
+            ("unknown deck field", {"note": "not part of the frozen schema"}),
+        )
+        for label, extra_fields in cases:
+            with self.subTest(case=label):
+                inputs = complete_inputs()
+                plan = json.loads(inputs["artifacts"]["action_plan"].decode("utf-8"))
+                plan["deck"].update(extra_fields)
+                inputs["artifacts"]["action_plan"] = json.dumps(
+                    plan,
+                    ensure_ascii=False,
+                ).encode("utf-8")
+
+                with self.assertRaisesRegex(
+                    ValueError,
+                    "prohibited Git receipt field|action plan deck fields mismatch",
+                ):
+                    build_release_manifest(inputs)
+
+    def test_every_builder_output_is_accepted_by_the_validator(self):
+        inputs = complete_inputs()
+        manifest = build_release_manifest(inputs)
+
+        self.assertEqual([], validate_release_manifest(manifest, inputs["artifacts"]))
 
     def test_release_hash_uses_canonical_utf8_json_and_excludes_only_self_hash(self):
         manifest = complete_manifest()
@@ -431,6 +467,41 @@ class ReleaseManifestTests(unittest.TestCase):
                     expected,
                     validate_release_manifest(manifest, changed_artifacts),
                 )
+
+    def test_rejects_invalid_titles_on_both_sides_of_the_frozen_plan(self):
+        invalid_titles = ("", None, ["not", "a", "title"], {"not": "a title"})
+        for title in invalid_titles:
+            with self.subTest(title=title):
+                changed_artifacts = artifacts()
+                plan = json.loads(changed_artifacts["action_plan"].decode("utf-8"))
+                cards = json.loads(changed_artifacts["final_cards"].decode("utf-8"))
+                stable_key = plan["actions"][0]["stable_card_key"]
+                plan["actions"][0]["title"] = title
+                cards["cards"][0]["title"] = title
+                manifest = complete_manifest()
+                replace_json_artifact(manifest, changed_artifacts, "action_plan", plan)
+                replace_json_artifact(manifest, changed_artifacts, "final_cards", cards)
+
+                errors = validate_release_manifest(manifest, changed_artifacts)
+
+                self.assertIn(f"action title is invalid: {stable_key}", errors)
+                self.assertIn(f"frozen card title is invalid: {stable_key}", errors)
+
+    def test_rejects_duplicate_titles_even_when_stable_keys_differ(self):
+        changed_artifacts = artifacts()
+        plan = json.loads(changed_artifacts["action_plan"].decode("utf-8"))
+        cards = json.loads(changed_artifacts["final_cards"].decode("utf-8"))
+        duplicate_title = plan["actions"][0]["title"]
+        plan["actions"][3]["title"] = duplicate_title
+        cards["cards"][3]["title"] = duplicate_title
+        manifest = complete_manifest()
+        replace_json_artifact(manifest, changed_artifacts, "action_plan", plan)
+        replace_json_artifact(manifest, changed_artifacts, "final_cards", cards)
+
+        errors = validate_release_manifest(manifest, changed_artifacts)
+
+        self.assertIn(f"duplicate action plan title: {duplicate_title}", errors)
+        self.assertIn(f"duplicate frozen card title: {duplicate_title}", errors)
 
     def test_action_counts_are_recomputed_from_action_list(self):
         changed_artifacts = artifacts()
@@ -666,30 +737,69 @@ class ReleaseManifestTests(unittest.TestCase):
                 {"ci_receipt": state_receipt(frozen, "ci_verified")},
             )
 
-    def test_rehashed_protected_change_forks_against_external_baseline(self):
-        draft = complete_manifest()
-        baseline = frozen_baseline(draft)
-        frozen = advance_release(draft, "plan_frozen", baseline)
-        original = copy.deepcopy(frozen)
-        frozen["artifact_hashes"]["final_cards"] = "d" * 64
-        refresh_self_hash(frozen)
-
-        fork = transition_release_state(
-            frozen,
-            "ci_verified",
-            {
-                "frozen_baseline": baseline,
-                "ci_receipt": state_receipt(frozen, "ci_verified"),
-                "new_release_id": "release-2026-08-17-002",
-            },
+    def test_every_protected_field_change_forks_a_deterministic_draft(self):
+        mutations = (
+            ("schema_version", lambda item: item.__setitem__("schema_version", 3)),
+            ("release_id", lambda item: item.__setitem__("release_id", "attacker-release-id")),
+            ("deck", lambda item: item["deck"].__setitem__("name", "changed deck")),
+            (
+                "chapter_routes",
+                lambda item: item["chapter_routes"]["base"].__setitem__("name", "changed base"),
+            ),
+            (
+                "card_counts",
+                lambda item: item["card_counts"].__setitem__(
+                    "before", item["card_counts"]["before"] + 1
+                ),
+            ),
+            (
+                "action_counts",
+                lambda item: item["action_counts"].__setitem__(
+                    "create", item["action_counts"]["create"] + 1
+                ),
+            ),
+            (
+                "artifact_hashes",
+                lambda item: item["artifact_hashes"].__setitem__("final_cards", "d" * 64),
+            ),
         )
+        for field, mutate in mutations:
+            with self.subTest(field=field):
+                draft = complete_manifest()
+                baseline = frozen_baseline(draft)
+                frozen = advance_release(draft, "plan_frozen", baseline)
+                mutate(frozen)
+                refresh_self_hash(frozen)
+                before_call = copy.deepcopy(frozen)
+                expected_release_id = deterministic_fork_release_id(baseline, frozen)
 
-        self.assertEqual("draft", fork["state"])
-        self.assertEqual("release-2026-08-17-002", fork["release_id"])
-        self.assertEqual("d" * 64, fork["artifact_hashes"]["final_cards"])
-        self.assertEqual({}, fork["state_evidence"])
-        self.assertEqual(release_hash(fork), fork["release_hash"])
-        self.assertEqual("plan_frozen", original["state"])
+                try:
+                    fork = transition_release_state(
+                        frozen,
+                        "ci_verified",
+                        {
+                            "frozen_baseline": baseline,
+                            "ci_receipt": state_receipt(frozen, "ci_verified"),
+                        },
+                    )
+                except ValueError as exc:
+                    self.fail(f"protected mutation raised instead of forking: {field}: {exc}")
+
+                self.assertEqual(before_call, frozen)
+                self.assertEqual("draft", fork["state"])
+                self.assertEqual(expected_release_id, fork["release_id"])
+                self.assertEqual({}, fork["state_evidence"])
+                self.assertEqual(release_hash(fork), fork["release_hash"])
+
+                repeated = transition_release_state(
+                    frozen,
+                    "ci_verified",
+                    {
+                        "frozen_baseline": baseline,
+                        "ci_receipt": state_receipt(frozen, "ci_verified"),
+                    },
+                )
+                self.assertEqual(fork["release_id"], repeated["release_id"])
 
     def test_state_machine_rejects_skip_backward_and_unknown_transitions(self):
         frozen, baseline = release_at("plan_frozen")
