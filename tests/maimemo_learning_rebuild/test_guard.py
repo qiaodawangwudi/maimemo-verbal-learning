@@ -202,6 +202,35 @@ class WriteGuardTests(unittest.TestCase):
                 self.assertFalse(result.ok)
                 self.assertIn("independent learning review is incomplete", result.errors)
 
+    def test_rewrite_not_required_resolution_without_object_observations_is_incomplete(self):
+        snapshot, registry, groups, cards, plan, approval, review = safe_fixture()
+        review.pop("review_hash")
+        review["resolutions"] = [
+            {
+                "subject_id": registry[0]["sense_id"],
+                "issue": "meaning and feature are near-duplicates",
+                "decision": "rewrite_not_required",
+                "reason": "已经完成独立人工审核没有发现问题，可以保持当前两个字段。",
+                "reviewer_context_isolated": True,
+            }
+        ]
+        approval["learning_review_hash"] = learning_review_hash(review)
+
+        result = evaluate_guard(
+            snapshot=snapshot,
+            registry=registry,
+            groups=groups,
+            final_cards=cards,
+            plan=plan,
+            catalog={"sources": []},
+            approval=approval,
+            target_chapter_id="chapter",
+            independent_review=review,
+        )
+
+        self.assertFalse(result.ok)
+        self.assertIn("independent learning review is incomplete", result.errors)
+
     def test_changed_incomplete_and_non_isolated_reviews_are_blocked(self):
         snapshot, registry, groups, cards, plan, approval, review = safe_fixture()
         review["complete"] = False
