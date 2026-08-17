@@ -248,6 +248,22 @@ class ApplicationBlindReviewTests(unittest.TestCase):
             errors,
         )
 
+    def test_rejects_single_card_reason_made_only_from_variables_and_punctuation(self):
+        cards = final_cards(card_id="card-101")
+        reasons = (
+            f"{TITLE}｜甲｜乙｜card-101｜2026｜乙",
+            f"【{TITLE}】（甲）——乙；card-101；2026；乙！！！",
+        )
+
+        for reason in reasons:
+            with self.subTest(reason=reason):
+                review = blind_review(distractor_rejections={"乙": reason})
+                errors = evaluate_blind_reviews(cards, review)
+                self.assertIn(
+                    f"blind review distractor rejection is not card-specific: {TITLE}:乙",
+                    errors,
+                )
+
     def test_rejects_duplicate_application_card_identity_itself(self):
         cards = final_cards(card_id="same-card")
         cards["cards"].append(copy.deepcopy(cards["cards"][0]))

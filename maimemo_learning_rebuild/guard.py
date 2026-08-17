@@ -147,24 +147,52 @@ def main() -> int:
     parser.add_argument("--blind-review", type=Path, required=True)
     parser.add_argument("--target-chapter-id", required=True)
     args = parser.parse_args()
-    snapshot = load_strict_json(args.snapshot)
-    registry = load_strict_json(args.registry)["records"]
-    groups = load_strict_json(args.groups)["groups"]
-    cards = load_strict_json(args.cards)["cards"]
-    plan = load_strict_json(args.plan)
-    catalog = load_source_catalog(args.sources)
-    approval = (
-        json.loads(args.approval.read_text(encoding="utf-8-sig"))
-        if args.approval
-        else None
-    )
-    independent_review = (
-        load_strict_json(args.independent_review)
-        if args.independent_review
-        else None
-    )
-    application_review = load_strict_json(args.application_review)
-    blind_review = load_strict_json(args.blind_review)
+    input_label = "snapshot"
+    try:
+        snapshot = load_strict_json(args.snapshot)
+        input_label = "registry"
+        registry = load_strict_json(args.registry)["records"]
+        input_label = "groups"
+        groups = load_strict_json(args.groups)["groups"]
+        input_label = "cards"
+        cards = load_strict_json(args.cards)["cards"]
+        input_label = "plan"
+        plan = load_strict_json(args.plan)
+        input_label = "sources"
+        catalog = load_source_catalog(args.sources)
+        input_label = "approval"
+        approval = load_strict_json(args.approval) if args.approval else None
+        input_label = "independent-review"
+        independent_review = (
+            load_strict_json(args.independent_review)
+            if args.independent_review
+            else None
+        )
+        input_label = "application-review"
+        application_review = load_strict_json(args.application_review)
+        input_label = "blind-review"
+        blind_review = load_strict_json(args.blind_review)
+    except (
+        OSError,
+        UnicodeError,
+        json.JSONDecodeError,
+        ValueError,
+        RecursionError,
+        OverflowError,
+        TypeError,
+        KeyError,
+        AttributeError,
+    ):
+        print(
+            json.dumps(
+                {
+                    "ok": False,
+                    "errors": [f"invalid guard input: {input_label}"],
+                },
+                ensure_ascii=False,
+            )
+        )
+        return 1
     result = evaluate_guard(
         snapshot=snapshot,
         registry=registry,

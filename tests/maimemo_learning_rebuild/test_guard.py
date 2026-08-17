@@ -1,5 +1,10 @@
 import copy
+import json
+import subprocess
+import sys
+import tempfile
 import unittest
+from pathlib import Path
 
 from maimemo_learning_rebuild.guard import evaluate_guard as _evaluate_guard
 from maimemo_learning_rebuild.learning_quality import (
@@ -99,6 +104,71 @@ def reviewed_fixture(record, resolution):
 
 
 class WriteGuardTests(unittest.TestCase):
+    def test_guard_cli_rejects_damaged_and_nonfinite_review_json_without_leaks(self):
+        cases = (
+            ("application-review", '{"complete": true, "applications": [}'),
+            ("blind-review", '{"complete": true, "reviews": [}'),
+            ("application-review", '{"complete": true, "applications": [], "score": NaN}'),
+            ("blind-review", '{"complete": true, "reviews": [], "score": Infinity}'),
+        )
+
+        for invalid_label, invalid_payload in cases:
+            with self.subTest(invalid_label=invalid_label, invalid_payload=invalid_payload):
+                with tempfile.TemporaryDirectory() as temporary:
+                    root = Path(temporary)
+                    payloads = {
+                        "snapshot": {"cards": []},
+                        "registry": {"records": []},
+                        "groups": {"groups": []},
+                        "cards": {"cards": []},
+                        "plan": {},
+                        "sources": {"sources": []},
+                        "application-review": APPLICATION_REVIEW,
+                        "blind-review": BLIND_REVIEW,
+                    }
+                    paths = {}
+                    for label, payload in payloads.items():
+                        path = root / f"{label}.json"
+                        path.write_text(json.dumps(payload), encoding="utf-8")
+                        paths[label] = path
+                    paths[invalid_label].write_text(invalid_payload, encoding="utf-8")
+                    command = [
+                        sys.executable,
+                        "-m",
+                        "maimemo_learning_rebuild.guard",
+                    ]
+                    for label in (
+                        "snapshot",
+                        "registry",
+                        "groups",
+                        "cards",
+                        "plan",
+                        "sources",
+                        "application-review",
+                        "blind-review",
+                    ):
+                        command.extend([f"--{label}", str(paths[label])])
+                    command.extend(["--target-chapter-id", "chapter"])
+
+                    result = subprocess.run(
+                        command,
+                        cwd=Path(__file__).parents[2],
+                        capture_output=True,
+                        text=True,
+                        encoding="utf-8",
+                    )
+
+                self.assertNotEqual(0, result.returncode)
+                self.assertNotIn("Traceback", result.stderr)
+                self.assertNotIn(str(root), result.stdout + result.stderr)
+                self.assertEqual(
+                    {
+                        "ok": False,
+                        "errors": [f"invalid guard input: {invalid_label}"],
+                    },
+                    json.loads(result.stdout),
+                )
+
     def test_safe_complete_plan_passes(self):
         snapshot, registry, groups, cards, plan, approval, independent_review = safe_fixture()
 

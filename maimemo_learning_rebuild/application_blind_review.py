@@ -233,7 +233,7 @@ def _validate_entry(review: dict, card: dict) -> tuple[list[str], list[str]]:
         ]
         normalized = _normalized_reason(reason, variables)
         repeated_reason_candidates.append(normalized)
-        if distractor not in reason or any(
+        if not normalized or distractor not in reason or any(
             phrase in reason for phrase in GENERIC_REVIEW_PHRASES
         ):
             errors.append(
