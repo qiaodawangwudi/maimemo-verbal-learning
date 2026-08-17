@@ -13,6 +13,7 @@ from maimemo_learning_rebuild.api import (
     RateLimitError,
 )
 from maimemo_learning_rebuild.release_writer import (
+    TYPE_PREFIXES,
     _load_frozen_release,
     execute_release,
     main,
@@ -32,8 +33,9 @@ ROUTES = {
 
 
 def card(title, card_type, content, *, action="create", card_id=""):
+    suffix = title.removeprefix(TYPE_PREFIXES[card_type]).replace("｜", ":")
     return {
-        "stable_card_key": f"{card_type}:{title}",
+        "stable_card_key": f"{card_type}:{suffix}",
         "title": title,
         "card_type": card_type,
         "action": action,
@@ -101,6 +103,7 @@ def manifest(snapshot, cards):
         for route in ROUTES
     }
     return {
+        "release_id": "release-1",
         "release_hash": "a" * 64,
         "deck": {"id": "deck", "name": "deck"},
         "chapter_routes": {

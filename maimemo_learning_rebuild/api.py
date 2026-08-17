@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 import email.utils
+import math
 import socket
 from datetime import datetime, timezone
 import urllib.error
@@ -14,37 +15,76 @@ from .guard import GuardResult
 
 
 BASE_URL = "https://open.maimemo.com/open/api/v1/markji"
+MAX_RETRY_AFTER_SECONDS = 3600.0
 
 
 class AmbiguousMutationError(RuntimeError):
     """A mutation may have reached the server, so callers must read before retrying."""
 
 
-class RateLimitError(RuntimeError):
-    """A definitive 429 response with the server-provided retry delay."""
-
-    def __init__(self, retry_after_seconds: float, message: str = "HTTP 429"):
-        super().__init__(message)
-        self.retry_after_seconds = max(0.0, float(retry_after_seconds))
-
-
 class PermanentApiError(RuntimeError):
     """A definitive API rejection that must not be retried as a mutation."""
+
+
+class RateLimitError(RuntimeError):
+    """A definitive 429 response with a finite, bounded server delay."""
+
+    def __init__(self, retry_after_seconds: float, message: str = "HTTP 429"):
+        delay = float(retry_after_seconds)
+        if not math.isfinite(delay) or delay < 0 or delay > MAX_RETRY_AFTER_SECONDS:
+            raise ValueError("Retry-After is not finite and bounded")
+        super().__init__(message)
+        self.retry_after_seconds = delay
 
 
 def _retry_after_seconds(value: str | None) -> float:
     if not value:
         return 0.0
     try:
-        return max(0.0, float(value.strip()))
+        delay = float(value.strip())
     except ValueError:
         try:
             parsed = email.utils.parsedate_to_datetime(value)
         except (TypeError, ValueError, OverflowError):
-            return 0.0
+            raise PermanentApiError("invalid Retry-After header")
         if parsed.tzinfo is None:
             parsed = parsed.replace(tzinfo=timezone.utc)
-        return max(0.0, (parsed - datetime.now(timezone.utc)).total_seconds())
+        try:
+            delay = max(0.0, (parsed - datetime.now(timezone.utc)).total_seconds())
+        except (OverflowError, OSError, ValueError) as error:
+            raise PermanentApiError("invalid Retry-After header") from error
+    if not math.isfinite(delay) or delay < 0 or delay > MAX_RETRY_AFTER_SECONDS:
+        raise PermanentApiError("invalid Retry-After header")
+    return delay
+
+
+def _reject_json_constant(value: str) -> object:
+    raise ValueError(f"non-finite JSON number: {value}")
+
+
+def _unique_json_object(pairs: list[tuple[str, object]]) -> dict:
+    value = {}
+    for key, item in pairs:
+        if key in value:
+            raise ValueError(f"duplicate JSON key: {key}")
+        value[key] = item
+    return value
+
+
+def _strict_response(response) -> dict:
+    raw = response.read()
+    if isinstance(raw, bytes):
+        raw = raw.decode("utf-8-sig")
+    if not isinstance(raw, str):
+        raise ValueError("API response must be UTF-8 JSON")
+    value = json.loads(
+        raw,
+        parse_constant=_reject_json_constant,
+        object_pairs_hook=_unique_json_object,
+    )
+    if not isinstance(value, dict):
+        raise ValueError("API response must be an object")
+    return value
 
 
 class Transport(Protocol):
@@ -53,11 +93,18 @@ class Transport(Protocol):
 
 class UrllibTransport:
     def request(self, method: str, url: str, headers: dict, payload: dict | None = None) -> dict:
-        data = None if payload is None else json.dumps(payload, ensure_ascii=False).encode("utf-8")
+        data = None if payload is None else json.dumps(
+            payload, ensure_ascii=False, allow_nan=False
+        ).encode("utf-8")
         request = urllib.request.Request(url, data=data, method=method, headers=headers)
         try:
             with urllib.request.urlopen(request, timeout=60) as response:
-                return json.load(response)
+                try:
+                    return _strict_response(response)
+                except (UnicodeDecodeError, json.JSONDecodeError, TypeError, ValueError, RecursionError) as error:
+                    if method == "POST":
+                        raise AmbiguousMutationError("mutation response was not strict JSON") from error
+                    raise PermanentApiError("API response was not strict JSON") from error
         except urllib.error.HTTPError as error:
             if error.code == 429:
                 raise RateLimitError(

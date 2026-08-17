@@ -4,7 +4,8 @@
 
 - Baseline: `f59d9a7b61db838c48ca82b76f2b4da49272b569`
 - Commit subject: `feat: add drift-safe resumable release writer`
-- Scope was limited to `task-7-brief.md`.
+- Scope was limited to `task-7-brief.md`, followed by every P1/P2 item in
+  `task-7-review.md`.
 
 ## Delivered behavior
 
@@ -18,18 +19,49 @@
 - Added the protected CLI with only `--release-dir`, `--approval-receipt`, and `--journal`. It strictly loads and hash-validates all frozen artifacts, passes the untouched manifest through `release_environment` receipt validation before client construction, and returns nonzero unless the final route-aware readback is successful.
 - `release_environment.py` is not present at this baseline, so the CLI imports it only at the protected boundary and fails closed before constructing a client until that module is supplied by its owning task.
 
+## Review remediation
+
+- Every POST is now preceded by a release-wide live-state gate. It checks exact
+  deck and route identity, every planned card's route/id/root/content/grammar,
+  completed outcomes, and (after root readback) the complete comparison
+  title-to-root map.
+- Resume and final verification require exact frozen `card_id` for `update` and
+  `unchanged`, even when content is identical. Duplicate card, chapter, route,
+  and root IDs fail closed.
+- Frozen cards are fully parsed before the journal lock is acquired: title,
+  content H1, card type, stable key, action/card ID, placeholder position and
+  target, resolved reference syntax, and manifest route counts must agree.
+  Resolved base references are checked against the exact comparison title/root
+  map before POST.
+- Public `execute_release` requires a strict snapshot and rejects cyclic,
+  non-finite, structurally malformed manifest/card/snapshot/live values before
+  mutation. Live and frozen deck identities and route structures are required.
+- The protected environment boundary accepts only one exact strict success
+  object whose receipt, release ID/hash, GitHub run ID, and environment run ID
+  all bind. Every scalar/list/null/cyclic/non-finite/extra-field alternative
+  fails before protected client construction.
+- API JSON responses now reject duplicate keys, non-finite values, non-object
+  roots, and invalid UTF-8. `Retry-After` must be finite and between 0 and 3600
+  seconds; cancellation remains checked after the bounded wait and before a
+  retry.
+
 ## TDD evidence
 
 - RED: missing writer/API interfaces failed imports and behavior tests.
 - GREEN: exception isolation and all writer branches passed.
 - RED/GREEN regression cycles were also completed for bare `mkjr_`, stale lock recovery, untouched receipt manifest, and post-base comparison-root drift.
+- Review RED reproduced all requested fail-open cases (30 failures and 4
+  errors initially). Incremental GREEN cycles covered strict receipts,
+  duplicate/non-finite JSON, release-wide drift, exact IDs/routes/root maps,
+  malformed frozen structures, bounded retry cancellation, and resolved-root
+  mapping before POST.
 
 ## Verification
 
 - `git diff --check`: passed (only Git's existing LF-to-CRLF notices).
 - `python -m compileall -q maimemo_learning_rebuild tests\maimemo_learning_rebuild`: passed.
-- `python -m unittest tests.maimemo_learning_rebuild.test_release_writer tests.maimemo_learning_rebuild.test_sync -v`: 28/28 Task 7 target tests passed.
-- `python -m unittest discover -v`: 225 tests ran; 223 passed. The only failures are the two pre-existing external-DOCX-dependent review tests listed below (1 error, 1 failure).
+- `python -m unittest tests.maimemo_learning_rebuild.test_release_writer tests.maimemo_learning_rebuild.test_release_writer_adversarial tests.maimemo_learning_rebuild.test_sync -v`: 42/42 Task 7 target and adversarial tests passed.
+- `python -m unittest discover -v`: 239 tests ran; 237 passed. The only failures are the two pre-existing external-DOCX-dependent review tests listed below (1 error, 1 failure).
 
 ## Known external failures
 
