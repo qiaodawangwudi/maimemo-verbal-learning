@@ -7,13 +7,14 @@ import json
 from dataclasses import dataclass
 from pathlib import Path
 
-from .application_blind_review import load_strict_json
+from .application_blind_review import load_strict_json, strict_json_error
 from .groups import validate_group_registry
 from .learning_quality import learning_review_hash
 from .planning import content_hash, validate_action_plan
 from .review import GENERIC_WARNINGS, review_registry
 from .snapshot import audit_snapshot
 from .sources import load_source_catalog
+from .release_environment import RECEIPT_FIELDS
 
 
 @dataclass(frozen=True)
@@ -34,6 +35,7 @@ def evaluate_guard(
     catalog: dict,
     approval: dict | None,
     target_chapter_id: str,
+    github_receipt: dict | None = None,
     independent_review: dict | None = None,
     application_review: dict | None = None,
     blind_review: dict | None = None,
@@ -114,7 +116,25 @@ def evaluate_guard(
     expected_chapter_id = str(plan.get("chapter_id") or "")
     if target_chapter_id != expected_chapter_id:
         errors.append(f"wrong target chapter: {target_chapter_id}")
-    if approval is None:
+    if plan.get("schema_version") == 2:
+        try:
+            receipt_is_strict = (
+                isinstance(github_receipt, dict)
+                and set(github_receipt) == RECEIPT_FIELDS
+                and strict_json_error(github_receipt) is None
+                and github_receipt.get("schema_version") == 2
+                and type(github_receipt.get("schema_version")) is int
+                and github_receipt.get("receipt_type") == "github_protected_release"
+            )
+        except (RecursionError, OverflowError, TypeError, ValueError):
+            receipt_is_strict = False
+        if not receipt_is_strict:
+            errors.append("schema-v2 write requires GitHub receipt")
+            if approval is not None:
+                errors.append(
+                    "legacy write approval is read-only and cannot authorize writes"
+                )
+    elif approval is None:
         errors.append("missing write approval")
     else:
         if approval.get("plan_hash") != plan_hash:
@@ -142,6 +162,7 @@ def main() -> int:
     parser.add_argument("--plan", type=Path, required=True)
     parser.add_argument("--sources", type=Path, required=True)
     parser.add_argument("--approval", type=Path)
+    parser.add_argument("--github-receipt", type=Path)
     parser.add_argument("--independent-review", type=Path)
     parser.add_argument("--application-review", type=Path, required=True)
     parser.add_argument("--blind-review", type=Path, required=True)
@@ -162,6 +183,10 @@ def main() -> int:
         catalog = load_source_catalog(args.sources)
         input_label = "approval"
         approval = load_strict_json(args.approval) if args.approval else None
+        input_label = "github-receipt"
+        github_receipt = (
+            load_strict_json(args.github_receipt) if args.github_receipt else None
+        )
         input_label = "independent-review"
         independent_review = (
             load_strict_json(args.independent_review)
@@ -201,6 +226,7 @@ def main() -> int:
         plan=plan,
         catalog=catalog,
         approval=approval,
+        github_receipt=github_receipt,
         target_chapter_id=args.target_chapter_id,
         independent_review=independent_review,
         application_review=application_review,

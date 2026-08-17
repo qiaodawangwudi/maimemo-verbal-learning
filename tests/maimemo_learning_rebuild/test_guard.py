@@ -257,6 +257,62 @@ class WriteGuardTests(unittest.TestCase):
         self.assertIn("approval action counts mismatch", result.errors)
         self.assertIn("approval chapter mismatch", result.errors)
 
+    def test_schema_v2_legacy_approval_is_read_only_and_cannot_authorize(self):
+        snapshot, registry, groups, cards, plan, approval, independent_review = safe_fixture()
+        plan["schema_version"] = 2
+
+        result = evaluate_guard(
+            snapshot=snapshot,
+            registry=registry,
+            groups=groups,
+            final_cards=cards,
+            plan=plan,
+            catalog={"sources": []},
+            approval=approval,
+            github_receipt=None,
+            target_chapter_id="chapter",
+            independent_review=independent_review,
+        )
+
+        self.assertIn("schema-v2 write requires GitHub receipt", result.errors)
+        self.assertIn(
+            "legacy write approval is read-only and cannot authorize writes",
+            result.errors,
+        )
+
+    def test_schema_v2_github_receipt_satisfies_authorization_gate(self):
+        snapshot, registry, groups, cards, plan, approval, independent_review = safe_fixture()
+        plan["schema_version"] = 2
+        github_receipt = {
+            "schema_version": 2,
+            "receipt_type": "github_protected_release",
+            "release_id": "release-1",
+            "release_hash": "a" * 64,
+            "approved_sha": "b" * 40,
+            "github_run_id": "12345",
+            "github_environment": "maimemo-final-release",
+            "deployment_status": "success",
+        }
+
+        result = evaluate_guard(
+            snapshot=snapshot,
+            registry=registry,
+            groups=groups,
+            final_cards=cards,
+            plan=plan,
+            catalog={"sources": []},
+            approval=approval,
+            github_receipt=github_receipt,
+            target_chapter_id="chapter",
+            independent_review=independent_review,
+        )
+
+        self.assertNotIn("schema-v2 write requires GitHub receipt", result.errors)
+        self.assertNotIn(
+            "legacy write approval is read-only and cannot authorize writes",
+            result.errors,
+        )
+
     def test_missing_independent_review_is_blocked(self):
         snapshot, registry, groups, cards, plan, approval, _ = safe_fixture()
 

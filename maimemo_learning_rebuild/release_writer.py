@@ -14,9 +14,7 @@ from datetime import datetime, timezone
 
 from .api import (
     AmbiguousMutationError,
-    MaimemoClient,
     RateLimitError,
-    UrllibTransport,
 )
 from .application_blind_review import strict_json_error
 from .guard import GuardResult
@@ -996,19 +994,14 @@ def _validate_release_environment(manifest, receipt_path):
 def _create_protected_client(manifest, validation):
     module = _release_environment_module()
     factory = getattr(module, "open_protected_client", None)
-    if callable(factory):
-        return factory(manifest, validation)
-    return MaimemoClient(
-        UrllibTransport(),
-        token=os.environ.get("MAIMEMO_TOKEN", ""),
-        deck_id=manifest["deck"]["id"],
-    )
+    environment = getattr(validation, "environment", None)
+    if not callable(factory) or environment is None:
+        raise RuntimeError("GitHub release environment receipt is not approved")
+    return factory(environment)
 
 
 def _safe_error(error):
-    message = str(error)
-    token = os.environ.get("MAIMEMO_TOKEN", "")
-    return message.replace(token, "[REDACTED]") if token else message
+    return "protected release failed [REDACTED]"
 
 
 def _parser():

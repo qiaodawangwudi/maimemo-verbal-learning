@@ -313,7 +313,7 @@ class ReleaseWriterTests(unittest.TestCase):
         ]
         error_output = StringIO()
         with (
-            patch.dict(os.environ, {"MAIMEMO_TOKEN": "secret-token"}, clear=False),
+            patch.dict(os.environ, {"MAIMEMO_API_TOKEN": "secret-token"}, clear=False),
             patch(
                 "maimemo_learning_rebuild.release_writer._load_frozen_release",
                 return_value=({"release_hash": "a" * 64}, []),
