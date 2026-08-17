@@ -22,6 +22,7 @@ jobs:
           python -m unittest -v
           tests.maimemo_learning_rebuild.test_groups
           tests.maimemo_learning_rebuild.test_guard
+          tests.maimemo_learning_rebuild.test_application_quality_gate
           tests.maimemo_learning_rebuild.test_markji
           tests.maimemo_learning_rebuild.test_models
           tests.maimemo_learning_rebuild.test_public_quality_gate
@@ -40,9 +41,20 @@ jobs:
           python-version: "3.10"
       - run: python -m maimemo_learning_rebuild.public_quality_gate --artifact-dir maimemo_learning_rebuild/artifacts
 
+  application-card-quality-gate:
+    name: Application card quality gate
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+      - name: Require complete application review and useful scenario cards
+        run: python -m maimemo_learning_rebuild.application_quality_gate --artifact-dir maimemo_learning_rebuild/artifacts
+
   final-user-authorization:
     name: Final user authorization
-    needs: [automated-tests, learning-quality-gate]
+    needs: [automated-tests, learning-quality-gate, application-card-quality-gate]
     environment: maimemo-final-release
     runs-on: ubuntu-latest
     steps:
