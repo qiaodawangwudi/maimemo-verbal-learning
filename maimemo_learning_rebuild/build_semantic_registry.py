@@ -158,7 +158,7 @@ def build_registry(source_root: Path, catalog: dict) -> tuple[dict, list[dict]]:
         lesson_five_overrides.update(
             {term: (override, path.stem) for term, override in batch.items()}
         )
-    four_poems_overrides: dict[str, dict] = {}
+    four_poems_overrides: dict[str, tuple[dict, str]] = {}
     for path in sorted(
         (Path(__file__).parent / "artifacts").glob(
             "semantic_overrides_four_poems_batch*.json"
@@ -168,7 +168,9 @@ def build_registry(source_root: Path, catalog: dict) -> tuple[dict, list[dict]]:
         duplicates = set(four_poems_overrides) & set(batch)
         if duplicates:
             raise ValueError(f"duplicate four-poems overrides: {sorted(duplicates)}")
-        four_poems_overrides.update(batch)
+        four_poems_overrides.update(
+            {term: (override, path.stem) for term, override in batch.items()}
+        )
 
     archive_by_term: dict[str, tuple[dict, str]] = {}
     for path in sorted((source_root / "judgment_archive_v2").glob("judgments_*.json")):
@@ -303,8 +305,9 @@ def build_registry(source_root: Path, catalog: dict) -> tuple[dict, list[dict]]:
                 ],
                 "provenance": {"batch": "four-poems", "source_index_only": True},
             }
-            override = four_poems_overrides.get(term)
-            if override:
+            override_entry = four_poems_overrides.get(term)
+            if override_entry:
+                override, batch_name = override_entry
                 record.update(
                     {
                         "status": "ready",
@@ -321,12 +324,12 @@ def build_registry(source_root: Path, catalog: dict) -> tuple[dict, list[dict]]:
                 record.pop("review_blockers", None)
                 record["provenance"] = {
                     "batch": "four-poems",
-                    "manual_semantic_review": "batch1",
+                    "manual_semantic_review": batch_name,
                 }
             provenance = {
                 "tier": (
                     "manually_reviewed_from_transcript"
-                    if override
+                    if override_entry
                     else "source_index_pending_semantic_rebuild"
                 )
             }

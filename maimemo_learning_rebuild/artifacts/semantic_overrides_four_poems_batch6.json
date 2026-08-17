@@ -1,0 +1,126 @@
+{
+  "schema_version": 1,
+  "basis": "逐词回到四诗风雅颂逐字稿，重建资源窘迫、照搬旧说、虚假替代、方向分离和主客错位的判断边界。",
+  "records": {
+    "捉襟见肘": {
+      "meaning": "由于人力、财力、物力等资源有限，处理事务时处处窘迫、难以应付。",
+      "distinctive_feature": "根因必须落在资源不足，结果是能力覆盖不了需要，而非一般忙乱或顾此失彼。",
+      "recognition_cues": ["人少事多、经费不足", "有限资源难以覆盖多项需求"],
+      "dimensions": [{"axis": "原因", "judgment": "人力、财力、物力等资源短缺。"}, {"axis": "状态", "judgment": "应付困难、处处窘迫。"}],
+      "comparison_edges": [{"other_term": "寅吃卯粮", "minimum_difference": "捉襟见肘描述当前资源不足造成的窘迫；寅吃卯粮描述为应付当前而提前耗用未来资源。"}],
+      "misuse_boundary": "题干只是任务冲突或取舍失当，却没有资源短缺这一原因时，不宜使用。"
+    },
+    "寅吃卯粮": {
+      "meaning": "当前就提前耗用未来时期的收入或资源，以应付眼前需要。",
+      "distinctive_feature": "有明确的时间错配：本期不足，于是预支下一期；不仅是不顾长远，也不等于一般资源短缺。",
+      "recognition_cues": ["预支未来收入填补当前缺口", "提前耗用下一阶段资源"],
+      "dimensions": [{"axis": "资源时间", "judgment": "未来资源被提前使用。"}, {"axis": "直接原因", "judgment": "当前资源不足或急需应付。"}],
+      "comparison_edges": [{"other_term": "捉襟见肘", "minimum_difference": "寅吃卯粮强调预支未来资源这一做法；捉襟见肘只描述当前资源不足造成的窘迫。"}, {"other_term": "竭泽而渔", "minimum_difference": "寅吃卯粮突出时间上的预支；竭泽而渔突出把可持续资源一次性耗尽。"}],
+      "misuse_boundary": "只是当前资源有限而没有提前支取未来资源的动作时，只能说明捉襟见肘。"
+    },
+    "拾人牙慧": {
+      "meaning": "把别人说过的言论、观点拿来重复，自己缺少独立思考和见解。",
+      "distinctive_feature": "所‘拾’的是他人的话语和观点，落点在言论依附，而非照稿宣读或把整套方法强行套用。",
+      "recognition_cues": ["重复前人的观点而无新见", "把他人言论当作自己的表达"],
+      "dimensions": [{"axis": "借用对象", "judgment": "他人的言论、观点。"}, {"axis": "主体状态", "judgment": "缺少独立思考。"}],
+      "comparison_edges": [{"other_term": "述而不作", "minimum_difference": "拾人牙慧带有贬义，强调重复他人观点、没有独立见解；述而不作可中性地指只阐述旧说、不创作新说。"}, {"other_term": "照本宣科", "minimum_difference": "拾人牙慧强调观点来自他人；照本宣科强调照着现成文本机械宣读。"}],
+      "misuse_boundary": "合理引用他人观点并有自己的分析，或只是照稿念但不涉及观点归属时，不宜使用。"
+    },
+    "随波逐流": {
+      "meaning": "没有坚定立场或自主判断，随着潮流、环境或他人的选择而行动。",
+      "distinctive_feature": "核心是被外部潮流带着走；课程按中性偏贬处理，不能把所有顺应趋势都机械判成贬义。",
+      "recognition_cues": ["盲目跟随大众", "缺少立场、随着风向改变"],
+      "dimensions": [{"axis": "自主性", "judgment": "缺乏稳定立场和独立判断。"}, {"axis": "驱动力", "judgment": "外部潮流或他人选择。"}],
+      "comparison_edges": [{"other_term": "拾人牙慧", "minimum_difference": "随波逐流强调行动或立场跟着潮流走；拾人牙慧强调重复他人的言论观点。"}],
+      "misuse_boundary": "经过独立判断后主动顺应客观趋势，题干没有盲从或立场缺失时，不宜使用。"
+    },
+    "照本宣科": {
+      "meaning": "照着现成文本、讲稿或本子机械地逐字宣读、讲解。",
+      "distinctive_feature": "必须有可照读的‘本’，问题在表达方式僵硬照念，不等于借鉴观点或脱离实际地套方法。",
+      "recognition_cues": ["照着讲稿一字不差地念", "授课只念幻灯片内容"],
+      "dimensions": [{"axis": "依赖对象", "judgment": "现成文本或讲稿。"}, {"axis": "表达方式", "judgment": "机械照读。"}],
+      "comparison_edges": [{"other_term": "生搬硬套", "minimum_difference": "照本宣科是照文本机械宣读；生搬硬套是无视实际条件强行套用经验、方法或理论。"}],
+      "misuse_boundary": "题干强调方法不适配实际而非照稿宣读时，应使用生搬硬套。"
+    },
+    "述而不作": {
+      "meaning": "只阐述、整理已有学说或成果，而不提出、创作自己的新见解。",
+      "distinctive_feature": "课程说明它本可中性描述治学方式，也可在研究语境中批评只堆砌前人成果；辨析落点是‘述旧而不创新’。",
+      "recognition_cues": ["只介绍前人成果、不发表新见", "整理传统学说而不另作创见"],
+      "dimensions": [{"axis": "主要动作", "judgment": "阐述、整理已有内容。"}, {"axis": "缺失部分", "judgment": "没有创作新观点。"}],
+      "comparison_edges": [{"other_term": "拾人牙慧", "minimum_difference": "述而不作可中性指阐述旧说而不创新；拾人牙慧强调把他人观点拿来重复，贬义更强。"}],
+      "misuse_boundary": "作者虽大量介绍前人成果，但同时提出自己的研究和见解时，不能认定为述而不作。"
+    },
+    "生搬硬套": {
+      "meaning": "不顾自身条件和实际情况，机械、强行地搬用别人的经验、方法或理论。",
+      "distinctive_feature": "关键是外来方案与本地实际不适配仍被硬套，而不是单纯引用旧观点或照稿念。",
+      "recognition_cues": ["照搬外地经验而不做适配", "无视实际条件套用固定模式"],
+      "dimensions": [{"axis": "搬用对象", "judgment": "他人的经验、方法、理论。"}, {"axis": "适配状态", "judgment": "忽略自身实际。"}],
+      "comparison_edges": [{"other_term": "照本宣科", "minimum_difference": "生搬硬套强调方案与实际不匹配；照本宣科强调照着文本机械宣读。"}],
+      "misuse_boundary": "在充分理解和因地制宜改造后借鉴经验，不属于生搬硬套。"
+    },
+    "陈词滥调": {
+      "meaning": "陈旧、空泛而被反复使用的言论或套话，缺少新意和实际价值。",
+      "distinctive_feature": "课程强调它与抄袭模仿无必然关系，批评的是表达本身又旧又滥、价值低。",
+      "recognition_cues": ["文章充斥过时套话", "反复出现而毫无新意的说法"],
+      "dimensions": [{"axis": "内容新旧", "judgment": "陈旧。"}, {"axis": "使用状态", "judgment": "被滥用、缺乏价值。"}],
+      "comparison_edges": [{"other_term": "老生常谈", "minimum_difference": "陈词滥调明显贬斥陈旧、空泛且被滥用的套话；老生常谈只说大家听惯的常见话题，语气较轻。"}],
+      "misuse_boundary": "内容虽然常被谈论但仍有必要、仍有现实价值时，老生常谈可能更合适。"
+    },
+    "老生常谈": {
+      "meaning": "人们经常谈论、早已听惯的道理或话题。",
+      "distinctive_feature": "课程按中性、略偏贬处理，重点是常见和听惯，不必达到陈旧空泛、毫无价值的程度。",
+      "recognition_cues": ["长期反复被谈到的话题", "大家都熟悉的旧道理"],
+      "dimensions": [{"axis": "熟悉度", "judgment": "广为人知、听惯。"}, {"axis": "评价强度", "judgment": "中性或轻微贬义。"}],
+      "comparison_edges": [{"other_term": "陈词滥调", "minimum_difference": "老生常谈只强调常说、听惯；陈词滥调还强调表达陈旧空泛、被滥用，否定性更强。"}],
+      "misuse_boundary": "题干强烈批评套话空泛、低劣、毫无价值时，陈词滥调更精确。"
+    },
+    "望梅止渴": {
+      "meaning": "借助想象或心理暗示暂时安慰自己、缓解现实需求，却没有真正解决问题。",
+      "distinctive_feature": "侧重自我宽慰且可能有短暂心理效果，不必含有欺骗他人的意图。",
+      "recognition_cues": ["靠想象暂时缓解焦虑或需求", "现实条件未改变，只得到心理安慰"],
+      "dimensions": [{"axis": "作用对象", "judgment": "自己或处境中的人获得心理宽慰。"}, {"axis": "实际效果", "judgment": "短暂缓解但未真实满足需求。"}],
+      "comparison_edges": [{"other_term": "画饼充饥", "minimum_difference": "望梅止渴偏向通过想象自我宽慰；画饼充饥常指以不能兑现的空想或许诺安慰自己或他人，并可带有给别人画饼意味。"}],
+      "misuse_boundary": "题干描述他人用空头承诺诱导、安抚对象时，画饼充饥通常更贴近。"
+    },
+    "画饼充饥": {
+      "meaning": "用不能兑现的空想、设想或许诺来安慰自己或他人，代替现实满足。",
+      "distinctive_feature": "现实需要没有被满足，所给的是虚构的‘饼’；课程指出它可与望梅止渴通用，但更常有他人许诺、画蓝图的语境。",
+      "recognition_cues": ["只给美好蓝图却不给实际条件", "用空头承诺安抚需求"],
+      "dimensions": [{"axis": "替代物", "judgment": "虚构设想或不能兑现的许诺。"}, {"axis": "现实状态", "judgment": "实际需求仍未解决。"}],
+      "comparison_edges": [{"other_term": "望梅止渴", "minimum_difference": "画饼充饥更常包含向他人描绘不能兑现的前景；望梅止渴更偏自我想象带来的暂时宽慰。"}],
+      "misuse_boundary": "题干中的规划有资源、行动和兑现路径，或已真正解决需求时，不能使用。"
+    },
+    "空中楼阁": {
+      "meaning": "脱离现实条件、缺乏实际基础和支撑的理论、方案或规划。",
+      "distinctive_feature": "核心是‘不落地、无根基’，不是暂时未实现，也不是用空想安慰需求。",
+      "recognition_cues": ["规划缺乏现实条件支撑", "理论悬空、无法落地"],
+      "dimensions": [{"axis": "现实基础", "judgment": "缺少事实、条件或资源支撑。"}, {"axis": "适用对象", "judgment": "理论、方案、规划等。"}],
+      "comparison_edges": [{"other_term": "画饼充饥", "minimum_difference": "空中楼阁评价方案、理论本身没有现实根基；画饼充饥强调用不能兑现的设想代替现实满足、进行安慰。"}],
+      "misuse_boundary": "方案虽尚未实施但已有充分依据、资源和可行路径时，不能因‘未来规划’就使用。"
+    },
+    "分道扬镳": {
+      "meaning": "原本同行、合作或方向一致的双方，因理念或发展路径分歧而分开，各走各路。",
+      "distinctive_feature": "必须有‘先共同—后分开’的关系变化，强调主体之间分离，不评价某个主体的目标与行动是否相反。",
+      "recognition_cues": ["合作伙伴因理念不同各自发展", "原本同路的双方后来分开"],
+      "dimensions": [{"axis": "前期关系", "judgment": "曾经同行或合作。"}, {"axis": "后期状态", "judgment": "因分歧各走不同道路。"}],
+      "comparison_edges": [{"other_term": "背道而驰", "minimum_difference": "分道扬镳强调原本同行的多个主体后来分开；背道而驰强调行动方向与目标、原则或另一方完全相反。"}],
+      "misuse_boundary": "题干只有一个主体的行动与目标相反，没有共同关系破裂时，不宜使用。"
+    },
+    "反客为主": {
+      "meaning": "原本处于次要、从属地位的一方反而占据主导位置，使主客关系颠倒。",
+      "distinctive_feature": "位置发生了实质倒置，‘客’变成主导者；不只是声势盖过主体。",
+      "recognition_cues": ["辅助工具反过来支配使用者", "次要一方取得主导权"],
+      "dimensions": [{"axis": "原有地位", "judgment": "主体处于次要、从属位置。"}, {"axis": "变化结果", "judgment": "反而成为主导。"}],
+      "comparison_edges": [{"other_term": "喧宾夺主", "minimum_difference": "反客为主强调次要一方实际占据主导位置；喧宾夺主强调配角声势过大、抢走主体风头，未必取得控制权。"}],
+      "misuse_boundary": "配角只是更显眼、更喧闹，却未实际成为主导时，喧宾夺主更精确。"
+    },
+    "喧宾夺主": {
+      "meaning": "配角、次要内容声势过大，掩盖或抢走了主体、主要内容的风头。",
+      "distinctive_feature": "落点是注意力和表现上的压倒，而非次要一方真正取得主导权。",
+      "recognition_cues": ["装饰过强掩盖作品主题", "配角抢走主体风头"],
+      "dimensions": [{"axis": "失衡方式", "judgment": "次要部分声势、表现过强。"}, {"axis": "直接结果", "judgment": "主要部分被掩盖。"}],
+      "comparison_edges": [{"other_term": "反客为主", "minimum_difference": "喧宾夺主强调次要部分抢风头、掩盖主体；反客为主强调主客位置实质颠倒，次要者成为主导。"}],
+      "misuse_boundary": "题干明确说辅助者已经控制、支配主体时，反客为主更准确。"
+    }
+  }
+}

@@ -46,17 +46,17 @@ class RegistryReviewTests(unittest.TestCase):
         report = review_registry(registry["records"], catalog, groups)
 
         self.assertEqual(621, report["records"])
-        self.assertEqual(349, report["ready"])
-        self.assertEqual(272, report["pending"])
+        self.assertEqual(435, report["ready"])
+        self.assertEqual(186, report["pending"])
         self.assertEqual(0, report["hard_errors"])
         self.assertEqual(621, len({record["term"] for record in registry["records"]}))
 
         by_term = {record["term"]: record for record in registry["records"]}
         self.assertEqual("ready", by_term["如火如荼"]["status"])
         self.assertNotEqual("一些军队", by_term["如火如荼"]["meaning"])
-        self.assertEqual("pending", by_term["述而不作"]["status"])
-        self.assertNotIn("meaning", by_term["述而不作"])
-        self.assertEqual("是什么意思啊", by_term["述而不作"]["candidate"]["course_sense"])
+        self.assertEqual("ready", by_term["述而不作"]["status"])
+        self.assertIn("只阐述", by_term["述而不作"]["meaning"])
+        self.assertIn("不提出", by_term["述而不作"]["meaning"])
         self.assertEqual("ready", by_term["事倍功半"]["status"])
         self.assertEqual("pending", by_term["大而化之"]["status"])
         self.assertEqual("ready", by_term["游刃有余"]["status"])

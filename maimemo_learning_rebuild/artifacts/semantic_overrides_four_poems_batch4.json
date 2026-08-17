@@ -1,0 +1,134 @@
+{
+  "schema_version": 1,
+  "basis": "逐词回到四诗风雅颂逐字稿，重建整体崩解、负面事物复现、风险防范时点和治标不治本的动作差别。",
+  "records": {
+    "分崩离析": {
+      "meaning": "原本统一的整体从内部发生分裂，成员、部分逐渐离散。",
+      "distinctive_feature": "重点是整体内部关系破裂、成员各自离开，先有“分”和“离”，不必表现为短时间彻底崩塌。",
+      "recognition_cues": ["组织内部成员离心、出走", "统一整体逐渐分裂成多个部分"],
+      "dimensions": [{"axis": "崩解来源", "judgment": "整体内部关系破裂。"}, {"axis": "表现", "judgment": "成员、部分分裂离散。"}],
+      "comparison_edges": [{"other_term": "土崩瓦解", "minimum_difference": "分崩离析突出整体内部成员分裂、离散；土崩瓦解突出结构在短时间内迅速、彻底崩溃。"}],
+      "misuse_boundary": "题干只说某物完全消失，没有整体内部成员分裂关系时，不宜使用。"
+    },
+    "无影无踪": {
+      "meaning": "完全消失，找不到任何踪影或痕迹。",
+      "distinctive_feature": "结果是对象不再可见、不可追踪，课程概括为“什么也没了”；不描述整体如何分裂崩溃。",
+      "recognition_cues": ["彻底消失、毫无踪迹", "再也找不到对象"],
+      "dimensions": [{"axis": "存在状态", "judgment": "对象已不可见、不可追踪。"}, {"axis": "痕迹", "judgment": "没有留下踪迹。"}],
+      "comparison_edges": [],
+      "misuse_boundary": "题干强调组织、制度或整体结构分裂、崩溃时，应使用分崩离析、土崩瓦解等词。"
+    },
+    "沉渣泛起": {
+      "meaning": "已经沉寂的陈旧、落后或有害思想、现象重新出现。",
+      "distinctive_feature": "像水底沉渣重新浮上来，常指旧思想、旧风气等负面内容返现，未必此前被彻底消灭。",
+      "recognition_cues": ["陈旧思想、落后风气重新出现", "已经沉寂的负面内容再次冒头"],
+      "dimensions": [{"axis": "对象", "judgment": "陈旧、落后的思想或现象。"}, {"axis": "前期状态", "judgment": "沉寂、潜伏。"}],
+      "comparison_edges": [
+        {"other_term": "死灰复燃", "minimum_difference": "沉渣泛起多指沉寂的陈旧思想、落后现象重新出现；死灰复燃多指已被压制、看似消灭的有害事物重新活动并造成危害。"},
+        {"other_term": "卷土重来", "minimum_difference": "沉渣泛起的对象常是旧思想、旧风气；卷土重来要求某个失败、受挫的势力重新反扑。"}
+      ],
+      "misuse_boundary": "题干主体是遭遇失败的具体势力再次进攻，或危险事物被扑灭后重新危害时，应分别考虑卷土重来、死灰复燃。"
+    },
+    "死灰复燃": {
+      "meaning": "已经被压制、停止或看似消灭的有害事物重新活动、发展。",
+      "distinctive_feature": "前提比一般沉寂更强，像火已熄灭却再次燃起；复现后通常重新产生现实危害。",
+      "recognition_cues": ["已被治理的违法活动重新出现", "危险思想、势力或现象重新活跃"],
+      "dimensions": [{"axis": "前期状态", "judgment": "被压制、停止或看似消灭。"}, {"axis": "复现结果", "judgment": "重新活动并可能造成危害。"}],
+      "comparison_edges": [
+        {"other_term": "沉渣泛起", "minimum_difference": "死灰复燃突出已被压制或看似消灭的有害事物重新活动；沉渣泛起多指沉寂的陈旧思想、落后现象重新出现。"},
+        {"other_term": "卷土重来", "minimum_difference": "死灰复燃不要求主体曾在竞争中失败；卷土重来要求失败或受挫的势力再次反扑。"}
+      ],
+      "misuse_boundary": "题干只是旧话题、旧风气再次出现，或失败势力重新进攻，没有被压制后复燃的结构时，不宜使用。"
+    },
+    "卷土重来": {
+      "meaning": "遭遇失败或挫折的势力重新恢复力量，再次进攻或活动。",
+      "distinctive_feature": "必须有“先败—后返”的主体经历，复出带有反扑、再战意味；不是任何旧现象再次出现。",
+      "recognition_cues": ["失败势力恢复后再次反扑", "受挫主体重新进入竞争"],
+      "dimensions": [{"axis": "前期经历", "judgment": "遭遇失败或挫折。"}, {"axis": "后续动作", "judgment": "恢复后再次进攻、活动。"}],
+      "comparison_edges": [{"other_term": "死灰复燃", "minimum_difference": "卷土重来要求失败或受挫的主体重新反扑；死灰复燃泛指已被压制、停止的有害事物重新活动。"}],
+      "misuse_boundary": "只是陈旧思想、落后风气或有害现象重新出现，没有具体失败主体和反扑动作时，不宜使用。"
+    },
+    "土崩瓦解": {
+      "meaning": "像土块崩塌、瓦片碎裂一样，整体在短时间内迅速彻底崩溃。",
+      "distinctive_feature": "突出崩溃速度和彻底程度，整体结构失去支撑后快速垮掉；不专门描写成员离心过程。",
+      "recognition_cues": ["政权、体系、联盟迅速崩溃", "结构短期内彻底瓦解"],
+      "dimensions": [{"axis": "速度", "judgment": "迅速、短时间。"}, {"axis": "程度", "judgment": "整体结构彻底崩溃。"}],
+      "comparison_edges": [{"other_term": "分崩离析", "minimum_difference": "土崩瓦解突出整体迅速、彻底崩溃；分崩离析突出内部成员分裂、逐渐离散。"}],
+      "misuse_boundary": "题干重点是成员离心、各自出走，而非结构短期彻底垮掉时，应使用分崩离析。"
+    },
+    "居安思危": {
+      "meaning": "身处安定环境时仍想到可能发生的危险，保持忧患意识。",
+      "distinctive_feature": "落点首先是风险意识，情境必须“当前安稳”；只有想到危险，不等于已经采取具体准备。",
+      "recognition_cues": ["形势安定时仍保持警觉", "顺境中预想到潜在风险"],
+      "dimensions": [{"axis": "当前状态", "judgment": "安定、顺利。"}, {"axis": "心理状态", "judgment": "保持忧患意识。"}],
+      "comparison_edges": [
+        {"other_term": "有备无患", "minimum_difference": "居安思危强调安定时想到危险、保持忧患意识；有备无患强调已经提前采取准备，从而避免祸患。"},
+        {"other_term": "未雨绸缪", "minimum_difference": "居安思危可停在风险意识；未雨绸缪要求在风险发生前落实具体准备和防范行动。"}
+      ],
+      "misuse_boundary": "题干明确出现检查、储备、修补等准备动作时，应考虑有备无患或未雨绸缪。"
+    },
+    "有备无患": {
+      "meaning": "事先做好准备，就能够避免祸患或在风险来临时不受其害。",
+      "distinctive_feature": "结构是“准备—免患”，比单纯忧患意识多出实际准备，比一般预防更强调准备带来的保障结果。",
+      "recognition_cues": ["提前储备、检查后能够避免风险", "准备充分所以不怕问题发生"],
+      "dimensions": [{"axis": "前置动作", "judgment": "事先做好准备。"}, {"axis": "结果", "judgment": "免除或从容应对祸患。"}],
+      "comparison_edges": [
+        {"other_term": "居安思危", "minimum_difference": "有备无患已经采取准备并形成保障；居安思危只强调安定时保持忧患意识。"},
+        {"other_term": "未雨绸缪", "minimum_difference": "有备无患突出准备带来免患结果；未雨绸缪突出风险发生前进行具体筹划、防范的行动过程。"}
+      ],
+      "misuse_boundary": "只有担忧、意识或问题发生后的补救，没有事先准备时，不宜使用。"
+    },
+    "曲突徙薪": {
+      "meaning": "在灾祸发生前改变危险条件、移除隐患，从源头预防事故。",
+      "distinctive_feature": "不仅提前准备，还要准确识别风险源并改变它，像改烟囱、移柴薪一样直接消除起火条件。",
+      "recognition_cues": ["事故发生前改造危险源", "从源头移除可预见隐患"],
+      "dimensions": [{"axis": "时间", "judgment": "问题发生之前。"}, {"axis": "措施位置", "judgment": "直接改变风险源、消除隐患。"}],
+      "comparison_edges": [
+        {"other_term": "防微杜渐", "minimum_difference": "曲突徙薪在事故发生前识别并改变风险源；防微杜渐在问题已经出现细微苗头时及时制止扩大。"},
+        {"other_term": "亡羊补牢", "minimum_difference": "曲突徙薪是问题发生前的源头预防；亡羊补牢是损失发生后的及时补救。"}
+      ],
+      "misuse_boundary": "问题已经出现苗头或已经造成损失时，应分别考虑防微杜渐、亡羊补牢。"
+    },
+    "防微杜渐": {
+      "meaning": "在问题刚露出细微苗头时及时制止，防止其逐渐发展扩大。",
+      "distinctive_feature": "风险已经有“微”的迹象，但尚未严重；动作是堵住发展过程，不是完全无迹象时的准备。",
+      "recognition_cues": ["小问题、坏苗头刚出现就处理", "防止轻微现象逐步恶化"],
+      "dimensions": [{"axis": "问题阶段", "judgment": "已有细微苗头。"}, {"axis": "行动目标", "judgment": "阻断其扩大、恶化。"}],
+      "comparison_edges": [
+        {"other_term": "曲突徙薪", "minimum_difference": "防微杜渐在问题出现细微苗头时制止扩大；曲突徙薪在事故发生前识别并改变风险源。"},
+        {"other_term": "亡羊补牢", "minimum_difference": "防微杜渐在严重损失前遏制苗头；亡羊补牢在损失已经发生后采取补救。"}
+      ],
+      "misuse_boundary": "风险尚无苗头时的准备，或损失已经发生后的修补，不宜使用防微杜渐。"
+    },
+    "亡羊补牢": {
+      "meaning": "问题或损失已经发生后及时采取补救，防止继续受损。",
+      "distinctive_feature": "时间点在事后，但评价并不消极，强调虽然已经损失，及时修补仍能减少后续损失。",
+      "recognition_cues": ["第一次损失后立刻整改", "事故发生后修补漏洞、防止再犯"],
+      "dimensions": [{"axis": "时间", "judgment": "损失已经发生。"}, {"axis": "行动结果", "judgment": "补救并防止继续损失。"}],
+      "comparison_edges": [
+        {"other_term": "曲突徙薪", "minimum_difference": "亡羊补牢是损失发生后的补救；曲突徙薪是问题发生前改变风险源。"},
+        {"other_term": "防微杜渐", "minimum_difference": "亡羊补牢发生在损失之后；防微杜渐发生在问题只有细微苗头、尚未造成严重损失时。"}
+      ],
+      "misuse_boundary": "问题尚未发生或仅有细微苗头时，应使用预防类词语，不能把任何提前治理都称为亡羊补牢。"
+    },
+    "扬汤止沸": {
+      "meaning": "用舀起热水再倒回的办法暂时止住沸腾，比喻只处理表面，不能从根本解决问题。",
+      "distinctive_feature": "措施对现象可能有短暂缓解，但问题根源仍在，因而很快复发；不是完全没有作用。",
+      "recognition_cues": ["措施只能暂时降温", "表面缓解后问题仍会复发"],
+      "dimensions": [{"axis": "措施位置", "judgment": "作用于表面现象。"}, {"axis": "效果时长", "judgment": "短暂、不能根治。"}],
+      "comparison_edges": [
+        {"other_term": "隔靴搔痒", "minimum_difference": "扬汤止沸可能暂时缓解表面症状，但根源未除；隔靴搔痒强调措施隔着一层，没有触及问题实质。"},
+        {"other_term": "釜底抽薪", "minimum_difference": "扬汤止沸只暂缓表面现象；釜底抽薪直接去除根源，从根本解决问题。"}
+      ],
+      "misuse_boundary": "措施完全没有碰到实质时更接近隔靴搔痒；直接去除根源时应使用釜底抽薪。"
+    },
+    "隔靴搔痒": {
+      "meaning": "处理问题没有触及实质和要害，措施难以真正发挥作用。",
+      "distinctive_feature": "问题在接触层级，像隔着靴子抓痒，动作与真正问题之间隔着一层；不必有短暂缓解效果。",
+      "recognition_cues": ["措施绕开核心问题", "表面动作没有触到实质"],
+      "dimensions": [{"axis": "触及程度", "judgment": "未触及实质、要害。"}, {"axis": "作用结果", "judgment": "难以真正奏效。"}],
+      "comparison_edges": [{"other_term": "扬汤止沸", "minimum_difference": "隔靴搔痒强调没有触到问题实质；扬汤止沸强调表面措施能短暂缓解，却不能根治。"}],
+      "misuse_boundary": "措施虽不治本但能暂时缓解症状时，扬汤止沸更精确；已经从根源解决时更不能使用。"
+    }
+  }
+}

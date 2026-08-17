@@ -1,0 +1,118 @@
+{
+  "schema_version": 1,
+  "basis": "逐词回到四诗风雅颂逐字稿，重建出现阶段、条件成熟、变化方向与绝境行动；不沿用旧抽取中重复的词义和语义核心。",
+  "records": {
+    "呼之欲出": {
+      "meaning": "形象、作品、方案或新事物已经接近出现，但尚未真正呈现或推出。",
+      "distinctive_feature": "卡在“将出未出”的临界点，条件和轮廓已经明显，却不能把它当作已经出现。",
+      "recognition_cues": ["即将推出、马上显现", "轮廓清楚但尚未正式出现"],
+      "dimensions": [{"axis": "时间阶段", "judgment": "出现之前的临界状态。"}, {"axis": "完成度", "judgment": "已具轮廓，尚未正式呈现。"}],
+      "comparison_edges": [{"other_term": "横空出世", "minimum_difference": "呼之欲出描述即将出现但尚未出现；横空出世描述事物已经突然出现并造成冲击。"}],
+      "misuse_boundary": "题干已经明确新事物正式出现、迅速崛起或顺应需求产生时，不能再使用呼之欲出。"
+    },
+    "异军突起": {
+      "meaning": "在原有力量或竞争格局之外，一支新的力量突然兴起。",
+      "distinctive_feature": "必须先有较成熟的既有格局，再出现原本不占主导的新力量快速成长，带有竞争结构。",
+      "recognition_cues": ["成熟行业中出现新的强劲力量", "原本不起眼的主体快速崛起"],
+      "dimensions": [{"axis": "格局前提", "judgment": "已有稳定或成熟力量格局。"}, {"axis": "出现者", "judgment": "新的竞争力量。"}],
+      "comparison_edges": [
+        {"other_term": "横空出世", "minimum_difference": "异军突起强调新力量在既有竞争格局中快速兴起；横空出世强调事物突然出现、出人意料，不必有既有竞争格局。"},
+        {"other_term": "应运而生", "minimum_difference": "异军突起突出新力量在格局中的快速崛起；应运而生突出事物因时代、市场或现实需要而产生。"}
+      ],
+      "misuse_boundary": "题干只说顺应需求产生，或只是突然出现，没有既有格局和新竞争力量时，不宜使用。"
+    },
+    "横空出世": {
+      "meaning": "某个新事物、人物或成果突然出现，出人意料并产生明显冲击。",
+      "distinctive_feature": "“横空”强调出现缺少铺垫、突然闯入视野；重点是出现方式，而不是产生原因或竞争地位。",
+      "recognition_cues": ["毫无预兆地突然出现", "一出现就引人注目、造成冲击"],
+      "dimensions": [{"axis": "出现方式", "judgment": "突然、出人意料。"}, {"axis": "外部效果", "judgment": "引起明显关注或冲击。"}],
+      "comparison_edges": [
+        {"other_term": "呼之欲出", "minimum_difference": "横空出世表示已经突然出现；呼之欲出表示接近出现但尚未真正出现。"},
+        {"other_term": "应运而生", "minimum_difference": "横空出世突出突然出现；应运而生突出产生有明确的时代、市场或现实需求。"},
+        {"other_term": "异军突起", "minimum_difference": "横空出世不要求既有竞争格局；异军突起要求新力量在原有格局中快速兴起。"}
+      ],
+      "misuse_boundary": "题干已交代事物是随着条件成熟自然形成，或只是即将推出尚未出现时，不宜使用。"
+    },
+    "应运而生": {
+      "meaning": "顺应时代、环境、市场或现实需要而产生。",
+      "distinctive_feature": "核心是“需求—产生”的因果，出现并不突兀，而是外部条件召唤出的结果。",
+      "recognition_cues": ["随着新需求、新环境而产生", "时代条件催生新事物"],
+      "dimensions": [{"axis": "产生原因", "judgment": "时代、市场或现实需要。"}, {"axis": "逻辑关系", "judgment": "外部需求催生事物。"}],
+      "comparison_edges": [
+        {"other_term": "横空出世", "minimum_difference": "应运而生强调外部需求催生；横空出世强调突然、出人意料地出现。"},
+        {"other_term": "水到渠成", "minimum_difference": "应运而生解释新事物为何产生；水到渠成解释条件成熟后某个结果自然实现。"}
+      ],
+      "misuse_boundary": "题干只强调突然出现、竞争崛起或结果自然完成，没有时代和现实需求这一产生原因时，不宜使用。"
+    },
+    "水到渠成": {
+      "meaning": "相关条件成熟后，事情自然顺利完成或结果自然出现。",
+      "distinctive_feature": "过程不靠临时强求，先有长期准备或客观条件成熟，随后结果自然形成。",
+      "recognition_cues": ["条件成熟后自然成功", "前期积累充分，结果顺势形成"],
+      "dimensions": [{"axis": "前提", "judgment": "必要条件已经成熟。"}, {"axis": "结果方式", "judgment": "自然形成，不必勉强推动。"}],
+      "comparison_edges": [{"other_term": "应运而生", "minimum_difference": "水到渠成强调条件成熟后结果自然实现；应运而生强调新事物因时代、市场或现实需要而产生。"}],
+      "misuse_boundary": "只是出现了新的需求，尚未形成成熟条件和自然结果时，应考虑应运而生。"
+    },
+    "蔚然成风": {
+      "meaning": "某种良好行为、道德或文明习惯逐渐普及，形成盛行的风气。",
+      "distinctive_feature": "通常带正向评价，要求从个别行为扩展为群体普遍实践；不是任何流行现象都能使用。",
+      "recognition_cues": ["良好习惯在群体中普遍形成", "文明、学习、公益等成为风气"],
+      "dimensions": [{"axis": "普及范围", "judgment": "由个别扩展为群体性风气。"}, {"axis": "语义色彩", "judgment": "通常用于良好、正向行为。"}],
+      "comparison_edges": [],
+      "misuse_boundary": "题干中的现象尚未普遍、性质中性或明显负面时，不宜使用蔚然成风。"
+    },
+    "今非昔比": {
+      "meaning": "现在的情况已经不同于过去。",
+      "distinctive_feature": "只判断今昔发生明显变化，变化可以变好也可以变坏；词本身不提供变化方向。",
+      "recognition_cues": ["现在与过去形成明显对比", "今昔状态已经不同"],
+      "dimensions": [{"axis": "比较时间", "judgment": "现在与过去。"}, {"axis": "变化方向", "judgment": "中性，需由语境判断好坏。"}],
+      "comparison_edges": [{"other_term": "每况愈下", "minimum_difference": "今非昔比只说今昔不同，方向可好可坏；每况愈下明确表示状况持续变差。"}],
+      "misuse_boundary": "题干明确描述一天比一天差、持续恶化时，应使用每况愈下而非中性的今非昔比。"
+    },
+    "每况愈下": {
+      "meaning": "情况持续恶化，一次比一次差。",
+      "distinctive_feature": "同时包含负向变化和连续趋势，不能只凭当前状态差就使用。",
+      "recognition_cues": ["一天比一天差", "多个时间点呈持续恶化趋势"],
+      "dimensions": [{"axis": "变化方向", "judgment": "持续变坏。"}, {"axis": "时间结构", "judgment": "连续多个阶段下降。"}],
+      "comparison_edges": [
+        {"other_term": "今非昔比", "minimum_difference": "每况愈下明确表示持续恶化；今非昔比只表示现在不同于过去，不限定好坏。"},
+        {"other_term": "难以为继", "minimum_difference": "每况愈下描述状态越来越差；难以为继描述资源或条件不足，事情难以继续维持。"}
+      ],
+      "misuse_boundary": "题干只是无法继续、一次性变差或今昔不同，没有持续恶化过程时，不宜使用。"
+    },
+    "难以为继": {
+      "meaning": "由于资源、条件或支撑不足，事情很难继续维持下去。",
+      "distinctive_feature": "判断重点是持续能力即将耗尽，回答“还能不能继续”，不等于状态正在逐步变差。",
+      "recognition_cues": ["资金、资源、动力不足以继续", "当前模式无法长期维持"],
+      "dimensions": [{"axis": "判断任务", "judgment": "能否继续维持。"}, {"axis": "阻碍来源", "judgment": "支撑条件不足或即将耗尽。"}],
+      "comparison_edges": [{"other_term": "每况愈下", "minimum_difference": "难以为继强调缺乏支撑、无法继续；每况愈下强调状态沿时间持续恶化。"}],
+      "misuse_boundary": "只是表现越来越差，但仍能持续运行，或只是今昔不同，没有维持困难时，不宜使用。"
+    },
+    "孤注一掷": {
+      "meaning": "在不利或绝境中把全部力量、资源押在一次行动上，企图最后成功。",
+      "distinctive_feature": "像赌博押上全部赌注，带有高风险、成败一搏和偏贬义色彩；不等于一般全力以赴。",
+      "recognition_cues": ["走投无路后押上全部资源", "成败在此一举的冒险一搏"],
+      "dimensions": [{"axis": "投入程度", "judgment": "倾尽所有、没有保留。"}, {"axis": "风险色彩", "judgment": "冒险且通常偏贬义。"}],
+      "comparison_edges": [
+        {"other_term": "破釜沉舟", "minimum_difference": "孤注一掷像赌博般押上全部，突出高风险和偏贬义；破釜沉舟主动断绝退路以坚定全力行动，通常偏褒义。"},
+        {"other_term": "铤而走险", "minimum_difference": "孤注一掷突出把全部资源押在一次成败上；铤而走险突出无路可走而采取危险行动，不要求押上全部。"}
+      ],
+      "misuse_boundary": "题干只是坚定全力行动、不给自己留退路且评价正向时，更适合破釜沉舟。"
+    },
+    "破釜沉舟": {
+      "meaning": "主动断绝退路，下定决心全力以赴争取成功。",
+      "distinctive_feature": "通过不留后路来强化决心和执行，通常赞扬意志坚定；风险不是赌博式押注的唯一重点。",
+      "recognition_cues": ["主动切断退路", "坚定决心、全力以赴"],
+      "dimensions": [{"axis": "退路状态", "judgment": "主动断绝。"}, {"axis": "语义色彩", "judgment": "通常偏褒义，赞扬决绝行动。"}],
+      "comparison_edges": [{"other_term": "孤注一掷", "minimum_difference": "破釜沉舟主动断绝退路，突出坚定决心且通常偏褒义；孤注一掷押上全部赌一次成败，突出冒险且偏贬义。"}],
+      "misuse_boundary": "题干强调赌博式冒险、押上所有资源，或因无路可走被迫采取危险手段时，应分别考虑孤注一掷、铤而走险。"
+    },
+    "铤而走险": {
+      "meaning": "在无路可走或受到逼迫时，采取危险、冒险的行动。",
+      "distinctive_feature": "触发点是困境逼迫和道路断绝，重点是被迫冒险；不要求投入全部资源，也不带坚定意志的赞扬。",
+      "recognition_cues": ["走投无路后采取危险行动", "压力逼迫主体冒险"],
+      "dimensions": [{"axis": "触发原因", "judgment": "无路可走、受到逼迫。"}, {"axis": "行动性质", "judgment": "危险、冒险。"}],
+      "comparison_edges": [{"other_term": "孤注一掷", "minimum_difference": "铤而走险强调受困境逼迫而冒险；孤注一掷强调把全部力量或资源押在一次成败上。"}],
+      "misuse_boundary": "题干只是主动断绝退路、全力行动，或只是押上全部赌一次成败时，应分别考虑破釜沉舟、孤注一掷。"
+    }
+  }
+}
