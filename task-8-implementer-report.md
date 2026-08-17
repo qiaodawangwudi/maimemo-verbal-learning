@@ -17,7 +17,9 @@
 - Reused one full receipt validator in the public environment boundary and guard. Schema-v2 guard plans must carry valid `release_id` and `release_hash` bindings matching every typed receipt field; placeholder values never authorize.
 - Restricted events to exact `workflow_dispatch`, exact main, and empty head/base refs.
 - Added open-time live environment revalidation and exact comparison with the registered receipt and capability before the single token lookup.
-- Wrapped token lookup and client construction in one secret-safe boundary. Failures use a fixed redacted message, suppress chaining with `from None`, and leave neither `__cause__` nor formatted traceback token leakage.
+- Wrapped token lookup and client construction in one secret-safe boundary. Failures use a fixed redacted message and are re-raised only after the secret-bearing handler has exited.
+- Secondary review: removed the historical environment mapping from capability bindings. Open always snapshots the current global `os.environ`, verifies it against the registered snapshot and receipt, checks that the global object was not replaced again, and reads the token once from that current object.
+- Secondary review: secret failures now leave the active `except` block before a separate helper raises the fixed error. The resulting exception has no `__cause__`, no `__context__`, no suppressed hidden context, and no token in the complete formatted traceback.
 
 ## TDD evidence
 
@@ -25,13 +27,14 @@
 - RED 2: after adding interface shells, 12 behavior tests produced 27 expected failures covering the requested gates.
 - RED 3: Task 7 adapter and guard-v2 tests failed before writer/guard integration.
 - Review RED: 70 focused tests produced 28 expected failures reproducing all P1/P2 findings before remediation.
+- Secondary-review RED: whole-`os.environ` replacement and direct `__context__` assertions produced three expected failures before remediation.
 - Review GREEN: the focused environment, guard, manifest-envelope, writer, adversarial-writer, and sync suites passed.
 
 ## Verification
 
-- `python -m unittest tests.maimemo_learning_rebuild.test_release_environment tests.maimemo_learning_rebuild.test_guard -v`: 38 passed.
+- `python -m unittest tests.maimemo_learning_rebuild.test_release_environment tests.maimemo_learning_rebuild.test_guard -v`: 39 passed.
 - `python -m unittest tests.maimemo_learning_rebuild.test_release_writer tests.maimemo_learning_rebuild.test_release_writer_adversarial tests.maimemo_learning_rebuild.test_release_manifest tests.maimemo_learning_rebuild.test_sync -v`: 79 passed.
-- `python -m unittest discover -v`: 269 run, 267 passed, 1 failure and 1 error. Both remaining failures are the pre-existing external DOCX dependency issue in `test_review`: the configured `C:\Users\admin\Desktop\20260108 ... .docx` source is absent, causing the direct review test to error and its CLI companion to emit no expected review text.
+- `python -m unittest discover -v`: 270 run, 268 passed, 1 failure and 1 error. Both remaining failures are the pre-existing external DOCX dependency issue in `test_review`: the configured `C:\Users\admin\Desktop\20260108 ... .docx` source is absent, causing the direct review test to error and its CLI companion to emit no expected review text.
 - `python -m compileall -q maimemo_learning_rebuild tests/maimemo_learning_rebuild`: passed.
 - `git diff --check`: no whitespace errors; Git emitted only line-ending conversion warnings.
 
@@ -39,3 +42,4 @@
 
 - Original: `feat: require protected github release environment`
 - Review fix: `fix: harden protected release capability`
+- Secondary-review fix: `fix: use current protected environment at open`

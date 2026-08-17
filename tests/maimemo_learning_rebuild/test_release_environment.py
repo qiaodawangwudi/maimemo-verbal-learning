@@ -313,6 +313,22 @@ class ReleaseEnvironmentTests(unittest.TestCase):
                         open_protected_client(capability)
                 self.assertNotIn("MAIMEMO_API_TOKEN", env.reads)
 
+    def test_replacing_entire_process_environment_invalidates_capability(self):
+        current = manifest()
+        original = TrackingEnvironment(complete_environment(current))
+        replacement = TrackingEnvironment(complete_environment(current))
+        replacement["GITHUB_ACTIONS"] = "false"
+        with patch.object(os, "environ", original):
+            capability = validate_github_receipt(receipt(current), current)
+
+        with patch.object(os, "environ", replacement), self.assertRaisesRegex(
+            RuntimeError, "protected GitHub Actions environment required"
+        ):
+            open_protected_client(capability)
+
+        self.assertNotIn("MAIMEMO_API_TOKEN", original.reads)
+        self.assertNotIn("MAIMEMO_API_TOKEN", replacement.reads)
+
     def test_secret_failures_have_no_cause_or_traceback_leak(self):
         current = manifest()
         for env, constructor_error in (
@@ -340,6 +356,8 @@ class ReleaseEnvironmentTests(unittest.TestCase):
                         self.fail("secret failure was not raised")
 
                 self.assertIsNone(caught.__cause__)
+                self.assertIsNone(caught.__context__)
+                self.assertFalse(caught.__suppress_context__)
                 rendered = "".join(traceback.format_exception(caught))
                 self.assertNotIn("top-secret-token", rendered)
                 self.assertIn("[REDACTED]", rendered)

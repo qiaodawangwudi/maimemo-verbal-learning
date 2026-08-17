@@ -188,7 +188,6 @@ class _ReleaseCapability:
 
 
 class _CapabilityBinding(NamedTuple):
-    mapping: Mapping[str, str]
     environment: _EnvironmentSnapshot
     release_id: str
     release_hash: str
@@ -326,7 +325,6 @@ def validate_github_receipt(receipt: object, manifest: object) -> _ReleaseCapabi
 
     capability = _ReleaseCapability(_CAPABILITY_KEY)
     _CAPABILITIES[capability] = _CapabilityBinding(
-        mapping,
         environment,
         release_id,
         release_hash,
@@ -365,7 +363,8 @@ def open_protected_client(capability: object):
     if binding is None:
         raise RuntimeError("validated GitHub receipt required")
 
-    current = ReleaseEnvironment.from_mapping(binding.mapping)
+    current_mapping = os.environ
+    current = ReleaseEnvironment.from_mapping(current_mapping)
     if current != binding.environment:
         raise RuntimeError("protected release environment changed after validation")
     receipt = json.loads(binding.receipt_bytes.decode("utf-8"))
@@ -386,14 +385,27 @@ def open_protected_client(capability: object):
 
     from .api import MaimemoClient, UrllibTransport
 
+    if os.environ is not current_mapping:
+        raise RuntimeError("protected release environment changed before token access")
+    failed = False
+    client = None
+    token = None
     try:
-        token = binding.mapping.get("MAIMEMO_API_TOKEN")
+        token = current_mapping.get("MAIMEMO_API_TOKEN")
         if not isinstance(token, str) or not token:
             raise RuntimeError("missing protected token")
-        return MaimemoClient(
+        client = MaimemoClient(
             UrllibTransport(),
             token=token,
             deck_id=binding.deck_id,
         )
     except Exception:
-        raise RuntimeError("protected client could not be opened [REDACTED]") from None
+        failed = True
+    token = None
+    if failed:
+        _raise_protected_client_failure()
+    return client
+
+
+def _raise_protected_client_failure() -> None:
+    raise RuntimeError("protected client could not be opened [REDACTED]")
