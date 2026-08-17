@@ -1,6 +1,8 @@
 import importlib.util
+import hashlib
 import json
 import os
+import shutil
 import subprocess
 import sys
 import tempfile
@@ -148,6 +150,8 @@ class SkillInstallTests(unittest.TestCase):
                     "backup_retained",
                     "backup_path",
                     "backup_installed_hash",
+                    "backup_receipt_sha256",
+                    "backup_directory_identity",
                     "directory_flush_mode",
                 },
                 set(receipt),
@@ -159,6 +163,8 @@ class SkillInstallTests(unittest.TestCase):
             self.assertFalse(receipt["backup_retained"])
             self.assertIsNone(receipt["backup_path"])
             self.assertIsNone(receipt["backup_installed_hash"])
+            self.assertIsNone(receipt["backup_receipt_sha256"])
+            self.assertIsNone(receipt["backup_directory_identity"])
             self.assertIn(receipt["directory_flush_mode"], {"required", "best_effort"})
             self.assertEqual(
                 receipt,
@@ -223,17 +229,12 @@ class SkillInstallTests(unittest.TestCase):
             old_skill = (target / "SKILL.md").read_bytes()
             old_receipt = (target / RECEIPT_NAME).read_bytes()
             (source / "SKILL.md").write_text("replacement\n", encoding="utf-8")
-            real_replace = os.replace
-            calls = 0
+            def fail_publish(src, dst):
+                raise OSError("simulated swap failure")
 
-            def fail_second_replace(src, dst):
-                nonlocal calls
-                calls += 1
-                if calls == 2:
-                    raise OSError("simulated swap failure")
-                return real_replace(src, dst)
-
-            with mock.patch.object(self.module.os, "replace", side_effect=fail_second_replace):
+            with mock.patch.object(
+                self.module, "_rename_directory_noreplace", side_effect=fail_publish
+            ):
                 with self.assertRaisesRegex(
                     RuntimeError, "installation failed; original restored"
                 ):
@@ -260,7 +261,9 @@ class SkillInstallTests(unittest.TestCase):
                 raise OSError("simulated Windows destination collision")
 
             with mock.patch.object(
-                self.module.os, "replace", side_effect=collide_without_moving_stage
+                self.module,
+                "_rename_directory_noreplace",
+                side_effect=collide_without_moving_stage,
             ):
                 with self.assertRaisesRegex(RuntimeError, "foreign target preserved"):
                     self.module.install(source, target)
@@ -283,20 +286,15 @@ class SkillInstallTests(unittest.TestCase):
             self.module.install(source, target)
             old_skill = (target / "SKILL.md").read_bytes()
             (source / "SKILL.md").write_text("replacement\n", encoding="utf-8")
-            real_replace = os.replace
-            calls = 0
-
             def collide_after_backup(src, dst):
-                nonlocal calls
-                calls += 1
-                if calls == 1:
-                    return real_replace(src, dst)
                 Path(dst).mkdir()
                 (Path(dst) / "user.bin").write_bytes(b"foreign replacement target")
                 raise OSError("simulated Windows destination collision")
 
             with mock.patch.object(
-                self.module.os, "replace", side_effect=collide_after_backup
+                self.module,
+                "_rename_directory_noreplace",
+                side_effect=collide_after_backup,
             ):
                 with self.assertRaisesRegex(RuntimeError, "foreign target preserved"):
                     self.module.install(source, target)
@@ -304,6 +302,73 @@ class SkillInstallTests(unittest.TestCase):
             self.assertEqual(
                 b"foreign replacement target", (target / "user.bin").read_bytes()
             )
+            backups = [
+                path
+                for path in target.parent.iterdir()
+                if path.name.startswith(target.name + ".backup-")
+            ]
+            self.assertEqual(1, len(backups))
+            self.assertEqual(old_skill, (backups[0] / "SKILL.md").read_bytes())
+
+    def test_atomic_noreplace_preserves_first_install_foreign_empty_directory(self):
+        rename_noreplace = getattr(self.module, "_rename_directory_noreplace", None)
+        self.assertTrue(callable(rename_noreplace), "atomic no-replace rename is absent")
+        with tempfile.TemporaryDirectory() as temporary:
+            source, target = prepared_skill_dirs(Path(temporary))
+            injected_identity = None
+            injection_calls = 0
+
+            def inject_empty_target(src, dst):
+                nonlocal injected_identity, injection_calls
+                injection_calls += 1
+                Path(dst).mkdir()
+                metadata = Path(dst).lstat()
+                injected_identity = (metadata.st_dev, metadata.st_ino)
+                return rename_noreplace(src, dst)
+
+            with mock.patch.object(
+                self.module,
+                "_rename_directory_noreplace",
+                side_effect=inject_empty_target,
+            ):
+                with self.assertRaisesRegex(RuntimeError, "foreign target preserved"):
+                    self.module.install(source, target)
+
+            self.assertGreater(injection_calls, 0)
+            metadata = target.lstat()
+            self.assertEqual(injected_identity, (metadata.st_dev, metadata.st_ino))
+            self.assertEqual([], list(target.iterdir()))
+
+    def test_atomic_noreplace_preserves_upgrade_foreign_empty_directory_and_backup(self):
+        rename_noreplace = getattr(self.module, "_rename_directory_noreplace", None)
+        self.assertTrue(callable(rename_noreplace), "atomic no-replace rename is absent")
+        with tempfile.TemporaryDirectory() as temporary:
+            source, target = prepared_skill_dirs(Path(temporary))
+            self.module.install(source, target)
+            old_skill = (target / "SKILL.md").read_bytes()
+            (source / "SKILL.md").write_text("replacement\n", encoding="utf-8")
+            injected_identity = None
+            injection_calls = 0
+
+            def inject_empty_target(src, dst):
+                nonlocal injected_identity, injection_calls
+                injection_calls += 1
+                Path(dst).mkdir()
+                metadata = Path(dst).lstat()
+                injected_identity = (metadata.st_dev, metadata.st_ino)
+                return rename_noreplace(src, dst)
+
+            with mock.patch.object(
+                self.module,
+                "_rename_directory_noreplace",
+                side_effect=inject_empty_target,
+            ):
+                with self.assertRaisesRegex(RuntimeError, "foreign target preserved"):
+                    self.module.install(source, target)
+
+            self.assertGreater(injection_calls, 0)
+            metadata = target.lstat()
+            self.assertEqual(injected_identity, (metadata.st_dev, metadata.st_ino))
             backups = [
                 path
                 for path in target.parent.iterdir()
@@ -324,7 +389,7 @@ class SkillInstallTests(unittest.TestCase):
             def swap_foreign_target_at_rollback_rename(src, dst):
                 nonlocal replace_calls
                 replace_calls += 1
-                if replace_calls == 3:
+                if replace_calls == 2:
                     real_replace(target, captured_install)
                     target.mkdir()
                     (target / "user.bin").write_bytes(b"foreign at rollback boundary")
@@ -374,7 +439,7 @@ class SkillInstallTests(unittest.TestCase):
                 self.module.os, "replace", side_effect=change_old_target_after_rename
             ):
                 with self.assertRaisesRegex(
-                    RuntimeError, "installed skill has unrecorded changes"
+                    RuntimeError, "retained backup receipt mismatch"
                 ):
                     self.module.install(source, target)
 
@@ -397,6 +462,157 @@ class SkillInstallTests(unittest.TestCase):
             self.assertTrue(backup.is_dir())
             self.assertEqual(target.parent, backup.parent)
             self.assertEqual(old_skill, (backup / "SKILL.md").read_bytes())
+            self.assertEqual(
+                hashlib.sha256((backup / RECEIPT_NAME).read_bytes()).hexdigest(),
+                second["backup_receipt_sha256"],
+            )
+            metadata = backup.lstat()
+            self.assertEqual(
+                f"{metadata.st_dev}:{metadata.st_ino}",
+                second["backup_directory_identity"],
+            )
+
+    def test_verify_rejects_retained_backup_receipt_only_drift(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            source, target = prepared_skill_dirs(Path(temporary))
+            self.module.install(source, target)
+            (source / "SKILL.md").write_text("canonical skill v2\n", encoding="utf-8")
+            second = self.module.install(source, target)
+            backup_receipt_path = Path(second["backup_path"]) / RECEIPT_NAME
+            changed = json.loads(backup_receipt_path.read_text(encoding="utf-8"))
+            changed["merged_commit"] = "a" * 40
+            backup_receipt_path.write_bytes(
+                (
+                    json.dumps(
+                        changed,
+                        ensure_ascii=False,
+                        allow_nan=False,
+                        sort_keys=True,
+                        separators=(",", ":"),
+                    )
+                    + "\n"
+                ).encode("utf-8")
+            )
+
+            with self.assertRaisesRegex(RuntimeError, "retained backup receipt"):
+                self.module.verify_install(source, target)
+
+    def test_next_upgrade_refuses_invalid_retained_backup_receipt(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            source, target = prepared_skill_dirs(Path(temporary))
+            self.module.install(source, target)
+            (source / "SKILL.md").write_text("canonical skill v2\n", encoding="utf-8")
+            second = self.module.install(source, target)
+            target_receipt_bytes = (target / RECEIPT_NAME).read_bytes()
+            target_skill_bytes = (target / "SKILL.md").read_bytes()
+            backup_receipt_path = Path(second["backup_path"]) / RECEIPT_NAME
+            changed = json.loads(backup_receipt_path.read_text(encoding="utf-8"))
+            changed["merged_commit"] = "a" * 40
+            backup_receipt_path.write_bytes(
+                (
+                    json.dumps(
+                        changed,
+                        ensure_ascii=False,
+                        allow_nan=False,
+                        sort_keys=True,
+                        separators=(",", ":"),
+                    )
+                    + "\n"
+                ).encode("utf-8")
+            )
+            before_siblings = {path.name for path in target.parent.iterdir()}
+            (source / "SKILL.md").write_text("canonical skill v3\n", encoding="utf-8")
+
+            with self.assertRaisesRegex(RuntimeError, "retained backup receipt"):
+                self.module.install(source, target)
+
+            self.assertEqual(target_receipt_bytes, (target / RECEIPT_NAME).read_bytes())
+            self.assertEqual(target_skill_bytes, (target / "SKILL.md").read_bytes())
+            self.assertEqual(before_siblings, {path.name for path in target.parent.iterdir()})
+
+    def test_next_upgrade_refuses_missing_promised_retained_backup(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            source, target = prepared_skill_dirs(root)
+            self.module.install(source, target)
+            (source / "SKILL.md").write_text("canonical skill v2\n", encoding="utf-8")
+            second = self.module.install(source, target)
+            target_receipt_bytes = (target / RECEIPT_NAME).read_bytes()
+            displaced = root / "displaced-retained-backup"
+            os.replace(Path(second["backup_path"]), displaced)
+            (source / "SKILL.md").write_text("canonical skill v3\n", encoding="utf-8")
+
+            with self.assertRaisesRegex(RuntimeError, "retained backup"):
+                self.module.install(source, target)
+
+            self.assertEqual(target_receipt_bytes, (target / RECEIPT_NAME).read_bytes())
+            self.assertTrue(displaced.is_dir())
+
+    def test_verify_rejects_byte_identical_backup_directory_identity_swap(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            source, target = prepared_skill_dirs(root)
+            self.module.install(source, target)
+            (source / "SKILL.md").write_text("canonical skill v2\n", encoding="utf-8")
+            second = self.module.install(source, target)
+            backup = Path(second["backup_path"])
+            displaced = root / "displaced-original-backup"
+            os.replace(backup, displaced)
+            shutil.copytree(displaced, backup)
+
+            with self.assertRaisesRegex(RuntimeError, "retained backup identity"):
+                self.module.verify_install(source, target)
+
+    def test_verify_rechecks_backup_identity_after_read_boundary(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            source, target = prepared_skill_dirs(root)
+            self.module.install(source, target)
+            (source / "SKILL.md").write_text("canonical skill v2\n", encoding="utf-8")
+            second = self.module.install(source, target)
+            backup = Path(second["backup_path"])
+            displaced = root / "displaced-at-read-boundary"
+            real_assert = self.module._assert_recorded_target
+            injection_calls = 0
+
+            def swap_before_receipt_read(path, *args, **kwargs):
+                nonlocal injection_calls
+                if Path(path) == backup and injection_calls == 0:
+                    injection_calls += 1
+                    os.replace(backup, displaced)
+                    shutil.copytree(displaced, backup)
+                return real_assert(path, *args, **kwargs)
+
+            with mock.patch.object(
+                self.module,
+                "_assert_recorded_target",
+                side_effect=swap_before_receipt_read,
+            ):
+                with self.assertRaisesRegex(RuntimeError, "retained backup identity"):
+                    self.module.verify_install(source, target)
+
+            self.assertGreater(injection_calls, 0)
+            self.assertTrue(displaced.is_dir())
+
+    def test_three_valid_upgrades_preserve_verified_backup_lineage(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            source, target = prepared_skill_dirs(Path(temporary))
+            self.module.install(source, target)
+            (source / "SKILL.md").write_text("canonical skill v2\n", encoding="utf-8")
+            second = self.module.install(source, target)
+            self.assertEqual(second, self.module.verify_install(source, target))
+            (source / "SKILL.md").write_text("canonical skill v3\n", encoding="utf-8")
+
+            third = self.module.install(source, target)
+
+            self.assertEqual(third, self.module.verify_install(source, target))
+            backups = [
+                path
+                for path in target.parent.iterdir()
+                if path.name.startswith(target.name + ".backup-")
+            ]
+            self.assertEqual(2, len(backups))
+            self.assertNotEqual(second["backup_path"], third["backup_path"])
 
     def test_change_after_final_backup_assertion_survives_successful_upgrade(self):
         with tempfile.TemporaryDirectory() as temporary:
@@ -552,25 +768,27 @@ class SkillVerifyAndCliTests(unittest.TestCase):
             self.module.install(source, target)
             receipt_path = target / RECEIPT_NAME
             valid_bytes = receipt_path.read_bytes()
+            valid_receipt_path = Path(temporary) / "valid-receipt.json"
+            valid_receipt_path.write_bytes(valid_bytes)
             malformed_bytes = b"not-json"
             receipt_path.write_bytes(malformed_bytes)
-            real_read_bytes = self.module.Path.read_bytes
+            real_open = self.module.os.open
+            redirected_open_calls = 0
 
-            def substitute_only_while_reading(path):
-                if Path(path) != receipt_path:
-                    return real_read_bytes(path)
-                receipt_path.write_bytes(valid_bytes)
-                try:
-                    return real_read_bytes(path)
-                finally:
-                    receipt_path.write_bytes(malformed_bytes)
+            def redirect_receipt_open(path, flags, *args, **kwargs):
+                nonlocal redirected_open_calls
+                if Path(path) == receipt_path:
+                    redirected_open_calls += 1
+                    return real_open(valid_receipt_path, flags, *args, **kwargs)
+                return real_open(path, flags, *args, **kwargs)
 
             with mock.patch.object(
-                self.module.Path, "read_bytes", substitute_only_while_reading
+                self.module.os, "open", side_effect=redirect_receipt_open
             ):
                 with self.assertRaisesRegex(RuntimeError, "strict install receipt required"):
                     self.module.verify_install(source, target)
 
+            self.assertGreater(redirected_open_calls, 0)
             self.assertEqual(malformed_bytes, receipt_path.read_bytes())
 
     def test_verify_rereads_receipt_at_final_boundary(self):

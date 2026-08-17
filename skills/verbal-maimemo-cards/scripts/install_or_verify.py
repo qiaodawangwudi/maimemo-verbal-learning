@@ -2,6 +2,7 @@
 """Install or verify the repository's canonical verbal Maimemo skill."""
 
 import argparse
+import ctypes
 import hashlib
 import json
 import os
@@ -27,6 +28,8 @@ RECEIPT_FIELDS = {
     "backup_retained",
     "backup_path",
     "backup_installed_hash",
+    "backup_receipt_sha256",
+    "backup_directory_identity",
     "directory_flush_mode",
 }
 CACHE_DIRECTORY_NAMES = {"__pycache__", ".pytest_cache", ".mypy_cache", ".ruff_cache"}
@@ -34,12 +37,56 @@ CACHE_FILE_SUFFIXES = {".pyc", ".pyo"}
 HASH_PREAMBLE = b"skill-hash-v1\0"
 _DIGEST = re.compile(r"[0-9a-f]{64}\Z")
 _COMMIT = re.compile(r"[0-9a-f]{40,64}\Z")
+_DIRECTORY_IDENTITY = re.compile(r"[0-9]+:[0-9]+\Z")
 _IS_WINDOWS = os.name == "nt"
 DIRECTORY_FLUSH_MODE = "best_effort" if _IS_WINDOWS else "required"
+_AT_FDCWD = -100
+_RENAME_NOREPLACE = 1
+_RENAME_EXCL = 0x4
 
 
 def _lexists(path):
     return os.path.lexists(os.fspath(path))
+
+
+def _rename_directory_noreplace(source, target):
+    """Atomically publish a directory only when target does not exist."""
+    source_path = os.fspath(source)
+    target_path = os.fspath(target)
+    if _IS_WINDOWS:
+        os.rename(source_path, target_path)
+        return
+
+    library = ctypes.CDLL(None, use_errno=True)
+    source_bytes = os.fsencode(source_path)
+    target_bytes = os.fsencode(target_path)
+    if sys.platform.startswith("linux") and hasattr(library, "renameat2"):
+        renameat2 = library.renameat2
+        renameat2.argtypes = [
+            ctypes.c_int,
+            ctypes.c_char_p,
+            ctypes.c_int,
+            ctypes.c_char_p,
+            ctypes.c_uint,
+        ]
+        renameat2.restype = ctypes.c_int
+        result = renameat2(
+            _AT_FDCWD,
+            source_bytes,
+            _AT_FDCWD,
+            target_bytes,
+            _RENAME_NOREPLACE,
+        )
+    elif sys.platform == "darwin" and hasattr(library, "renamex_np"):
+        renamex_np = library.renamex_np
+        renamex_np.argtypes = [ctypes.c_char_p, ctypes.c_char_p, ctypes.c_uint]
+        renamex_np.restype = ctypes.c_int
+        result = renamex_np(source_bytes, target_bytes, _RENAME_EXCL)
+    else:
+        raise RuntimeError("atomic no-replace directory rename is unavailable")
+    if result != 0:
+        error_number = ctypes.get_errno()
+        raise OSError(error_number, os.strerror(error_number), target_path)
 
 
 def _is_reparse(metadata):
@@ -219,6 +266,10 @@ def _metadata_identity(metadata):
     return (metadata.st_dev, metadata.st_ino)
 
 
+def _identity_text(identity):
+    return f"{identity[0]}:{identity[1]}"
+
+
 def _metadata_signature(metadata):
     return (
         metadata.st_dev,
@@ -278,12 +329,18 @@ def _validate_receipt(value):
         value.get("backup_retained") is False
         and value.get("backup_path") is None
         and value.get("backup_installed_hash") is None
+        and value.get("backup_receipt_sha256") is None
+        and value.get("backup_directory_identity") is None
     ) or (
         value.get("backup_retained") is True
         and isinstance(value.get("backup_path"), str)
         and bool(value["backup_path"])
         and isinstance(value.get("backup_installed_hash"), str)
         and bool(_DIGEST.fullmatch(value["backup_installed_hash"]))
+        and isinstance(value.get("backup_receipt_sha256"), str)
+        and bool(_DIGEST.fullmatch(value["backup_receipt_sha256"]))
+        and isinstance(value.get("backup_directory_identity"), str)
+        and bool(_DIRECTORY_IDENTITY.fullmatch(value["backup_directory_identity"]))
     )
     valid = (
         isinstance(value, dict)
@@ -350,20 +407,61 @@ def _assert_recorded_target(target, source_identity, *, expected_receipt_bytes=N
     return receipt, receipt_bytes
 
 
-def _verify_retained_backup(receipt, target):
+def _verify_retained_backup(
+    receipt,
+    target,
+    *,
+    lineage_parent=None,
+    lineage_prefix=None,
+    visited=None,
+):
     if not receipt["backup_retained"]:
         return None
+    if lineage_parent is None:
+        lineage_parent = target.parent
+    if lineage_prefix is None:
+        lineage_prefix = target.name + ".backup-"
+    if visited is None:
+        visited = {os.path.normcase(str(target))}
     backup = _resolve_path(receipt["backup_path"], "retained backup", must_exist=True)
     if (
         not _same_identity(str(backup), receipt["backup_path"])
-        or backup.parent != target.parent
-        or not backup.name.startswith(target.name + ".backup-")
+        or backup.parent != lineage_parent
+        or not backup.name.startswith(lineage_prefix)
         or backup == target
     ):
         raise RuntimeError("retained backup path mismatch")
-    backup_receipt, _ = _assert_recorded_target(backup, receipt["source_identity"])
+    backup_key = os.path.normcase(str(backup))
+    if backup_key in visited:
+        raise RuntimeError("retained backup lineage cycle")
+    visited.add(backup_key)
+    actual_directory_identity = _directory_identity(backup, "retained backup")
+    if _identity_text(actual_directory_identity) != receipt["backup_directory_identity"]:
+        raise RuntimeError("retained backup identity mismatch")
+    try:
+        backup_receipt, backup_receipt_bytes = _assert_recorded_target(
+            backup, receipt["source_identity"]
+        )
+    except RuntimeError as error:
+        raise RuntimeError("retained backup receipt mismatch") from error
+    if not _matches_directory_identity(backup, actual_directory_identity):
+        raise RuntimeError("retained backup identity mismatch")
+    if (
+        hashlib.sha256(backup_receipt_bytes).hexdigest()
+        != receipt["backup_receipt_sha256"]
+    ):
+        raise RuntimeError("retained backup receipt mismatch")
     if backup_receipt["installed_hash"] != receipt["backup_installed_hash"]:
         raise RuntimeError("retained backup hash mismatch")
+    _verify_retained_backup(
+        backup_receipt,
+        backup,
+        lineage_parent=lineage_parent,
+        lineage_prefix=lineage_prefix,
+        visited=visited,
+    )
+    if not _matches_directory_identity(backup, actual_directory_identity):
+        raise RuntimeError("retained backup identity mismatch")
     return backup
 
 
@@ -559,11 +657,14 @@ def install(source, target):
     had_target = _lexists(target)
     previous_receipt = None
     previous_receipt_bytes = None
+    previous_target_identity = None
     if had_target:
         _reject_reparse_components(target, "target")
         previous_receipt, previous_receipt_bytes = _assert_recorded_target(
             target, source_identity
         )
+        previous_target_identity = _directory_identity(target, "installed target")
+        _verify_retained_backup(previous_receipt, target)
 
     snapshot = _snapshot_skill(source)
     canonical_hash = _hash_snapshot(snapshot)
@@ -578,6 +679,12 @@ def install(source, target):
         "backup_path": str(backup) if had_target else None,
         "backup_installed_hash": (
             previous_receipt["installed_hash"] if had_target else None
+        ),
+        "backup_receipt_sha256": (
+            hashlib.sha256(previous_receipt_bytes).hexdigest() if had_target else None
+        ),
+        "backup_directory_identity": (
+            _identity_text(previous_target_identity) if had_target else None
         ),
         "directory_flush_mode": DIRECTORY_FLUSH_MODE,
     }
@@ -607,14 +714,12 @@ def install(source, target):
                 source_identity,
                 expected_receipt_bytes=previous_receipt_bytes,
             )
+            if not _matches_directory_identity(target, previous_target_identity):
+                raise RuntimeError("installed target identity changed during swap")
             os.replace(target, backup)
             backup_moved = True
             try:
-                _assert_recorded_target(
-                    backup,
-                    source_identity,
-                    expected_receipt_bytes=previous_receipt_bytes,
-                )
+                _verify_retained_backup(receipt, target)
             except Exception:
                 if _lexists(target):
                     raise RuntimeError(
@@ -628,7 +733,7 @@ def install(source, target):
             raise RuntimeError("target appeared during installation")
 
         try:
-            os.replace(stage, target)
+            _rename_directory_noreplace(stage, target)
         except Exception as error:
             if _matches_directory_identity(stage, stage_identity):
                 if _lexists(target):
@@ -681,11 +786,7 @@ def install(source, target):
 
         if had_target:
             try:
-                _assert_recorded_target(
-                    backup,
-                    source_identity,
-                    expected_receipt_bytes=previous_receipt_bytes,
-                )
+                _verify_retained_backup(receipt, target)
             except Exception as error:
                 raise RuntimeError(
                     f"installation completed; changed backup preserved at {backup}"
