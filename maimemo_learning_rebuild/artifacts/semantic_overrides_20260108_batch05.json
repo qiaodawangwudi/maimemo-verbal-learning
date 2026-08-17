@@ -1,0 +1,149 @@
+{
+  "schema_version": 1,
+  "basis": "逐段复核20260108原始课程文稿P0137-P0149；大而化之、具体而微存在规范义与题中字面用法并存，继续拆义待核，不强行制成单义卡。",
+  "records": {
+    "事半功倍": {
+      "status": "ready",
+      "meaning": "投入较少的精力或成本，却取得较大的成效。",
+      "distinctive_feature": "评价方法的投入产出效率高，必须同时观察“少投入”和“多成果”，不是只说结果好。",
+      "recognition_cues": ["同样目标下，某种做法省力且效果好。", "少量投入换来较大成果。"],
+      "dimensions": [{"axis": "投入", "judgment": "相对较少。"}, {"axis": "产出", "judgment": "相对较大，效率高。"}],
+      "comparison_edges": [{"other_term": "事倍功半", "minimum_difference": "事半功倍是少投入、多成效的高效率；事倍功半是多投入、少成效的低效率。"}],
+      "misuse_boundary": "题干只说完全没有成果、道路错误或未来空间大，没有投入产出效率比较时，不宜使用。"
+    },
+    "事倍功半": {
+      "status": "ready",
+      "meaning": "投入很多精力或成本，却只取得很少成效。",
+      "distinctive_feature": "评价方法效率低，但并非毫无结果；结构是“大投入—小成果”。",
+      "recognition_cues": ["没弄清原因就行动，费力而成效少。", "投入增加，产出仍低。"],
+      "dimensions": [{"axis": "投入", "judgment": "相对较多。"}, {"axis": "产出", "judgment": "仍有成果但相对较少。"}],
+      "comparison_edges": [
+        {"other_term": "事半功倍", "minimum_difference": "事倍功半是多投入、少成效的低效率；事半功倍是少投入、多成效的高效率。"},
+        {"other_term": "无功而返", "minimum_difference": "事倍功半仍取得少量成果，只是效率低；无功而返要求没有取得预期成果。"},
+        {"other_term": "误入歧途", "minimum_difference": "事倍功半评价投入产出效率低；误入歧途评价选择的道路、方向本身错误。"}
+      ],
+      "misuse_boundary": "完全没有结果时偏向无功而返；选择了错误道路时偏向误入歧途。"
+    },
+    "无功而返": {
+      "status": "ready",
+      "meaning": "付出行动后没有取得预期成果，只好返回。",
+      "distinctive_feature": "结果是“零成果”或目标落空，重点不在投入是否很多，也不在道路是否错误。",
+      "recognition_cues": ["做了事情却什么成果也没得到。", "行动结束时目标完全落空。"],
+      "dimensions": [{"axis": "行动前提", "judgment": "已经付诸行动。"}, {"axis": "结果", "judgment": "没有取得预期成果。"}],
+      "comparison_edges": [
+        {"other_term": "事倍功半", "minimum_difference": "无功而返要求没有取得预期成果；事倍功半仍有成果，只是投入多、产出少。"},
+        {"other_term": "误入歧途", "minimum_difference": "无功而返只判断结果落空；误入歧途判断行动进入了错误道路或方向。"}
+      ],
+      "misuse_boundary": "只是成效较少而不是零成果，或明确走上错误道路时，应分别考虑事倍功半、误入歧途。"
+    },
+    "误入歧途": {
+      "status": "ready",
+      "meaning": "由于判断或选择失误，走上错误的道路、方向。",
+      "distinctive_feature": "错误落在路径选择，后果不仅是低效或无结果，还意味着行为方向偏离正道。",
+      "recognition_cues": ["道路、方向、价值选择发生偏差。", "主体被引向错误发展路径。"],
+      "dimensions": [{"axis": "错误位置", "judgment": "道路或方向选择。"}, {"axis": "语义色彩", "judgment": "偏离正确、正当路径。"}],
+      "comparison_edges": [{"other_term": "无功而返", "minimum_difference": "误入歧途指出道路、方向本身错误；无功而返只说明行动没有取得预期成果。"}],
+      "misuse_boundary": "题干只是效率不高或结果落空，没有错误道路和方向偏离时，不宜使用。"
+    },
+    "因势利导": {
+      "status": "ready",
+      "meaning": "顺着事物已有的发展趋势、情势或特点，加以引导。",
+      "distinctive_feature": "办法不是简单适配差异，而是借用已有“势”推动其朝合适方向发展，带有引导动作。",
+      "recognition_cues": ["政府、家长顺着已有趋势加以引导。", "借水势、形势或情势推动。"],
+      "dimensions": [{"axis": "依据", "judgment": "已有趋势、情势或特点。"}, {"axis": "动作", "judgment": "顺势引导。"}],
+      "comparison_edges": [
+        {"other_term": "因地制宜", "minimum_difference": "因势利导顺着已有形势加以引导；因地制宜根据不同地区、单位的具体条件调整办法。"},
+        {"other_term": "因人而异", "minimum_difference": "因势利导依据形势并实施引导；因人而异依据不同人的特点判断差异或调整。"},
+        {"other_term": "有的放矢", "minimum_difference": "因势利导强调顺着已有趋势引导；有的放矢强调目标明确、措施有针对性。"}
+      ],
+      "misuse_boundary": "题干只按地区、人群或具体目标调整办法，没有借势和引导关系时，应考虑其他三个词。"
+    },
+    "因地制宜": {
+      "status": "ready",
+      "meaning": "根据不同地区、地点或单位的具体条件，采取适合的办法。",
+      "distinctive_feature": "差异来源锁定在“地”和当地条件，判断关键是地域、单位环境不同，而非人的特点或已有趋势。",
+      "recognition_cues": ["不同地区、单位采取不同措施。", "办法取决于当地资源和条件。"],
+      "dimensions": [{"axis": "差异来源", "judgment": "地域、地点、单位条件。"}, {"axis": "动作结果", "judgment": "制定适合当地的办法。"}],
+      "comparison_edges": [
+        {"other_term": "因势利导", "minimum_difference": "因地制宜根据当地条件调整办法；因势利导顺着已有形势、趋势加以引导。"},
+        {"other_term": "因人而异", "minimum_difference": "因地制宜的差异来自地区和环境；因人而异的差异来自不同人的特点。"}
+      ],
+      "misuse_boundary": "差异来自人员特点、具体目标或发展趋势，而不是地域和当地条件时，不宜使用。"
+    },
+    "因人而异": {
+      "status": "ready",
+      "meaning": "由于人的情况、特点不同，判断、结果或办法也有所不同。",
+      "distinctive_feature": "变量必须是“人”，需要比较不同人的能力、需求、性格或条件；不适用于地区差异。",
+      "recognition_cues": ["不同人采取不同方式。", "结果随个人特点变化。"],
+      "dimensions": [{"axis": "差异来源", "judgment": "个人能力、需求、性格或条件。"}, {"axis": "结果", "judgment": "办法或结论随人变化。"}],
+      "comparison_edges": [{"other_term": "因地制宜", "minimum_difference": "因人而异根据人的特点产生差异；因地制宜根据地区、地点或单位条件调整办法。"}],
+      "misuse_boundary": "题干按地域、单位条件制定方案，或顺着形势引导时，应分别考虑因地制宜、因势利导。"
+    },
+    "有的放矢": {
+      "status": "ready",
+      "meaning": "做事有明确目标，措施能够针对具体问题。",
+      "distinctive_feature": "“的”是靶子，“矢”是箭，必须能找到措施所瞄准的问题对象；核心是针对性。",
+      "recognition_cues": ["一把钥匙开一把锁。", "先找准问题，再采取精准措施。"],
+      "dimensions": [{"axis": "目标清晰度", "judgment": "有明确靶点。"}, {"axis": "措施关系", "judgment": "办法与具体问题对应。"}],
+      "comparison_edges": [{"other_term": "因势利导", "minimum_difference": "有的放矢强调目标明确、措施有针对性；因势利导强调顺着已有形势或趋势进行引导。"}],
+      "misuse_boundary": "只说根据不同地区、不同人调整，或借助趋势推动，没有明确问题靶点时，不宜使用。"
+    },
+    "南辕北辙": {
+      "status": "ready",
+      "meaning": "一个主体的行动方向、做法与其想达到的目的正好相反。",
+      "distinctive_feature": "必须同时找到同一主体的“目的”和“行动方向”，行动方向在实施阶段已经背离目的；不要求相反结果已经发生。",
+      "recognition_cues": ["想达到A，却朝远离A的方向行动。", "目的与做法方向相反。"],
+      "dimensions": [{"axis": "主体数量", "judgment": "通常是一个主体。"}, {"axis": "反向位置", "judgment": "行动方向与目的相反。"}],
+      "comparison_edges": [{"other_term": "适得其反", "minimum_difference": "南辕北辙强调做法方向与目的相反；适得其反强调实际得到的结果与愿望相反。"}],
+      "misuse_boundary": "只说明最终结果相反，却没有行动方向背离目的的结构时，应使用适得其反。"
+    },
+    "适得其反": {
+      "status": "ready",
+      "meaning": "实际得到的结果恰好与原来的愿望、目的相反。",
+      "distinctive_feature": "反向发生在结果端，必须看到行为已经造成相反效果；课程把它作为南辕北辙之后的结果递进。",
+      "recognition_cues": ["本想改善，结果反而恶化。", "实际效果与愿望正相反。"],
+      "dimensions": [{"axis": "反向位置", "judgment": "实际结果与愿望相反。"}, {"axis": "时间阶段", "judgment": "相反效果已经出现。"}],
+      "comparison_edges": [{"other_term": "南辕北辙", "minimum_difference": "适得其反强调已经得到相反结果；南辕北辙强调行动方向、做法与目的相反。"}],
+      "misuse_boundary": "题干只判断做法方向不对，尚未出现相反结果时，更接近南辕北辙。"
+    },
+    "坐而论道": {
+      "status": "ready",
+      "meaning": "坐着空谈道理、议论事情，却不付诸行动。",
+      "distinctive_feature": "批评点是停留在“说”而没有“做”，所谈内容不必达到系统理论研究的程度。",
+      "recognition_cues": ["天天谈应该怎么做，却从不行动。", "只动嘴、不落实。"],
+      "dimensions": [{"axis": "表达行动关系", "judgment": "有议论，无实践。"}, {"axis": "理论深度", "judgment": "不要求系统钻研理论。"}],
+      "comparison_edges": [
+        {"other_term": "起而行之", "minimum_difference": "坐而论道停留在议论、不行动；起而行之强调停止空谈并付诸实践。"},
+        {"other_term": "纸上谈兵", "minimum_difference": "坐而论道批评只说不做；纸上谈兵强调只会理论、脱离真实实践，实际操作能力不足。"}
+      ],
+      "misuse_boundary": "题干强调理论研究与真实操作脱节，而不是一般只说不做时，更适合纸上谈兵。"
+    },
+    "起而行之": {
+      "status": "ready",
+      "meaning": "停止空谈，起身行动，把想法付诸实践。",
+      "distinctive_feature": "包含从“坐着说”到“起来做”的状态转换，重点是立即落实，而非只形成理论。",
+      "recognition_cues": ["与其坐而论道，不如行动起来。", "从议论、计划转入实际执行。"],
+      "dimensions": [{"axis": "状态变化", "judgment": "由说转为做。"}, {"axis": "实践性", "judgment": "付诸现实行动。"}],
+      "comparison_edges": [{"other_term": "坐而论道", "minimum_difference": "起而行之强调停止空谈并实际行动；坐而论道描述只议论、不落实。"}],
+      "misuse_boundary": "只有观点讨论、理论研究或行动意愿，却没有付诸实践的变化时，不宜使用。"
+    },
+    "纸上谈兵": {
+      "status": "ready",
+      "meaning": "只在书本、理论层面谈论方法，脱离实际，缺乏真实操作能力。",
+      "distinctive_feature": "课程强调“理论—实践”断裂：理论可能讲得很好，但一到真实操作就不行。",
+      "recognition_cues": ["只学理论不做题、不实践。", "书本方案漂亮，真实操作失败。"],
+      "dimensions": [{"axis": "知识状态", "judgment": "停留在理论和书本。"}, {"axis": "实践结果", "judgment": "缺少实际检验和操作能力。"}],
+      "comparison_edges": [{"other_term": "坐而论道", "minimum_difference": "纸上谈兵强调理论与实践脱节；坐而论道强调一般性地只说不行动，不要求理论研究深入。"}],
+      "misuse_boundary": "只是口头承诺、议论却不行动，没有理论和实践脱节关系时，更接近坐而论道。"
+    },
+    "条分缕析": {
+      "status": "ready",
+      "meaning": "有条理地一条一条、一个部分一个部分进行细致分析。",
+      "distinctive_feature": "既有清楚分层，又有逐项分析动作；不是简单罗列，也不是积少成多。",
+      "recognition_cues": ["从概念、范畴、术语、议题逐项分析。", "内容被分条、分层拆解说明。"],
+      "dimensions": [{"axis": "结构", "judgment": "分条、分层。"}, {"axis": "动作深度", "judgment": "逐项细致分析。"}],
+      "comparison_edges": [],
+      "misuse_boundary": "只把小部分累积成整体，或只列出项目没有分析时，不宜使用条分缕析。"
+    }
+  }
+}

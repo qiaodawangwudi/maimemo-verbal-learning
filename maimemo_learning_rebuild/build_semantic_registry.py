@@ -19,6 +19,46 @@ from .sources import (
 )
 
 
+LESSON_FIVE_REQUIRED_OVERRIDE_FIELDS = {
+    "meaning",
+    "distinctive_feature",
+    "recognition_cues",
+    "dimensions",
+    "comparison_edges",
+    "misuse_boundary",
+}
+
+
+def apply_lesson_five_override(
+    record: dict, override: dict, batch_name: str
+) -> dict:
+    """Promote only a complete, manually reviewed replacement for a quarantined candidate."""
+    if override.get("status") != "ready":
+        blocker = override.get("review_blocker")
+        if blocker and blocker not in record.setdefault("review_blockers", []):
+            record["review_blockers"].append(blocker)
+        return record
+    missing = sorted(
+        field
+        for field in LESSON_FIVE_REQUIRED_OVERRIDE_FIELDS
+        if field not in override or override[field] in (None, "")
+    )
+    if missing:
+        blocker = "人工覆盖缺少完整学习字段"
+        if blocker not in record.setdefault("review_blockers", []):
+            record["review_blockers"].append(blocker)
+        return record
+    record.update({field: override[field] for field in LESSON_FIVE_REQUIRED_OVERRIDE_FIELDS})
+    record["status"] = "ready"
+    record["typical_contexts"] = override.get("typical_contexts", [])
+    record.pop("candidate", None)
+    record.pop("review_blockers", None)
+    provenance = record.setdefault("provenance", {})
+    provenance.pop("derived_content_quarantined", None)
+    provenance["manual_semantic_review"] = batch_name
+    return record
+
+
 def _load_records(path: Path) -> list[dict]:
     return json.loads(path.read_text(encoding="utf-8-sig")).get("records", [])
 
@@ -102,9 +142,22 @@ def build_registry(source_root: Path, catalog: dict) -> tuple[dict, list[dict]]:
     approved = json.loads(approved_path.read_text(encoding="utf-8"))
     approved_by_term = {record["term"]: record for record in approved["records"]}
     overrides_path = Path(__file__).parent / "artifacts" / "semantic_overrides_20260108.json"
-    lesson_five_overrides = json.loads(
+    lesson_five_notes = json.loads(
         overrides_path.read_text(encoding="utf-8")
     )["records"]
+    lesson_five_overrides: dict[str, tuple[dict, str]] = {}
+    for path in sorted(
+        (Path(__file__).parent / "artifacts").glob(
+            "semantic_overrides_20260108_batch*.json"
+        )
+    ):
+        batch = json.loads(path.read_text(encoding="utf-8"))["records"]
+        duplicates = set(lesson_five_overrides) & set(batch)
+        if duplicates:
+            raise ValueError(f"duplicate 20260108 overrides: {sorted(duplicates)}")
+        lesson_five_overrides.update(
+            {term: (override, path.stem) for term, override in batch.items()}
+        )
     four_poems_overrides: dict[str, dict] = {}
     for path in sorted(
         (Path(__file__).parent / "artifacts").glob(
@@ -170,7 +223,7 @@ def build_registry(source_root: Path, catalog: dict) -> tuple[dict, list[dict]]:
             edges = _make_edge_references_explicit(term, edges)
             locations = lesson_five_term_locations.get(term, [])[:3]
             evidence = _full_evidence(lesson_five_source, locations, catalog_by_name)
-            override = lesson_five_overrides.get(term)
+            note = lesson_five_notes.get(term)
             record = {
                 "term": term,
                 "sense_id": source.get("sense_id") or f"{term}::20260108课程义::001",
@@ -184,8 +237,8 @@ def build_registry(source_root: Path, catalog: dict) -> tuple[dict, list[dict]]:
                     "dimensions": source.get("dimensions", []),
                     "comparison_edges": edges,
                     "misuse_boundary": (
-                        override.get("misuse_boundary")
-                        if override
+                        note.get("misuse_boundary")
+                        if note
                         else source.get("misuse_boundary", "")
                     ),
                 },
@@ -206,12 +259,15 @@ def build_registry(source_root: Path, catalog: dict) -> tuple[dict, list[dict]]:
                 record["review_blockers"].append(
                     "派生判断档案本身标为pending，必须重新裁定后才能升为ready。"
                 )
-            if override:
+            if note:
                 record["provenance"]["manual_boundary_review_only"] = True
-                if override.get("review_blocker"):
-                    record["review_blockers"].append(override["review_blocker"])
+                if note.get("review_blocker"):
+                    record["review_blockers"].append(note["review_blocker"])
             if dropped:
                 record["excluded_edges_outside_library"] = dropped
+            if term in lesson_five_overrides:
+                override, batch_name = lesson_five_overrides[term]
+                record = apply_lesson_five_override(record, override, batch_name)
             provenance = {"tier": "derived_guide_quarantined_pending_manual_rebuild"}
         elif term in approved_by_term:
             source = dict(approved_by_term[term])

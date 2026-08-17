@@ -46,8 +46,8 @@ class RegistryReviewTests(unittest.TestCase):
         report = review_registry(registry["records"], catalog, groups)
 
         self.assertEqual(621, report["records"])
-        self.assertEqual(207, report["ready"])
-        self.assertEqual(414, report["pending"])
+        self.assertEqual(349, report["ready"])
+        self.assertEqual(272, report["pending"])
         self.assertEqual(0, report["hard_errors"])
         self.assertEqual(621, len({record["term"] for record in registry["records"]}))
 
@@ -57,13 +57,26 @@ class RegistryReviewTests(unittest.TestCase):
         self.assertEqual("pending", by_term["述而不作"]["status"])
         self.assertNotIn("meaning", by_term["述而不作"])
         self.assertEqual("是什么意思啊", by_term["述而不作"]["candidate"]["course_sense"])
-        self.assertEqual("pending", by_term["事倍功半"]["status"])
+        self.assertEqual("ready", by_term["事倍功半"]["status"])
         self.assertEqual("pending", by_term["大而化之"]["status"])
-        self.assertEqual("pending", by_term["游刃有余"]["status"])
-        self.assertEqual("pending", by_term["举足轻重"]["status"])
-        self.assertIn(
-            "派生档案",
-            "".join(by_term["游刃有余"].get("review_blockers", [])),
+        self.assertEqual("ready", by_term["游刃有余"]["status"])
+        self.assertEqual("ready", by_term["举足轻重"]["status"])
+        lesson_five = [
+            record
+            for record in registry["records"]
+            if record.get("provenance", {}).get("batch") == "20260108"
+        ]
+        self.assertEqual(142, sum(record["status"] == "ready" for record in lesson_five))
+        self.assertEqual(
+            {"勇立潮头", "空穴来风", "大而化之", "具体而微"},
+            {record["term"] for record in lesson_five if record["status"] != "ready"},
+        )
+        self.assertTrue(
+            all(
+                not record.get("provenance", {}).get("derived_content_quarantined")
+                for record in lesson_five
+                if record["status"] == "ready"
+            )
         )
         self.assertEqual("ready", by_term["薪火相传"]["status"])
         self.assertIn("一脉相承", by_term["薪火相传"]["misuse_boundary"])

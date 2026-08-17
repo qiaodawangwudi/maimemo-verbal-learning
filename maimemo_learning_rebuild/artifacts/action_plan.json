@@ -8,8 +8,8 @@
   "expected_after": 732,
   "action_counts": {
     "create": 2,
-    "manual-review": 529,
-    "update": 215
+    "manual-review": 387,
+    "update": 357
   },
   "actions": [
     {
@@ -1415,242 +1415,242 @@
     {
       "title": "基础词义｜舍本逐末",
       "card_id": "mkjc_K_V2FkS5462GEPJsbEukKuGefnZ2BGcIUFEFdzXCimx0a07iL6eZ9.z8BRZfBG72",
-      "action": "manual-review",
-      "content_hash": "3e76117c83df649ff7b7b25c9d39575c88e2c1e20326302d6b71680c115f114f",
-      "reason": "语义主档案尚未ready，禁止渲染或写入。",
-      "record_status": "pending"
+      "action": "update",
+      "content_hash": "0156d15c7c015af639010ecc20f7ea3052b8df28805233dcfcaba95a5edfdec3",
+      "reason": "按已验收语义记录改造成分层学习卡。",
+      "record_status": "ready"
     },
     {
       "title": "基础词义｜本末倒置",
       "card_id": "mkjc_K_V2FkS5462GEPJsbEukKuT7BhoYHE8BBhnqHRcE2_vsm7H91x59m51WQ.z5r3VO",
-      "action": "manual-review",
-      "content_hash": "c8c235ce0675f3bf964e75456fda767e537bbb6bba32257948037998a132ab8a",
-      "reason": "语义主档案尚未ready，禁止渲染或写入。",
-      "record_status": "pending"
+      "action": "update",
+      "content_hash": "33bb1be622e4a805a696342eaf64aa861c39d5fb1235940f8afd063e8cb3cb31",
+      "reason": "按已验收语义记录改造成分层学习卡。",
+      "record_status": "ready"
     },
     {
       "title": "基础词义｜因小失大",
       "card_id": "mkjc_K_V2FkS5462GEPJsbEukKs91h6RYXr.gwakgjEXjN7z_ZQBUrSS3q.q3.jhf4aqb",
-      "action": "manual-review",
-      "content_hash": "81767d321011da711392e86d499fb0994a23245102212a9a0147e4de4770ed5d",
-      "reason": "语义主档案尚未ready，禁止渲染或写入。",
-      "record_status": "pending"
+      "action": "update",
+      "content_hash": "7f6111695eef2a68c810a59ebf267e43ee869d1d42c8980116de043ccb2a1650",
+      "reason": "按已验收语义记录改造成分层学习卡。",
+      "record_status": "ready"
     },
     {
       "title": "基础词义｜细枝末节",
       "card_id": "mkjc_K_V2FkS5462GEPJsbEukKl0TVBixSgMQI9JyRRimaOSsjRLx1INKVKS396Q8OQwK",
-      "action": "manual-review",
-      "content_hash": "67e35f8406556db8e69faca9a41c093dd0d39a0de6728b506dc32b5c3c93d456",
-      "reason": "语义主档案尚未ready，禁止渲染或写入。",
-      "record_status": "pending"
+      "action": "update",
+      "content_hash": "94b29f4515df2a580b666175318e47a73ae6861631576f79adc999209c0935f7",
+      "reason": "按已验收语义记录改造成分层学习卡。",
+      "record_status": "ready"
     },
     {
       "title": "基础词义｜枝节",
       "card_id": "mkjc_K_V2FkS5462GEPJsbEukKqOLdPJWfMXo0qCXaGFmGanWSdFJLEi21oxEZ3Q_i_QN",
-      "action": "manual-review",
-      "content_hash": "360e9b6e841b0fa605b0cd9b96c65d471a06468be6f4a39785a371fd8628a3c2",
-      "reason": "语义主档案尚未ready，禁止渲染或写入。",
-      "record_status": "pending"
+      "action": "update",
+      "content_hash": "889e11f45e81963f290133521b544702cd621c1504d8bc62cfc7eccbcc86c5a4",
+      "reason": "按已验收语义记录改造成分层学习卡。",
+      "record_status": "ready"
     },
     {
       "title": "基础词义｜凝聚",
       "card_id": "mkjc_ReZJjv6iaEJU73tqTxhGLOxGGoXpPNA2EYMxkIjIIYTYsIU8CMVdyMh4BizjnPym",
-      "action": "manual-review",
-      "content_hash": "c02d0fc13604dfcba54f8b4e5da7cbae612823cf54fbba36db771373a875b5dd",
-      "reason": "语义主档案尚未ready，禁止渲染或写入。",
-      "record_status": "pending"
+      "action": "update",
+      "content_hash": "5a962395b4f05481a1626338ac49e59d0d46ad85ffa9c77416250d344e356e4c",
+      "reason": "按已验收语义记录改造成分层学习卡。",
+      "record_status": "ready"
     },
     {
       "title": "基础词义｜汇集",
       "card_id": "mkjc_ReZJjv6iaEJU73tqTxhGLMvUhh_DA0rQad_sJ794HqtZYMgrWUj5KMi4WJI1IE1W",
-      "action": "manual-review",
-      "content_hash": "e309d350b1a54d8ed74002875e904155ac8c31e68768d5be350f0bcc68818897",
-      "reason": "语义主档案尚未ready，禁止渲染或写入。",
-      "record_status": "pending"
+      "action": "update",
+      "content_hash": "79bd344fa107bf60aaf60666ca39cc60ce6567e4ed572b5476468d29a7798aef",
+      "reason": "按已验收语义记录改造成分层学习卡。",
+      "record_status": "ready"
     },
     {
       "title": "基础词义｜聚焦",
       "card_id": "mkjc_ReZJjv6iaEJU73tqTxhGLNgGtlquj0_IzH3oiyGQHkZx4qnPyHqHaadgiqbglsWX",
-      "action": "manual-review",
-      "content_hash": "643f29f49c8e9deab558d758cbd823db492c83cf8594f7930d96c7301518f126",
-      "reason": "语义主档案尚未ready，禁止渲染或写入。",
-      "record_status": "pending"
+      "action": "update",
+      "content_hash": "c5843c8d8fd402a53a14bb95f5b1f15112681da7f1d934094c5bfdccd1870e9a",
+      "reason": "按已验收语义记录改造成分层学习卡。",
+      "record_status": "ready"
     },
     {
       "title": "基础词义｜阐明",
       "card_id": "mkjc_ReZJjv6iaEJU73tqTxhGLBsVKH9nRFaOby.i1QdCxvQKJSp.rJyq31J4K4q5JihU",
-      "action": "manual-review",
-      "content_hash": "441e4dd6989a80344ad6f3dfbde85cc0954d8b87b3ca854e1834799c676c14c6",
-      "reason": "语义主档案尚未ready，禁止渲染或写入。",
-      "record_status": "pending"
+      "action": "update",
+      "content_hash": "23def7f2564ecb7a7228bce3fba32f3a6daf8c20adc716e1976ae72c4f0f37c0",
+      "reason": "按已验收语义记录改造成分层学习卡。",
+      "record_status": "ready"
     },
     {
       "title": "基础词义｜肃清",
       "card_id": "mkjc_ReZJjv6iaEJU73tqTxhGLCktpEHb_yGhgrs97hXgTc_EcefMjvBBRdIHSqxjcKEy",
-      "action": "manual-review",
-      "content_hash": "579f4de6f05fe85a480e778655864bd1a91530da978d79866fa1ba30a73b9a1f",
-      "reason": "语义主档案尚未ready，禁止渲染或写入。",
-      "record_status": "pending"
+      "action": "update",
+      "content_hash": "af09eacd7b4234589719e3ea88c3226195d15d3822d532496893a8c182f0c733",
+      "reason": "按已验收语义记录改造成分层学习卡。",
+      "record_status": "ready"
     },
     {
       "title": "基础词义｜澄清",
       "card_id": "mkjc_ReZJjv6iaEJU73tqTxhGLMMnWWIPKh.gr.9HkvkcpQujlgUgEDJgG_bqvbbugmmC",
-      "action": "manual-review",
-      "content_hash": "fb9a2c90e4e63781b0e917570aa3333a2d3017e416a8c012b91392faecc8aaa0",
-      "reason": "语义主档案尚未ready，禁止渲染或写入。",
-      "record_status": "pending"
+      "action": "update",
+      "content_hash": "85d3357b8d3086b960e4cfa647e21328e756dbfe2f3db6b64e69c73dcad95849",
+      "reason": "按已验收语义记录改造成分层学习卡。",
+      "record_status": "ready"
     },
     {
       "title": "基础词义｜梳理",
       "card_id": "mkjc_ReZJjv6iaEJU73tqTxhGLDeHKll0SAe5QLV20Q3wErKnCv51hw6lAyYYBP3OwPi4",
-      "action": "manual-review",
-      "content_hash": "ac402639e44fee194dc0d2a10dbae727c27f5ce641ebb7aeb15cf283d686e186",
-      "reason": "语义主档案尚未ready，禁止渲染或写入。",
-      "record_status": "pending"
+      "action": "update",
+      "content_hash": "f6013e05d103dae538a57a78f6ffd220db258ac2a54862c161d38caa1392775a",
+      "reason": "按已验收语义记录改造成分层学习卡。",
+      "record_status": "ready"
     },
     {
       "title": "基础词义｜理清",
       "card_id": "mkjc_ReZJjv6iaEJU73tqTxhGLAyePe1bbCeozptQ36YJJiJS6n1iStn4ua4iivbpt9VM",
-      "action": "manual-review",
-      "content_hash": "822a15fae6e2eb80bf43ea4b1223360b14921580838c934b07534855e707ce07",
-      "reason": "语义主档案尚未ready，禁止渲染或写入。",
-      "record_status": "pending"
+      "action": "update",
+      "content_hash": "640b4867af4850b809bbd0bb55ceef35df1a15c02601971bc15a0439536fe904",
+      "reason": "按已验收语义记录改造成分层学习卡。",
+      "record_status": "ready"
     },
     {
       "title": "基础词义｜厘清",
       "card_id": "mkjc_ReZJjv6iaEJU73tqTxhGLNqUt7aiwN3Ztm3lmn.ZIDW4E4Uzv1nnWbe2H3iohfrE",
-      "action": "manual-review",
-      "content_hash": "f4366ab0daa548f389ad730e0b6ebad62933fd1f443d2dcb870eb41a583cd321",
-      "reason": "语义主档案尚未ready，禁止渲染或写入。",
-      "record_status": "pending"
+      "action": "update",
+      "content_hash": "3252af932ed8b7168d47e8d2c58123f47fd389584d1949170523d8f250013ab3",
+      "reason": "按已验收语义记录改造成分层学习卡。",
+      "record_status": "ready"
     },
     {
       "title": "基础词义｜与虎谋皮",
       "card_id": "mkjc_ySmc.LzwFf076IbPrpFku6afZBzsvaPqtf96yPOwgXBWIoR4eajEOoY.CfOWEDxH",
-      "action": "manual-review",
-      "content_hash": "908cbdf9e62ad9ff53ba2747f9f4699effe1f335b36e921dc5f397a2108bef65",
-      "reason": "语义主档案尚未ready，禁止渲染或写入。",
-      "record_status": "pending"
+      "action": "update",
+      "content_hash": "1407be9b9ba0574d7185047dd3692f2a8a6850b8869defeab01c3ffbb89a87ee",
+      "reason": "按已验收语义记录改造成分层学习卡。",
+      "record_status": "ready"
     },
     {
       "title": "基础词义｜对牛弹琴",
       "card_id": "mkjc_ySmc.LzwFf076IbPrpFku35IXJjXZ_epa3O4NQ2Ya0IlPmAwvy3z9Y0PfuVbkdNh",
-      "action": "manual-review",
-      "content_hash": "680cbfb0eb198ecbcf2f4194b087ecc9dbce29c730de78971a1bdee441a3899c",
-      "reason": "语义主档案尚未ready，禁止渲染或写入。",
-      "record_status": "pending"
+      "action": "update",
+      "content_hash": "a991d33f9d221175143438d5af86e8bf417f2dc5260bf2f505ec7cd853c39ddc",
+      "reason": "按已验收语义记录改造成分层学习卡。",
+      "record_status": "ready"
     },
     {
       "title": "基础词义｜鸡同鸭讲",
       "card_id": "mkjc_ySmc.LzwFf076IbPrpFku1cz9IZHCPmGkoIoIg7vTLHVa03pP8DqiVbMu4uzay2T",
-      "action": "manual-review",
-      "content_hash": "a4d8ea07b63f1e6c36f38ef3141b1a6b5ccc8ea6919a59484477d9f0a5c3c4d7",
-      "reason": "语义主档案尚未ready，禁止渲染或写入。",
-      "record_status": "pending"
+      "action": "update",
+      "content_hash": "3f436d6d52327ea309b6209426ae8aae217a6cef1145ca17233ff754e8b7b8c2",
+      "reason": "按已验收语义记录改造成分层学习卡。",
+      "record_status": "ready"
     },
     {
       "title": "基础词义｜心术不正",
       "card_id": "mkjc_ySmc.LzwFf076IbPrpFku4LYx7jQIYWXIzNVpNEf32.ViP4rk7zjMlC453OwsZiB",
-      "action": "manual-review",
-      "content_hash": "448d8c248a807e5416d3000e962d9e5a72f261352e8f859f47c97a987b69e329",
-      "reason": "语义主档案尚未ready，禁止渲染或写入。",
-      "record_status": "pending"
+      "action": "update",
+      "content_hash": "97b10a41d71ffee6d87bf2b7228f107443e188f537102b6e083b217ffdcd5690",
+      "reason": "按已验收语义记录改造成分层学习卡。",
+      "record_status": "ready"
     },
     {
       "title": "基础词义｜并行不悖",
       "card_id": "mkjc_ySmc.LzwFf076IbPrpFkuy9dBd19rhvTDPZMdPkHCN7Ni22YJWVpl.3M8Ui8luO8",
-      "action": "manual-review",
-      "content_hash": "a1bf4a196e2b9b54e1c29ba93552f6ba3a96224511a5280db7be480ec0a944dd",
-      "reason": "语义主档案尚未ready，禁止渲染或写入。",
-      "record_status": "pending"
+      "action": "update",
+      "content_hash": "d62f9f3293e80dbd171547e1bcd5427ab9143c3819fa0fc424175af1e28cc108",
+      "reason": "按已验收语义记录改造成分层学习卡。",
+      "record_status": "ready"
     },
     {
       "title": "基础词义｜如影随形",
       "card_id": "mkjc_ySmc.LzwFf076IbPrpFku9uw0hPm7iNuytffC0HKmo7f91ujAAdg6gStdhr0ece1",
-      "action": "manual-review",
-      "content_hash": "9a418ce75609e4c27f7ba1dab03c1d50d2d508c7a15fda7743999f5e46a74059",
-      "reason": "语义主档案尚未ready，禁止渲染或写入。",
-      "record_status": "pending"
+      "action": "update",
+      "content_hash": "284f7eb7ede64124cc18fa29a9f4ff5f265eee72e9cf8752f8d4a082b8c1a496",
+      "reason": "按已验收语义记录改造成分层学习卡。",
+      "record_status": "ready"
     },
     {
       "title": "基础词义｜各有所长",
       "card_id": "mkjc_ySmc.LzwFf076IbPrpFkux0baOwNM4.cn2k5H98VwWQf7lsxb5B77tFc1gC2FatT",
-      "action": "manual-review",
-      "content_hash": "7177e2294c9b097b8e2d7f4f022e58de1dec9907b83ee6e1967ea4763d0d0836",
-      "reason": "语义主档案尚未ready，禁止渲染或写入。",
-      "record_status": "pending"
+      "action": "update",
+      "content_hash": "1bc0276af27bdfeec78e4388f3c1f60ad1837bf63456b9111fee7bc184c52c3d",
+      "reason": "按已验收语义记录改造成分层学习卡。",
+      "record_status": "ready"
     },
     {
       "title": "基础词义｜不可或缺",
       "card_id": "mkjc_ySmc.LzwFf076IbPrpFku9Vkyvyylur6xP30jR.SZAKgAvs5TbwlOa0cdBZU77gZ",
-      "action": "manual-review",
-      "content_hash": "6afba01b3e15b66a3dad7af9334700a06d8defc0299a721bbfcf1c1a5e9012a2",
-      "reason": "语义主档案尚未ready，禁止渲染或写入。",
-      "record_status": "pending"
+      "action": "update",
+      "content_hash": "d91742be1590485c17377902d74aff1982a1d26c9604834af25fc345c724b682",
+      "reason": "按已验收语义记录改造成分层学习卡。",
+      "record_status": "ready"
     },
     {
       "title": "基础词义｜传承",
       "card_id": "mkjc_7r16BGWx2fo6s3sDEhY8voygIZN.z74LlfyKHcTeRXBJ0KkBSgbXrOU336CetSku",
-      "action": "manual-review",
-      "content_hash": "e805acce04fb8f787d1e73b1753cbf063878d717cc9e226de555cf6242a6bbb3",
-      "reason": "语义主档案尚未ready，禁止渲染或写入。",
-      "record_status": "pending"
+      "action": "update",
+      "content_hash": "ff37633aaee82f3fc591ef8a43f6b81bd743f79836ad76e021768ec55c5e7acb",
+      "reason": "按已验收语义记录改造成分层学习卡。",
+      "record_status": "ready"
     },
     {
       "title": "基础词义｜弘扬",
       "card_id": "mkjc_7r16BGWx2fo6s3sDEhY8vqNc_e0K2uzutja9EPY.1uGsMm9B5aXCoqYnNs64zvjZ",
-      "action": "manual-review",
-      "content_hash": "9fceea1f4d2b613836547cf3c39d5ecdbb1e6ea0b1879b353478ce757760b488",
-      "reason": "语义主档案尚未ready，禁止渲染或写入。",
-      "record_status": "pending"
+      "action": "update",
+      "content_hash": "52bd8ff06e015b750b51fea52505a283b019d6a300c95a56edc9fdaf2702a8b8",
+      "reason": "按已验收语义记录改造成分层学习卡。",
+      "record_status": "ready"
     },
     {
       "title": "基础词义｜踔厉奋发",
       "card_id": "mkjc_7r16BGWx2fo6s3sDEhY8vib8qiBmOpAyhl1DC.YxEtuwU.AUBwF8HmJACG_zrhab",
-      "action": "manual-review",
-      "content_hash": "809a17fb31622cd6f96460eeae5b4efa7c3204ce8b85a933f878da3260bd1fef",
-      "reason": "语义主档案尚未ready，禁止渲染或写入。",
-      "record_status": "pending"
+      "action": "update",
+      "content_hash": "1c0505dc18c5391b05e432d0a286ff2b6a6b2cc35e31f3ee1486801b2c4b1361",
+      "reason": "按已验收语义记录改造成分层学习卡。",
+      "record_status": "ready"
     },
     {
       "title": "基础词义｜勇毅前行",
       "card_id": "mkjc_7r16BGWx2fo6s3sDEhY8vgqCQ2mELDVDGkQyu732KNpqRJPyn38SzJXE9Ctrmbj4",
-      "action": "manual-review",
-      "content_hash": "2fed03d69f3a725d97b9f7bc98af1979dac143c3567cbf92d96d5c0f04d9bff9",
-      "reason": "语义主档案尚未ready，禁止渲染或写入。",
-      "record_status": "pending"
+      "action": "update",
+      "content_hash": "495a7bb22a0d744c9fe4025a911136b79d8615fb0cfac21052cab805b4030356",
+      "reason": "按已验收语义记录改造成分层学习卡。",
+      "record_status": "ready"
     },
     {
       "title": "基础词义｜笃行不怠",
       "card_id": "mkjc_7r16BGWx2fo6s3sDEhY8vgdcUqGnEa_43GZ_1d6.JtXfGEXSQR.rGA1_zTy0iHa_",
-      "action": "manual-review",
-      "content_hash": "231a6f8b1b1717327f1f697253bde809d4c9f3bc7e30a1e69c8cf4aee95c21dd",
-      "reason": "语义主档案尚未ready，禁止渲染或写入。",
-      "record_status": "pending"
+      "action": "update",
+      "content_hash": "e5acab3f75906a51e171c4ac16e33ccec1afdd085895f7f01b03abbdc93bea99",
+      "reason": "按已验收语义记录改造成分层学习卡。",
+      "record_status": "ready"
     },
     {
       "title": "基础词义｜奋勇争先",
       "card_id": "mkjc_7r16BGWx2fo6s3sDEhY8vsrNKCbk4F7UIhlHNynP7hZJs8ZgAdRWDLVtp7cAoDUy",
-      "action": "manual-review",
-      "content_hash": "8657d873a45c5710659a521464762a32528ecaac9288b9e48f81a7db17e0561b",
-      "reason": "语义主档案尚未ready，禁止渲染或写入。",
-      "record_status": "pending"
+      "action": "update",
+      "content_hash": "6485397c1028aab0918db5db3ca24fb338ac3f792eb4a381eec3e7eecd2fdb41",
+      "reason": "按已验收语义记录改造成分层学习卡。",
+      "record_status": "ready"
     },
     {
       "title": "基础词义｜奋起争先",
       "card_id": "mkjc_7r16BGWx2fo6s3sDEhY8vqp9JE5tVIBapxn63H2v6JqYO6VtYX700sZXvJR_Rz9p",
-      "action": "manual-review",
-      "content_hash": "f2f69cf8029adffb27f136bd5b1067d26c712603506a433c8b9fc46eb57e9631",
-      "reason": "语义主档案尚未ready，禁止渲染或写入。",
-      "record_status": "pending"
+      "action": "update",
+      "content_hash": "5f57ebcc6b3428565594223516c1082d58fd8f7b6b8e86f6e96f49806120ce76",
+      "reason": "按已验收语义记录改造成分层学习卡。",
+      "record_status": "ready"
     },
     {
       "title": "基础词义｜久久为功",
       "card_id": "mkjc_7r16BGWx2fo6s3sDEhY8viOboKgaR.Dr7ghj5EyLM.Ol3Gca.pcDTx5_Uf4yrZg9",
-      "action": "manual-review",
-      "content_hash": "eb5515ba7cfd926d09ebbfc787344cc8109fcacec00edc68c8e6a14feb541cea",
-      "reason": "语义主档案尚未ready，禁止渲染或写入。",
-      "record_status": "pending"
+      "action": "update",
+      "content_hash": "6a59cc7e868335efa4138cbe2fe41e448e678b657714da4e67380128aa2f5d65",
+      "reason": "按已验收语义记录改造成分层学习卡。",
+      "record_status": "ready"
     },
     {
       "title": "基础词义｜勇立潮头",
@@ -1663,338 +1663,338 @@
     {
       "title": "基础词义｜履行",
       "card_id": "mkjc_lZIe9Cv34rQ7c2ZZIp6xOdYeAHJ3r9A1nHp3VN4aC2KjLGz5xPJdXVEMGFBTMuJv",
-      "action": "manual-review",
-      "content_hash": "57f2ae3c13ea2b52a92ca56f760b5a209fe8ccf2c038566cdf257447cf5482a3",
-      "reason": "语义主档案尚未ready，禁止渲染或写入。",
-      "record_status": "pending"
+      "action": "update",
+      "content_hash": "76e9125afabafc4c0769e322da6ec78e92bd54dcbd3a9b8c2c6e9bc2dba88a1d",
+      "reason": "按已验收语义记录改造成分层学习卡。",
+      "record_status": "ready"
     },
     {
       "title": "基础词义｜堪当",
       "card_id": "mkjc_lZIe9Cv34rQ7c2ZZIp6xOe1rpkUpNznDZur_c.SnZTSH50cydqncA9wUF6QON7Hd",
-      "action": "manual-review",
-      "content_hash": "1ad7b69e43000baa1f744117e3396719b68f38702825e99d9deefcab17293032",
-      "reason": "语义主档案尚未ready，禁止渲染或写入。",
-      "record_status": "pending"
+      "action": "update",
+      "content_hash": "04923e573f11851bae139a5677929e2296df2d988de636b2481ce7bc02ec3e32",
+      "reason": "按已验收语义记录改造成分层学习卡。",
+      "record_status": "ready"
     },
     {
       "title": "基础词义｜担负",
       "card_id": "mkjc_lZIe9Cv34rQ7c2ZZIp6xOd_6ldVRlZDJq.Ed86dIElNU6.B9LXVBHfzrsmPbXMJQ",
-      "action": "manual-review",
-      "content_hash": "d9f23229eda8a363a952ab929e5c99708f238e60bf3a0b5329040b701409b2ab",
-      "reason": "语义主档案尚未ready，禁止渲染或写入。",
-      "record_status": "pending"
+      "action": "update",
+      "content_hash": "45bd75c1ce46541fe86832e0028ca05b2b0cc3490ebf25717cc06cf2f32a88f3",
+      "reason": "按已验收语义记录改造成分层学习卡。",
+      "record_status": "ready"
     },
     {
       "title": "基础词义｜担当",
       "card_id": "mkjc_lZIe9Cv34rQ7c2ZZIp6xOdPewemNtvu2J1aEVgxlmq8Jno8v1uGbsvVLWtOvtBe.",
-      "action": "manual-review",
-      "content_hash": "996ba56ae8f2fe025fcbd53cffc78cebe8870b9482f0134745bb283262908f21",
-      "reason": "语义主档案尚未ready，禁止渲染或写入。",
-      "record_status": "pending"
+      "action": "update",
+      "content_hash": "fcdd64de83c392394d0e8a8ba6e89afc65777205263ae207615fff4dec9e8c8e",
+      "reason": "按已验收语义记录改造成分层学习卡。",
+      "record_status": "ready"
     },
     {
       "title": "基础词义｜淡化",
       "card_id": "mkjc_lZIe9Cv34rQ7c2ZZIp6xOeDj2zsIZpAbg4XjJsiEBk2uYE9Eyww1kksmtFNHwDhp",
-      "action": "manual-review",
-      "content_hash": "0a629e864eef5670aedc230ae95c52e8df51457420915c0389e7afa56dee3221",
-      "reason": "语义主档案尚未ready，禁止渲染或写入。",
-      "record_status": "pending"
+      "action": "update",
+      "content_hash": "5a65580f3e99a86e81fdb2dff60e8cc60f7fbb4375b81b53cdfeffd0d2d7c325",
+      "reason": "按已验收语义记录改造成分层学习卡。",
+      "record_status": "ready"
     },
     {
       "title": "基础词义｜忽视",
       "card_id": "mkjc_lZIe9Cv34rQ7c2ZZIp6xOdsRIBxHtl4hc4D2DCE6cipbtgzdSn7LcIFfj_sXc1sV",
-      "action": "manual-review",
-      "content_hash": "b4af00a2bd39d8743603e5d59cf37ed6720a95e43caa66540f0a5c8e358d25e3",
-      "reason": "语义主档案尚未ready，禁止渲染或写入。",
-      "record_status": "pending"
+      "action": "update",
+      "content_hash": "0cb740af6a9f418459d7214a67fd7d7befc9f3e5f757adcfbc07d86a365832a5",
+      "reason": "按已验收语义记录改造成分层学习卡。",
+      "record_status": "ready"
     },
     {
       "title": "基础词义｜无视",
       "card_id": "mkjc_lZIe9Cv34rQ7c2ZZIp6xOUinDfiyrMbzO2v10C4G4OJkPiKxgeq1SzDO4ZRFVMpJ",
-      "action": "manual-review",
-      "content_hash": "13964b96d138ff9c6ee03abaf3172fbf6301136da0c75eb577eb1716c819c786",
-      "reason": "语义主档案尚未ready，禁止渲染或写入。",
-      "record_status": "pending"
+      "action": "update",
+      "content_hash": "627bb799af75d252c2a67f05d0c3226de6931e23602367da78fdc5bdbd5ef8e5",
+      "reason": "按已验收语义记录改造成分层学习卡。",
+      "record_status": "ready"
     },
     {
       "title": "基础词义｜模糊",
       "card_id": "mkjc_lZIe9Cv34rQ7c2ZZIp6xOTj1zPg1fakFH7VQntaUMDMYQqDSL7LyF8c_wLRjPatL",
-      "action": "manual-review",
-      "content_hash": "7ff367a3798b02da2802b87beadff4d838ace2a7039d05d9a06878ffe5936c8b",
-      "reason": "语义主档案尚未ready，禁止渲染或写入。",
-      "record_status": "pending"
+      "action": "update",
+      "content_hash": "9443a02754c56e794a5a64bc845ad2f339bc6d6c676acd3a4d52dab7cd573e2f",
+      "reason": "按已验收语义记录改造成分层学习卡。",
+      "record_status": "ready"
     },
     {
       "title": "基础词义｜约定俗成",
       "card_id": "mkjc_74ueHI5RI99w3BygGwLcByk0TGlL9.SJu1HJ.CanDmbBpn6qncXjyUzOac5TaoMi",
-      "action": "manual-review",
-      "content_hash": "bf2134d4fb90593389d7057ccb908259900fdcd1aa19c448fa53bb15fb7982bf",
-      "reason": "语义主档案尚未ready，禁止渲染或写入。",
-      "record_status": "pending"
+      "action": "update",
+      "content_hash": "fb95a7d135c776819336a0b78a501d78bafabcb6ae5f48403c1b343e17849cfa",
+      "reason": "按已验收语义记录改造成分层学习卡。",
+      "record_status": "ready"
     },
     {
       "title": "基础词义｜未成风气",
       "card_id": "mkjc_74ueHI5RI99w3BygGwLcB.EisUBohWUQ36PW.P2cnk33qx7QV134mfH_eZsduD78",
-      "action": "manual-review",
-      "content_hash": "e28a4d073326871a46ed3877251414e1f4702d7e5573d2f32c124cc9a49c7da0",
-      "reason": "语义主档案尚未ready，禁止渲染或写入。",
-      "record_status": "pending"
+      "action": "update",
+      "content_hash": "ade7f330bb7cefc7c2a4519b3d466e1d860cf99a999f272fa0ef3bb525e4db8f",
+      "reason": "按已验收语义记录改造成分层学习卡。",
+      "record_status": "ready"
     },
     {
       "title": "基础词义｜习以为常",
       "card_id": "mkjc_74ueHI5RI99w3BygGwLcB0pGRMAhxfzvIPRnMORJLuXwAfih800OhYUGvvPK4uMG",
-      "action": "manual-review",
-      "content_hash": "6bf4df6d1e95d44455aefd4397be74fbd37ed37f08827c12da2cbf9f1a24b413",
-      "reason": "语义主档案尚未ready，禁止渲染或写入。",
-      "record_status": "pending"
+      "action": "update",
+      "content_hash": "cee4c81f9bc040bb7691ef5d7cc834c20fb549c83fbcc9f8a4fd5ab0bb0b51d1",
+      "reason": "按已验收语义记录改造成分层学习卡。",
+      "record_status": "ready"
     },
     {
       "title": "基础词义｜心照不宣",
       "card_id": "mkjc_74ueHI5RI99w3BygGwLcB6eeMQ8lXObSNr9p_O6lqEeIEbgvRaJ4Yaqo43.5yZ_w",
-      "action": "manual-review",
-      "content_hash": "728564b987901948701b28644dd6b36519f41057e767ef8454938fa500b43fae",
-      "reason": "语义主档案尚未ready，禁止渲染或写入。",
-      "record_status": "pending"
+      "action": "update",
+      "content_hash": "df93163f2932b4288734547769b75cd5d29d0e4a81d6ffaff657ea5dc40fb240",
+      "reason": "按已验收语义记录改造成分层学习卡。",
+      "record_status": "ready"
     },
     {
       "title": "基础词义｜百花齐放",
       "card_id": "mkjc_74ueHI5RI99w3BygGwLcBxm.DACbm9Id_brU4Y11gN.dFNVFW52oA0mtfSgd56X1",
-      "action": "manual-review",
-      "content_hash": "03d2e84af9dbf59bd026724711579c29fa79b115dd529c4cf810ca491a9b9db7",
-      "reason": "语义主档案尚未ready，禁止渲染或写入。",
-      "record_status": "pending"
+      "action": "update",
+      "content_hash": "fc5fcebbcc226f85abb537f3df9fc5851cfe8349671fc7c66a37dc89d78791c3",
+      "reason": "按已验收语义记录改造成分层学习卡。",
+      "record_status": "ready"
     },
     {
       "title": "基础词义｜百家争鸣",
       "card_id": "mkjc_74ueHI5RI99w3BygGwLcB6HX8yp.Wstv9cAyCaAdpiG63PBEHLRTj9_HyXSwdbTh",
-      "action": "manual-review",
-      "content_hash": "4550422d645a801bca31837b140bd5313cdb1b3cee8cc8e50308d8c1559c30ac",
-      "reason": "语义主档案尚未ready，禁止渲染或写入。",
-      "record_status": "pending"
+      "action": "update",
+      "content_hash": "3c674ef135f18da390412ba84190c47cfcd01ab25a04080a3a40604a18c69afa",
+      "reason": "按已验收语义记录改造成分层学习卡。",
+      "record_status": "ready"
     },
     {
       "title": "基础词义｜包罗万象",
       "card_id": "mkjc_74ueHI5RI99w3BygGwLcB2u6tvXW8PylAW9fWQYQn7xnFqfYkj6yHnyfU2TNXsmu",
-      "action": "manual-review",
-      "content_hash": "71be06712d4331ca2a1ba401d0b79b6eb37b43174884648b370838c91408fc16",
-      "reason": "语义主档案尚未ready，禁止渲染或写入。",
-      "record_status": "pending"
+      "action": "update",
+      "content_hash": "87b77c7d31038b7963ffd27a7b477fe1cc18941a53c2c0f793c945733f17e49e",
+      "reason": "按已验收语义记录改造成分层学习卡。",
+      "record_status": "ready"
     },
     {
       "title": "基础词义｜完备",
       "card_id": "mkjc_7KMSmI4GrfgPIG8HHm8tkMS_GbqSe9xCu9NrQSLN6qbDOSsW.__GggcEARBwPEdc",
-      "action": "manual-review",
-      "content_hash": "9ef5a8688e1d44518a33ecce42e0ecd5123a8b98899a5dfb4f2e893fca97f4e2",
-      "reason": "语义主档案尚未ready，禁止渲染或写入。",
-      "record_status": "pending"
+      "action": "update",
+      "content_hash": "3102868388f603f43d3d64232cbaf02de8cfe1980c9ee1c67cbaa9c91a693a31",
+      "reason": "按已验收语义记录改造成分层学习卡。",
+      "record_status": "ready"
     },
     {
       "title": "基础词义｜完整",
       "card_id": "mkjc_7KMSmI4GrfgPIG8HHm8tkIeMu4uTUnc1Ajz5C_fNl88QIsG4CGFCSJq6Mu1_Dkyp",
-      "action": "manual-review",
-      "content_hash": "043de72c432c338811bdcea9e8994dd09c8be14f46b52e04a209c50b77076482",
-      "reason": "语义主档案尚未ready，禁止渲染或写入。",
-      "record_status": "pending"
+      "action": "update",
+      "content_hash": "b99ff7932b55c3d5171b9651f6e8401789d44542c00e7df1c2f6e2d296b0b01d",
+      "reason": "按已验收语义记录改造成分层学习卡。",
+      "record_status": "ready"
     },
     {
       "title": "基础词义｜完善",
       "card_id": "mkjc_7KMSmI4GrfgPIG8HHm8tkBxah0z73okiE8GDHp2R3SvAQsITK6CCpFdhJPy1dVEQ",
-      "action": "manual-review",
-      "content_hash": "312a53ad14788b2b1c56c723dc24b5c16871e4f76033928632bf2095ea682250",
-      "reason": "语义主档案尚未ready，禁止渲染或写入。",
-      "record_status": "pending"
+      "action": "update",
+      "content_hash": "8d5b49b96969a700cdd182b7599f195d0506baa47b04b05a4dbe78d2b628b363",
+      "reason": "按已验收语义记录改造成分层学习卡。",
+      "record_status": "ready"
     },
     {
       "title": "基础词义｜完全",
       "card_id": "mkjc_7KMSmI4GrfgPIG8HHm8tkFqrvxKrQxk84.DDQBdbxoR1xQpw.cYl0isBzDuA0Afd",
-      "action": "manual-review",
-      "content_hash": "c2b9eace668b950642d7e4b6ab76022687b00fa98f7b1d07dc0167d466ae69f6",
-      "reason": "语义主档案尚未ready，禁止渲染或写入。",
-      "record_status": "pending"
+      "action": "update",
+      "content_hash": "0a341a516566cd25356c9e4b63e4e2208bdcaf4216f0c3e4f476ae3c669133bd",
+      "reason": "按已验收语义记录改造成分层学习卡。",
+      "record_status": "ready"
     },
     {
       "title": "基础词义｜范式",
       "card_id": "mkjc_7KMSmI4GrfgPIG8HHm8tkBL7eXxCy7XEEGZ1AouoElsc1yqj3KhTGi9jiorxtriH",
-      "action": "manual-review",
-      "content_hash": "5404a7b43fc19b5c74e007f5f1d45e8bea055ff8c57a979dd9ae9a518038a31f",
-      "reason": "语义主档案尚未ready，禁止渲染或写入。",
-      "record_status": "pending"
+      "action": "update",
+      "content_hash": "421f87b90602d1ec3b80243dc6e63d12995245fffa4487c973e9d11d6c812d1b",
+      "reason": "按已验收语义记录改造成分层学习卡。",
+      "record_status": "ready"
     },
     {
       "title": "基础词义｜制作",
       "card_id": "mkjc_7KMSmI4GrfgPIG8HHm8tkF29FV76vmVfDo4I_vQZnoD0SPKmI6dzP5oM_4BbGpWT",
-      "action": "manual-review",
-      "content_hash": "103452e9bc105e6048f949b5c8d6f9e2bc9055dc33abd425c899d2f7668be60f",
-      "reason": "语义主档案尚未ready，禁止渲染或写入。",
-      "record_status": "pending"
+      "action": "update",
+      "content_hash": "2c9e6baeb9c5dca162ac82fcf3bd81274f4ca3aad6de54873dc183f1bf6fb936",
+      "reason": "按已验收语义记录改造成分层学习卡。",
+      "record_status": "ready"
     },
     {
       "title": "基础词义｜迎合",
       "card_id": "mkjc_7KMSmI4GrfgPIG8HHm8tkIeUiEiwsqR6KIXxE4gIFsZGBakChZ4qdxGsBHwKrity",
-      "action": "manual-review",
-      "content_hash": "f2d87f8e02bf80153ce1132dd3b08f27f07397ea358aaad59b6ee734a338f528",
-      "reason": "语义主档案尚未ready，禁止渲染或写入。",
-      "record_status": "pending"
+      "action": "update",
+      "content_hash": "3328dd3bb468915a602638e0c9fad2c7a3639bb97126e5e41705d912d32d05c8",
+      "reason": "按已验收语义记录改造成分层学习卡。",
+      "record_status": "ready"
     },
     {
       "title": "基础词义｜彰显",
       "card_id": "mkjc_7KMSmI4GrfgPIG8HHm8tkPiaxWoshn5bjJX1NTbFzvZkmOPNaE94ybRFB9dNQCax",
-      "action": "manual-review",
-      "content_hash": "22c59767da245012fd44cd692f4946dee4c3561226a6dce642af42cac46662b1",
-      "reason": "语义主档案尚未ready，禁止渲染或写入。",
-      "record_status": "pending"
+      "action": "update",
+      "content_hash": "7dfecb10865a0f02726b0777441aec6a23b3dcd85988561f4f5b0dd5ec538a27",
+      "reason": "按已验收语义记录改造成分层学习卡。",
+      "record_status": "ready"
     },
     {
       "title": "基础词义｜凸显",
       "card_id": "mkjc_pdG6pgF5lJAwGykdJWYkxHzEV6ZpxqCMOSfZ6D7m8_qEdkMLea7mDkccGO5CURO_",
-      "action": "manual-review",
-      "content_hash": "b70ca8f31e3d13f74f9424df7523bc5ba709b701077129afa88b0b008cb172b9",
-      "reason": "语义主档案尚未ready，禁止渲染或写入。",
-      "record_status": "pending"
+      "action": "update",
+      "content_hash": "40712eb30d261d6062f929bcbf1ecf9d1a1f3e7151e8a8aaf0f79323f8574ee6",
+      "reason": "按已验收语义记录改造成分层学习卡。",
+      "record_status": "ready"
     },
     {
       "title": "基础词义｜批驳",
       "card_id": "mkjc_pdG6pgF5lJAwGykdJWYkxMV3XIPMHVWlrYhtmiCJC52EgGufTCCoaDgT5lrNx3rX",
-      "action": "manual-review",
-      "content_hash": "476b3613e8bfcee218e12d620226530f549df2368e1d61b1fee190ebefe86e28",
-      "reason": "语义主档案尚未ready，禁止渲染或写入。",
-      "record_status": "pending"
+      "action": "update",
+      "content_hash": "a4d2baeb51cacd1e9b74d0a8767d552af7bad32f109f6cdadf81234c098004ce",
+      "reason": "按已验收语义记录改造成分层学习卡。",
+      "record_status": "ready"
     },
     {
       "title": "基础词义｜对抗",
       "card_id": "mkjc_pdG6pgF5lJAwGykdJWYkxCtknGg5quYG2nY3Qm2n.BRlPbTZe7mfe1K5NJXoF7_w",
-      "action": "manual-review",
-      "content_hash": "23a3fb726678283f651c49aba320ab4f36674714d9c0d7afbfd7030684dc5881",
-      "reason": "语义主档案尚未ready，禁止渲染或写入。",
-      "record_status": "pending"
+      "action": "update",
+      "content_hash": "baa23f00a3082997880e474999fe0d7a8878018117ecd38c0092b7c7675d5e1e",
+      "reason": "按已验收语义记录改造成分层学习卡。",
+      "record_status": "ready"
     },
     {
       "title": "基础词义｜抵制",
       "card_id": "mkjc_pdG6pgF5lJAwGykdJWYkxLQ2gpz7_bncCjuObdGozeRc_iumXaqu3rZCyGWRSgdw",
-      "action": "manual-review",
-      "content_hash": "e93acaf341af7cc4f8bd4f1daa7be7704be694c97bb6943d2c0d8ed21a658efd",
-      "reason": "语义主档案尚未ready，禁止渲染或写入。",
-      "record_status": "pending"
+      "action": "update",
+      "content_hash": "99a97795ea5f11ccb543f008780e07cceb4cf69571bfd06c1c735674f6a0c89f",
+      "reason": "按已验收语义记录改造成分层学习卡。",
+      "record_status": "ready"
     },
     {
       "title": "基础词义｜拆穿",
       "card_id": "mkjc_pdG6pgF5lJAwGykdJWYkxGu3tVIGOdPxlPHMnflmK8zvkNZg0FDV501Mn9wtu9EA",
-      "action": "manual-review",
-      "content_hash": "26de9c770650c34f6afb5e885537ad97e3acfb53685c22ee09b6aae717bc457e",
-      "reason": "语义主档案尚未ready，禁止渲染或写入。",
-      "record_status": "pending"
+      "action": "update",
+      "content_hash": "d5a7c61e502bef0049804c318a070b797cbeb32b3578cb6d70bab1ff5839eadb",
+      "reason": "按已验收语义记录改造成分层学习卡。",
+      "record_status": "ready"
     },
     {
       "title": "基础词义｜回应",
       "card_id": "mkjc_pdG6pgF5lJAwGykdJWYkxI.RhSWa7cW2def9SJQ9pSjcV1F8GayLjuBm_d.ytmAp",
-      "action": "manual-review",
-      "content_hash": "06eff834c4684cad74642c0971fade9f55d844f39783c053ebfe46b23d5403a4",
-      "reason": "语义主档案尚未ready，禁止渲染或写入。",
-      "record_status": "pending"
+      "action": "update",
+      "content_hash": "d1daa2fb87daa674c9b600dd934a410784b832376adc2d5a5dd7ebf813eac3fc",
+      "reason": "按已验收语义记录改造成分层学习卡。",
+      "record_status": "ready"
     },
     {
       "title": "基础词义｜呼应",
       "card_id": "mkjc_pdG6pgF5lJAwGykdJWYkxPlOtk877pmIYnXk2ntik6pw5UdyRW4LtOjpI3vu0a88",
-      "action": "manual-review",
-      "content_hash": "6e840baea27d81618fe861fbc083ba27f2565952763af4465c4068137fc4c2ef",
-      "reason": "语义主档案尚未ready，禁止渲染或写入。",
-      "record_status": "pending"
+      "action": "update",
+      "content_hash": "a440c18e0124b77e46f699949781ddd42561870dece79d0dfa95db8d7a549001",
+      "reason": "按已验收语义记录改造成分层学习卡。",
+      "record_status": "ready"
     },
     {
       "title": "基础词义｜响应",
       "card_id": "mkjc_pdG6pgF5lJAwGykdJWYkxD1OlnYKC7pIDKjiXH1usNMSp6Uxv.ZfSBIGe48_S4Wb",
-      "action": "manual-review",
-      "content_hash": "9b4b27acdd9cd4181357b7eebc2b743d01f46b1e9affcef4d60016fe3869e707",
-      "reason": "语义主档案尚未ready，禁止渲染或写入。",
-      "record_status": "pending"
+      "action": "update",
+      "content_hash": "7f20998e0276c1805df450f2e01994d1a237710014e0990d7e15ea7898b2f3cc",
+      "reason": "按已验收语义记录改造成分层学习卡。",
+      "record_status": "ready"
     },
     {
       "title": "基础词义｜反应",
       "card_id": "mkjc_pdG6pgF5lJAwGykdJWYkxEqI8ZStmG.QBaG.AnvrJc6EdxxQuDWHbJ14x_nbU3YS",
-      "action": "manual-review",
-      "content_hash": "6e274cc2d4f336f291954f683cdd7aa1b8cd7c5e49c3adc908c3609e838a933b",
-      "reason": "语义主档案尚未ready，禁止渲染或写入。",
-      "record_status": "pending"
+      "action": "update",
+      "content_hash": "80696cfe2a3cbc33be6e3c965a7ac5392defe76bb498be9a815c30851df2d8d1",
+      "reason": "按已验收语义记录改造成分层学习卡。",
+      "record_status": "ready"
     },
     {
       "title": "基础词义｜刻舟求剑",
       "card_id": "mkjc_CEglhy2QnFcXCTmirrfz26Lt_.1JeMoCvVO_dd.XN_mYr7LBUO_SuH8AlSoi2OI8",
-      "action": "manual-review",
-      "content_hash": "befa5a5bec2021d8c96f5edd2c50c5780aaf65ab67eb63b3bb7bf228643bcd54",
-      "reason": "语义主档案尚未ready，禁止渲染或写入。",
-      "record_status": "pending"
+      "action": "update",
+      "content_hash": "0f79443ddad7eb632680f4a6786fa43c1a72d4eacedbed603cc921f5a871906c",
+      "reason": "按已验收语义记录改造成分层学习卡。",
+      "record_status": "ready"
     },
     {
       "title": "基础词义｜守株待兔",
       "card_id": "mkjc_CEglhy2QnFcXCTmirrfz22GPOPeSahtz_sGUIU_icD8vJbxxKy_py9evt2L.cBSP",
-      "action": "manual-review",
-      "content_hash": "6e987217130e573a24607d41e9eeef89000e665f8bb5b1b00cebc239432d74d1",
-      "reason": "语义主档案尚未ready，禁止渲染或写入。",
-      "record_status": "pending"
+      "action": "update",
+      "content_hash": "0a8c28235a4260ae842644b28efa876e50b94a0e7dd8ee610a0b9ae5621d02f2",
+      "reason": "按已验收语义记录改造成分层学习卡。",
+      "record_status": "ready"
     },
     {
       "title": "基础词义｜善作善成",
       "card_id": "mkjc_CEglhy2QnFcXCTmirrfz20CPqVBWCBIB09nmeK1jYjrlkrI2wyuDukooqc3XjbM5",
-      "action": "manual-review",
-      "content_hash": "887fa22052d3764629fd22fbd698fb6e013072274236a8712a700e894c71b58e",
-      "reason": "语义主档案尚未ready，禁止渲染或写入。",
-      "record_status": "pending"
+      "action": "update",
+      "content_hash": "ff867df344cd058f4cd288ada3172a98346eee5776c1d4949c634f38a29e4c4c",
+      "reason": "按已验收语义记录改造成分层学习卡。",
+      "record_status": "ready"
     },
     {
       "title": "基础词义｜坐以待毙",
       "card_id": "mkjc_CEglhy2QnFcXCTmirrfz26QYgSpRAmhKHxfCTi9x2tYKUyUSlZojpwOBbm2NbVwB",
-      "action": "manual-review",
-      "content_hash": "11ad295c7e6b4b4d305fd4cee9163476f6471ee8ff5321f510be1c7ca439e910",
-      "reason": "语义主档案尚未ready，禁止渲染或写入。",
-      "record_status": "pending"
+      "action": "update",
+      "content_hash": "37855c87f30bfa7360fdff97cac1b68fce2d52fcc7b557db99546b23bb08bf8f",
+      "reason": "按已验收语义记录改造成分层学习卡。",
+      "record_status": "ready"
     },
     {
       "title": "基础词义｜熟视无睹",
       "card_id": "mkjc_CEglhy2QnFcXCTmirrfz2xl5SUgmEN1xsmIhrz68DAM04RNlFREHE3tr7kOtjB1Y",
-      "action": "manual-review",
-      "content_hash": "fd69b0855b6f0409454f8d32ead077ac9ef681d0370e4182f3eb2d6e7c70f1e1",
-      "reason": "语义主档案尚未ready，禁止渲染或写入。",
-      "record_status": "pending"
+      "action": "update",
+      "content_hash": "08872f687fe1dbe06ae3297b473863be54dfc2833763312bf0bcc271f35ba605",
+      "reason": "按已验收语义记录改造成分层学习卡。",
+      "record_status": "ready"
     },
     {
       "title": "基础词义｜视而不见",
       "card_id": "mkjc_CEglhy2QnFcXCTmirrfz2_CgromkfKcYOnfwyw8gtP_UFfKlFbM21HjSNAhAoVxr",
-      "action": "manual-review",
-      "content_hash": "c2c79e590d4dc61ecf6ec669fd8901f85502dea4ebe4e4113b80fd93005dbf8b",
-      "reason": "语义主档案尚未ready，禁止渲染或写入。",
-      "record_status": "pending"
+      "action": "update",
+      "content_hash": "f9ceff182a36e1ee1abb90cf80222d7eaa702b7f89b2efbeecc13e8cf95604e1",
+      "reason": "按已验收语义记录改造成分层学习卡。",
+      "record_status": "ready"
     },
     {
       "title": "基础词义｜虚张声势",
       "card_id": "mkjc_CEglhy2QnFcXCTmirrfz2.ArzCkJtMSwqAeLPLN0Qe4isq03w05RV7MT2jKkWhWM",
-      "action": "manual-review",
-      "content_hash": "e093f5ea119c09b3e6bebae6cdfef0fbea9e5c7bf38fffa2cac6e8bab5dbd45c",
-      "reason": "语义主档案尚未ready，禁止渲染或写入。",
-      "record_status": "pending"
+      "action": "update",
+      "content_hash": "92b575e751c1fbe21004e62ebaf8a321f16eb482ca4ffb0b1fe38c3c22a86496",
+      "reason": "按已验收语义记录改造成分层学习卡。",
+      "record_status": "ready"
     },
     {
       "title": "基础词义｜危言耸听",
       "card_id": "mkjc_gGUorZjJBpLzLWKIYIx_toHsQS8yuuJIgFUXfx1xC2KmWF7jJVybbeApycdgnQm9",
-      "action": "manual-review",
-      "content_hash": "8c50f4d4838c607e3f9df1d2e8fb1cea8904628ed541fef9f620b2b1db0b6e2b",
-      "reason": "语义主档案尚未ready，禁止渲染或写入。",
-      "record_status": "pending"
+      "action": "update",
+      "content_hash": "f138d96abeff335a9f0bcda38885ed196086a1cf91191625379383452b18584b",
+      "reason": "按已验收语义记录改造成分层学习卡。",
+      "record_status": "ready"
     },
     {
       "title": "基础词义｜耸人听闻",
       "card_id": "mkjc_gGUorZjJBpLzLWKIYIx_tnIaR9O9ObXvlZE21vuFuxg6t6.ggGQR8jgg.4Vyo1sU",
-      "action": "manual-review",
-      "content_hash": "747596e6a76a37a4c63707d65f57ea902b6877a3b826658558fda88f35f0c0eb",
-      "reason": "语义主档案尚未ready，禁止渲染或写入。",
-      "record_status": "pending"
+      "action": "update",
+      "content_hash": "ebd0ae210de7fd36e442d53650876572de19fc10f9203b5fb88e521f5102ef81",
+      "reason": "按已验收语义记录改造成分层学习卡。",
+      "record_status": "ready"
     },
     {
       "title": "基础词义｜骇人听闻",
       "card_id": "mkjc_gGUorZjJBpLzLWKIYIx_tut45cI5T9s_7bQ_pfslyGKP82Njdj78NxP4XLPMzPGl",
-      "action": "manual-review",
-      "content_hash": "aa91fd2fe3c529f7912ed841e3f426b56966ea3d0e79e2edeabc44aebf267074",
-      "reason": "语义主档案尚未ready，禁止渲染或写入。",
-      "record_status": "pending"
+      "action": "update",
+      "content_hash": "3de17c7ecff0366369a273b84d08a2e2ed0522ff30e09dbbae78f70329bc92bf",
+      "reason": "按已验收语义记录改造成分层学习卡。",
+      "record_status": "ready"
     },
     {
       "title": "基础词义｜空穴来风",
@@ -2007,106 +2007,106 @@
     {
       "title": "基础词义｜醍醐灌顶",
       "card_id": "mkjc_gGUorZjJBpLzLWKIYIx_tlX0CzTk_uyQRsp1ON4meAhqev.uLuZDap5i3TmhT3je",
-      "action": "manual-review",
-      "content_hash": "1438c15b93195c51d2c229d0dfda2286bd16447c07ef097a4ffc8de175a8168f",
-      "reason": "语义主档案尚未ready，禁止渲染或写入。",
-      "record_status": "pending"
+      "action": "update",
+      "content_hash": "82d2b9f3c852d5adb82ce430f588731fa36fd9ea61c2e1645b000e6096b8678f",
+      "reason": "按已验收语义记录改造成分层学习卡。",
+      "record_status": "ready"
     },
     {
       "title": "基础词义｜振聋发聩",
       "card_id": "mkjc_gGUorZjJBpLzLWKIYIx_tng0zBbTAxMCJwcSapZSQy_d0wTcHESFbuvxBpTVN2i_",
-      "action": "manual-review",
-      "content_hash": "db3721677b11bf2c272b9d0e401c8563687f852080753ab512dbb16868ee3b98",
-      "reason": "语义主档案尚未ready，禁止渲染或写入。",
-      "record_status": "pending"
+      "action": "update",
+      "content_hash": "1bbe469e12050ae65a885f86ae5844805601edd38d9c090113e10d759a049f38",
+      "reason": "按已验收语义记录改造成分层学习卡。",
+      "record_status": "ready"
     },
     {
       "title": "基础词义｜警钟长鸣",
       "card_id": "mkjc_gGUorZjJBpLzLWKIYIx_triVkV7lLYrSXVHIbbtzD5sYs5K94YwHCWgWh3j3qCZn",
-      "action": "manual-review",
-      "content_hash": "b565b3cc23306142d078c89e0a38a22f293f2c83cc19144568c67fa76669a095",
-      "reason": "语义主档案尚未ready，禁止渲染或写入。",
-      "record_status": "pending"
+      "action": "update",
+      "content_hash": "1857e3b7b1aa18f8cc1ad664853d8752ec291084adba052c0fd4763d8bb1d532",
+      "reason": "按已验收语义记录改造成分层学习卡。",
+      "record_status": "ready"
     },
     {
       "title": "基础词义｜事半功倍",
       "card_id": "mkjc_gGUorZjJBpLzLWKIYIx_tj1xuscV2ppXxWaWQXGNgLzCHOkKacjKB1IE7gDCMWt4",
-      "action": "manual-review",
-      "content_hash": "98850931684a9d26a2dd2f7a51e64290bebe2f060e104f92f0b35028c63091bd",
-      "reason": "语义主档案尚未ready，禁止渲染或写入。",
-      "record_status": "pending"
+      "action": "update",
+      "content_hash": "7a712be46f840b261ec1158421da981a938eb9922e85a1ea162ff777ced26096",
+      "reason": "按已验收语义记录改造成分层学习卡。",
+      "record_status": "ready"
     },
     {
       "title": "基础词义｜事倍功半",
       "card_id": "mkjc_gGUorZjJBpLzLWKIYIx_tqHiUyclp3yo5MC4Z6JnDERehQHEGZNf4OYUizIR2Q9U",
-      "action": "manual-review",
-      "content_hash": "434c4335777ad8ea0d4dd7baba07055ca3e0a72104453d1d916d1725a1b96cf4",
-      "reason": "语义主档案尚未ready，禁止渲染或写入。",
-      "record_status": "pending"
+      "action": "update",
+      "content_hash": "72bedf38a2fa74c24b284aed0c00b8f3001220d3dcd6a29b343d8fe8fceae0e1",
+      "reason": "按已验收语义记录改造成分层学习卡。",
+      "record_status": "ready"
     },
     {
       "title": "基础词义｜无功而返",
       "card_id": "mkjc_dmb7.uS1nXYE_ZLKfJKP7R7jOqopP4z1EFXHo98zXbcMwXfI6Tb8CrrW00qtByrc",
-      "action": "manual-review",
-      "content_hash": "a80cae5ac6e46a323ed546330d2dd781f9009475d6d6221434483402afeb4146",
-      "reason": "语义主档案尚未ready，禁止渲染或写入。",
-      "record_status": "pending"
+      "action": "update",
+      "content_hash": "e6d4af952a2c2b1687657947703785b6dad55a8080fbee63ffe0bc4c51641ae8",
+      "reason": "按已验收语义记录改造成分层学习卡。",
+      "record_status": "ready"
     },
     {
       "title": "基础词义｜误入歧途",
       "card_id": "mkjc_dmb7.uS1nXYE_ZLKfJKP7V5U7tKjkEiVyC8h6qBCn0FImrZjkUjKx0PXc1KBD5dO",
-      "action": "manual-review",
-      "content_hash": "f7bfb69d37fa3abe5df40516dcd138dc57b2d8dbd648e8bf44e169306bf758ae",
-      "reason": "语义主档案尚未ready，禁止渲染或写入。",
-      "record_status": "pending"
+      "action": "update",
+      "content_hash": "1a046e434b3fd4c0c21472b47e2f0fdf2212f5b38ae3be075e7c7790e2af7d3d",
+      "reason": "按已验收语义记录改造成分层学习卡。",
+      "record_status": "ready"
     },
     {
       "title": "基础词义｜因势利导",
       "card_id": "mkjc_dmb7.uS1nXYE_ZLKfJKP7W2xz9jHXYjK4S647yJNm_i6km.JFEKzzYdplYgaflqC",
-      "action": "manual-review",
-      "content_hash": "229a4409f1fb0a1d0c99fd78662cd46fa7accad225d6d212399782374493cde4",
-      "reason": "语义主档案尚未ready，禁止渲染或写入。",
-      "record_status": "pending"
+      "action": "update",
+      "content_hash": "000ec2bb45a597d519cde5aede66df1e4f7e2ad3084c5ed4abd3d2efd47d86ca",
+      "reason": "按已验收语义记录改造成分层学习卡。",
+      "record_status": "ready"
     },
     {
       "title": "基础词义｜因地制宜",
       "card_id": "mkjc_dmb7.uS1nXYE_ZLKfJKP7eqsuAqcH5ZXqgmPGCXTVcSXzzGdpF3iohKV4ejNj5g2",
-      "action": "manual-review",
-      "content_hash": "0dab3cbde4f2efc870fdeb099cccbfd75f9284060c685ef9a3ad069ffba6a17f",
-      "reason": "语义主档案尚未ready，禁止渲染或写入。",
-      "record_status": "pending"
+      "action": "update",
+      "content_hash": "f3d03a061592f4b4338ec993457a68ca2feddad94ffdabbfc8c347b7fca41cb1",
+      "reason": "按已验收语义记录改造成分层学习卡。",
+      "record_status": "ready"
     },
     {
       "title": "基础词义｜因人而异",
       "card_id": "mkjc_dmb7.uS1nXYE_ZLKfJKP7amVFj5YIkb7uDY2DssBWJ8w1i1vRIRkK3zzmmWDI82a",
-      "action": "manual-review",
-      "content_hash": "aac46e87ce8f02a514857d8f54370d3ee7cd63f62aaa6f3c5684003376d690b6",
-      "reason": "语义主档案尚未ready，禁止渲染或写入。",
-      "record_status": "pending"
+      "action": "update",
+      "content_hash": "7f40338d1b4e3133cd144c18e9f9665e2e564f5000ae3e4986dd7924f2dc834f",
+      "reason": "按已验收语义记录改造成分层学习卡。",
+      "record_status": "ready"
     },
     {
       "title": "基础词义｜有的放矢",
       "card_id": "mkjc_dmb7.uS1nXYE_ZLKfJKP7bBHaR2GlZMR9Eq6tGkvw5Uu41UTFmlqBi2nfX697YmI",
-      "action": "manual-review",
-      "content_hash": "e425aeca4656e0e13884aeee51c724d333ad80ffbb8abb8cdb6c0b37fd5cc14d",
-      "reason": "语义主档案尚未ready，禁止渲染或写入。",
-      "record_status": "pending"
+      "action": "update",
+      "content_hash": "5940b5f344d40ad88d7b10cf6776610d5e73a8ead5c345bcebfcb337d4abf8a6",
+      "reason": "按已验收语义记录改造成分层学习卡。",
+      "record_status": "ready"
     },
     {
       "title": "基础词义｜南辕北辙",
       "card_id": "mkjc_dmb7.uS1nXYE_ZLKfJKP7cW0ytxpM95kCKcaKHJ2xd5ZGEi4leTW1OYoon9Tr1c8",
-      "action": "manual-review",
-      "content_hash": "23c79a60da7dd5c306850173272c7847d23f5a9f8703909b6b54650ece4bb62a",
-      "reason": "语义主档案尚未ready，禁止渲染或写入。",
-      "record_status": "pending"
+      "action": "update",
+      "content_hash": "dbbc740a4733fa7b3794a0f44c69242bfe43a74ecc0c3851672d5624dab34b3d",
+      "reason": "按已验收语义记录改造成分层学习卡。",
+      "record_status": "ready"
     },
     {
       "title": "基础词义｜适得其反",
       "card_id": "mkjc_dmb7.uS1nXYE_ZLKfJKP7WZTDnFO8fdNZClRrUKGsYWOxNATvcX3YcAQz1wr3TNN",
-      "action": "manual-review",
-      "content_hash": "047bb345b258ead71b9cab3bf753f38f66c9263aef76d39fda1a98c1cfe06000",
-      "reason": "语义主档案尚未ready，禁止渲染或写入。",
-      "record_status": "pending"
+      "action": "update",
+      "content_hash": "5b4eaa62249558b06c13682d5679852fb45afcc2ca98dc9cb77d661b6a62c078",
+      "reason": "按已验收语义记录改造成分层学习卡。",
+      "record_status": "ready"
     },
     {
       "title": "基础词义｜大而化之",
@@ -2127,450 +2127,450 @@
     {
       "title": "基础词义｜坐而论道",
       "card_id": "mkjc_cj4lpnBM3WNTuHCyCuNxI4JcvuyX2gWta2C3W6iwYM.QIj_aVO8nn3tJISDoS2vS",
-      "action": "manual-review",
-      "content_hash": "f1e40e47fc18411337e043400aade7d0ee04a67c00055ddc76c55aface9a6760",
-      "reason": "语义主档案尚未ready，禁止渲染或写入。",
-      "record_status": "pending"
+      "action": "update",
+      "content_hash": "49f899f726b34153fccd1685fa4bb899fe3e31011536888e741b33169bbf4e40",
+      "reason": "按已验收语义记录改造成分层学习卡。",
+      "record_status": "ready"
     },
     {
       "title": "基础词义｜起而行之",
       "card_id": "mkjc_cj4lpnBM3WNTuHCyCuNxI7mxsEAEB9lxYLmJ5gduyfohx7ksfUhUc6iebPrwFWsF",
-      "action": "manual-review",
-      "content_hash": "4e447feb67b4118d5503557d8cb1bd9d4a4079ae114d3410663519e722ff2d46",
-      "reason": "语义主档案尚未ready，禁止渲染或写入。",
-      "record_status": "pending"
+      "action": "update",
+      "content_hash": "10c3b2b85579e08c592103da9c0a2d2e50574e0aebeda213fbfd863b39fb5fa0",
+      "reason": "按已验收语义记录改造成分层学习卡。",
+      "record_status": "ready"
     },
     {
       "title": "基础词义｜纸上谈兵",
       "card_id": "mkjc_cj4lpnBM3WNTuHCyCuNxI49xBk08ZUNGFV7syqSHtAIc7CPYlbZRalUVlISFDupE",
-      "action": "manual-review",
-      "content_hash": "b654f07329e757977a1f99e9b8075c16749e1f9e22076d2164c5c84909c1af7c",
-      "reason": "语义主档案尚未ready，禁止渲染或写入。",
-      "record_status": "pending"
+      "action": "update",
+      "content_hash": "dfc8c424b5fd3f533000774ab3f94e933524c86a4592afc05f579195a5448088",
+      "reason": "按已验收语义记录改造成分层学习卡。",
+      "record_status": "ready"
     },
     {
       "title": "基础词义｜条分缕析",
       "card_id": "mkjc_cj4lpnBM3WNTuHCyCuNxIxiGy_2x4UulIgUmkteIyBcihm9.x.Vc7ay0E_qnpU3j",
-      "action": "manual-review",
-      "content_hash": "144645a3149b64850d8f040518957ac51572c7b9e8654dad5397c2a24611dd0e",
-      "reason": "语义主档案尚未ready，禁止渲染或写入。",
-      "record_status": "pending"
+      "action": "update",
+      "content_hash": "80cb9f72f429c864c20675466f994519b46f277a790ee1a593ce8342445668e6",
+      "reason": "按已验收语义记录改造成分层学习卡。",
+      "record_status": "ready"
     },
     {
       "title": "基础词义｜聚沙成塔",
       "card_id": "mkjc_cj4lpnBM3WNTuHCyCuNxI0GhtB6KjBZP_AwjuuZbSv_3.W4fB5NiCjBBz7u41_0X",
-      "action": "manual-review",
-      "content_hash": "eedf1797e7adab8e61e55db19554bffc201616db79e40889b60cb004d7bd0446",
-      "reason": "语义主档案尚未ready，禁止渲染或写入。",
-      "record_status": "pending"
+      "action": "update",
+      "content_hash": "c06c6548077d208d87b19f913cfbe2eff0d481212dc0ea584da10bdc8256a9a3",
+      "reason": "按已验收语义记录改造成分层学习卡。",
+      "record_status": "ready"
     },
     {
       "title": "基础词义｜集腋成裘",
       "card_id": "mkjc_cj4lpnBM3WNTuHCyCuNxI_.esNNSxVJHuwyrZVMfpBtgAhxdMNH3tyJuzzayqxyq",
-      "action": "manual-review",
-      "content_hash": "2e122ff6161b72f3269b711514608588bcafd1959f5b4ddefdf68a0c9f8d8a1e",
-      "reason": "语义主档案尚未ready，禁止渲染或写入。",
-      "record_status": "pending"
+      "action": "update",
+      "content_hash": "185c8a0929fe2e22eda9b152ca8274d7c1604f52e0aca8002c82c12909e8b7ff",
+      "reason": "按已验收语义记录改造成分层学习卡。",
+      "record_status": "ready"
     },
     {
       "title": "基础词义｜卷帙浩繁",
       "card_id": "mkjc_f8fjbuWWOMNyByWxDcJxqTIyZATtSzOZM7lDVcPjblLhSauhkP7I5nUS_Qgk3P7Z",
-      "action": "manual-review",
-      "content_hash": "62093534d2c5a8383438ac7c0f7a878420d18cccf38b9e9984e1efb2f876efb8",
-      "reason": "语义主档案尚未ready，禁止渲染或写入。",
-      "record_status": "pending"
+      "action": "update",
+      "content_hash": "9a368bf8d242015b46889d6aba80df788f5a077e1d8d04dca5770951a7250810",
+      "reason": "按已验收语义记录改造成分层学习卡。",
+      "record_status": "ready"
     },
     {
       "title": "基础词义｜偏听偏信",
       "card_id": "mkjc_f8fjbuWWOMNyByWxDcJxqYb7gxCF4J9oxdxoS_5MuH9Di5osaj8pwmL55DunZ7hD",
-      "action": "manual-review",
-      "content_hash": "d3426383c9c310d8ac13824243302e33c922cd13536a6c6622e2adc43b94c2cc",
-      "reason": "语义主档案尚未ready，禁止渲染或写入。",
-      "record_status": "pending"
+      "action": "update",
+      "content_hash": "7dc17a146e7499aa41c087ac1ff1eaebb29406180ff4867b02342afbdbe052dc",
+      "reason": "按已验收语义记录改造成分层学习卡。",
+      "record_status": "ready"
     },
     {
       "title": "基础词义｜亦步亦趋",
       "card_id": "mkjc_f8fjbuWWOMNyByWxDcJxqZIdGeprSANhtFa4ZTnJY7nDy6oCBxLqlDDX4OoFjPLt",
-      "action": "manual-review",
-      "content_hash": "b6b490f503d8c290019bf460def5febdc5b00d9f076c9db2c48440e4c65bcf54",
-      "reason": "语义主档案尚未ready，禁止渲染或写入。",
-      "record_status": "pending"
+      "action": "update",
+      "content_hash": "0c32266cb9e281c892d3504935f2a1385adae51e93383a7d2783919a29057ad9",
+      "reason": "按已验收语义记录改造成分层学习卡。",
+      "record_status": "ready"
     },
     {
       "title": "基础词义｜人云亦云",
       "card_id": "mkjc_f8fjbuWWOMNyByWxDcJxqZa4084pv4YAgOucpr03XzJ1E3SxXJ5Q2ltiUjlABhhv",
-      "action": "manual-review",
-      "content_hash": "703c1026f224a0962c9957d138de066e90ac8fe87b26faa5d4b7362ac8ea723d",
-      "reason": "语义主档案尚未ready，禁止渲染或写入。",
-      "record_status": "pending"
+      "action": "update",
+      "content_hash": "6a9969e3101d594c4f70b034d873b7e6cdf25c1efe2821cd7a43a08c70c854e4",
+      "reason": "按已验收语义记录改造成分层学习卡。",
+      "record_status": "ready"
     },
     {
       "title": "基础词义｜盲从",
       "card_id": "mkjc_f8fjbuWWOMNyByWxDcJxqek48GJYeJTqN5adOrtKPt_Z9zzg0ZJx._D4pvhmqeTD",
-      "action": "manual-review",
-      "content_hash": "fb1df997d468754aceefcb56ebd74cd4b60e7d72b4e02b020437489d947143b7",
-      "reason": "语义主档案尚未ready，禁止渲染或写入。",
-      "record_status": "pending"
+      "action": "update",
+      "content_hash": "56a844b1cd8277cdc85eb81cba03bdc7dc9da6f4dda99f15901694bba2f5476b",
+      "reason": "按已验收语义记录改造成分层学习卡。",
+      "record_status": "ready"
     },
     {
       "title": "基础词义｜盲信",
       "card_id": "mkjc_f8fjbuWWOMNyByWxDcJxqcJfOK9y5elCY19DglyArVKmQ8ZpzsbpYVlopXOQZ9XQ",
-      "action": "manual-review",
-      "content_hash": "5d37675f232f5ed73d90154e178fbb436df2225ddc0758e78a8739c163bfcebe",
-      "reason": "语义主档案尚未ready，禁止渲染或写入。",
-      "record_status": "pending"
+      "action": "update",
+      "content_hash": "44d5e01f1c3c8f2b6cdec31792f35833ffcaf5d9254563d36b02828c14437ce6",
+      "reason": "按已验收语义记录改造成分层学习卡。",
+      "record_status": "ready"
     },
     {
       "title": "基础词义｜标本兼治",
       "card_id": "mkjc_f8fjbuWWOMNyByWxDcJxqaPdENcGlSIY_2zwJNqNhMpfAA2e7LhX9J7miE1Qgi5J",
-      "action": "manual-review",
-      "content_hash": "88aa4698e5be2c921125763be6155b08cbf63f30456c9217b370c2a89059b073",
-      "reason": "语义主档案尚未ready，禁止渲染或写入。",
-      "record_status": "pending"
+      "action": "update",
+      "content_hash": "3fa48f99e05e2d46dcb0f07d1fe761d032179616a61dd185dc91d7d2f977e6af",
+      "reason": "按已验收语义记录改造成分层学习卡。",
+      "record_status": "ready"
     },
     {
       "title": "基础词义｜立竿见影",
       "card_id": "mkjc_77v0fAJGtLdAD0SvP4Gu2WHpwW.2ViEv2v5ILRsOPWZ_DR6SJKB9hqkI7yZfFLkY",
-      "action": "manual-review",
-      "content_hash": "40c51376b736a50a3b20a4b726f07e7fdf8f7f5f5a80bbebff0ab30b84717d1d",
-      "reason": "语义主档案尚未ready，禁止渲染或写入。",
-      "record_status": "pending"
+      "action": "update",
+      "content_hash": "4c802671fb571686ca08d799f6a49ff521285dcfa67dad98fa4cec428595a63b",
+      "reason": "按已验收语义记录改造成分层学习卡。",
+      "record_status": "ready"
     },
     {
       "title": "基础词义｜高屋建瓴",
       "card_id": "mkjc_77v0fAJGtLdAD0SvP4Gu2cLZVDaL10u_jzEudR.vfZqjK2ezFyPYZxhN3ZDSh7DR",
-      "action": "manual-review",
-      "content_hash": "efd3ec7203d8e57c06f7ab05214e531b6849c6e7376c0f3c45fdc2f84e90b9ae",
-      "reason": "语义主档案尚未ready，禁止渲染或写入。",
-      "record_status": "pending"
+      "action": "update",
+      "content_hash": "ac52840480db61cd582f5484bab77415ed2f4fea3c91bf619d02a808d077bd22",
+      "reason": "按已验收语义记录改造成分层学习卡。",
+      "record_status": "ready"
     },
     {
       "title": "基础词义｜纲举目张",
       "card_id": "mkjc_77v0fAJGtLdAD0SvP4Gu2aTJ7dkA8kVgygcghp48xx3Hh7ozo6T5Q_TdPL4NLfnN",
-      "action": "manual-review",
-      "content_hash": "f9934392cf40e8d3532c2d96137477657c305a889252942d2f795dbad40e4893",
-      "reason": "语义主档案尚未ready，禁止渲染或写入。",
-      "record_status": "pending"
+      "action": "update",
+      "content_hash": "6a2901f483b35ab10dcfc0199ae3368d4960f565bd42fdc3482647ec2bb6eab0",
+      "reason": "按已验收语义记录改造成分层学习卡。",
+      "record_status": "ready"
     },
     {
       "title": "基础词义｜抓住牛鼻子",
       "card_id": "mkjc_77v0fAJGtLdAD0SvP4Gu2WV9j9LD31g3uY0hyIDg9rTVnWTa9vPwmf1pyRK5UM2_",
-      "action": "manual-review",
-      "content_hash": "a4d169e87e317bf6635fc0d5498ece69ca7f665283eaf59939b4723fccc43788",
-      "reason": "语义主档案尚未ready，禁止渲染或写入。",
-      "record_status": "pending"
+      "action": "update",
+      "content_hash": "c3fdb07d431231fb72910715910a0e6e29a323939f945284dfa9253baea2ccc9",
+      "reason": "按已验收语义记录改造成分层学习卡。",
+      "record_status": "ready"
     },
     {
       "title": "基础词义｜游刃有余",
       "card_id": "mkjc_77v0fAJGtLdAD0SvP4Gu2fp0CbePziMwO05jT3Wh9oRZP3QcM7qABG.aTaW7exuC",
-      "action": "manual-review",
-      "content_hash": "dbe4fffb8253a8c573c7916ef056ce1bbbe89208c53eeff8fa0f025e7cec40e9",
-      "reason": "语义主档案尚未ready，禁止渲染或写入。",
-      "record_status": "pending"
+      "action": "update",
+      "content_hash": "c2ff85807e60b412840a7b77b7d1bf6e99e80231332785c127cb6b1c14638964",
+      "reason": "按已验收语义记录改造成分层学习卡。",
+      "record_status": "ready"
     },
     {
       "title": "基础词义｜举足轻重",
       "card_id": "mkjc_77v0fAJGtLdAD0SvP4Gu2XzAOJ7_LegHg.Bymlr4PUP8d6QGDzVyHW2Z4JZJ0vXl",
-      "action": "manual-review",
-      "content_hash": "d287b31129e272f0fcae3fe48d750b77212f843d443b9129f3532a94ea6fd2df",
-      "reason": "语义主档案尚未ready，禁止渲染或写入。",
-      "record_status": "pending"
+      "action": "update",
+      "content_hash": "d0eea4b06673c13e1d5ef7a3f4cfc8a3e426431586440cec79a8710c5510f40b",
+      "reason": "按已验收语义记录改造成分层学习卡。",
+      "record_status": "ready"
     },
     {
       "title": "基础词义｜大有可为",
       "card_id": "mkjc_77v0fAJGtLdAD0SvP4Gu2YQlHNmRvOXVCGBaBvkRuxjv1.alUbdmeOwDojdhtnIj",
-      "action": "manual-review",
-      "content_hash": "061ef1530da62d7795956aad75a9f845ef728e49566cf7afdc4c70608e389aea",
-      "reason": "语义主档案尚未ready，禁止渲染或写入。",
-      "record_status": "pending"
+      "action": "update",
+      "content_hash": "fa2e6fbca3a817e89eaf0a6a6f49caaf8c08ab25465db50155951e63ade2be0a",
+      "reason": "按已验收语义记录改造成分层学习卡。",
+      "record_status": "ready"
     },
     {
       "title": "基础词义｜崭露头角",
       "card_id": "mkjc_77v0fAJGtLdAD0SvP4Gu2Wx0Sbl4XUSs.0QlZvQaDJefFTddRTaLrD50dr4.sDmC",
-      "action": "manual-review",
-      "content_hash": "58582c0f3f1a1d2cc6c6a961c737c6ec1524a696cc0e6315614dcf345cf19744",
-      "reason": "语义主档案尚未ready，禁止渲染或写入。",
-      "record_status": "pending"
+      "action": "update",
+      "content_hash": "70547010ada39f9ca12637d0a4e463e9298d43d5060a12eb6dec3c6a6e660936",
+      "reason": "按已验收语义记录改造成分层学习卡。",
+      "record_status": "ready"
     },
     {
       "title": "基础词义｜粉墨登场",
       "card_id": "mkjc_05EQJ32Ib59sB7EZTRbbuOwDiKQXNs6_r4QFkY.up01Sjkp.I29y.MovoUJdpvG4",
-      "action": "manual-review",
-      "content_hash": "457078f8feb7fa83144d8f87f61295b7e35f781601e07042419d413d3f9ab524",
-      "reason": "语义主档案尚未ready，禁止渲染或写入。",
-      "record_status": "pending"
+      "action": "update",
+      "content_hash": "01af44003b6061e1dd59c25423f79ee3bab0191c921eceb9a7cd8ab02fa20fd2",
+      "reason": "按已验收语义记录改造成分层学习卡。",
+      "record_status": "ready"
     },
     {
       "title": "基础词义｜大放异彩",
       "card_id": "mkjc_05EQJ32Ib59sB7EZTRbbuJbcjmg05UAJGIyYHPEj8yBfEjNJXpTvZbelPrnHu9yJ",
-      "action": "manual-review",
-      "content_hash": "37f5561f4216510c9212c7c55cec802813c460a24d3c2f4937b14dd466fa8915",
-      "reason": "语义主档案尚未ready，禁止渲染或写入。",
-      "record_status": "pending"
+      "action": "update",
+      "content_hash": "c2fc949046be39688a4395eb05a9b550f57f0d688c2eadacad28819282999cf1",
+      "reason": "按已验收语义记录改造成分层学习卡。",
+      "record_status": "ready"
     },
     {
       "title": "基础词义｜独占鳌头",
       "card_id": "mkjc_05EQJ32Ib59sB7EZTRbbuFDr0hnQjgz7lHyV0ArAv1APBkCQ8EXQ88Yx9R9nZTHD",
-      "action": "manual-review",
-      "content_hash": "cfa802ee5b289faaa94527bfd81c775682ec3a5a1fd813bb3d881bbfe1d33685",
-      "reason": "语义主档案尚未ready，禁止渲染或写入。",
-      "record_status": "pending"
+      "action": "update",
+      "content_hash": "1cd6c9f88d864f5bfd8f58aa4dd605399360c30e94000cbb73287884081a07a5",
+      "reason": "按已验收语义记录改造成分层学习卡。",
+      "record_status": "ready"
     },
     {
       "title": "基础词义｜跑马圈地",
       "card_id": "mkjc_05EQJ32Ib59sB7EZTRbbuP5mHauCJyZeDCC3PrwzobPtx011UC3z.2Jbjt2gDYLD",
-      "action": "manual-review",
-      "content_hash": "b2035e7f12bd3617a83fe9257b7ea6323141b54b6f1372e90a5b231ddd69595c",
-      "reason": "语义主档案尚未ready，禁止渲染或写入。",
-      "record_status": "pending"
+      "action": "update",
+      "content_hash": "436cf83a874ae2d0b53d67b2634b5844f0342af33a3997fb08d787e8d89ccb4d",
+      "reason": "按已验收语义记录改造成分层学习卡。",
+      "record_status": "ready"
     },
     {
       "title": "基础词义｜养精蓄锐",
       "card_id": "mkjc_05EQJ32Ib59sB7EZTRbbuGVUg1WW01.Mb0tjFCZq01.vgBqHuH0gUIv.dql_LUOn",
-      "action": "manual-review",
-      "content_hash": "f8e30c8c1353e8d9855e4f5d30db50ccc56af33ea65a9f02f888c7ab04d74758",
-      "reason": "语义主档案尚未ready，禁止渲染或写入。",
-      "record_status": "pending"
+      "action": "update",
+      "content_hash": "733452b87df4021bd74b27bef703b84f8f503b0c2c42862cbe578bf2526b74d0",
+      "reason": "按已验收语义记录改造成分层学习卡。",
+      "record_status": "ready"
     },
     {
       "title": "基础词义｜脱颖而出",
       "card_id": "mkjc_05EQJ32Ib59sB7EZTRbbuFnFz3mphsWAP7Wv5YLaAmU0MDLwAM.m6.Qz0EfEdHPi",
-      "action": "manual-review",
-      "content_hash": "5068d809968fc2e9476c2c8ed81076935d04641b0f65a3215b2b2fbcc0358fae",
-      "reason": "语义主档案尚未ready，禁止渲染或写入。",
-      "record_status": "pending"
+      "action": "update",
+      "content_hash": "fb446173a63d76d4b9edf8ef48224b5122177f49b05c8c4b734bc0043c9850c7",
+      "reason": "按已验收语义记录改造成分层学习卡。",
+      "record_status": "ready"
     },
     {
       "title": "基础词义｜脱节",
       "card_id": "mkjc_05EQJ32Ib59sB7EZTRbbuM1QIUFHI07km4D.zdP6.BMLp88DvW1Hcx_2ShAyF7CI",
-      "action": "manual-review",
-      "content_hash": "1c41ca67a8796e56ec22954b4a04310d8d5338d879f2eef8e66818d3fc4e5aa3",
-      "reason": "语义主档案尚未ready，禁止渲染或写入。",
-      "record_status": "pending"
+      "action": "update",
+      "content_hash": "b56131f1b935afbfd40e480aeed4b79af37b7e93176b2e763eae042f8216fa38",
+      "reason": "按已验收语义记录改造成分层学习卡。",
+      "record_status": "ready"
     },
     {
       "title": "基础词义｜脱钩",
       "card_id": "mkjc_05EQJ32Ib59sB7EZTRbbuIULzTYEv72O4IevXJ5YeBDqU_vqP9MJR0T7tr_oBFBC",
-      "action": "manual-review",
-      "content_hash": "fab524a10f6ee7bd4dea6afeb54acf6661a183adabbad788b54a9e017bf06882",
-      "reason": "语义主档案尚未ready，禁止渲染或写入。",
-      "record_status": "pending"
+      "action": "update",
+      "content_hash": "63c5f3d954d5ffdcb07e9f473c8a68ba1c160cb71585857ab5539a1327113e24",
+      "reason": "按已验收语义记录改造成分层学习卡。",
+      "record_status": "ready"
     },
     {
       "title": "基础词义｜天罗地网",
       "card_id": "mkjc_23Lr5IjR.nwJM8I0h89IeCPevQq.5qzzVBDEssivE2Woh0.iUPFI4zKp_RBgGFbo",
-      "action": "manual-review",
-      "content_hash": "79eea1de0efb088fb5dd08ed97de17cf862fafed133830ee3dc463fe714ba51d",
-      "reason": "语义主档案尚未ready，禁止渲染或写入。",
-      "record_status": "pending"
+      "action": "update",
+      "content_hash": "6d9c11661f81ca3ce8cdeed4be418191a38da43d9bbe5520653266550f397c05",
+      "reason": "按已验收语义记录改造成分层学习卡。",
+      "record_status": "ready"
     },
     {
       "title": "基础词义｜风吹草动",
       "card_id": "mkjc_23Lr5IjR.nwJM8I0h89IeH5q10md3hNFnnv3L_z5prOburlCP.7Rh4OWzuxyBVaw",
-      "action": "manual-review",
-      "content_hash": "9ca73c9688df0e3033d73126a97ee643337daa08a9c6be4dbd50e81a33f33821",
-      "reason": "语义主档案尚未ready，禁止渲染或写入。",
-      "record_status": "pending"
+      "action": "update",
+      "content_hash": "8c297585d7cfb244419403f9e1415bbd9b63d3500f8ad0e0af79e04464a61eff",
+      "reason": "按已验收语义记录改造成分层学习卡。",
+      "record_status": "ready"
     },
     {
       "title": "基础词义｜蛛丝马迹",
       "card_id": "mkjc_23Lr5IjR.nwJM8I0h89IeDQqU1HhG8qqugUgx00zdterxAmOQ.BMRveOnuYV3L1e",
-      "action": "manual-review",
-      "content_hash": "56899e44c666f4a9ce8ac85dca26af16aa10e2ba36e5e51e554a7c81d0371e21",
-      "reason": "语义主档案尚未ready，禁止渲染或写入。",
-      "record_status": "pending"
+      "action": "update",
+      "content_hash": "ece182691bfdefcd89b5fae1d44cd2bcb410ce0dc0d92433247b7874051b4db0",
+      "reason": "按已验收语义记录改造成分层学习卡。",
+      "record_status": "ready"
     },
     {
       "title": "基础词义｜精细",
       "card_id": "mkjc_23Lr5IjR.nwJM8I0h89IeN5_TbhvPvAYU6xJWeq6nm5yaEHx9DetXdy.55YTSkOf",
-      "action": "manual-review",
-      "content_hash": "ee03553e71972bc953bbf24fe573bbd329236ba0ec3c56062a42a02b50d41e82",
-      "reason": "语义主档案尚未ready，禁止渲染或写入。",
-      "record_status": "pending"
+      "action": "update",
+      "content_hash": "026580445e62ce5cae028708fef7fa8b01cdac592944fa9b54bbc1f7b7485cad",
+      "reason": "按已验收语义记录改造成分层学习卡。",
+      "record_status": "ready"
     },
     {
       "title": "基础词义｜直观",
       "card_id": "mkjc_23Lr5IjR.nwJM8I0h89IeKTtYbc2LeZaXAyEd4PyoMlg4.CiIdMIwQy6zmImvAf6",
-      "action": "manual-review",
-      "content_hash": "909dbd348badd18d9c8aeebb8d8c77fec5b545f7006a11a6654c99e4edc9653d",
-      "reason": "语义主档案尚未ready，禁止渲染或写入。",
-      "record_status": "pending"
+      "action": "update",
+      "content_hash": "b3277d85c393cade466d6ceeb800615105b9b3954838652fc4c5dd0c2097a8e9",
+      "reason": "按已验收语义记录改造成分层学习卡。",
+      "record_status": "ready"
     },
     {
       "title": "基础词义｜背道而驰",
       "card_id": "mkjc_23Lr5IjR.nwJM8I0h89IeOUD83GdPDLkckNLMarRPcO1AHQ42ic1H0TdOpYJazoJ",
-      "action": "manual-review",
-      "content_hash": "9e1670b6dd1e80e108a34a116d15555753c8074d23db777ae4444b9db168f20d",
-      "reason": "语义主档案尚未ready，禁止渲染或写入。",
-      "record_status": "pending"
+      "action": "update",
+      "content_hash": "72c66c73a3b187ab67dc289234591f17a16ff6decd68cc4dbd3f0a3c367174a2",
+      "reason": "按已验收语义记录改造成分层学习卡。",
+      "record_status": "ready"
     },
     {
       "title": "基础词义｜映射",
       "card_id": "mkjc_23Lr5IjR.nwJM8I0h89IeMmduOuBOg8CBQzSbxM41PHWT5S7Y6VJ2lhUtRBfAX9V",
-      "action": "manual-review",
-      "content_hash": "a7ab5902bbe149d31b50da8026ac652a7e505401c370bd59d300de80f9684ed8",
-      "reason": "语义主档案尚未ready，禁止渲染或写入。",
-      "record_status": "pending"
+      "action": "update",
+      "content_hash": "e262593d76b6b1acc75a52506811058d1566d63b85de4d910bb0c55dba6e85d8",
+      "reason": "按已验收语义记录改造成分层学习卡。",
+      "record_status": "ready"
     },
     {
       "title": "基础词义｜折射",
       "card_id": "mkjc_23Lr5IjR.nwJM8I0h89IeLewoKIGZGSd.x.f4qFiNoYuwu00lKTSdTRTs5tElvm8",
-      "action": "manual-review",
-      "content_hash": "c1596bf5d5008ebf8e28819c1f0ac0cca6c5936aca9ba2665320bd286160d2f9",
-      "reason": "语义主档案尚未ready，禁止渲染或写入。",
-      "record_status": "pending"
+      "action": "update",
+      "content_hash": "6eab974294bfb24cdfa03a50b429d05d28e769db76e685d39f8971fcd2225d24",
+      "reason": "按已验收语义记录改造成分层学习卡。",
+      "record_status": "ready"
     },
     {
       "title": "基础词义｜声名鹊起",
       "card_id": "mkjc_s4dbuNG9mjItWPuuhw1j86OyeenOTR9ccPGl8KxbYKlI6oXn7XWUiNUOTTjNHEV1",
-      "action": "manual-review",
-      "content_hash": "097625b57f6ebac4e9470584cc1f6443a239f46b572e0dbbe21c01114980625c",
-      "reason": "语义主档案尚未ready，禁止渲染或写入。",
-      "record_status": "pending"
+      "action": "update",
+      "content_hash": "7879fcda2d0f0f9a12af1ae45752a469fa160921e996852f60aa53bdfcbadfeb",
+      "reason": "按已验收语义记录改造成分层学习卡。",
+      "record_status": "ready"
     },
     {
       "title": "基础词义｜声名大噪",
       "card_id": "mkjc_s4dbuNG9mjItWPuuhw1j87RKrko_IpXaMq8.TR.Qc2K9E066vJndS2p6JUcAKoaU",
-      "action": "manual-review",
-      "content_hash": "a0c1d19f8c6915f98b11697b4cc880c86ddcd1e3b68ec77b6e20266e47fcabfb",
-      "reason": "语义主档案尚未ready，禁止渲染或写入。",
-      "record_status": "pending"
+      "action": "update",
+      "content_hash": "95e9fb12e32eea5ba101192e7d46d5a8d9f393fbe8da58fd22216701a02f6e51",
+      "reason": "按已验收语义记录改造成分层学习卡。",
+      "record_status": "ready"
     },
     {
       "title": "基础词义｜十年磨一剑",
       "card_id": "mkjc_s4dbuNG9mjItWPuuhw1j84jkZ8EgzBfIKH_Rk69kYP.2iGERopwXmm2aNzEZ7VmP",
-      "action": "manual-review",
-      "content_hash": "c780566e9476678b01407bad9509cdd8ac853c15ec84a4aa36f7a1993e4e609f",
-      "reason": "语义主档案尚未ready，禁止渲染或写入。",
-      "record_status": "pending"
+      "action": "update",
+      "content_hash": "b752a518dcc1c6d9b2ea7b1cd212434eaafecd453b331fea0e9d132af631917f",
+      "reason": "按已验收语义记录改造成分层学习卡。",
+      "record_status": "ready"
     },
     {
       "title": "基础词义｜决心",
       "card_id": "mkjc_s4dbuNG9mjItWPuuhw1j84kS54e4G.u8Q86rpzKA7bzTstSwZ_q9NYzxSRXTDYTv",
-      "action": "manual-review",
-      "content_hash": "99805aa8e3b26b859dccce85af844b2cfa608119db7c9a4d50ba8879f4e7b06a",
-      "reason": "语义主档案尚未ready，禁止渲染或写入。",
-      "record_status": "pending"
+      "action": "update",
+      "content_hash": "8a09b8b1db367de1bd27653312163c12727ed78abbd981479b5ca485e11c2582",
+      "reason": "按已验收语义记录改造成分层学习卡。",
+      "record_status": "ready"
     },
     {
       "title": "基础词义｜厚积薄发",
       "card_id": "mkjc_s4dbuNG9mjItWPuuhw1j88Ey.vrF7_LJ8KmHG.y4gl_em98UTg_Eu8bWGXJ1qMfh",
-      "action": "manual-review",
-      "content_hash": "4ca79bba7f2a751af44b41e8e6629daca110a2bd92f4e64387e098da9f1e390f",
-      "reason": "语义主档案尚未ready，禁止渲染或写入。",
-      "record_status": "pending"
+      "action": "update",
+      "content_hash": "6c41a797e2e750423ba13ca3d9b186ad584ac952607e490dbd2488d2f9031f6f",
+      "reason": "按已验收语义记录改造成分层学习卡。",
+      "record_status": "ready"
     },
     {
       "title": "基础词义｜筚路蓝缕",
       "card_id": "mkjc_s4dbuNG9mjItWPuuhw1j8xxq77TmQ3TZ_VPMyrTp2SIEzereyryUE8hZY9PhyB5h",
-      "action": "manual-review",
-      "content_hash": "4e2dbad995b25f353cdf87c2130b1cff8e85382ad57609bf885f2235ec209786",
-      "reason": "语义主档案尚未ready，禁止渲染或写入。",
-      "record_status": "pending"
+      "action": "update",
+      "content_hash": "b0d8e031a146d7980913b21c9cc98405434d10fcb60be946b79dc0e78b663267",
+      "reason": "按已验收语义记录改造成分层学习卡。",
+      "record_status": "ready"
     },
     {
       "title": "基础词义｜自强不息",
       "card_id": "mkjc_s4dbuNG9mjItWPuuhw1j859pDl4GNhVU7rzwUzP9a5qrYLw1EGY6FgTyAPu71BtV",
-      "action": "manual-review",
-      "content_hash": "6f7f2ec6f85010a6ea80cd80c1c206be02d6db4ad25d8bf00565adf5e20d9317",
-      "reason": "语义主档案尚未ready，禁止渲染或写入。",
-      "record_status": "pending"
+      "action": "update",
+      "content_hash": "4f364f58e497d5b598c5d4cd1b086679c6bdbc7c0872a87e5cdf575838aa960e",
+      "reason": "按已验收语义记录改造成分层学习卡。",
+      "record_status": "ready"
     },
     {
       "title": "基础词义｜稳扎稳打",
       "card_id": "mkjc_s4dbuNG9mjItWPuuhw1j89EATK2ZeuUvCj7odegZdXiW1bi3N4KFaVmfgl0Sd0uS",
-      "action": "manual-review",
-      "content_hash": "7d3c39c4c1c867d4325746b685cfb2b0e9215513f728d539995df23a7abc6a7e",
-      "reason": "语义主档案尚未ready，禁止渲染或写入。",
-      "record_status": "pending"
+      "action": "update",
+      "content_hash": "568f6c66f916ce36ce96e8dec154d92a0081065b83d3d78de82fd1082834a45d",
+      "reason": "按已验收语义记录改造成分层学习卡。",
+      "record_status": "ready"
     },
     {
       "title": "基础词义｜步步为营",
       "card_id": "mkjc_s4dbuNG9mjItWPuuhw1j8.oCjcyeSGrrDHh3w9qgTsgFBk.s14eJhvZg6zHreGen",
-      "action": "manual-review",
-      "content_hash": "3dcaf25284f59b77cc7e3ebf2f7db3eca330c7d7727942041868c3b4318ac3c4",
-      "reason": "语义主档案尚未ready，禁止渲染或写入。",
-      "record_status": "pending"
+      "action": "update",
+      "content_hash": "93d1a1c30a1921f4a3c3f7628b1f009460dccb025b99643a4627c43d042dfdd7",
+      "reason": "按已验收语义记录改造成分层学习卡。",
+      "record_status": "ready"
     },
     {
       "title": "基础词义｜混合",
       "card_id": "mkjc_Pv3TgTERQojmyiWbAtLLwLmbB1j3sSSPtvExUcDtvDzkGaUqCuz2FnqdMgVU_e6A",
-      "action": "manual-review",
-      "content_hash": "1b5f188fd12547a6567fe9691decf048f2e3fcbf60b9f7ddb73ca3152f408798",
-      "reason": "语义主档案尚未ready，禁止渲染或写入。",
-      "record_status": "pending"
+      "action": "update",
+      "content_hash": "3398f9b3c9afe4137ed53523aa61e80c2181beadd18993887760934d332f3dba",
+      "reason": "按已验收语义记录改造成分层学习卡。",
+      "record_status": "ready"
     },
     {
       "title": "基础词义｜隐藏",
       "card_id": "mkjc_Pv3TgTERQojmyiWbAtLLwCOlHFDtwZeDztaycYhYPErbFYOthNPZkiVwRityn_Lh",
-      "action": "manual-review",
-      "content_hash": "22bcd8b8bd072053e88dce7669445503e2e757e5f15e005dc05eea7f39f49127",
-      "reason": "语义主档案尚未ready，禁止渲染或写入。",
-      "record_status": "pending"
+      "action": "update",
+      "content_hash": "d99f71dc7825f5d4d6da43e38b08f9e97596e834e13179514e1e4a9ea5992b4d",
+      "reason": "按已验收语义记录改造成分层学习卡。",
+      "record_status": "ready"
     },
     {
       "title": "基础词义｜淹没",
       "card_id": "mkjc_Pv3TgTERQojmyiWbAtLLwAUVzqU2zdR0AjPy08aZtnFGT7VkEJv8qWPCe.HinWne",
-      "action": "manual-review",
-      "content_hash": "da8e096bc07c1cda7dc3a5b40cf01147b094c44a902119e418f72ea993944a12",
-      "reason": "语义主档案尚未ready，禁止渲染或写入。",
-      "record_status": "pending"
+      "action": "update",
+      "content_hash": "8644b66b28d18ff71f061c7daaaa601198b73e963ad3f7a89fcd2a80b661e5ed",
+      "reason": "按已验收语义记录改造成分层学习卡。",
+      "record_status": "ready"
     },
     {
       "title": "基础词义｜存储",
       "card_id": "mkjc_Pv3TgTERQojmyiWbAtLLwLIEZDH4lmA6SciV1no10mib_ospjkE6XIJs0nS_Yz.r",
-      "action": "manual-review",
-      "content_hash": "6207014d43587887b6ab68dd19fd92c9055340cf6b7f644b569ee72a56bc1e85",
-      "reason": "语义主档案尚未ready，禁止渲染或写入。",
-      "record_status": "pending"
+      "action": "update",
+      "content_hash": "6974408065498efdc71b993c11cc4ce4faad2260b25c9b57434295f110551c56",
+      "reason": "按已验收语义记录改造成分层学习卡。",
+      "record_status": "ready"
     },
     {
       "title": "基础词义｜图谋不轨",
       "card_id": "mkjc_Pv3TgTERQojmyiWbAtLLwKvZuKNy6yHicWt7dBv7UzyECorKlFQksTohicOiWF8U",
-      "action": "manual-review",
-      "content_hash": "debbc94c1a0d7bbbf0fb276e6cb951d50fc03240d47ef2929b96fabe723e79d0",
-      "reason": "语义主档案尚未ready，禁止渲染或写入。",
-      "record_status": "pending"
+      "action": "update",
+      "content_hash": "a7feb010cad7e5adabd318084eab3705db8028893603026edfbc10ae765d721d",
+      "reason": "按已验收语义记录改造成分层学习卡。",
+      "record_status": "ready"
     },
     {
       "title": "基础词义｜唯利是图",
       "card_id": "mkjc_Pv3TgTERQojmyiWbAtLLwLx1.rA1Rcg.nI_YIokQGaWf_BNWMQ8zW8yLdz4JE8Qu",
-      "action": "manual-review",
-      "content_hash": "6e3860d1fb20e160288a058d8768b87d905f7630117b3683073fcfc7a2986ea7",
-      "reason": "语义主档案尚未ready，禁止渲染或写入。",
-      "record_status": "pending"
+      "action": "update",
+      "content_hash": "c502f69dec9515c098898e82e7b87e3de41bfffe238634511859d553382a1801",
+      "reason": "按已验收语义记录改造成分层学习卡。",
+      "record_status": "ready"
     },
     {
       "title": "基础词义｜处心积虑",
       "card_id": "mkjc_Pv3TgTERQojmyiWbAtLLwMyPZJssIIFA.YffndFr4N_eA5bKrbR9C.7FBl5d9dit",
-      "action": "manual-review",
-      "content_hash": "4345b95fbaaa9b38fc3f5c2ca82d434ba8a8aadb0bca647a58d3f4e6f6b327f8",
-      "reason": "语义主档案尚未ready，禁止渲染或写入。",
-      "record_status": "pending"
+      "action": "update",
+      "content_hash": "987a59647c67eb9c5feebfa8ccb2f2b513964e080e401693baa1e465363cbfa4",
+      "reason": "按已验收语义记录改造成分层学习卡。",
+      "record_status": "ready"
     },
     {
       "title": "基础词义｜识别",
       "card_id": "mkjc_Pv3TgTERQojmyiWbAtLLwAFGaQrYXHUSD.hhgJbrQxg.S6uBvRhThPglnTSTXzsT",
-      "action": "manual-review",
-      "content_hash": "d49539b2905e9326697507f34c652d24b5d39faa05e36c76399a51a118050080",
-      "reason": "语义主档案尚未ready，禁止渲染或写入。",
-      "record_status": "pending"
+      "action": "update",
+      "content_hash": "9cb337424b645f052321a26bfde2016c06d0442deffd4e912d22737798ce8de8",
+      "reason": "按已验收语义记录改造成分层学习卡。",
+      "record_status": "ready"
     },
     {
       "title": "基础词义｜复原",
       "card_id": "mkjc_1lHM4JbNEI1mfzykBd3IhKmpNQPunCCDSWNUTG474CsPl6nNHNoQm1e_FPmQNxP_",
-      "action": "manual-review",
-      "content_hash": "34316eaf1695776b5010c2da7e54b197b1943e56a6bb1b98372a710c1269ce15",
-      "reason": "语义主档案尚未ready，禁止渲染或写入。",
-      "record_status": "pending"
+      "action": "update",
+      "content_hash": "749845caebf18919227d2f52eac883d445102b57eb53d34c4217f8da0fe2224f",
+      "reason": "按已验收语义记录改造成分层学习卡。",
+      "record_status": "ready"
     },
     {
       "title": "基础词义｜当头棒喝",
       "card_id": "mkjc_1lHM4JbNEI1mfzykBd3IhHfcj3lg.6aa5YNrRILTyxxXYEFfb6yK4Av7h3a82smA",
-      "action": "manual-review",
-      "content_hash": "cc8fafc49a6deb9fdf71c9e06d50916b258d6e9782e25893fc3b27780362656f",
-      "reason": "语义主档案尚未ready，禁止渲染或写入。",
-      "record_status": "pending"
+      "action": "update",
+      "content_hash": "5927e6092ae2f77272bccec5d37d467ef76c09e6142098352814d5397a4741ae",
+      "reason": "按已验收语义记录改造成分层学习卡。",
+      "record_status": "ready"
     },
     {
       "title": "基础词义｜呼之欲出",
@@ -2759,10 +2759,10 @@
     {
       "title": "基础词义｜缘木求鱼",
       "card_id": "mkjc_lhEmTKsya.OJNFheX0finkurO2bltROGzfXxP5sE4NvpNf_cO0uOwQS.2D9xdOJb",
-      "action": "manual-review",
-      "content_hash": "a85243791fb1b9bc145cef905285cb15524eaa8adf515ae9031285e25b4c7143",
-      "reason": "语义主档案尚未ready，禁止渲染或写入。",
-      "record_status": "pending"
+      "action": "update",
+      "content_hash": "c9339d8bc29365af904262128c8d7a861bbcdd893e2725c84a6a039d449ec0d6",
+      "reason": "按已验收语义记录改造成分层学习卡。",
+      "record_status": "ready"
     },
     {
       "title": "基础词义｜扬汤止沸",
@@ -5979,5 +5979,5 @@
       "record_status": "ready"
     }
   ],
-  "plan_hash": "b07116662dbb2fafcb1988e5ccd0749bd26a175d71e50f8d1e4230db3fc6cd7a"
+  "plan_hash": "01974449c53c791bc20b4ec18e49aea484f149709ad538cc56adb0947279d181"
 }

@@ -1,0 +1,204 @@
+{
+  "schema_version": 1,
+  "basis": "逐段复核20260108原始课程文稿P0084-P0099；把领域、对象、搭配和动作方式分别建模，不把同题选项自动视为近义词。",
+  "records": {
+    "百花齐放": {
+      "status": "ready",
+      "meaning": "比喻不同形式、风格的文艺作品自由发展、共同繁荣。",
+      "distinctive_feature": "课程把适用领域锁定在文艺、艺术和文化多样性，判断重点是多种创作形态并存。",
+      "recognition_cues": ["文艺、艺术领域呈现多样繁荣。", "多种创作风格和形式共同发展。"],
+      "dimensions": [{"axis": "适用领域", "judgment": "文艺、艺术、文化。"}, {"axis": "多样性类型", "judgment": "作品形式和风格多样。"}],
+      "comparison_edges": [{"other_term": "百家争鸣", "minimum_difference": "百花齐放强调文艺形式和风格多样繁荣；百家争鸣强调学术领域不同学派、观点展开讨论。"}],
+      "misuse_boundary": "题干核心是不同学术观点、理论流派争论时，应考虑百家争鸣。"
+    },
+    "百家争鸣": {
+      "status": "ready",
+      "meaning": "不同学派、观点或理论自由发表意见、相互讨论争辩。",
+      "distinctive_feature": "课程把适用领域锁定在学术思想和观点讨论，必须能看到不同主张之间的表达与争鸣。",
+      "recognition_cues": ["不同学派、理论、观点展开讨论。", "学术领域允许多种主张发声。"],
+      "dimensions": [{"axis": "适用领域", "judgment": "学术、思想、理论。"}, {"axis": "多样性类型", "judgment": "观点和主张多元。"}],
+      "comparison_edges": [{"other_term": "百花齐放", "minimum_difference": "百家争鸣强调学术观点和理论讨论；百花齐放强调文艺作品、形式和风格多样繁荣。"}],
+      "misuse_boundary": "只有文艺形式丰富，却没有学派、理论或观点讨论时，不宜使用百家争鸣。"
+    },
+    "包罗万象": {
+      "status": "ready",
+      "meaning": "包含的内容极为广泛，各种事物和方面几乎都有。",
+      "distinctive_feature": "不仅表示种类多，还强调覆盖范围广、近于应有尽有；评价的是内容容量，不限定文艺或学术领域。",
+      "recognition_cues": ["内容范围广大，什么都有。", "题干强调涵盖各个方面。"],
+      "dimensions": [{"axis": "覆盖范围", "judgment": "广到包含多种事物和方面。"}, {"axis": "评价对象", "judgment": "体系、内容、题材等容纳范围。"}],
+      "comparison_edges": [],
+      "misuse_boundary": "题干只说形式多样，或只说文艺、学术领域多元，却没有广泛涵盖各方面内容时，不宜使用。"
+    },
+    "完备": {
+      "status": "ready",
+      "meaning": "应有的内容、条件或组成部分齐全，而且整体状态良好。",
+      "distinctive_feature": "课程概括为“又全又好”：既有齐备度，也有成熟、周全的质量评价。",
+      "recognition_cues": ["体系、制度、条件该有的都有。", "题干同时要求齐全与良好。"],
+      "dimensions": [{"axis": "齐全度", "judgment": "构成要素齐备。"}, {"axis": "质量状态", "judgment": "整体成熟、周全。"}],
+      "comparison_edges": [
+        {"other_term": "完整", "minimum_difference": "完备兼顾要素齐全和状态良好；完整只保证没有缺损、缺失。"},
+        {"other_term": "完善", "minimum_difference": "完备强调当前构成齐全且状态良好；完善常强调使已有事物变得更好、更周全的过程或结果。"},
+        {"other_term": "完全", "minimum_difference": "完备评价体系、条件是否齐全良好；完全表示全部、彻底或范围无遗漏，不专门评价构成质量。"}
+      ],
+      "misuse_boundary": "题干只表示范围全部、程度彻底时，应使用完全；只强调没有残缺时，完整即可。"
+    },
+    "完整": {
+      "status": "ready",
+      "meaning": "具有应有的各个部分，没有残缺或缺失。",
+      "distinctive_feature": "判断标准只有结构是否缺失，不额外保证质量成熟、功能良好。",
+      "recognition_cues": ["材料、内容、结构没有缺项。", "题干检查是否残缺。"],
+      "dimensions": [{"axis": "结构状态", "judgment": "应有部分没有缺失。"}, {"axis": "质量含义", "judgment": "不自动表示优秀或成熟。"}],
+      "comparison_edges": [
+        {"other_term": "完备", "minimum_difference": "完整只保证没有残缺；完备还要求构成齐全并处于良好、周全状态。"},
+        {"other_term": "完善", "minimum_difference": "完整回答是否缺项；完善回答是否经过改进而变得更好、更周全。"}
+      ],
+      "misuse_boundary": "题干强调体系既齐全又成熟，或强调继续改进提升时，应分别考虑完备、完善。"
+    },
+    "完善": {
+      "status": "ready",
+      "meaning": "使事物变得完备、良好，或形容事物已经较为周全良好。",
+      "distinctive_feature": "常带改进方向，从现有基础继续补足、优化；重点是质量和周全程度提高。",
+      "recognition_cues": ["完善制度、机制、体系。", "题干出现补足、优化、改进。"],
+      "dimensions": [{"axis": "变化方向", "judgment": "由不足向更好、更周全发展。"}, {"axis": "评价重点", "judgment": "质量和成熟度。"}],
+      "comparison_edges": [
+        {"other_term": "完整", "minimum_difference": "完善强调改进并提高质量、周全度；完整只判断应有部分是否缺失。"},
+        {"other_term": "完备", "minimum_difference": "完善常突出补足优化的过程；完备突出当前要素齐全且状态良好。"}
+      ],
+      "misuse_boundary": "题干只检查内容有没有缺项，没有改进或质量提升要求时，完整更直接。"
+    },
+    "完全": {
+      "status": "ready",
+      "meaning": "全部、彻底，没有任何欠缺或例外。",
+      "distinctive_feature": "表示范围覆盖或程度达到极限，通常修饰动作、状态和判断；不专门说明一个体系的组成是否齐备。",
+      "recognition_cues": ["范围无遗漏、程度彻底。", "完全同意、完全改变、完全不同。"],
+      "dimensions": [{"axis": "语义功能", "judgment": "限定范围或程度。"}, {"axis": "程度", "judgment": "全部、彻底。"}],
+      "comparison_edges": [{"other_term": "完备", "minimum_difference": "完全表示范围全部或程度彻底；完备评价体系、条件是否构成齐全且状态良好。"}],
+      "misuse_boundary": "需要评价工业体系、制度条件“该有的都有且状态良好”时，应使用完备，不能只用完全替代。"
+    },
+    "范式": {
+      "status": "ready",
+      "meaning": "被共同认可并遵循的研究、思考或做事模式。",
+      "distinctive_feature": "不是一次性方法，而是具有示范性和共同遵循基础的成套模式，课程以学术研究和工业流程为例。",
+      "recognition_cues": ["共同认可、共同遵守的研究或生产模式。", "题干强调可复制、可遵循的整体模式。"],
+      "dimensions": [{"axis": "认可程度", "judgment": "得到群体或行业共同认可。"}, {"axis": "结构层级", "judgment": "成套模式，高于零散方法。"}],
+      "comparison_edges": [],
+      "misuse_boundary": "只指临时办法、单个步骤或一般标准，没有形成共同认可的整体模式时，不宜使用范式。"
+    },
+    "制作": {
+      "status": "ready",
+      "meaning": "通过一系列环节把作品或产品生产出来。",
+      "distinctive_feature": "课程中的电影制作覆盖策划、编剧、拍摄、导演、后期等完整生产过程，范围大于单一拍摄环节。",
+      "recognition_cues": ["电影从策划到成片的完整流程。", "题干统摄多个生产环节。"],
+      "dimensions": [{"axis": "范围", "judgment": "覆盖作品生产的多个环节。"}, {"axis": "结果", "judgment": "形成可交付的作品或产品。"}],
+      "comparison_edges": [],
+      "misuse_boundary": "题干只说摄像、拍摄或某个具体环节时，制作范围过大；只有构思内容而未进入生产流程时，也不能混同。"
+    },
+    "迎合": {
+      "status": "ready",
+      "meaning": "有意顺着他人的心意、偏好或需求说话办事，以取得好感或利益。",
+      "distinctive_feature": "动作带有主动逢迎、讨好的主观色彩，往往暗含为了对方而调整自己，并非中性地符合客观要求。",
+      "recognition_cues": ["主动顺着他人偏好、讨好对方。", "为了市场、受众或权势者改变表达。"],
+      "dimensions": [{"axis": "主观动机", "judgment": "主动逢迎、讨好。"}, {"axis": "语义色彩", "judgment": "常含轻微贬义。"}],
+      "comparison_edges": [],
+      "misuse_boundary": "只是客观上符合需求、规律或标准，没有逢迎讨好动机时，不宜使用迎合。"
+    },
+    "彰显": {
+      "status": "ready",
+      "meaning": "鲜明地显示、体现某种精神、价值、意义或品质。",
+      "distinctive_feature": "常承接正向、抽象的精神价值，强调使内在意义得到鲜明展现。",
+      "recognition_cues": ["彰显精神、价值、担当。", "题干要显示抽象正向意义。"],
+      "dimensions": [{"axis": "常见对象", "judgment": "精神、价值、意义、品质。"}, {"axis": "语义方向", "judgment": "多为正向展示。"}],
+      "comparison_edges": [{"other_term": "凸显", "minimum_difference": "彰显常使精神、价值等正向抽象意义鲜明呈现；凸显强调某个特征、问题或重要性变得突出。"}],
+      "misuse_boundary": "题干突出问题的严重性、矛盾或风险时，更适合凸显；不能只因宾语抽象就机械使用彰显。"
+    },
+    "凸显": {
+      "status": "ready",
+      "meaning": "使某个特征、问题、矛盾或重要性明显突出。",
+      "distinctive_feature": "落点是显著程度提高，课程特别指出常与问题的严重性、重要性等搭配，不自带正向价值赞扬。",
+      "recognition_cues": ["凸显问题、矛盾、重要性。", "某个方面在对比中变得突出。"],
+      "dimensions": [{"axis": "突出对象", "judgment": "特征、问题、矛盾、重要性。"}, {"axis": "语义色彩", "judgment": "可正可负，不限定赞扬。"}],
+      "comparison_edges": [{"other_term": "彰显", "minimum_difference": "凸显强调特征、问题或重要性变得突出；彰显常用于鲜明展示精神、价值和正向品质。"}],
+      "misuse_boundary": "题干要赞扬并展示精神价值时，彰显通常更贴切；但仍须结合具体宾语而非机械套用。"
+    },
+    "批驳": {
+      "status": "ready",
+      "meaning": "指出错误观点或言论的问题，并加以反驳。",
+      "distinctive_feature": "对象必须是可判断真误的观点、思潮或言论，动作包含“认定错误—说明理由—驳斥”。",
+      "recognition_cues": ["批驳错误思潮、错误言论。", "通过论述指出对方观点不成立。"],
+      "dimensions": [{"axis": "对象", "judgment": "观点、思潮、言论。"}, {"axis": "动作方式", "judgment": "论证其错误并反驳。"}],
+      "comparison_edges": [
+        {"other_term": "对抗", "minimum_difference": "批驳用论证指出观点和言论错误；对抗描述双方处于较强的对立、斗争关系。"},
+        {"other_term": "抵制", "minimum_difference": "批驳发生在言论和论证层面；抵制发生在行动层面，表示拒绝接受或阻止。"},
+        {"other_term": "拆穿", "minimum_difference": "批驳的对象是错误观点或思潮；拆穿的对象是谎言、骗局或伪装。"}
+      ],
+      "misuse_boundary": "对象不是观点言论，而是商品、行动、谎言或双方斗争关系时，应分别考虑抵制、拆穿、对抗。"
+    },
+    "对抗": {
+      "status": "ready",
+      "meaning": "双方相互敌对、抵抗或斗争。",
+      "distinctive_feature": "建立的是力量或立场对立关系，双方都作为行动主体参与，语气强于一般不同意见。",
+      "recognition_cues": ["双方交手、相互抵抗。", "题干出现明确阵营或力量对立。"],
+      "dimensions": [{"axis": "主体结构", "judgment": "至少两方相互作用。"}, {"axis": "关系强度", "judgment": "明确对立、斗争。"}],
+      "comparison_edges": [{"other_term": "批驳", "minimum_difference": "对抗描述双方力量或立场相互斗争；批驳通过论证指出观点、言论或思潮错误。"}],
+      "misuse_boundary": "只是用文章、论述指出错误观点，没有双方力量交手时，不宜拔高为对抗。"
+    },
+    "抵制": {
+      "status": "ready",
+      "meaning": "采取行动拒绝接受、阻止或反对某种事物、行为或影响。",
+      "distinctive_feature": "课程强调行动层面的拒绝和抗拒，常见对象是商品、活动、风气等，而不是用论证驳斥一句话。",
+      "recognition_cues": ["拒买、拒绝参与、行动阻止。", "抵制商品、不良风气或行为。"],
+      "dimensions": [{"axis": "动作层级", "judgment": "实际拒绝或阻止。"}, {"axis": "常见对象", "judgment": "商品、行为、活动、影响。"}],
+      "comparison_edges": [{"other_term": "批驳", "minimum_difference": "抵制是行动上拒绝接受或阻止；批驳是言论上指出错误并反驳。"}],
+      "misuse_boundary": "对象是观点、思潮，动作只是说明其错误时，应使用批驳，不能因态度反对就使用抵制。"
+    },
+    "拆穿": {
+      "status": "ready",
+      "meaning": "揭露谎言、骗局、诡计或伪装，使真相显露。",
+      "distinctive_feature": "预设对象故意遮掩真实情况，动作目标是戳破伪装；不是一般反驳错误观点。",
+      "recognition_cues": ["拆穿谎言、骗局、伪装。", "揭开故意隐瞒的真相。"],
+      "dimensions": [{"axis": "对象性质", "judgment": "谎言、骗局、诡计、伪装。"}, {"axis": "结果", "judgment": "被隐藏的真相显露。"}],
+      "comparison_edges": [{"other_term": "批驳", "minimum_difference": "拆穿揭露谎言、骗局或伪装；批驳通过论证指出观点、思潮或言论错误。"}],
+      "misuse_boundary": "对象只是错误观点，未体现故意欺骗和伪装时，应使用批驳而非拆穿。"
+    },
+    "回应": {
+      "status": "ready",
+      "meaning": "对问题、要求、关切或某种情势作出回答或行动反应。",
+      "distinctive_feature": "核心是“前面有一个对象提出或出现，主体随后作出答复”，不要求前后结构相互照应。",
+      "recognition_cues": ["回应关切、问题、时代要求。", "题干出现先提出、后答复。"],
+      "dimensions": [{"axis": "动作关系", "judgment": "针对既有问题或要求作答。"}, {"axis": "主动性", "judgment": "主体作出有意识的回答。"}],
+      "comparison_edges": [
+        {"other_term": "呼应", "minimum_difference": "回应是对问题、要求或情势作出回答；呼应是前后内容或不同部分彼此照应。"},
+        {"other_term": "响应", "minimum_difference": "回应的对象较广；响应通常针对号召、倡议或行动要求并跟进行动。"},
+        {"other_term": "反应", "minimum_difference": "回应通常是有意识的答复；反应是受到刺激后出现的变化，可为自然或生理变化。"}
+      ],
+      "misuse_boundary": "没有回答对象，只是前后内容照应、接受号召或受刺激产生变化时，应分别考虑呼应、响应、反应。"
+    },
+    "呼应": {
+      "status": "ready",
+      "meaning": "前后内容、不同部分或不同主体之间相互照应、配合。",
+      "distinctive_feature": "必须存在两个位置或部分之间的对应关系，如首尾呼应、前后呼应；不是单向回答。",
+      "recognition_cues": ["首尾、前后、上下文相互照应。", "两个部分在内容或结构上对应。"],
+      "dimensions": [{"axis": "结构", "judgment": "至少两个部分形成对应。"}, {"axis": "常见场景", "judgment": "文章结构、观点或行动配合。"}],
+      "comparison_edges": [{"other_term": "回应", "minimum_difference": "呼应要求前后内容或不同部分相互照应；回应是主体针对问题、要求或情势作出答复。"}],
+      "misuse_boundary": "题干只有单方面回答，没有前后或两部分对应关系时，应使用回应。"
+    },
+    "响应": {
+      "status": "ready",
+      "meaning": "对号召、倡议、要求等表示赞同并采取相应行动。",
+      "distinctive_feature": "课程突出固定搭配“响应号召”，不仅知道或回答，还要顺着行动要求跟进。",
+      "recognition_cues": ["响应号召、倡议。", "主体接受行动要求并跟进行动。"],
+      "dimensions": [{"axis": "触发对象", "judgment": "号召、倡议、行动要求。"}, {"axis": "结果", "judgment": "赞同并采取相应行动。"}],
+      "comparison_edges": [{"other_term": "回应", "minimum_difference": "响应通常针对号召、倡议并跟进行动；回应可以针对问题、关切或情势作出回答。"}],
+      "misuse_boundary": "没有号召、倡议或行动要求，只是回答问题、解释关切时，应使用回应。"
+    },
+    "反应": {
+      "status": "ready",
+      "meaning": "受到外界刺激后产生的变化、表现或作用。",
+      "distinctive_feature": "课程强调自然反应、生理反应和刺激—变化结构，主体不一定有意识作答。",
+      "recognition_cues": ["刺激之后出现自然、生理或心理变化。", "条件反射、身体反应。"],
+      "dimensions": [{"axis": "触发机制", "judgment": "外界刺激引发变化。"}, {"axis": "主动性", "judgment": "可为非主动、非语言答复。"}],
+      "comparison_edges": [{"other_term": "回应", "minimum_difference": "反应是刺激引发的变化，可无意识；回应是针对问题、要求或情势作出的有意识答复。"}],
+      "misuse_boundary": "题干表达主动答复、接受号召或篇章前后照应时，应分别使用回应、响应、呼应。"
+    }
+  }
+}

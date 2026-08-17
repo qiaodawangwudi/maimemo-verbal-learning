@@ -64,7 +64,7 @@ class PlanningTests(unittest.TestCase):
         self.assertEqual(first_plan["plan_hash"], second_plan["plan_hash"])
         self.assertEqual(first_cards, second_cards)
         self.assertEqual(
-            {"create": 2, "manual-review": 529, "update": 215},
+            {"create": 2, "manual-review": 387, "update": 357},
             first_plan["action_counts"],
         )
         self.assertEqual(732, first_plan["expected_after"])

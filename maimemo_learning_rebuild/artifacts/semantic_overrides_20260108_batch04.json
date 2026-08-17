@@ -1,0 +1,138 @@
+{
+  "schema_version": 1,
+  "basis": "逐段复核20260108原始课程文稿P0101-P0129；空穴来风因老师明确表示现代用法混乱继续pending，其余词按变化观、行动结果、真假来源和警醒时长重建。",
+  "records": {
+    "刻舟求剑": {
+      "status": "ready",
+      "meaning": "拘泥于已经变化的旧条件，用静止、僵化的办法处理发展变化的问题。",
+      "distinctive_feature": "错误发生在时间和条件变化：环境已经改变，主体仍把旧位置、旧标准当成不变依据。",
+      "recognition_cues": ["题干要求用发展眼光看问题。", "外部条件已变，做法仍停在过去。"],
+      "dimensions": [{"axis": "变化观", "judgment": "把动态事物静止化。"}, {"axis": "错误来源", "judgment": "沿用失效的旧条件和旧办法。"}],
+      "comparison_edges": [{"other_term": "守株待兔", "minimum_difference": "刻舟求剑强调条件已变却仍按旧位置、旧标准行动；守株待兔强调办法僵化地等待，或盼望偶然好运再次发生。"}],
+      "misuse_boundary": "题干只是消极等待、想靠运气获利，却没有条件变化和旧标准失效时，更接近守株待兔。"
+    },
+    "守株待兔": {
+      "status": "ready",
+      "meaning": "死守狭隘经验、不知变通地等待，或妄想依靠偶然机会不劳而获。",
+      "distinctive_feature": "课程明确两个落点：办法僵化地等，或把一次偶然好运当成可重复规律。",
+      "recognition_cues": ["一次偶然得利后继续原地等待。", "不换办法，只盼机会自动到来。"],
+      "dimensions": [{"axis": "行动方式", "judgment": "僵化等待、不主动改变。"}, {"axis": "获利预期", "judgment": "把偶然好运当作可重复机会。"}],
+      "comparison_edges": [{"other_term": "刻舟求剑", "minimum_difference": "守株待兔突出僵化等待或侥幸获利；刻舟求剑突出环境已变化却仍按失效的旧条件处理。"}],
+      "misuse_boundary": "题干只批评静止地看待变化，没有等待或侥幸获利结构时，更适合刻舟求剑。"
+    },
+    "善作善成": {
+      "status": "ready",
+      "meaning": "善于开展工作，也善于把事情做好、做成并坚持到底。",
+      "distinctive_feature": "同时评价“会做”和“做成”，不仅有行动能力，还要求形成完成结果、善始善终。",
+      "recognition_cues": ["战略形成后长期坚持、一抓到底。", "既会开展，又能完成。"],
+      "dimensions": [{"axis": "过程能力", "judgment": "善于组织和推进工作。"}, {"axis": "结果要求", "judgment": "把事情完成并做好。"}],
+      "comparison_edges": [],
+      "misuse_boundary": "只表示开始行动、调整方法或长期等待，却没有把事情做成、做到底的结果要求时，不宜使用。"
+    },
+    "坐以待毙": {
+      "status": "ready",
+      "meaning": "面对危险或毁灭性后果消极等待，不采取挽救行动。",
+      "distinctive_feature": "结果程度极重，接近任由自己走向失败或毁灭；不是一般等待、迟缓或暂未解决。",
+      "recognition_cues": ["危险逼近却完全不自救。", "消极等待导致严重失败或毁灭。"],
+      "dimensions": [{"axis": "行动状态", "judgment": "完全消极、不采取挽救行动。"}, {"axis": "后果程度", "judgment": "面临失败、毁灭等严重结果。"}],
+      "comparison_edges": [],
+      "misuse_boundary": "只是存在问题需要规范，或者主体暂时等待，尚未达到任由毁灭而不行动的程度时，语气过重。"
+    },
+    "熟视无睹": {
+      "status": "ready",
+      "meaning": "经常看到某事，却像没有看见一样漠不关心。",
+      "distinctive_feature": "“熟视”增加反复见到、已经熟悉的前提，问题是长期接触后仍然不重视。",
+      "recognition_cues": ["问题长期存在、反复看见。", "看惯以后仍不予关注。"],
+      "dimensions": [{"axis": "接触频率", "judgment": "经常、反复看到。"}, {"axis": "态度", "judgment": "仍然漠视、不重视。"}],
+      "comparison_edges": [{"other_term": "视而不见", "minimum_difference": "熟视无睹多出经常看到、已经熟悉的前提；视而不见只要求看见了却不理会。"}],
+      "misuse_boundary": "题干只出现一次看见后不理会，没有长期、反复接触的条件时，视而不见更稳妥。"
+    },
+    "视而不见": {
+      "status": "ready",
+      "meaning": "虽然看见某人某事，却不注意、不重视或故意不理会。",
+      "distinctive_feature": "核心矛盾是“已看见—未处理”，不要求对象长期反复出现。",
+      "recognition_cues": ["问题就在眼前却不予理会。", "题干强调看见与不处理之间的反差。"],
+      "dimensions": [{"axis": "认知前提", "judgment": "主体已经看见。"}, {"axis": "后续态度", "judgment": "不注意、不重视或不处理。"}],
+      "comparison_edges": [{"other_term": "熟视无睹", "minimum_difference": "视而不见不要求长期反复接触；熟视无睹强调经常看到、已经熟悉却仍然漠视。"}],
+      "misuse_boundary": "题干强调因害怕风险而停止发展，不是看见问题却不理会时，应考虑因噎废食等因果词。"
+    },
+    "虚张声势": {
+      "status": "ready",
+      "meaning": "故意制造虚假的强大声势，用来吓唬、迷惑别人。",
+      "distinctive_feature": "主体必须有意识地“装强”，虚假的是力量和阵势；自然现象、真实后果没有这种主观意图。",
+      "recognition_cues": ["实际力量不足，却故意摆出强大阵势。", "目的在威吓或迷惑对方。"],
+      "dimensions": [{"axis": "虚假对象", "judgment": "力量、阵势或声势。"}, {"axis": "主观目的", "judgment": "吓唬、迷惑别人。"}],
+      "comparison_edges": [{"other_term": "危言耸听", "minimum_difference": "虚张声势用虚假阵势装强；危言耸听用夸大或惊人的言论使人害怕。"}],
+      "misuse_boundary": "题干描述大自然、真实灾害或真实发生的可怕事件，没有主体故意装强时，不宜使用。"
+    },
+    "危言耸听": {
+      "status": "ready",
+      "meaning": "故意说夸大、惊人的话，使人震惊或害怕。",
+      "distinctive_feature": "手段是言论，信息被夸大或失真；重点不在事件本身是否可怕，而在说话者故意把话说得吓人。",
+      "recognition_cues": ["夸大事实、说惊人话吓人。", "题干评价言论而非真实事件。"],
+      "dimensions": [{"axis": "载体", "judgment": "言论、说法。"}, {"axis": "真实性", "judgment": "内容被夸大或失真。"}],
+      "comparison_edges": [
+        {"other_term": "骇人听闻", "minimum_difference": "危言耸听是说话者夸大或失真以吓人；骇人听闻是真实事件本身令人震惊害怕。"},
+        {"other_term": "虚张声势", "minimum_difference": "危言耸听通过夸大言论吓人；虚张声势通过伪造强大阵势吓人。"}
+      ],
+      "misuse_boundary": "真实发生的事件本身极其可怕时，应使用骇人听闻；没有言论载体时也不宜使用危言耸听。"
+    },
+    "耸人听闻": {
+      "status": "ready",
+      "meaning": "故意说夸大或虚假的事情，使人震惊、害怕。",
+      "distinctive_feature": "课程把耸人听闻与危言耸听归为同类：可怕感来自人为夸大或失实传播，而非真实事件本身。",
+      "recognition_cues": ["夸大或虚假内容被传播来吓人。", "题干否定某种说法是人为渲染。"],
+      "dimensions": [{"axis": "真实性", "judgment": "存在夸大或虚假。"}, {"axis": "效果", "judgment": "使听者震惊、害怕。"}],
+      "comparison_edges": [{"other_term": "骇人听闻", "minimum_difference": "耸人听闻的可怕感来自夸大、虚假传播；骇人听闻的可怕感来自真实事件。"}],
+      "misuse_boundary": "事件确实发生且事实本身令人震惊时，应使用骇人听闻；本课未给出耸人听闻与危言耸听的稳定二选一边界。"
+    },
+    "骇人听闻": {
+      "status": "ready",
+      "meaning": "真实发生的事情或事实令人极度震惊、害怕。",
+      "distinctive_feature": "课程用“真的吓人”概括，真实性是与危言耸听、耸人听闻相区分的首要判断。",
+      "recognition_cues": ["真实命案、暴行或事实本身可怕。", "没有人为夸大前提。"],
+      "dimensions": [{"axis": "真实性", "judgment": "事情真实发生。"}, {"axis": "情绪效果", "judgment": "事实本身令人震惊害怕。"}],
+      "comparison_edges": [
+        {"other_term": "危言耸听", "minimum_difference": "骇人听闻描述真实事实本身可怕；危言耸听描述说话者夸大或失真来吓人。"},
+        {"other_term": "耸人听闻", "minimum_difference": "骇人听闻要求事件真实；耸人听闻的可怕感来自夸大或虚假传播。"}
+      ],
+      "misuse_boundary": "内容是编造、夸大出来吓人的说法时，应考虑危言耸听或耸人听闻。"
+    },
+    "醍醐灌顶": {
+      "status": "ready",
+      "meaning": "受到启发后一下子明白、通透，认识豁然开朗。",
+      "distinctive_feature": "变化发生在理解层面，强调瞬间想通、看透；不要求此前处于麻木状态，也不表示长期警惕。",
+      "recognition_cues": ["一句话或一个规律使人瞬间想明白。", "认识由困惑转为通透。"],
+      "dimensions": [{"axis": "变化对象", "judgment": "人的理解和认识。"}, {"axis": "时间", "judgment": "瞬间领悟。"}],
+      "comparison_edges": [
+        {"other_term": "振聋发聩", "minimum_difference": "醍醐灌顶使困惑者瞬间明白；振聋发聩用有力言论唤醒思想麻木者。"},
+        {"other_term": "警钟长鸣", "minimum_difference": "醍醐灌顶强调一次性领悟；警钟长鸣强调长期持续保持警醒。"}
+      ],
+      "misuse_boundary": "题干要求长期警惕或唤醒麻木群体，而不是个人瞬间想通时，不宜使用。"
+    },
+    "振聋发聩": {
+      "status": "ready",
+      "meaning": "用有力的言论唤醒思想麻木、认识迟钝的人。",
+      "distinctive_feature": "课程以鲁迅文章为例，接受者不是一般困惑，而是对重要问题已经麻木，需要被强力唤醒。",
+      "recognition_cues": ["有力文章、言论唤醒麻木的人群。", "题干出现启蒙、唤醒社会。"],
+      "dimensions": [{"axis": "接受者状态", "judgment": "思想麻木、认识迟钝。"}, {"axis": "作用方式", "judgment": "强力言论唤醒。"}],
+      "comparison_edges": [
+        {"other_term": "醍醐灌顶", "minimum_difference": "振聋发聩针对麻木者进行思想唤醒；醍醐灌顶针对困惑者，使其瞬间想通。"},
+        {"other_term": "警钟长鸣", "minimum_difference": "振聋发聩侧重一次有力唤醒；警钟长鸣侧重长期持续保持警惕。"}
+      ],
+      "misuse_boundary": "题干没有说明人们思想麻木，只要求持续注意某项风险时，应使用警钟长鸣。"
+    },
+    "警钟长鸣": {
+      "status": "ready",
+      "meaning": "让警示长期持续存在，使人始终保持警惕。",
+      "distinctive_feature": "“长鸣”锁定时间维度，重点不是一瞬间被点醒，而是长期、反复提醒不能放松。",
+      "recognition_cues": ["风险长期存在，需要时刻警惕。", "环保、安全等问题需要持续提醒。"],
+      "dimensions": [{"axis": "时间", "judgment": "长期、持续。"}, {"axis": "作用结果", "judgment": "始终保持警惕。"}],
+      "comparison_edges": [
+        {"other_term": "醍醐灌顶", "minimum_difference": "警钟长鸣强调长期持续警惕；醍醐灌顶强调一次启发使人瞬间明白。"},
+        {"other_term": "振聋发聩", "minimum_difference": "警钟长鸣用于长期提醒已有警觉的人；振聋发聩用于有力唤醒思想麻木者。"}
+      ],
+      "misuse_boundary": "只说一次警告使人顿悟，或用强力言论唤醒麻木者时，应分别考虑醍醐灌顶、振聋发聩。"
+    }
+  }
+}
