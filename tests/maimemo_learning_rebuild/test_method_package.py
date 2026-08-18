@@ -30,6 +30,10 @@ class MethodPackageBoundaryTests(unittest.TestCase):
         self.assertIn("来源清点", guide)
         self.assertIn("GitHub最终授权", guide)
         self.assertIn("全量回读", guide)
+        self.assertIn("全库重复对账", guide)
+        self.assertIn("同词、同义项", guide)
+        self.assertIn("同词、不同义项", guide)
+        self.assertIn("证明无可复用卡后才允许新建", guide)
         self.assertNotIn("869", guide)
 
 

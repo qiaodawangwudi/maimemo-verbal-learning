@@ -6,6 +6,8 @@ import argparse
 import json
 from pathlib import Path
 
+from .reconciliation import reconciliation_hash, semantic_registry_hash
+
 
 def evaluate_public_gate(
     registry: dict, groups: dict, plan: dict, final_cards: dict
@@ -14,6 +16,28 @@ def evaluate_public_gate(
     records = registry.get("records", [])
     group_records = groups.get("groups", [])
     actions = plan.get("actions", [])
+    reconciliation = plan.get("library_reconciliation")
+    if reconciliation is None:
+        errors.append("public gate library reconciliation is missing")
+    else:
+        if not isinstance(reconciliation, dict):
+            errors.append("public gate library reconciliation is invalid")
+        else:
+            if reconciliation.get("status") != "passed":
+                errors.append("public gate library reconciliation is not passed")
+            if reconciliation.get("semantic_registry_hash") != semantic_registry_hash(
+                records
+            ):
+                errors.append(
+                    "public gate semantic registry differs from reconciliation"
+                )
+            try:
+                if reconciliation.get("reconciliation_hash") != reconciliation_hash(
+                    reconciliation
+                ):
+                    errors.append("public gate library reconciliation hash mismatch")
+            except (TypeError, ValueError, OverflowError, RecursionError):
+                errors.append("public gate library reconciliation hash mismatch")
 
     non_ready_records = sum(record.get("status") != "ready" for record in records)
     if non_ready_records:

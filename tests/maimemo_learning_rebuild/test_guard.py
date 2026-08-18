@@ -12,6 +12,7 @@ from maimemo_learning_rebuild.learning_quality import (
     learning_review_hash,
 )
 from maimemo_learning_rebuild.planning import build_action_plan
+from maimemo_learning_rebuild.reconciliation import build_library_reconciliation
 
 
 APPLICATION_REVIEW = {"complete": True, "applications": []}
@@ -57,8 +58,25 @@ def safe_fixture():
         ],
     }
     registry = [ready_record()]
+    reconciliation = build_library_reconciliation(
+        snapshot,
+        registry,
+        resolutions={
+            registry[0]["sense_id"]: {
+                "decision": "reuse_existing",
+                "canonical_card_id": "c1",
+                "retire_card_ids": [],
+                "reason": "测试夹具已明确核对为同一义项。",
+            }
+        },
+    )
     plan, cards = build_action_plan(
-        snapshot, registry, [], APPLICATION_REVIEW, BLIND_REVIEW
+        snapshot,
+        registry,
+        [],
+        APPLICATION_REVIEW,
+        BLIND_REVIEW,
+        reconciliation,
     )
     independent_review = {
         "complete": True,
@@ -81,7 +99,12 @@ def reviewed_fixture(record, resolution):
     snapshot, _, groups, _, _, _, _ = safe_fixture()
     registry = [record]
     plan, cards = build_action_plan(
-        snapshot, registry, groups, APPLICATION_REVIEW, BLIND_REVIEW
+        snapshot,
+        registry,
+        groups,
+        APPLICATION_REVIEW,
+        BLIND_REVIEW,
+        build_library_reconciliation(snapshot, registry),
     )
     independent_review = {
         "complete": True,

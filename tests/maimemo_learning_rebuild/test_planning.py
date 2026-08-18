@@ -13,6 +13,10 @@ from maimemo_learning_rebuild.planning import (
     build_action_plan,
     validate_action_plan,
 )
+from maimemo_learning_rebuild.reconciliation import (
+    build_library_reconciliation,
+    reconciliation_hash,
+)
 
 
 def snapshot_card(card_id, root_id, title, content=None):
@@ -82,6 +86,138 @@ def blind_review_for_applications(applications):
 
 
 class PlanningTests(unittest.TestCase):
+    def test_build_requires_passed_library_reconciliation(self):
+        snapshot = {"cards": []}
+        registry = [semantic("甲")]
+        with self.assertRaisesRegex(ValueError, "library reconciliation is required"):
+            build_action_plan(
+                snapshot,
+                registry,
+                [],
+                empty_application_review(),
+                empty_blind_review(),
+            )
+
+    def test_plan_binds_library_reconciliation_and_canonical_card(self):
+        snapshot = {
+            "cards": [
+                snapshot_card("c1", "r1", "基础词义｜甲"),
+                snapshot_card("c2", "r2", "基础词义｜ 甲 "),
+            ]
+        }
+        registry = [semantic("甲")]
+        reconciliation = build_library_reconciliation(
+            snapshot,
+            registry,
+            resolutions={
+                "甲::课程义::001": {
+                    "decision": "merge_existing",
+                    "canonical_card_id": "c1",
+                    "retire_card_ids": ["c2"],
+                    "reason": "保留c1，合并c2并迁移引用后待停用。",
+                }
+            },
+        )
+
+        plan, _ = build_action_plan(
+            snapshot,
+            registry,
+            [],
+            empty_application_review(),
+            empty_blind_review(),
+            reconciliation,
+        )
+
+        self.assertEqual(reconciliation_hash(reconciliation), plan["reconciliation_hash"])
+        base_action = next(item for item in plan["actions"] if item["title"] == "基础词义｜甲")
+        retired_action = next(item for item in plan["actions"] if item.get("card_id") == "c2")
+        self.assertEqual("c1", base_action["card_id"])
+        self.assertEqual("manual-review", retired_action["action"])
+        self.assertIn("迁移引用", retired_action["reason"])
+
+    def test_plan_validation_rejects_semantic_registry_drift(self):
+        snapshot = {"cards": []}
+        registry = [semantic("甲")]
+        reconciliation = build_library_reconciliation(snapshot, registry)
+        plan, _ = build_action_plan(
+            snapshot,
+            registry,
+            [],
+            empty_application_review(),
+            empty_blind_review(),
+            reconciliation,
+        )
+        changed_registry = [semantic("乙")]
+
+        errors = validate_action_plan(
+            plan,
+            snapshot,
+            empty_application_review(),
+            empty_blind_review(),
+            reconciliation,
+            changed_registry,
+        )
+
+        self.assertIn("reconciliation semantic registry hash mismatch", errors)
+
+    def test_plan_validation_fails_closed_for_malformed_reconciliation(self):
+        errors = validate_action_plan(
+            {"actions": [], "before": 0, "expected_after": 0},
+            {"cards": []},
+            empty_application_review(),
+            empty_blind_review(),
+            [],
+            [],
+        )
+
+        self.assertIn("current library reconciliation is invalid", errors)
+
+    def test_rehashed_create_cannot_override_reuse_reconciliation(self):
+        snapshot = {
+            "snapshot_scope": "full_library",
+            "pagination_complete": True,
+            "reported_total": 1,
+            "cards": [snapshot_card("c1", "r1", "基础词义｜ Ａ 词 ")],
+        }
+        registry = [semantic("A词")]
+        reconciliation = build_library_reconciliation(
+            snapshot,
+            registry,
+            resolutions={
+                "A词::课程义::001": {
+                    "decision": "reuse_existing",
+                    "canonical_card_id": "c1",
+                    "retire_card_ids": [],
+                    "reason": "已核对为同一义项。",
+                }
+            },
+        )
+        plan, _ = build_action_plan(
+            snapshot,
+            registry,
+            [],
+            empty_application_review(),
+            empty_blind_review(),
+            reconciliation,
+        )
+        action = next(item for item in plan["actions"] if item["title"] == "基础词义｜A词")
+        action["action"] = "create"
+        action.pop("card_id")
+        plan["action_counts"] = {"create": 1}
+        plan["expected_after"] = 2
+        plan["plan_hash"] = _plan_hash(plan)
+
+        errors = validate_action_plan(
+            plan,
+            snapshot,
+            empty_application_review(),
+            empty_blind_review(),
+            reconciliation,
+            registry,
+        )
+
+        self.assertIn("base action contradicts reconciliation: A词::课程义::001", errors)
+
     def test_build_requires_both_review_artifacts(self):
         with self.assertRaisesRegex(ValueError, "application review is required"):
             build_action_plan({"cards": []}, [], [])
@@ -105,6 +241,7 @@ class PlanningTests(unittest.TestCase):
             [],
             application_review,
             blind_review,
+            build_library_reconciliation(snapshot, registry),
         )
 
         self.assertEqual(
@@ -133,6 +270,7 @@ class PlanningTests(unittest.TestCase):
             [],
             application_review,
             blind_review,
+            build_library_reconciliation(snapshot, registry),
         )
         changed_application_review = copy.deepcopy(application_review)
         changed_application_review["complete"] = False
@@ -182,6 +320,7 @@ class PlanningTests(unittest.TestCase):
             [],
             application_review,
             blind_review,
+            build_library_reconciliation(snapshot, registry),
         )
 
         errors = validate_action_plan(plan, snapshot)
@@ -199,6 +338,7 @@ class PlanningTests(unittest.TestCase):
             [],
             application_review,
             blind_review,
+            build_library_reconciliation(snapshot, []),
         )
         plan.pop("application_review_hash")
         plan.pop("blind_review_hash")
@@ -224,6 +364,7 @@ class PlanningTests(unittest.TestCase):
             [],
             valid_application,
             valid_blind,
+            build_library_reconciliation(snapshot, []),
         )
         incomplete_application = {"complete": False, "applications": []}
         incomplete_blind = {"complete": False, "reviews": []}
@@ -318,6 +459,9 @@ class PlanningTests(unittest.TestCase):
                 "groups": '{"groups": []}',
                 "applications": '{"complete": true, "applications": []}',
                 "blind": '{"complete": true, "reviews": [], "score": NaN}',
+                "reconciliation": json.dumps(
+                    build_library_reconciliation({"cards": []}, [])
+                ),
             }
             paths = {}
             for name, payload in payloads.items():
@@ -339,6 +483,8 @@ class PlanningTests(unittest.TestCase):
                     str(paths["applications"]),
                     "--blind-review",
                     str(paths["blind"]),
+                    "--reconciliation",
+                    str(paths["reconciliation"]),
                     "--output-dir",
                     str(root / "output"),
                 ],
@@ -376,6 +522,7 @@ class PlanningTests(unittest.TestCase):
             [group],
             empty_application_review(),
             empty_blind_review(),
+            build_library_reconciliation(snapshot, registry),
         )
 
         comparison_action = next(
@@ -419,6 +566,7 @@ class PlanningTests(unittest.TestCase):
             [],
             review,
             blind_review_for_applications([application]),
+            build_library_reconciliation(snapshot, registry),
         )
 
         action = next(item for item in plan["actions"] if item["title"] == application["title"])
@@ -437,6 +585,24 @@ class PlanningTests(unittest.TestCase):
             ]
         }
         registry = [semantic("甲"), semantic("乙", "pending"), semantic("丙")]
+        reconciliation = build_library_reconciliation(
+            snapshot,
+            registry,
+            resolutions={
+                "甲::课程义::001": {
+                    "decision": "reuse_existing",
+                    "canonical_card_id": "c1",
+                    "retire_card_ids": [],
+                    "reason": "已确认甲旧卡属于相同课程义项。",
+                },
+                "乙::课程义::001": {
+                    "decision": "reuse_existing",
+                    "canonical_card_id": "c2",
+                    "retire_card_ids": [],
+                    "reason": "乙仍待核，但旧卡身份已明确，仅禁止内容变更。",
+                },
+            },
+        )
 
         plan, final_cards = build_action_plan(
             snapshot,
@@ -444,6 +610,7 @@ class PlanningTests(unittest.TestCase):
             [],
             empty_application_review(),
             empty_blind_review(),
+            reconciliation,
         )
         actions = {action["title"]: action for action in plan["actions"]}
 

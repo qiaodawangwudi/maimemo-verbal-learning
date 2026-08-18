@@ -49,6 +49,8 @@ def evaluate_guard(
             snapshot,
             application_review,
             blind_review,
+            plan.get("library_reconciliation") if isinstance(plan, dict) else None,
+            registry,
         )
     )
 

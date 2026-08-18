@@ -17,6 +17,11 @@ from .application_blind_review import (
 from .application_quality_gate import application_review_hash
 from .markji import parse_card
 from .models import validate_action_record
+from .reconciliation import (
+    reconciliation_hash,
+    validate_library_reconciliation,
+    validate_library_reconciliation_binding,
+)
 from .render import render_application_card, render_base_card, render_comparison_card
 
 
@@ -49,6 +54,7 @@ def build_action_plan(
     groups: list[dict],
     application_review: dict | None = None,
     blind_review: dict | None = None,
+    library_reconciliation: dict | None = None,
 ) -> tuple[dict, list[dict]]:
     if application_review is None:
         raise ValueError("application review is required")
@@ -62,6 +68,17 @@ def build_action_plan(
         raise ValueError("blind review is required")
     if not isinstance(blind_review, dict) or strict_json_error(blind_review):
         raise ValueError("blind review must be a strict JSON object")
+    if library_reconciliation is None:
+        raise ValueError("library reconciliation is required")
+    reconciliation_errors = validate_library_reconciliation(
+        library_reconciliation,
+        snapshot,
+        registry,
+    )
+    if reconciliation_errors:
+        raise ValueError(
+            "library reconciliation is invalid: " + "; ".join(reconciliation_errors)
+        )
 
     if not isinstance(snapshot, dict) or strict_json_error(snapshot):
         raise ValueError("snapshot must be a strict JSON object")
@@ -74,7 +91,7 @@ def build_action_plan(
         parsed = [parse_card(card) for card in raw_cards]
     except (KeyError, TypeError, ValueError) as exc:
         raise ValueError(f"invalid snapshot card: {exc}") from exc
-    base_by_term = {card.term: card for card in parsed if card.card_type == "base"}
+    cards_by_id = {card.card_id: card for card in parsed}
     comparison_by_id = {
         card.card_id: card for card in parsed if card.card_type == "comparison"
     }
@@ -82,6 +99,9 @@ def build_action_plan(
         card.title: card for card in parsed if card.card_type == "application"
     }
     records_by_term = {record["term"]: record for record in registry}
+    reconciliation_by_sense = {
+        entry["sense_id"]: entry for entry in library_reconciliation["entries"]
+    }
     ready_groups = [group for group in groups if group.get("status") == "ready"]
     ready_group_refs: dict[str, list[dict]] = {}
     for group in ready_groups:
@@ -100,7 +120,16 @@ def build_action_plan(
     for record in sorted(registry, key=lambda item: (item.get("registry_order", 10**9), item["term"])):
         term = record["term"]
         title = f"基础词义｜{term}"
-        existing = base_by_term.get(term)
+        identity = str(record.get("sense_id") or "")
+        reconciliation_entry = reconciliation_by_sense[identity]
+        decision = reconciliation_entry["decision"]
+        if decision == "layer_senses":
+            raise ValueError(
+                "layered senses require a consolidated semantic record before planning"
+            )
+        existing = None
+        if decision in {"reuse_existing", "merge_existing"}:
+            existing = cards_by_id[reconciliation_entry["canonical_card_id"]]
         if record.get("status") != "ready":
             actions.append(
                 {
@@ -146,6 +175,18 @@ def build_action_plan(
                 "card_id": action.get("card_id", ""),
             }
         )
+        for retired_id in reconciliation_entry.get("retire_card_ids", []):
+            retired_card = cards_by_id[retired_id]
+            actions.append(
+                {
+                    "title": retired_card.title,
+                    "card_id": retired_card.card_id,
+                    "action": "manual-review",
+                    "content_hash": content_hash(retired_card.content),
+                    "reason": "重复卡内容并入主卡后，必须先迁移引用并由用户停用；程序不自动删除。",
+                    "record_status": "unresolved",
+                }
+            )
 
     handled_comparison_ids: set[str] = set()
     for group in groups:
@@ -273,6 +314,9 @@ def build_action_plan(
         "chapter_id": str(snapshot.get("chapter", {}).get("id") or ""),
         "chapter_name": str(snapshot.get("chapter", {}).get("name") or ""),
         "snapshot_hash": snapshot_hash(snapshot),
+        "semantic_registry_hash": library_reconciliation["semantic_registry_hash"],
+        "reconciliation_hash": reconciliation_hash(library_reconciliation),
+        "library_reconciliation": library_reconciliation,
         "before": len(parsed),
         "expected_after": len(parsed) + create_count,
         "action_counts": dict(sorted(action_counts.items())),
@@ -292,6 +336,8 @@ def validate_action_plan(
     snapshot: dict,
     application_review: dict | None = None,
     blind_review: dict | None = None,
+    library_reconciliation: dict | None = None,
+    registry: list[dict] | None = None,
 ) -> list[str]:
     errors: list[str] = []
     if not isinstance(plan, dict):
@@ -345,6 +391,76 @@ def validate_action_plan(
         errors.append("plan before count differs from snapshot")
     if plan.get("snapshot_hash") and plan.get("snapshot_hash") != snapshot_hash(snapshot):
         errors.append("snapshot hash mismatch")
+    stored_reconciliation_hash = plan.get("reconciliation_hash")
+    if not isinstance(stored_reconciliation_hash, str) or not stored_reconciliation_hash:
+        errors.append("action plan is missing library reconciliation hash")
+    current_reconciliation = (
+        library_reconciliation
+        if library_reconciliation is not None
+        else plan.get("library_reconciliation")
+    )
+    if current_reconciliation is None:
+        errors.append("current library reconciliation is missing")
+    else:
+        reconciliation_errors = validate_library_reconciliation_binding(
+            current_reconciliation, snapshot
+        )
+        if isinstance(current_reconciliation, dict) and current_reconciliation.get(
+            "semantic_registry_hash"
+        ) != plan.get("semantic_registry_hash") and plan.get("semantic_registry_hash"):
+            reconciliation_errors.append(
+                "reconciliation semantic registry hash differs from action plan"
+            )
+        if reconciliation_errors:
+            errors.append("current library reconciliation is invalid")
+        if registry is not None:
+            full_reconciliation_errors = validate_library_reconciliation(
+                current_reconciliation,
+                snapshot,
+                registry,
+            )
+            if "reconciliation semantic registry hash mismatch" in full_reconciliation_errors:
+                errors.append("reconciliation semantic registry hash mismatch")
+            if (
+                "reconciliation entries do not cover every semantic identity"
+                in full_reconciliation_errors
+            ):
+                errors.append(
+                    "reconciliation entries do not cover every semantic identity"
+                )
+        if isinstance(current_reconciliation, dict) and isinstance(actions, list):
+            for entry in current_reconciliation.get("entries", []):
+                if not isinstance(entry, dict):
+                    continue
+                sense_id = str(entry.get("sense_id") or "")
+                title = f"基础词义｜{entry.get('term', '')}"
+                decision = entry.get("decision")
+                canonical = str(entry.get("canonical_card_id") or "")
+                if decision == "create_new":
+                    matches = [
+                        action
+                        for action in actions
+                        if isinstance(action, dict)
+                        and action.get("title") == title
+                        and action.get("action") == "create"
+                        and not action.get("card_id")
+                    ]
+                else:
+                    matches = [
+                        action
+                        for action in actions
+                        if isinstance(action, dict)
+                        and action.get("card_id") == canonical
+                        and action.get("action")
+                        in {"update", "unchanged", "manual-review"}
+                    ]
+                if len(matches) != 1:
+                    errors.append(f"base action contradicts reconciliation: {sense_id}")
+        try:
+            if stored_reconciliation_hash != reconciliation_hash(current_reconciliation):
+                errors.append("action plan is not bound to current library reconciliation")
+        except (TypeError, ValueError, OverflowError, RecursionError):
+            errors.append("action plan is not bound to current library reconciliation")
     stored_application_hash = plan.get("application_review_hash")
     if not isinstance(stored_application_hash, str) or not stored_application_hash:
         errors.append("action plan is missing application review hash")
@@ -426,6 +542,7 @@ def main() -> int:
     parser.add_argument("--groups", type=Path, required=True)
     parser.add_argument("--applications", type=Path, required=True)
     parser.add_argument("--blind-review", type=Path, required=True)
+    parser.add_argument("--reconciliation", type=Path, required=True)
     parser.add_argument("--output-dir", type=Path, default=Path(__file__).parent / "artifacts")
     args = parser.parse_args()
     try:
@@ -434,6 +551,7 @@ def main() -> int:
         groups_payload = load_strict_json(args.groups)
         application_review = load_strict_json(args.applications)
         blind_review = load_strict_json(args.blind_review)
+        library_reconciliation = load_strict_json(args.reconciliation)
         if not all(
             isinstance(payload, dict)
             for payload in (snapshot_payload, registry_payload, groups_payload)
@@ -445,13 +563,23 @@ def main() -> int:
         if not isinstance(registry, list) or not isinstance(groups, list):
             raise ValueError("registry records and group registry groups must be lists")
         plan, final_cards = build_action_plan(
-            snapshot, registry, groups, application_review, blind_review
+            snapshot,
+            registry,
+            groups,
+            application_review,
+            blind_review,
+            library_reconciliation,
         )
     except (OSError, UnicodeError, json.JSONDecodeError, ValueError) as exc:
         print(json.dumps({"ok": False, "errors": [f"invalid strict JSON: {exc}"]}))
         return 1
     errors = validate_action_plan(
-        plan, snapshot, application_review, blind_review
+        plan,
+        snapshot,
+        application_review,
+        blind_review,
+        library_reconciliation,
+        registry,
     )
     if errors:
         for error in errors:

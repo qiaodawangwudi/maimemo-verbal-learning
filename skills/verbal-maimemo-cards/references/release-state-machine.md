@@ -7,7 +7,8 @@
 | 当前状态 | 进入下一状态所需工件 | 下一状态 | 失败动作 |
 |---|---|---|---|
 | `collecting_sources` | 有效 `source_inventory` | `building_semantics` | 停在来源清点 |
-| `building_semantics` | 通过的 `semantic_registry` | `reviewing_discrimination` | 报告待核义项或冲突 |
+| `building_semantics` | 通过的 `semantic_registry` | `reconciling_library` | 报告待核义项或冲突 |
+| `reconciling_library` | 绑定当前快照与语义档案的 `library_reconciliation` | `reviewing_discrimination` | 报告重复主卡、异形词、一词多义或新建证明缺失 |
 | `reviewing_discrimination` | 通过的 `discrimination_review` | `reviewing_applications` | 报告比较组或根引用决定 |
 | `reviewing_applications` | 通过的 `application_review` | `freezing_cards` | 报告非唯一题目 |
 | `freezing_cards` | 有效 `frozen_cards` | `building_manifest` | 禁止继续编辑后假装已冻结 |

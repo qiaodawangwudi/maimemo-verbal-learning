@@ -19,6 +19,7 @@ ASSET_ROOT = SKILL_ROOT / "assets" / "github"
 STAGE_MODULES = {
     "collect-sources": "maimemo_learning_rebuild.sources",
     "review-semantics": "maimemo_learning_rebuild.review",
+    "reconcile-library": "maimemo_learning_rebuild.reconciliation",
     "build-groups": "maimemo_learning_rebuild.groups",
     "build-applications": "maimemo_learning_rebuild.application_candidates",
     "review-applications": "maimemo_learning_rebuild.application_quality_gate",
@@ -32,6 +33,7 @@ STAGE_MODULES = {
 REQUIRED_RUNTIME_MODULES = (
     "source_inventory",
     "review",
+    "reconciliation",
     "learning_quality",
     "application_quality_gate",
     "release_manifest",

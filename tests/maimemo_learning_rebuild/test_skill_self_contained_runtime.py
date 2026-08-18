@@ -23,6 +23,8 @@ class SelfContainedSkillTests(unittest.TestCase):
         guide_text = guide.read_text(encoding="utf-8")
         for required in (
             "run_pipeline.py self-check",
+            "reconcile-library",
+            "library_reconciliation",
             "只审查",
             "生成预览",
             "受保护发布",
@@ -41,6 +43,7 @@ class SelfContainedSkillTests(unittest.TestCase):
             "release_writer.py",
             "readback.py",
             "guard.py",
+            "reconciliation.py",
         }
         present = {path.name for path in RUNTIME_PACKAGE.glob("*.py")}
         self.assertEqual(required_modules - present, set())

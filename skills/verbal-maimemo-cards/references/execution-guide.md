@@ -12,6 +12,7 @@ python scripts/run_pipeline.py self-check
 |---|---|
 | `collect-sources` | 清点、合并和定位来源 |
 | `review-semantics` | 建立并审查词义档案 |
+| `reconcile-library` | 对完整卡组快照执行规范词面与义项对账，生成 `library_reconciliation` |
 | `build-groups` | 重建完整近义比较组 |
 | `build-applications` | 生成候选应用题 |
 | `review-applications` | 独立审查答案唯一性 |
@@ -31,7 +32,7 @@ python scripts/run_pipeline.py review-applications --artifact-dir <工件目录>
 
 ### 只审查
 
-运行来源、语义、辨析和应用审查，输出问题清单；不冻结、不生成发布授权、不读取令牌、不调用写接口。
+运行来源、语义、全库重复对账、辨析和应用审查，输出问题清单；不冻结、不生成发布授权、不读取令牌、不调用写接口。
 
 ### 生成预览
 
@@ -56,6 +57,7 @@ python scripts/run_pipeline.py install-github-templates --target <目标仓库>
 - `self-check` 失败；
 - 任一前置工件不是 `passed`；
 - 词义、辨析或应用唯一性仍待核；
+- `library_reconciliation` 未通过，或不再匹配当前全库快照和语义档案；
 - 冻结内容、章节、动作或快照发生变化；
 - GitHub 授权与发布哈希不匹配；
 - 写入结果不确定且尚未全量回读。
