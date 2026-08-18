@@ -1,0 +1,4 @@
+interface:
+  display_name: "言语墨墨制卡"
+  short_description: "审查并安全发布言语理解词汇学习卡"
+  default_prompt: "使用完整证据审查、冻结发布清单和受保护授权处理这批言语词汇卡。"

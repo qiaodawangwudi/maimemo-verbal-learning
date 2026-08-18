@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "complete": true,
+  "totals": {
+    "rendered": 4,
+    "by_type": {
+      "comparison": 1,
+      "base": 2,
+      "application": 1
+    }
+  },
+  "cards": [
+    {
+      "stable_card_key": "comparison:甲、乙",
+      "title": "近义辨析｜甲、乙",
+      "card_type": "comparison",
+      "action": "create",
+      "card_id": "",
+      "content": "comparison"
+    },
+    {
+      "stable_card_key": "base:甲",
+      "title": "基础词义｜甲",
+      "card_type": "base",
+      "action": "update",
+      "card_id": "base-1",
+      "content": "base update"
+    },
+    {
+      "stable_card_key": "base:乙",
+      "title": "基础词义｜乙",
+      "card_type": "base",
+      "action": "unchanged",
+      "card_id": "base-2",
+      "content": "base unchanged"
+    },
+    {
+      "stable_card_key": "application:甲、乙:差别",
+      "title": "语境应用｜甲、乙｜差别",
+      "card_type": "application",
+      "action": "create",
+      "card_id": "",
+      "content": "application"
+    }
+  ]
+}

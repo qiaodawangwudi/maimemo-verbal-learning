@@ -1,0 +1,96 @@
+{
+  "schema_version": 2,
+  "deck": {
+    "id": "deck-release",
+    "name": "公考成语积累辨析"
+  },
+  "chapter_routes": {
+    "comparison": {
+      "id": "chapter-comparison",
+      "name": "近义辨析"
+    },
+    "base": {
+      "id": "chapter-base",
+      "name": "基础词义"
+    },
+    "application": {
+      "id": "chapter-application",
+      "name": "语境应用"
+    }
+  },
+  "before_counts": {
+    "comparison": 0,
+    "base": 2,
+    "application": 0
+  },
+  "route_counts": {
+    "comparison": {
+      "before": 0,
+      "create": 1,
+      "update": 0,
+      "unchanged": 0,
+      "after": 1
+    },
+    "base": {
+      "before": 2,
+      "create": 0,
+      "update": 1,
+      "unchanged": 1,
+      "after": 2
+    },
+    "application": {
+      "before": 0,
+      "create": 1,
+      "update": 0,
+      "unchanged": 0,
+      "after": 1
+    }
+  },
+  "action_counts": {
+    "create": 2,
+    "update": 1,
+    "unchanged": 1
+  },
+  "actions": [
+    {
+      "stable_card_key": "comparison:甲、乙",
+      "title": "近义辨析｜甲、乙",
+      "card_type": "comparison",
+      "route_id": "chapter-comparison",
+      "route_name": "近义辨析",
+      "action": "create",
+      "card_id": "",
+      "content_hash": "c271f2bb931810eef633f7c736d1dd934fbd6ed5f62ac8d8ea39ade811190622"
+    },
+    {
+      "stable_card_key": "base:甲",
+      "title": "基础词义｜甲",
+      "card_type": "base",
+      "route_id": "chapter-base",
+      "route_name": "基础词义",
+      "action": "update",
+      "card_id": "base-1",
+      "content_hash": "37dcf7a8031fb6b0a0a0f5fb32cf1806ef6fb343ab45167682e556ae70a90ca1"
+    },
+    {
+      "stable_card_key": "base:乙",
+      "title": "基础词义｜乙",
+      "card_type": "base",
+      "route_id": "chapter-base",
+      "route_name": "基础词义",
+      "action": "unchanged",
+      "card_id": "base-2",
+      "content_hash": "f76ef0a6a81cc3b3b8cbccc35b99bc0b375b8d3cff224e257d0fbc1f727bca3e"
+    },
+    {
+      "stable_card_key": "application:甲、乙:差别",
+      "title": "语境应用｜甲、乙｜差别",
+      "card_type": "application",
+      "route_id": "chapter-application",
+      "route_name": "语境应用",
+      "action": "create",
+      "card_id": "",
+      "content_hash": "1fe289205936c3fdb61158223892c7a8bee6ff4dfa085ea1c094ce0294e32114"
+    }
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "schema_version": 2,
+  "complete": true,
+  "reports": [
+    {
+      "name": "public_quality_gate",
+      "passed": true
+    },
+    {
+      "name": "application_blind_review",
+      "passed": true
+    }
+  ],
+  "independent_review": {
+    "complete": true,
+    "reviewer_context_isolated": true,
+    "resolutions": [],
+    "edge_reviews": [],
+    "comparison_reviews": [],
+    "semantic_registry_hash": "0fceade4212557bcdda14382349bbfcfba3cfbe7428c108de229360fbc89c03f",
+    "group_registry_hash": "1b7db55132f85b6a735dcd34a71a462d5b9b7485d766eec89ccc1dae6d804387",
+    "review_hash": "60324851e888a9f1242dd14ee7c0b8e072a7e9580e7cec587337e58abc6117f6"
+  }
+}

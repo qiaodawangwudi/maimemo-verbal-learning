@@ -1,0 +1,22 @@
+{
+  "id": "deck",
+  "name": "deck",
+  "chapters": [
+    {
+      "id": "chapter-comparison",
+      "name": "comparison",
+      "card_ids": []
+    },
+    {
+      "id": "chapter-base",
+      "name": "base",
+      "card_ids": []
+    },
+    {
+      "id": "chapter-application",
+      "name": "application",
+      "card_ids": []
+    }
+  ],
+  "cards": []
+}
