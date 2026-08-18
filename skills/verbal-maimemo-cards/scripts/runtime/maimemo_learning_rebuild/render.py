@@ -5,6 +5,18 @@ from __future__ import annotations
 import re
 
 
+_NON_DIMENSION_AXES = {
+    "选择落点",
+    "落点",
+    "核心辨析",
+    "词义",
+    "题干关键词",
+    "一眼辨析",
+    "怎么选",
+    "判断维度",
+}
+
+
 def _line(label: str, text: str) -> str:
     return f"[T#B#{label}]{text}"
 
@@ -38,6 +50,13 @@ def _adds_information(text: str, existing: list[str]) -> bool:
 
 def _same_judgment(left: str, right: str) -> bool:
     return bool(_normalized(left)) and _normalized(left) == _normalized(right)
+
+
+def _is_independent_dimension(axis: str) -> bool:
+    normalized = _normalized(axis)
+    return bool(normalized) and normalized not in {
+        _normalized(value) for value in _NON_DIMENSION_AXES
+    }
 
 
 def _landing_from_clause(term: str, clause: str) -> str:
@@ -168,12 +187,21 @@ def render_base_card(record: dict, group_refs: list[dict]) -> str:
             lines.append(_line(f"{term} × {other}：", glance))
     novel_dimensions = []
     dimension_seen = seen + cues + [item[1] for item in glances]
+    dimension_axes = set()
     for dimension in record.get("dimensions") or []:
+        axis = str(dimension.get("axis") or "").strip()
+        normalized_axis = _normalized(axis)
         judgment = str(dimension.get("judgment") or "").strip()
-        if judgment and _adds_information(judgment, dimension_seen):
-            novel_dimensions.append((str(dimension.get("axis") or "判断维度"), judgment))
+        if (
+            _is_independent_dimension(axis)
+            and normalized_axis not in dimension_axes
+            and judgment
+            and _adds_information(judgment, dimension_seen)
+        ):
+            novel_dimensions.append((axis, judgment))
+            dimension_axes.add(normalized_axis)
             dimension_seen.append(judgment)
-    if novel_dimensions:
+    if len(novel_dimensions) >= 2:
         lines.extend(["", "[T#B,!d16056#【多维判断】]"])
         for axis, judgment in novel_dimensions:
             lines.append(_line(f"{axis}：", judgment))
@@ -246,8 +274,12 @@ def render_comparison_card(group: dict, records: list[dict]) -> str:
         ]
         for term in members
     }
+    dimension_axes = set()
     for dimension in group.get("dimensions") or []:
-        axis = str(dimension.get("axis") or "判断维度").strip()
+        axis = str(dimension.get("axis") or "").strip()
+        normalized_axis = _normalized(axis)
+        if not _is_independent_dimension(axis) or normalized_axis in dimension_axes:
+            continue
         judgments = dimension.get("judgments") or {}
         novel = []
         for term in members:
@@ -261,9 +293,10 @@ def render_comparison_card(group: dict, records: list[dict]) -> str:
                 ],
             ):
                 novel.append((term, judgment))
-        if novel:
+        if len(novel) >= 2:
             novel_dimensions.append((axis, novel))
-    if novel_dimensions:
+            dimension_axes.add(normalized_axis)
+    if len(novel_dimensions) >= 2:
         lines.extend(["", "[T#B,!d16056#【多维判断】]"])
         for axis, judgments in novel_dimensions:
             lines.append(_line(f"{axis}：", ""))

@@ -253,6 +253,29 @@ class LayeredRenderTests(unittest.TestCase):
         self.assertEqual(1, rendered.count("针对缺点作改善"))
         self.assertNotIn("【词义】", rendered)
 
+    def test_base_card_does_not_call_one_axis_multidimensional(self):
+        for dimensions in (
+            [{"axis": "选择落点", "judgment": "突出由接近关系带来的优先获利。"}],
+            [{"axis": "对象范围", "judgment": "对象可以是人，也可以是事。"}],
+        ):
+            with self.subTest(dimensions=dimensions):
+                rendered = render_base_card(
+                    {
+                        "term": "近水楼台",
+                        "meaning": "因接近某人或某事而优先得到利益或机会。",
+                        "core_discrimination": "接近某人/某事 + 优先获得利益或机会",
+                        "recognition_cues": [],
+                        "comparison_edges": [],
+                        "dimensions": dimensions,
+                        "misuse_boundary": "",
+                        "typical_contexts": [],
+                    },
+                    [],
+                )
+
+                self.assertNotIn("【多维判断】", rendered)
+                self.assertNotIn("选择落点", rendered)
+
     def test_reviewed_selection_condition_is_shown_once_without_full_edge_echo(self):
         records = [
             {"term": "甲", "meaning": "甲的完整词义。", "distinctive_feature": "甲落点。"},
@@ -316,8 +339,8 @@ class LayeredRenderTests(unittest.TestCase):
         self.assertIn("突破解决 vs 保持顺畅", rendered)
         self.assertIn("突破解决 vs 由不通到贯通", rendered)
         self.assertNotIn(repeated, rendered)
-        self.assertIn("【多维判断】", rendered)
-        self.assertIn("对象", rendered)
+        self.assertNotIn("【多维判断】", rendered)
+        self.assertNotIn("对象", rendered)
         self.assertNotIn("选择落点", rendered)
 
 
