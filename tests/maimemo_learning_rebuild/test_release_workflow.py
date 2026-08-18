@@ -187,6 +187,23 @@ class ProtectedReleaseWorkflowTests(unittest.TestCase):
         self.assertIn("python -m unittest discover", workflow)
         self.assertIn("-s tests -t . -p 'test_*.py'", workflow)
 
+    def test_pull_request_ci_does_not_authorize_or_gate_unfrozen_working_artifacts(self):
+        workflow = QUALITY_WORKFLOW_PATH.read_text(encoding="utf-8")
+
+        self.assertNotIn("environment: maimemo-final-release", workflow)
+        self.assertNotIn(
+            "--artifact-dir maimemo_learning_rebuild/artifacts",
+            workflow,
+        )
+        self.assertIn(
+            "tests.maimemo_learning_rebuild.test_public_quality_gate",
+            workflow,
+        )
+        self.assertIn(
+            "tests.maimemo_learning_rebuild.test_application_quality_gate",
+            workflow,
+        )
+
 
 if __name__ == "__main__":
     unittest.main()
