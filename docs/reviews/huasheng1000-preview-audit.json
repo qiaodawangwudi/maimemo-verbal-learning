@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "audit_id": "huasheng1000-preview-20260819",
+  "scope": "preview_only_no_maimemo_write",
+  "source_inventory": {
+    "docx_files": 24,
+    "target_terms": 974,
+    "idioms": 814,
+    "content_words": 160
+  },
+  "outputs": {
+    "basic_cards": 974,
+    "comparison_cards": 104,
+    "application_cards": 974
+  },
+  "quality": {
+    "semantic_records_ready": 974,
+    "semantic_contract_errors": 0,
+    "comparison_group_errors": 0,
+    "application_contract_errors": 0,
+    "answer_hidden_application_reviews": 974,
+    "answer_hidden_review_errors": 0,
+    "local_test_count": 16,
+    "status": "passed"
+  },
+  "library_reconciliation": {
+    "exact_title_candidates": 127,
+    "no_exact_title_candidates": 847,
+    "full_live_library_completeness_proven": false,
+    "write_gate": "blocked_pending_full_live_snapshot"
+  },
+  "private_local_artifact_sha256": {
+    "basic_preview_markdown": "cd14b5d7f92d1218baba83a11134116ce11947277388afefad94958a0991ef8d",
+    "comparison_preview_markdown": "e97f04deb26fc10fe90bc495519b22fc0d3143029ef3fb166fa525b31aa64efb",
+    "application_preview_markdown": "1262da02d6553d6b075231fb23df0fb94c6079113eb6d9e3b81066615c4d221e",
+    "combined_preview_json": "afa06ed73a4a6dca0141526602b47ad9e9fed8b06c2c78d5c39d6a7a7b3211db",
+    "application_blind_review_json": "fd51e90da5c7e4355597443f2e04a48db286c51d52f01634aa82bebbd36f831e",
+    "application_repository_report_json": "fdfe5da4f3d4b2a90d96447479026e13c52ef798031cdffaa9c1d816fa4998e6"
+  },
+  "privacy": {
+    "raw_course_material_uploaded": false,
+    "card_content_uploaded": false,
+    "audit_contains_only_counts_hashes_and_nonsecret_status": true
+  }
+}
