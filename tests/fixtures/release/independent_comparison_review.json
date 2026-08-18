@@ -5,7 +5,7 @@
   "edge_reviews": [
     {
       "subject_id": "edge-v1-150b19a4fd0dbf5054722e4c29aa3b3faedb9abc0c910ae090ab1415894ac5a4",
-      "comparison_subject_id": "comparison-v1-f221000cae19e36177acdb55f990852e0f0a4741bb446127dbc84b682be53050",
+      "comparison_subject_id": "comparison-v1-0b23053ad3820e27b056989ecd5fe3ebd4ccebb466497af3de37c1c277beda4f",
       "group_id": "g-final-binding",
       "left": "甲",
       "right": "乙",
@@ -19,13 +19,13 @@
   ],
   "comparison_reviews": [
     {
-      "comparison_subject_id": "comparison-v1-f221000cae19e36177acdb55f990852e0f0a4741bb446127dbc84b682be53050",
+      "comparison_subject_id": "comparison-v1-0b23053ad3820e27b056989ecd5fe3ebd4ccebb466497af3de37c1c277beda4f",
       "stable_card_key": "comparison:甲、乙",
       "card_type": "comparison",
       "route_id": "chapter-comparison",
       "route_name": "近义辨析",
       "title": "近义辨析｜甲、乙",
-      "final_content_hash": "71d60435693378bbcfcaea16cf3610f1f817d00479099350097e1f6a75a65302",
+      "final_content_hash": "c1ece485b5808687073b13e635b8be8562f75601c0bbaa38307252438b8c486d",
       "edge_subject_ids": [
         "edge-v1-150b19a4fd0dbf5054722e4c29aa3b3faedb9abc0c910ae090ab1415894ac5a4"
       ]

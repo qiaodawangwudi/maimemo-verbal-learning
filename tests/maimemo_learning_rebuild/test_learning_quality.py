@@ -71,7 +71,7 @@ def ready_comparison_records():
 STANDARD_EDGE_REVIEW = {
     "subject_id": "edge-v1-d80aa611a12c4a4d637815dfcf83760c803a6ca44a7cd51fbbf31a1c68082942",
     "comparison_subject_id": (
-        "comparison-v1-146999e6eb97a98fd544f21e92f075693b167d492a7ba83b40326307b4f905fe"
+        "comparison-v1-656fbddbe6f08a3fcf75196c6cb4466f82be9c29007232b1a483e27ce7312d40"
     ),
     "group_id": "g-risk",
     "left": "因噎废食",
@@ -88,7 +88,7 @@ STANDARD_EDGE_REVIEW = {
 }
 STANDARD_COMPARISON_REVIEW = {
     "comparison_subject_id": (
-        "comparison-v1-146999e6eb97a98fd544f21e92f075693b167d492a7ba83b40326307b4f905fe"
+        "comparison-v1-656fbddbe6f08a3fcf75196c6cb4466f82be9c29007232b1a483e27ce7312d40"
     ),
     "stable_card_key": "comparison:因噎废食、投鼠忌器",
     "card_type": "comparison",
@@ -96,7 +96,7 @@ STANDARD_COMPARISON_REVIEW = {
     "route_name": "近义辨析",
     "title": "近义辨析｜因噎废食、投鼠忌器",
     "final_content_hash": (
-        "8b46763e22079531a9525efeb8319130b03083133b2d721af0f44afc9751e988"
+        "4de547ecd7bee0fe32effb5264b0b9a28cdb2f186cdc28f72d800996fce6938c"
     ),
     "edge_subject_ids": [STANDARD_EDGE_REVIEW["subject_id"]],
 }

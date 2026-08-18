@@ -72,7 +72,7 @@ class LayeredRenderTests(unittest.TestCase):
             self.assertEqual(1, rendered.count("\n---\n"))
             self.assertIn("【核心辨析】", rendered)
 
-    def test_base_card_puts_keyword_core_first_and_omits_group_repetition(self):
+    def test_base_card_keeps_compact_one_glance_without_group_repetition(self):
         record = {
             "term": "因噎废食",
             "meaning": "因出过问题或怕出问题，索性停止本应继续的行动。",
@@ -88,6 +88,7 @@ class LayeredRenderTests(unittest.TestCase):
             "dimensions": [
                 {"axis": "触发条件", "judgment": "已有问题，或担心问题发生。"},
                 {"axis": "动作结果", "judgment": "本应继续的行动被整体停止。"},
+                {"axis": "对象边界", "judgment": "对象是本应继续的必要行动。"},
             ],
             "misuse_boundary": "只有害怕或犹豫，却没有停止必要行动时，不足以使用。",
             "typical_contexts": ["不能因为个别事故就停止必要改革。"],
@@ -102,14 +103,22 @@ class LayeredRenderTests(unittest.TestCase):
         rendered = render_base_card(record, refs)
 
         self.assertEqual(1, rendered.count("\n---\n"))
-        ordered_labels = ["【核心辨析】", "【词义】", "【题干关键词】", "【易错边界】"]
+        ordered_labels = [
+            "【核心辨析】",
+            "【词义】",
+            "【题干关键词】",
+            "【一眼辨析】",
+            "【多维判断】",
+            "【易错边界】",
+        ]
         positions = [rendered.index(label) for label in ordered_labels]
         self.assertEqual(positions, sorted(positions))
         self.assertIn("【核心辨析】]担心问题发生 + 停止必要行动", rendered)
         self.assertNotIn("特别之处", rendered)
-        self.assertNotIn("一眼辨析", rendered)
-        self.assertNotIn("因噎废食 × 投鼠忌器", rendered)
-        self.assertNotIn("【多维判断】", rendered)
+        self.assertIn("【一眼辨析】", rendered)
+        self.assertIn("因噎废食 × 投鼠忌器", rendered)
+        self.assertIn("【多维判断】", rendered)
+        self.assertIn("对象边界", rendered)
         self.assertNotIn(record["comparison_edges"][0]["minimum_difference"], rendered)
         self.assertIn("【易错边界】", rendered)
         self.assertIn("【典型语境】", rendered)
@@ -198,7 +207,8 @@ class LayeredRenderTests(unittest.TestCase):
         self.assertIn("【怎么选】", rendered)
         self.assertNotIn("特别之处", rendered)
         self.assertNotIn("【最小差别】", rendered)
-        self.assertNotIn("【多维判断】", rendered)
+        self.assertIn("【多维判断】", rendered)
+        self.assertIn("对象方向", rendered)
 
     def test_base_card_uses_approved_keyword_formulas(self):
         cases = {
@@ -266,6 +276,49 @@ class LayeredRenderTests(unittest.TestCase):
 
         self.assertEqual(1, rendered.count(condition))
         self.assertNotIn(full_edge, rendered)
+
+    def test_comparison_card_keeps_compact_one_glance_and_only_novel_dimensions(self):
+        records = [
+            {"term": "攻克", "meaning": "解决难题。", "core_discrimination": "高难度问题 + 突破解决"},
+            {"term": "畅通", "meaning": "保持通道顺畅。", "core_discrimination": "已有通道 + 保持顺畅"},
+            {"term": "打通", "meaning": "使阻塞处贯通。", "core_discrimination": "原有阻塞 + 由不通到贯通"},
+        ]
+        repeated = "攻克重解决难点；畅通重保持顺畅；打通重从不通到贯通。"
+        group = {
+            "members": ["攻克", "畅通", "打通"],
+            "minimum_differences": [
+                {"left": "攻克", "right": "畅通", "text": repeated},
+                {"left": "攻克", "right": "打通", "text": repeated},
+            ],
+            "dimensions": [
+                {
+                    "axis": "选择落点",
+                    "judgments": {
+                        "攻克": "高难度问题 + 突破解决",
+                        "畅通": "已有通道 + 保持顺畅",
+                        "打通": "原有阻塞 + 由不通到贯通",
+                    },
+                },
+                {
+                    "axis": "对象",
+                    "judgments": {
+                        "攻克": "难题或难关",
+                        "畅通": "已有渠道或循环",
+                        "打通": "堵点或割裂环节",
+                    },
+                },
+            ],
+        }
+
+        rendered = render_comparison_card(group, records)
+
+        self.assertIn("【一眼辨析】", rendered)
+        self.assertIn("突破解决 vs 保持顺畅", rendered)
+        self.assertIn("突破解决 vs 由不通到贯通", rendered)
+        self.assertNotIn(repeated, rendered)
+        self.assertIn("【多维判断】", rendered)
+        self.assertIn("对象", rendered)
+        self.assertNotIn("选择落点", rendered)
 
 
 if __name__ == "__main__":

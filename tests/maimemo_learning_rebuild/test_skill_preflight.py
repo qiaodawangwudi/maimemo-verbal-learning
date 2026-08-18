@@ -40,6 +40,8 @@ class ReusableSkillPreflightTests(unittest.TestCase):
             "学习效果",
             "核心辨析 -> 词义 -> 题干关键词",
             "一个判断只出现一次",
+            "一眼辨析",
+            "多维判断",
             "冻结卡片",
             "全量回读",
         ):

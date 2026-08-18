@@ -40,6 +40,32 @@ def _same_judgment(left: str, right: str) -> bool:
     return bool(_normalized(left)) and _normalized(left) == _normalized(right)
 
 
+def _landing_from_clause(term: str, clause: str) -> str:
+    value = str(clause).strip("。；，： ")
+    value = re.sub(
+        rf"^{re.escape(term)}(?:的)?(?:重|看|侧重|强调|落点(?:是|在)?|：)",
+        "",
+        value,
+    )
+    return value.strip("。；，： ")
+
+
+def _pairwise_glance(left: str, right: str, text: str) -> str:
+    clauses = [part.strip() for part in re.split(r"[；。]", str(text)) if part.strip()]
+    left_clause = next((part for part in clauses if left in part), "")
+    right_clause = next((part for part in clauses if right in part), "")
+    left_landing = _landing_from_clause(left, left_clause)
+    right_landing = _landing_from_clause(right, right_clause)
+    if not left_landing or not right_landing:
+        return ""
+    return f"{left_landing} vs {right_landing}"
+
+
+def _core_landing(record: dict) -> str:
+    parts = [part.strip() for part in _core(record).split("+") if part.strip()]
+    return (parts[-1] if parts else _core(record)).strip("。；，： ")
+
+
 def render_application_card(application: dict) -> str:
     """Render a scenario exercise with the judgment process hidden on the back."""
 
@@ -121,8 +147,38 @@ def render_base_card(record: dict, group_refs: list[dict]) -> str:
             cues.append(text)
     if cues:
         lines.extend(["", _line("【题干关键词】", "；".join(cues) + "。")])
+    glances = []
+    for edge in record.get("comparison_edges") or []:
+        other = str(edge.get("other_term") or "").strip()
+        glance = str(edge.get("one_glance") or "").strip()
+        if not glance:
+            glance = _pairwise_glance(
+                term, other, str(edge.get("minimum_difference") or "")
+            )
+            if " vs " in glance:
+                _, other_landing = glance.split(" vs ", 1)
+                glance = f"{_core_landing(record)} vs {other_landing}"
+        if other and glance and _adds_information(
+            glance, [item[1] for item in glances]
+        ):
+            glances.append((other, glance))
+    if glances:
+        lines.extend(["", "[T#B#【一眼辨析】]"])
+        for other, glance in glances:
+            lines.append(_line(f"{term} × {other}：", glance))
+    novel_dimensions = []
+    dimension_seen = seen + cues + [item[1] for item in glances]
+    for dimension in record.get("dimensions") or []:
+        judgment = str(dimension.get("judgment") or "").strip()
+        if judgment and _adds_information(judgment, dimension_seen):
+            novel_dimensions.append((str(dimension.get("axis") or "判断维度"), judgment))
+            dimension_seen.append(judgment)
+    if novel_dimensions:
+        lines.extend(["", "[T#B,!d16056#【多维判断】]"])
+        for axis, judgment in novel_dimensions:
+            lines.append(_line(f"{axis}：", judgment))
     boundary = str(record.get("misuse_boundary") or "").strip()
-    if boundary and _adds_information(boundary, seen + cues):
+    if boundary and _adds_information(boundary, dimension_seen):
         lines.extend(["", _line("【易错边界】", boundary)])
     contexts = [
         str(context)
@@ -166,6 +222,53 @@ def render_comparison_card(group: dict, records: list[dict]) -> str:
         lines.extend(["", "[T#B#【词义】]"])
         for term, meaning in meanings:
             lines.append(_line(f"【{term}｜词义】", meaning))
+    glances = []
+    for edge in group.get("minimum_differences") or []:
+        left = str(edge.get("left") or "").strip()
+        right = str(edge.get("right") or "").strip()
+        glance = str(edge.get("one_glance") or "").strip()
+        if not glance and left in by_term and right in by_term:
+            glance = f"{_core_landing(by_term[left])} vs {_core_landing(by_term[right])}"
+        if not glance:
+            glance = _pairwise_glance(left, right, str(edge.get("text") or ""))
+        if left and right and glance and _adds_information(glance, glances):
+            glances.append((left, right, glance))
+    if glances:
+        lines.extend(["", "[T#B#【一眼辨析】]"])
+        for left, right, glance in glances:
+            lines.append(_line(f"{left} × {right}：", glance))
+    novel_dimensions = []
+    selection_texts_by_term = {
+        term: [
+            str(rule.get("text") or "").strip()
+            for rule in group.get("selection_rules") or []
+            if str(rule.get("term") or "").strip() == term
+        ]
+        for term in members
+    }
+    for dimension in group.get("dimensions") or []:
+        axis = str(dimension.get("axis") or "判断维度").strip()
+        judgments = dimension.get("judgments") or {}
+        novel = []
+        for term in members:
+            judgment = str(judgments.get(term) or "").strip()
+            if judgment and _adds_information(
+                judgment,
+                [
+                    _core(by_term[term]),
+                    str(by_term[term].get("meaning") or ""),
+                    *selection_texts_by_term[term],
+                ],
+            ):
+                novel.append((term, judgment))
+        if novel:
+            novel_dimensions.append((axis, novel))
+    if novel_dimensions:
+        lines.extend(["", "[T#B,!d16056#【多维判断】]"])
+        for axis, judgments in novel_dimensions:
+            lines.append(_line(f"{axis}：", ""))
+            for term, judgment in judgments:
+                lines.append(f"- {term}：{judgment}")
     rules = []
     for rule in group.get("selection_rules") or []:
         term = str(rule["term"])
