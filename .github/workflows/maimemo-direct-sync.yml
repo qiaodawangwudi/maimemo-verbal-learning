@@ -82,15 +82,24 @@ jobs:
                           raise SyncFailure("API_RESPONSE_CHANGED")
                       return result
                   except urllib.error.HTTPError as error:
-                      if error.code == 429 and attempt < 5:
-                          raw = error.headers.get("Retry-After", "2")
+                      try:
+                          error_body = error.read().decode("utf-8-sig", errors="ignore").lower()
+                      except Exception:
+                          error_body = ""
+                      rate_limited = error.code == 429 or any(
+                          hint in error_body
+                          for hint in ("rate", "limit", "频繁", "请求过多", "限流")
+                      )
+                      if rate_limited and attempt < 5:
+                          raw = error.headers.get("Retry-After", "65")
                           try:
-                              delay = min(60.0, max(1.0, float(raw)))
+                              delay = min(90.0, max(2.0, float(raw)))
                           except ValueError:
-                              delay = 2.0
+                              delay = 65.0
                           time.sleep(delay)
                           continue
-                      raise SyncFailure("API_WRITE_FAILED" if method == "POST" else "API_READ_FAILED") from None
+                      code = str(error.code) if error.code in {400, 401, 403, 404, 409, 413, 422, 429, 500, 502, 503, 504} else "OTHER"
+                      raise SyncFailure(("API_WRITE_HTTP_" if method == "POST" else "API_READ_HTTP_") + code) from None
                   except SyncFailure:
                       raise
                   except Exception:
@@ -231,7 +240,7 @@ jobs:
                       raise SystemExit("direct sync failed: AMBIGUOUS_WRITE_NOT_VERIFIED") from None
               if number % 25 == 0:
                   print("verified progress:", number, "of", len(desired))
-              time.sleep(0.15)
+              time.sleep(2.5)
 
           _, final_index = read_index()
           for title, card in desired.items():
@@ -251,3 +260,4 @@ jobs:
           }, sort_keys=True))
           token = ""
           PY
+
