@@ -1,0 +1,53 @@
+name: Learning quality gate
+
+"on":
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  automated-tests:
+    name: Automated tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+      - name: Run repository-portable tests
+        run: python -m unittest discover -s tests -t . -p 'test_*.py' -q
+
+  learning-quality-gate:
+    name: Learning quality gate
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+      - name: Test semantic and comparison quality boundaries
+        run: >-
+          python -m unittest
+          tests.maimemo_learning_rebuild.test_models
+          tests.maimemo_learning_rebuild.test_learning_quality
+          tests.maimemo_learning_rebuild.test_public_quality_gate
+          -q
+
+  application-card-quality-gate:
+    name: Application card quality gate
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+      - name: Test application-card review boundaries
+        run: >-
+          python -m unittest
+          tests.maimemo_learning_rebuild.test_application_candidates
+          tests.maimemo_learning_rebuild.test_application_blind_review
+          tests.maimemo_learning_rebuild.test_application_quality_gate
+          -q

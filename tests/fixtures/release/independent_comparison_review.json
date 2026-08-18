@@ -1,0 +1,34 @@
+{
+  "complete": true,
+  "reviewer_context_isolated": true,
+  "resolutions": [],
+  "edge_reviews": [
+    {
+      "subject_id": "edge-v1-150b19a4fd0dbf5054722e4c29aa3b3faedb9abc0c910ae090ab1415894ac5a4",
+      "comparison_subject_id": "comparison-v1-0b23053ad3820e27b056989ecd5fe3ebd4ccebb466497af3de37c1c277beda4f",
+      "group_id": "g-final-binding",
+      "left": "甲",
+      "right": "乙",
+      "left_observation": "必要行动被整体停止",
+      "right_observation": "顾忌点落在可能牵连的对象",
+      "contrast_axis": "甲看必要行动被整体停止；乙看顾忌点落在可能牵连的对象",
+      "left_focus": "甲落点：必要行动被整体停止",
+      "right_focus": "乙落点：顾忌点落在可能牵连的对象",
+      "question_selection_condition": "题干强调必要行动被整体停止选甲；强调顾忌点落在可能牵连的对象选乙"
+    }
+  ],
+  "comparison_reviews": [
+    {
+      "comparison_subject_id": "comparison-v1-0b23053ad3820e27b056989ecd5fe3ebd4ccebb466497af3de37c1c277beda4f",
+      "stable_card_key": "comparison:甲、乙",
+      "card_type": "comparison",
+      "route_id": "chapter-comparison",
+      "route_name": "近义辨析",
+      "title": "近义辨析｜甲、乙",
+      "final_content_hash": "c1ece485b5808687073b13e635b8be8562f75601c0bbaa38307252438b8c486d",
+      "edge_subject_ids": [
+        "edge-v1-150b19a4fd0dbf5054722e4c29aa3b3faedb9abc0c910ae090ab1415894ac5a4"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+.worktrees/
+__pycache__/
+*.py[cod]
+.env
+.env.*
+releases/**/local-only/
+release-journals/
+*.token
+.local-private/

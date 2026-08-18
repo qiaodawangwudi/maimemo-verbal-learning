@@ -1,0 +1,375 @@
+name: Protected Maimemo release
+
+"on":
+  workflow_dispatch:
+    inputs:
+      release_path:
+        description: Repository-relative frozen release directory under releases/
+        required: true
+        type: string
+      release_hash:
+        description: Approved 64-character frozen release hash
+        required: true
+        type: string
+      commit_sha:
+        description: Approved 40-character commit SHA on current main
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  prepare-release:
+    name: Validate frozen release without a write token
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the exact approved commit
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.commit_sha }}
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Use the tested Python runtime
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+
+      - name: Require the exact commit to be current main
+        shell: bash
+        env:
+          EXPECTED_SHA: ${{ inputs.commit_sha }}
+          EXPECTED_REF: ${{ github.ref }}
+        run: |
+          set -euo pipefail
+          [[ "$EXPECTED_SHA" =~ ^[0-9a-f]{40}$ ]]
+          test "$EXPECTED_REF" = "refs/heads/main"
+          test "$(git rev-parse HEAD)" = "$EXPECTED_SHA"
+          git fetch --no-tags origin main:refs/remotes/origin/main
+          test "$(git rev-parse HEAD)" = "$(git rev-parse origin/main)"
+
+      - name: Resolve and validate the frozen release
+        shell: bash
+        env:
+          RELEASE_PATH_INPUT: ${{ inputs.release_path }}
+          EXPECTED_RELEASE_HASH: ${{ inputs.release_hash }}
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import os
+          import re
+          import tempfile
+          from pathlib import Path
+
+          from maimemo_learning_rebuild.release_writer import (
+              _artifact_path,
+              _load_frozen_release,
+              validate_release_directory,
+          )
+
+          raw_path = os.environ["RELEASE_PATH_INPUT"]
+          expected_hash = os.environ["EXPECTED_RELEASE_HASH"]
+          if "\n" in raw_path or "\r" in raw_path:
+              raise SystemExit("release_path contains a line break")
+          if re.fullmatch(r"[0-9a-f]{64}", expected_hash) is None:
+              raise SystemExit("release_hash must be a lowercase SHA-256 digest")
+          release_dir = validate_release_directory(Path.cwd(), raw_path)
+          manifest, _cards = _load_frozen_release(release_dir)
+          if manifest["release_hash"] != expected_hash:
+              raise SystemExit("release_hash does not match the frozen manifest")
+          gate_dir = Path(
+              tempfile.mkdtemp(
+                  prefix="maimemo-gates-", dir=os.environ["RUNNER_TEMP"]
+              )
+          )
+          gate_names = {
+              "master_semantic_registry.json": "semantic_registry",
+              "group_registry.json": "group_registry",
+              "application_review.json": "application_review",
+              "application_blind_review.json": "blind_review",
+              "final_cards.json": "final_cards",
+              "action_plan.json": "action_plan",
+          }
+          for filename, artifact_key in gate_names.items():
+              (gate_dir / filename).symlink_to(
+                  _artifact_path(release_dir, artifact_key)
+              )
+          with Path(os.environ["GITHUB_ENV"]).open("a", encoding="utf-8") as stream:
+              stream.write(f"RELEASE_DIR={release_dir}\n")
+              stream.write(f"GATE_ARTIFACT_DIR={gate_dir}\n")
+          PY
+
+      - name: Run every repository test module
+        shell: bash
+        run: python -m unittest discover -s tests -t . -p 'test_*.py' -q
+
+      - name: Run independently bound learning quality gate
+        shell: bash
+        run: python -m maimemo_learning_rebuild.release_quality_gate --release-dir "$RELEASE_DIR" --precheck
+
+      - name: Run public learning quality gate
+        shell: bash
+        run: python -m maimemo_learning_rebuild.public_quality_gate --artifact-dir "$GATE_ARTIFACT_DIR"
+
+      - name: Run application card quality gate
+        shell: bash
+        run: python -m maimemo_learning_rebuild.application_quality_gate --artifact-dir "$GATE_ARTIFACT_DIR"
+
+      - name: Run source coverage and privacy gate
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+
+          from maimemo_learning_rebuild.release_writer import _artifact_path
+          from maimemo_learning_rebuild.source_inventory import (
+              validate_source_inventory,
+          )
+
+          release_dir = Path(os.environ["RELEASE_DIR"])
+          inventory = json.loads(
+              _artifact_path(release_dir, "source_inventory").read_text(
+                  encoding="utf-8-sig"
+              )
+          )
+          errors = validate_source_inventory(inventory)
+          print(
+              json.dumps(
+                  {"ok": not errors, "errors": errors},
+                  ensure_ascii=False,
+                  sort_keys=True,
+              )
+          )
+          if errors:
+              raise SystemExit(1)
+          PY
+
+      - name: Write non-secret release summary
+        shell: bash
+        env:
+          EXPECTED_SHA: ${{ inputs.commit_sha }}
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          import os
+          from collections import Counter
+          from pathlib import Path
+
+          from maimemo_learning_rebuild.release_writer import (
+              _artifact_path,
+              _load_frozen_release,
+          )
+
+          release_dir = Path(os.environ["RELEASE_DIR"])
+          manifest, _cards = _load_frozen_release(release_dir)
+          inventory = json.loads(
+              _artifact_path(release_dir, "source_inventory").read_text(
+                  encoding="utf-8-sig"
+              )
+          )
+          privacy_summary = dict(
+              sorted(
+                  Counter(
+                      source.get("privacy", "missing")
+                      for source in inventory.get("sources", [])
+                      if isinstance(source, dict)
+                  ).items()
+              )
+          )
+          fields = {
+              "deck": manifest["deck"],
+              "chapter_routes": manifest["chapter_routes"],
+              "card_counts": manifest["card_counts"],
+              "privacy_summary": privacy_summary,
+              "release_hash": manifest["release_hash"],
+              "commit_sha": os.environ["EXPECTED_SHA"],
+          }
+          lines = ["# Protected Maimemo release preparation", ""]
+          for key, value in fields.items():
+              rendered = (
+                  value
+                  if isinstance(value, str)
+                  else json.dumps(value, ensure_ascii=False, sort_keys=True)
+              )
+              lines.append(f"- **{key}**: `{rendered}`")
+          report = "\n".join(lines) + "\n"
+          report_dir = Path("release-reports")
+          report_dir.mkdir(exist_ok=True)
+          (report_dir / "prepare-summary.md").write_text(report, encoding="utf-8")
+          with Path(os.environ["GITHUB_STEP_SUMMARY"]).open(
+              "a", encoding="utf-8"
+          ) as stream:
+              stream.write(report)
+          PY
+
+      - name: Upload non-secret preparation report
+        uses: actions/upload-artifact@v4
+        with:
+          name: maimemo-release-preparation-${{ github.run_id }}
+          path: release-reports/
+          if-no-files-found: error
+          retention-days: 30
+
+  write-release:
+    name: Write the approved frozen release
+    needs: prepare-release
+    environment: maimemo-final-release
+    concurrency:
+      group: maimemo-production
+      cancel-in-progress: false
+    runs-on: ubuntu-latest
+    steps:
+      - name: Initialize non-secret result files
+        shell: bash
+        run: |
+          set -euo pipefail
+          result_dir="$RUNNER_TEMP/maimemo-release-results"
+          mkdir -p "$result_dir"
+          printf 'RESULT_DIR=%s\n' "$result_dir" >> "$GITHUB_ENV"
+          printf '%s\n' '{"action":"phase","outcome":"not_started","title":"workflow_initialization"}' \
+            > "$result_dir/journal.jsonl"
+          printf '%s\n' '{"ok":false,"status":"not_started"}' \
+            > "$result_dir/readback-report.json"
+
+      - name: Check out the exact approved commit
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.commit_sha }}
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Use the tested Python runtime
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+
+      - name: Recheck current main and the exact frozen release
+        shell: bash
+        env:
+          EXPECTED_SHA: ${{ inputs.commit_sha }}
+          EXPECTED_REF: ${{ github.ref }}
+          RELEASE_PATH_INPUT: ${{ inputs.release_path }}
+          EXPECTED_RELEASE_HASH: ${{ inputs.release_hash }}
+        run: |
+          set -euo pipefail
+          [[ "$EXPECTED_SHA" =~ ^[0-9a-f]{40}$ ]]
+          test "$EXPECTED_REF" = "refs/heads/main"
+          test "$(git rev-parse HEAD)" = "$EXPECTED_SHA"
+          git fetch --no-tags origin main:refs/remotes/origin/main
+          test "$(git rev-parse HEAD)" = "$(git rev-parse origin/main)"
+          python - <<'PY'
+          import json
+          import os
+          import re
+          from pathlib import Path
+
+          from maimemo_learning_rebuild.release_writer import (
+              _load_frozen_release,
+              validate_release_directory,
+          )
+
+          raw_path = os.environ["RELEASE_PATH_INPUT"]
+          expected_hash = os.environ["EXPECTED_RELEASE_HASH"]
+          if "\n" in raw_path or "\r" in raw_path:
+              raise SystemExit("release_path contains a line break")
+          if re.fullmatch(r"[0-9a-f]{64}", expected_hash) is None:
+              raise SystemExit("release_hash must be a lowercase SHA-256 digest")
+          release_dir = validate_release_directory(Path.cwd(), raw_path)
+          manifest, _cards = _load_frozen_release(release_dir)
+          if manifest["release_hash"] != expected_hash:
+              raise SystemExit("release_hash does not match the frozen manifest")
+          report_dir = Path(os.environ["RESULT_DIR"])
+          receipt = {
+              "schema_version": 2,
+              "receipt_type": "github_protected_release",
+              "release_id": manifest["release_id"],
+              "release_hash": manifest["release_hash"],
+              "approved_sha": os.environ["EXPECTED_SHA"],
+              "github_run_id": os.environ["GITHUB_RUN_ID"],
+              "github_environment": "maimemo-final-release",
+              "deployment_status": "success",
+          }
+          (report_dir / "approval-receipt.json").write_text(
+              json.dumps(
+                  receipt,
+                  ensure_ascii=False,
+                  sort_keys=True,
+                  separators=(",", ":"),
+                  allow_nan=False,
+              ),
+              encoding="utf-8",
+          )
+          with Path(os.environ["GITHUB_ENV"]).open("a", encoding="utf-8") as stream:
+              stream.write(f"RELEASE_DIR={release_dir}\n")
+          PY
+
+      - name: Run protected current-environment learning quality gate
+        shell: bash
+        env:
+          GITHUB_ENVIRONMENT: maimemo-final-release
+          GITHUB_DEPLOYMENT_STATUS: success
+          RELEASE_HASH: ${{ inputs.release_hash }}
+          APPROVED_COMMIT_SHA: ${{ inputs.commit_sha }}
+        run: python -m maimemo_learning_rebuild.release_quality_gate --release-dir "$RELEASE_DIR"
+
+      - name: Execute protected writer
+        shell: bash
+        env:
+          GITHUB_ENVIRONMENT: maimemo-final-release
+          GITHUB_DEPLOYMENT_STATUS: success
+          RELEASE_HASH: ${{ inputs.release_hash }}
+          APPROVED_COMMIT_SHA: ${{ inputs.commit_sha }}
+          MAIMEMO_API_TOKEN: ${{ secrets.MAIMEMO_TOKEN }}
+        run: |
+          set -euo pipefail
+          set +e
+          python -m maimemo_learning_rebuild.release_writer \
+            --release-dir "$RELEASE_DIR" \
+            --approval-receipt "$RESULT_DIR/approval-receipt.json" \
+            --journal "$RESULT_DIR/journal.jsonl" \
+            > "$RESULT_DIR/readback-report.json"
+          writer_status=$?
+          set -e
+          if [[ ! -s "$RESULT_DIR/readback-report.json" ]]; then
+            printf '%s\n' '{"error":"protected release failed [REDACTED]","ok":false}' \
+              > "$RESULT_DIR/readback-report.json"
+          fi
+          exit "$writer_status"
+
+      - name: Synthesize non-secret result files
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          result_dir="$RUNNER_TEMP/maimemo-release-results"
+          mkdir -p "$result_dir"
+          initial_journal='{"action":"phase","outcome":"not_started","title":"workflow_initialization"}'
+          if [[ ! -s "$result_dir/journal.jsonl" ]] || \
+             { [[ "$(wc -l < "$result_dir/journal.jsonl")" -eq 1 ]] && \
+               grep -Fqx -- "$initial_journal" "$result_dir/journal.jsonl"; }; then
+            printf '%s\n' '{"action":"phase","outcome":"failed","title":"workflow_prewrite_failure"}' \
+              > "$result_dir/journal.jsonl"
+          fi
+          initial_readback='{"ok":false,"status":"not_started"}'
+          if [[ ! -s "$result_dir/readback-report.json" ]] || \
+             { [[ "$(wc -l < "$result_dir/readback-report.json")" -eq 1 ]] && \
+               grep -Fqx -- "$initial_readback" "$result_dir/readback-report.json"; }; then
+            printf '%s\n' '{"ok":false,"status":"failed_before_readback"}' \
+              > "$result_dir/readback-report.json"
+          fi
+
+      - name: Upload non-secret journal and readback report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: maimemo-release-result-${{ github.run_id }}
+          path: |
+            ${{ runner.temp }}/maimemo-release-results/journal.jsonl
+            ${{ runner.temp }}/maimemo-release-results/readback-report.json
+          if-no-files-found: error
+          retention-days: 30

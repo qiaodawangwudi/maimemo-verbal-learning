@@ -1,0 +1,5 @@
+/.github/workflows/maimemo-release.yml @qiaodawangwudi
+/.github/workflows/maimemo-empty-target-check.yml @qiaodawangwudi
+/skills/verbal-maimemo-cards/** @qiaodawangwudi
+/maimemo_learning_rebuild/__init__.py @qiaodawangwudi
+/.github/CODEOWNERS @qiaodawangwudi

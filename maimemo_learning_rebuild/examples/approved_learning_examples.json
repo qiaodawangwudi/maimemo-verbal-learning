@@ -1,0 +1,53 @@
+{
+  "schema_version": 1,
+  "purpose": "仅用于演示工件结构的虚构小样本，不代表任何真实课程或正式卡片。",
+  "records": [
+    {
+      "term": "甲词",
+      "sense_id": "甲词::示例义::001",
+      "status": "ready",
+      "source_kind": "user_directed_supplement",
+      "meaning": "表示先确认原因，再决定是否行动。",
+      "distinctive_feature": "判断落点在行动之前的原因核验。",
+      "recognition_cues": ["先核验原因", "后决定行动"],
+      "dimensions": [{"axis": "判断阶段", "judgment": "行动之前"}],
+      "comparison_edges": [
+        {"other_term": "乙词", "minimum_difference": "甲词先查原因；乙词先看结果。"}
+      ],
+      "misuse_boundary": "题干只评价结果而没有原因核验时，不使用。",
+      "typical_contexts": ["先查清故障原因，再决定是否停机。"],
+      "evidence": []
+    },
+    {
+      "term": "乙词",
+      "sense_id": "乙词::示例义::001",
+      "status": "ready",
+      "source_kind": "user_directed_supplement",
+      "meaning": "表示依据已经出现的结果调整行动。",
+      "distinctive_feature": "判断落点在结果出现之后的应对。",
+      "recognition_cues": ["结果已经出现", "随后调整行动"],
+      "dimensions": [{"axis": "判断阶段", "judgment": "结果之后"}],
+      "comparison_edges": [
+        {"other_term": "甲词", "minimum_difference": "乙词先看结果；甲词先查原因。"}
+      ],
+      "misuse_boundary": "结果尚未出现、只在预先核验原因时，不使用。",
+      "typical_contexts": ["根据试运行结果调整参数。"],
+      "evidence": []
+    }
+  ],
+  "groups": [
+    {
+      "group_id": "synthetic-group-01",
+      "title": "近义辨析｜甲词、乙词",
+      "status": "ready",
+      "purpose": "演示原因核验与结果应对的判断差别。",
+      "members": ["甲词", "乙词"],
+      "minimum_differences": [
+        {"left": "甲词", "right": "乙词", "text": "甲词先查原因；乙词先看结果。"}
+      ],
+      "dimensions": [
+        {"axis": "判断阶段", "judgments": {"甲词": "行动之前", "乙词": "结果之后"}}
+      ]
+    }
+  ]
+}
