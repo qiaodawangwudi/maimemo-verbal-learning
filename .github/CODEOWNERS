@@ -1,5 +1,7 @@
 /.github/workflows/maimemo-release.yml @qiaodawangwudi
 /.github/workflows/maimemo-empty-target-check.yml @qiaodawangwudi
+/.github/workflows/maimemo-direct-sync.yml @qiaodawangwudi
+/release-inputs/** @qiaodawangwudi
 /skills/verbal-maimemo-cards/** @qiaodawangwudi
 /maimemo_learning_rebuild/__init__.py @qiaodawangwudi
 /.github/CODEOWNERS @qiaodawangwudi

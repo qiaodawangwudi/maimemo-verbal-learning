@@ -1,0 +1,253 @@
+name: Direct reviewed Maimemo batch sync
+
+"on":
+  push:
+    branches:
+      - main
+    paths:
+      - .github/workflows/maimemo-direct-sync.yml
+      - release-inputs/direct-batch-20260818.json
+
+permissions:
+  contents: read
+
+jobs:
+  sync-reviewed-batch:
+    name: Update matching cards and create missing cards
+    environment: maimemo-final-release
+    concurrency:
+      group: maimemo-production
+      cancel-in-progress: false
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out reviewed batch
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Reconcile, write, and read back
+        shell: bash
+        env:
+          MAIMEMO_API_TOKEN: ${{ secrets.MAIMEMO_TOKEN }}
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          import os
+          import re
+          import time
+          import urllib.error
+          import urllib.parse
+          import urllib.request
+          from pathlib import Path
+
+          BASE_URL = "https://open.maimemo.com/open/api/v1/markji"
+          INPUT_PATH = Path("release-inputs/direct-batch-20260818.json")
+          TITLE_RE = re.compile(r"^\[P#H1#([^\]\r\n]+)\]")
+
+
+          class SyncFailure(RuntimeError):
+              pass
+
+
+          token = os.environ.get("MAIMEMO_API_TOKEN", "")
+          if not token:
+              raise SystemExit("direct sync failed: TOKEN_MISSING")
+
+
+          def request(method, path, payload=None):
+              data = None
+              if payload is not None:
+                  data = json.dumps(
+                      payload, ensure_ascii=False, allow_nan=False
+                  ).encode("utf-8")
+              req = urllib.request.Request(
+                  BASE_URL + path,
+                  data=data,
+                  method=method,
+                  headers={
+                      "Accept": "application/json",
+                      "Content-Type": "application/json",
+                      "Authorization": "Bearer " + token,
+                  },
+              )
+              for attempt in range(6):
+                  try:
+                      with urllib.request.urlopen(req, timeout=60) as response:
+                          body = json.loads(response.read().decode("utf-8-sig"))
+                      if not isinstance(body, dict) or body.get("errors"):
+                          raise SyncFailure("API_RESPONSE_CHANGED")
+                      result = body.get("data", body)
+                      if not isinstance(result, dict):
+                          raise SyncFailure("API_RESPONSE_CHANGED")
+                      return result
+                  except urllib.error.HTTPError as error:
+                      if error.code == 429 and attempt < 5:
+                          raw = error.headers.get("Retry-After", "2")
+                          try:
+                              delay = min(60.0, max(1.0, float(raw)))
+                          except ValueError:
+                              delay = 2.0
+                          time.sleep(delay)
+                          continue
+                      raise SyncFailure("API_WRITE_FAILED" if method == "POST" else "API_READ_FAILED") from None
+                  except SyncFailure:
+                      raise
+                  except Exception:
+                      raise SyncFailure("API_WRITE_AMBIGUOUS" if method == "POST" else "API_READ_FAILED") from None
+              raise SyncFailure("RATE_LIMITED")
+
+
+          spec = json.loads(INPUT_PATH.read_text(encoding="utf-8-sig"))
+          if (
+              not isinstance(spec, dict)
+              or spec.get("schema_version") != 1
+              or not isinstance(spec.get("deck_name"), str)
+              or not isinstance(spec.get("chapter_routes"), dict)
+              or not isinstance(spec.get("cards"), list)
+          ):
+              raise SystemExit("direct sync failed: INVALID_INPUT")
+          routes = spec["chapter_routes"]
+          if set(routes) != {"comparison", "base", "application"}:
+              raise SystemExit("direct sync failed: INVALID_ROUTES")
+
+          desired = {}
+          for card in spec["cards"]:
+              if not isinstance(card, dict) or set(card) != {"route", "title", "content"}:
+                  raise SystemExit("direct sync failed: INVALID_CARD")
+              route, title, content = card["route"], card["title"], card["content"]
+              match = TITLE_RE.match(content) if isinstance(content, str) else None
+              if (
+                  route not in routes
+                  or not isinstance(title, str)
+                  or not title
+                  or match is None
+                  or match.group(1) != title
+                  or title in desired
+              ):
+                  raise SystemExit("direct sync failed: INVALID_CARD")
+              desired[title] = card
+
+          deck_list = request("GET", "/decks?offset=0&limit=100").get("decks")
+          if not isinstance(deck_list, list):
+              raise SystemExit("direct sync failed: API_RESPONSE_CHANGED")
+          deck_matches = [
+              item for item in deck_list
+              if isinstance(item, dict) and item.get("name") == spec["deck_name"]
+          ]
+          if len(deck_matches) != 1 or not isinstance(deck_matches[0].get("id"), str):
+              raise SystemExit("direct sync failed: DECK_NOT_UNIQUE")
+          deck_id = deck_matches[0]["id"]
+
+
+          def read_index():
+              live = request(
+                  "GET",
+                  "/decks/" + urllib.parse.quote(deck_id, safe="")
+                  + "/chapters?with_cards=true",
+              )
+              chapters = live.get("chapters")
+              cards = live.get("cards")
+              if not isinstance(chapters, list) or not isinstance(cards, list):
+                  raise SyncFailure("API_RESPONSE_CHANGED")
+              chapter_by_route = {}
+              for route, chapter_name in routes.items():
+                  matches = [
+                      chapter for chapter in chapters
+                      if isinstance(chapter, dict) and chapter.get("name") == chapter_name
+                  ]
+                  if len(matches) != 1 or not isinstance(matches[0].get("id"), str):
+                      raise SyncFailure("CHAPTERS_CHANGED")
+                  if not isinstance(matches[0].get("card_ids"), list):
+                      raise SyncFailure("API_RESPONSE_CHANGED")
+                  chapter_by_route[route] = matches[0]
+              route_by_card_id = {}
+              for route, chapter in chapter_by_route.items():
+                  for card_id in chapter["card_ids"]:
+                      if not isinstance(card_id, str) or card_id in route_by_card_id:
+                          raise SyncFailure("DUPLICATE_ROUTE_ASSIGNMENT")
+                      route_by_card_id[card_id] = route
+              cards_by_id = {
+                  card.get("id"): card for card in cards
+                  if isinstance(card, dict) and isinstance(card.get("id"), str)
+              }
+              if not set(route_by_card_id).issubset(cards_by_id):
+                  raise SyncFailure("INCOMPLETE_SNAPSHOT")
+              by_title = {}
+              for card_id, route in route_by_card_id.items():
+                  card = cards_by_id[card_id]
+                  content = card.get("content")
+                  match = TITLE_RE.match(content) if isinstance(content, str) else None
+                  if match is None:
+                      raise SyncFailure("UNPARSEABLE_EXISTING_CARD")
+                  title = match.group(1)
+                  if title in by_title:
+                      raise SyncFailure("DUPLICATE_EXISTING_TITLE")
+                  by_title[title] = {"id": card_id, "route": route, "content": content}
+              return chapter_by_route, by_title
+
+
+          created = updated = unchanged = 0
+          chapter_by_route, live_by_title = read_index()
+          order = {"comparison": 0, "base": 1, "application": 2}
+          for number, card in enumerate(
+              sorted(desired.values(), key=lambda item: (order[item["route"]], item["title"])),
+              start=1,
+          ):
+              existing = live_by_title.get(card["title"])
+              if existing is not None and existing["route"] != card["route"]:
+                  raise SystemExit("direct sync failed: TITLE_IN_WRONG_CHAPTER")
+              if existing is not None and existing["content"] == card["content"]:
+                  unchanged += 1
+                  continue
+              try:
+                  if existing is None:
+                      chapter_id = chapter_by_route[card["route"]]["id"]
+                      request(
+                          "POST",
+                          "/decks/" + urllib.parse.quote(deck_id, safe="")
+                          + "/chapters/" + urllib.parse.quote(chapter_id, safe="") + "/cards",
+                          {"card": {"content": card["content"], "grammar_version": 3}},
+                      )
+                      created += 1
+                  else:
+                      request(
+                          "POST",
+                          "/decks/" + urllib.parse.quote(deck_id, safe="")
+                          + "/cards/" + urllib.parse.quote(existing["id"], safe=""),
+                          {"card": {"content": card["content"], "grammar_version": 3}},
+                      )
+                      updated += 1
+              except SyncFailure as error:
+                  if str(error) != "API_WRITE_AMBIGUOUS":
+                      raise SystemExit("direct sync failed: " + str(error)) from None
+                  _, check = read_index()
+                  candidate = check.get(card["title"])
+                  if (
+                      candidate is None
+                      or candidate["route"] != card["route"]
+                      or candidate["content"] != card["content"]
+                  ):
+                      raise SystemExit("direct sync failed: AMBIGUOUS_WRITE_NOT_VERIFIED") from None
+              if number % 25 == 0:
+                  print("verified progress:", number, "of", len(desired))
+              time.sleep(0.15)
+
+          _, final_index = read_index()
+          for title, card in desired.items():
+              live = final_index.get(title)
+              if (
+                  live is None
+                  or live["route"] != card["route"]
+                  or live["content"] != card["content"]
+              ):
+                  raise SystemExit("direct sync failed: FINAL_READBACK_MISMATCH")
+          print(json.dumps({
+              "ok": True,
+              "desired": len(desired),
+              "created": created,
+              "updated": updated,
+              "unchanged": unchanged,
+          }, sort_keys=True))
+          token = ""
+          PY
