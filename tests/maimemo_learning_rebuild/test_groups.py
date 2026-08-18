@@ -120,6 +120,13 @@ class GroupGraphTests(unittest.TestCase):
             "ready",
             by_title["近义辨析｜瞻前顾后、优柔寡断、举棋不定"]["status"],
         )
+        self.assertTrue(
+            all(
+                item.get("source_card_id", "").startswith("mkjc_public_")
+                and item.get("root_id", "").startswith("mkjr_public_")
+                for item in payload["groups"]
+            )
+        )
 
     def test_overlap_audit_distinguishes_exact_subset_and_partial(self):
         groups = [

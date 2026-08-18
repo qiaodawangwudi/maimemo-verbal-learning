@@ -432,7 +432,13 @@ class PlanningTests(unittest.TestCase):
     def test_real_offline_plan_is_deterministic_and_count_safe(self):
         root = Path(__file__).parents[2]
         artifact_root = root / "maimemo_learning_rebuild" / "artifacts"
+        private_artifact_root = root / ".local-private" / "legacy-artifacts"
         source_root = root.parents[1]
+        private_groups = private_artifact_root / "group_registry.json"
+        if not private_groups.is_file():
+            self.skipTest(
+                "private historical card identifiers are intentionally not published"
+            )
         snapshot = json.loads(
             self._required_private_snapshot(source_root).read_text(encoding="utf-8-sig")
         )
@@ -440,7 +446,7 @@ class PlanningTests(unittest.TestCase):
             (artifact_root / "master_semantic_registry.json").read_text(encoding="utf-8")
         )["records"]
         groups = json.loads(
-            (artifact_root / "group_registry.json").read_text(encoding="utf-8")
+            private_groups.read_text(encoding="utf-8")
         )["groups"]
 
         application_review = empty_application_review()
