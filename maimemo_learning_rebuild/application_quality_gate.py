@@ -29,6 +29,10 @@ CLASSROOM_SPEECH = (
     "这个词",
     "选项的侧重点",
 )
+DEFINITION_RESTATEMENT_PROMPTS = (
+    "材料描述的并非一般现象，而是这样一种明确情形",
+    "若用一个词准确概括，这种情形可称为",
+)
 
 
 def _text(value: object) -> str:
@@ -103,6 +107,10 @@ def _validate_application_card(card: dict, source_quotes: set[str]) -> list[str]
         errors.append(f"application card lacks usable context: {title}")
     if any(marker in prompt for marker in CLASSROOM_SPEECH):
         errors.append(f"application card contains classroom speech: {title}")
+    if any(marker in prompt for marker in DEFINITION_RESTATEMENT_PROMPTS):
+        errors.append(
+            f"application card restates a definition instead of a scenario: {title}"
+        )
     normalized_prompt = "".join(prompt.split())
     if normalized_prompt and normalized_prompt in source_quotes:
         errors.append(f"application card copies source wording: {title}")

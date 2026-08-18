@@ -326,6 +326,26 @@ class ApplicationQualityGateTests(unittest.TestCase):
             ],
         }
 
+        meta_card = application_card(title)
+        meta_card["application"]["prompt"] = (
+            "材料描述的并非一般现象，而是这样一种明确情形："
+            "因担心风险而停止必要行动。若用一个词准确概括，"
+            "这种情形可称为“____”。"
+        )
+        meta_errors = evaluate_application_gate(
+            self.registry,
+            self.groups,
+            review,
+            {"cards": [meta_card]},
+            bound_plan(review, [title]),
+            blind_review([title]),
+        )
+
+        self.assertIn(
+            f"application card restates a definition instead of a scenario: {title}",
+            meta_errors,
+        )
+
         errors = evaluate_application_gate(
             self.registry,
             self.groups,
