@@ -77,6 +77,25 @@ class SemanticRecordTests(unittest.TestCase):
 
         self.assertIn("ambiguous reference: 前者", validate_semantic_record(record))
 
+    def test_keyword_core_requires_two_concrete_slots(self):
+        record = valid_record()
+        record["core_discrimination"] = "强调解决难题"
+
+        self.assertIn(
+            "core_discrimination requires keyword slots joined by +",
+            validate_semantic_record(record),
+        )
+
+    def test_recognition_cue_must_not_repeat_keyword_core(self):
+        record = valid_record()
+        record["core_discrimination"] = "高难度问题 + 突破解决"
+        record["recognition_cues"] = ["高难度问题，突破解决"]
+
+        self.assertIn(
+            "recognition cue repeats core_discrimination",
+            validate_semantic_record(record),
+        )
+
 
 class GroupRecordTests(unittest.TestCase):
     def test_group_accepts_known_unique_members(self):

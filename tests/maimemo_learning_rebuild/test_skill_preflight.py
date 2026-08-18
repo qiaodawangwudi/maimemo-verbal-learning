@@ -36,9 +36,15 @@ class ReusableSkillPreflightTests(unittest.TestCase):
     def test_skill_declares_learning_first_layered_contract(self):
         text = self.read_skill()
 
-        for phrase in ("学习效果", "特别之处", "做题识别点", "冻结卡片", "全量回读"):
+        for phrase in (
+            "学习效果",
+            "核心辨析 -> 词义 -> 题干关键词",
+            "一个判断只出现一次",
+            "冻结卡片",
+            "全量回读",
+        ):
             self.assertIn(phrase, text)
-        self.assertNotIn("不设机械的“特别之处”栏目", text)
+        self.assertNotIn("词义 -> 特别之处 -> 做题识别点", text)
 
 
 if __name__ == "__main__":

@@ -2,9 +2,42 @@
 
 from __future__ import annotations
 
+import re
+
 
 def _line(label: str, text: str) -> str:
     return f"[T#B#{label}]{text}"
+
+
+def _core(record: dict) -> str:
+    return str(
+        record.get("core_discrimination")
+        or record.get("distinctive_feature")
+        or ""
+    ).strip()
+
+
+def _normalized(text: str) -> str:
+    return re.sub(r"[^0-9A-Za-z\u4e00-\u9fff]", "", str(text)).lower()
+
+
+def _adds_information(text: str, existing: list[str]) -> bool:
+    candidate = _normalized(text)
+    if not candidate:
+        return False
+    for prior in existing:
+        normalized = _normalized(prior)
+        if (
+            candidate == normalized
+            or candidate in normalized
+            or normalized in candidate
+        ):
+            return False
+    return True
+
+
+def _same_judgment(left: str, right: str) -> bool:
+    return bool(_normalized(left)) and _normalized(left) == _normalized(right)
 
 
 def render_application_card(application: dict) -> str:
@@ -67,6 +100,8 @@ def render_application_card(application: dict) -> str:
 
 def render_base_card(record: dict, group_refs: list[dict]) -> str:
     term = str(record["term"])
+    core = _core(record)
+    meaning = str(record["meaning"])
     lines = [
         f"[P#H1#基础词义｜{term}]",
         "",
@@ -74,36 +109,20 @@ def render_base_card(record: dict, group_refs: list[dict]) -> str:
         "",
         "---",
         "",
-        _line("【词义】", str(record["meaning"])),
-        "",
-        _line("【特别之处】", str(record["distinctive_feature"])),
+        _line("【核心辨析】", core),
     ]
-    cues = [str(cue) for cue in record.get("recognition_cues", []) if str(cue).strip()]
+    if not _same_judgment(core, meaning):
+        lines.extend(["", _line("【词义】", meaning)])
+    seen = [core, meaning]
+    cues = []
+    for cue in record.get("recognition_cues", []):
+        text = str(cue).strip()
+        if _adds_information(text, seen + cues):
+            cues.append(text)
     if cues:
-        lines.extend(["", _line("【做题识别点】", "；".join(cues) + "。")])
-    edges = record.get("comparison_edges", [])
-    if edges:
-        lines.extend(["", "[T#B#【一眼辨析】]"])
-        for edge in edges:
-            other = str(edge["other_term"])
-            lines.append(
-                _line(
-                    f"{term} × {other}：",
-                    str(edge["minimum_difference"]),
-                )
-            )
-    dimensions = record.get("dimensions", [])
-    if dimensions:
-        lines.extend(["", "[T#B,!d16056#【多维判断】]"])
-        for dimension in dimensions:
-            lines.append(
-                _line(
-                    f"{dimension['axis']}：",
-                    str(dimension["judgment"]),
-                )
-            )
+        lines.extend(["", _line("【题干关键词】", "；".join(cues) + "。")])
     boundary = str(record.get("misuse_boundary") or "").strip()
-    if boundary:
+    if boundary and _adds_information(boundary, seen + cues):
         lines.extend(["", _line("【易错边界】", boundary)])
     contexts = [
         str(context)
@@ -133,38 +152,37 @@ def render_comparison_card(group: dict, records: list[dict]) -> str:
         "",
         "---",
     ]
+    lines.extend(["", "[T#B#【核心辨析】]"])
     for term in members:
         record = by_term[term]
-        lines.extend(
-            [
-                "",
-                _line(f"【{term}｜词义】", str(record["meaning"])),
-                _line(
-                    f"【{term}｜特别之处】",
-                    str(record["distinctive_feature"]),
-                ),
-            ]
-        )
-    differences = group.get("minimum_differences", [])
-    if differences:
-        lines.extend(["", "[T#B,!d16056#【最小差别】]"])
-        for edge in differences:
-            lines.append(
-                _line(
-                    f"{edge['left']} × {edge['right']}：",
-                    str(edge["text"]),
-                )
-            )
-    dimensions = group.get("dimensions", [])
-    if dimensions:
-        lines.extend(["", "[T#B,!d16056#【多维判断】]"])
-        for dimension in dimensions:
-            lines.append(_line(f"{dimension['axis']}：", ""))
-            judgments = dimension.get("judgments", {})
-            for term in members:
-                judgment = str(judgments.get(term) or "").strip()
-                if judgment:
-                    lines.append(f"- {term}：{judgment}")
+        lines.append(_line(f"【{term}】", _core(record)))
+    meanings = []
+    for term in members:
+        record = by_term[term]
+        meaning = str(record["meaning"])
+        if not _same_judgment(_core(record), meaning):
+            meanings.append((term, meaning))
+    if meanings:
+        lines.extend(["", "[T#B#【词义】]"])
+        for term, meaning in meanings:
+            lines.append(_line(f"【{term}｜词义】", meaning))
+    rules = []
+    for rule in group.get("selection_rules") or []:
+        term = str(rule["term"])
+        text = str(rule["text"]).strip()
+        if _adds_information(text, [_core(by_term[term])]):
+            rules.append((term, text))
+    if not rules:
+        seen_conditions = []
+        for edge in group.get("minimum_differences") or []:
+            condition = str(edge.get("question_selection_condition") or "").strip()
+            if condition and _adds_information(condition, seen_conditions):
+                rules.append(("", condition))
+                seen_conditions.append(condition)
+    if rules:
+        lines.extend(["", "[T#B,!d16056#【怎么选】]"])
+        for term, text in rules:
+            lines.append(f"- {text} → {term}" if term else f"- {text}")
     boundary = str(group.get("misuse_boundary") or "").strip()
     if boundary:
         lines.extend(["", _line("【易错边界】", boundary)])

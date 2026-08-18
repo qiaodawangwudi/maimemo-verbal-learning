@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import re
 from collections import Counter
 from typing import Iterable
 
@@ -17,13 +18,16 @@ READY_FIELDS = (
     "distinctive_feature",
     "dimensions",
     "comparison_edges",
-    "misuse_boundary",
     "evidence",
 )
 
 
 def _text(value: object) -> str:
     return str(value or "").strip()
+
+
+def _normalized_learning_text(value: object) -> str:
+    return re.sub(r"[^0-9A-Za-z\u4e00-\u9fff]", "", _text(value)).lower()
 
 
 def _ambiguous_errors(values: Iterable[object]) -> list[str]:
@@ -60,6 +64,17 @@ def validate_semantic_record(record: dict) -> list[str]:
     meaning = _text(record.get("meaning"))
     feature = _text(record.get("distinctive_feature"))
     boundary = _text(record.get("misuse_boundary"))
+    core = _text(record.get("core_discrimination"))
+    if core:
+        slots = [slot.strip() for slot in core.split("+")]
+        if len(slots) < 2 or any(not slot for slot in slots):
+            errors.append("core_discrimination requires keyword slots joined by +")
+        normalized_core = _normalized_learning_text(core)
+        for cue in record.get("recognition_cues") or []:
+            normalized_cue = _normalized_learning_text(cue)
+            if normalized_cue and normalized_cue == normalized_core:
+                errors.append("recognition cue repeats core_discrimination")
+                break
     if meaning and meaning == feature:
         errors.append("meaning equals distinctive_feature")
     if meaning and meaning == boundary:

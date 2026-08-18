@@ -7,7 +7,7 @@
 | 工件 | 必要字段 | 有效条件 |
 |---|---|---|
 | `source_inventory` | `source_groups[]`, `source_kind`, `locations`, `content_hash`, `access_scope` | 所有输入已清点；同源多版本已合组；证据可定位 |
-| `semantic_registry` | `term`, `sense_id`, `meaning`, `distinctive_feature`, `evidence[]`, `status` | 每个结论有证据；无 `pending` / `conflict` |
+| `semantic_registry` | `term`, `sense_id`, `meaning`, `core_discrimination`, `distinctive_feature`, `evidence[]`, `status` | `core_discrimination` 是面向学习者的关键词式核心辨析；`distinctive_feature` 仅作旧工件兼容；每个结论有证据；无 `pending` / `conflict` |
 | `library_reconciliation` | `snapshot_hash`, `semantic_registry_hash`, `entries[]`, `decision`, `canonical_card_id`, `retire_card_ids`, `reconciliation_hash` | 覆盖每个词面＋义项；新建有零候选证明；多卡和多义项无待决项 |
 | `discrimination_review` | `group_key`, `members[]`, `sense_ids[]`, `minimum_differences[]`, `root_decision` | 完整组已重建；每条差异可判别；根引用决策有身份依据 |
 | `application_review` | `prompt`, `options[]`, `best_option`, `exclusions[]`, `uniqueness_evidence`, `status` | 恰有一个最佳选项；逐项排除其余选项 |
@@ -25,7 +25,7 @@
 
 - 来源内容或证据定位变化：从 `semantic_registry` 重建。
 - 全库快照、规范词面、义项、主卡或重复卡处置变化：重建 `library_reconciliation`。
-- 词义、特别之处、成员、义项或最小差别变化：从 `discrimination_review` 重建。
+- 词义、核心辨析、成员、义项或怎么选规则变化：从 `discrimination_review` 重建。
 - 应用题、答案或排除理由变化：从 `application_review` 重建。
 - 卡片内容、顺序、标题或引用变化：重新冻结并重建发布清单。
 - 章节集合、动作或动作总数变化：重建 `release_manifest` 并重新授权。
