@@ -170,11 +170,8 @@ class ProtectedReleaseWorkflowTests(unittest.TestCase):
         }
         expected_paths = {
             "/.github/workflows/maimemo-release.yml",
-            "/maimemo_learning_rebuild/api.py",
-            "/maimemo_learning_rebuild/release_environment.py",
-            "/maimemo_learning_rebuild/release_quality_gate.py",
-            "/maimemo_learning_rebuild/release_writer.py",
-            "/maimemo_learning_rebuild/release_manifest.py",
+            "/skills/verbal-maimemo-cards/**",
+            "/maimemo_learning_rebuild/__init__.py",
             "/.github/CODEOWNERS",
         }
 

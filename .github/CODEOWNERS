@@ -1,7 +1,4 @@
 /.github/workflows/maimemo-release.yml @qiaodawangwudi
-/maimemo_learning_rebuild/api.py @qiaodawangwudi
-/maimemo_learning_rebuild/release_environment.py @qiaodawangwudi
-/maimemo_learning_rebuild/release_quality_gate.py @qiaodawangwudi
-/maimemo_learning_rebuild/release_writer.py @qiaodawangwudi
-/maimemo_learning_rebuild/release_manifest.py @qiaodawangwudi
+/skills/verbal-maimemo-cards/** @qiaodawangwudi
+/maimemo_learning_rebuild/__init__.py @qiaodawangwudi
 /.github/CODEOWNERS @qiaodawangwudi

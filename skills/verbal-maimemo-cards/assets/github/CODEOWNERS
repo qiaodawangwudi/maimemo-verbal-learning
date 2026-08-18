@@ -1,0 +1,4 @@
+/.github/workflows/learning-quality-gate.yml @qiaodawangwudi
+/.github/workflows/maimemo-release.yml @qiaodawangwudi
+/maimemo_learning_rebuild/** @qiaodawangwudi
+/.github/CODEOWNERS @qiaodawangwudi

@@ -17,6 +17,7 @@ description: Use when civil-service verbal-comprehension transcripts or user-sup
 
 ## 必读参考
 
+- 首次运行、选择“只审查 / 生成预览 / 受保护发布”或调用内置程序时读取 [执行入口](references/execution-guide.md)。
 - 进入来源清点前读取 [来源与隐私政策](references/source-and-privacy-policy.md)。
 - 建立工件、冻结哈希或判断工件是否失效时读取 [工件契约](references/artifact-contracts.md)。
 - 审查词义、辨析或应用题时读取 [学习质量量规](references/learning-quality-rubric.md)。
@@ -62,6 +63,8 @@ description: Use when civil-service verbal-comprehension transcripts or user-sup
 只允许状态机中的 GitHub 受保护发布路径。写入前再次核对 `github_authorization.release_hash == release_manifest.release_hash`，且章节集合、动作总数一致。写入器必须接收冻结载荷、幂等键和发布哈希；缺少任一项即拒绝启动。
 
 请求超时、连接中断或响应不可解析时，标记 `write_indeterminate`，停止新的创建请求。先全量回读并按幂等键、标题和内容哈希查找；只有可证明目标不存在，才重放完全相同的冻结请求。不得用新请求 ID 绕过重复检测。
+
+所有审查、冻结、授权、写入和回读程序均随 Skill 安装在 `scripts/runtime/`。不得以“当前工作区没有项目仓库”为由改用临时脚本；通过 `scripts/run_pipeline.py` 调用内置运行时。首次使用必须先执行 `self-check`，失败时停止，不重写或猜测缺失程序。
 
 ## 示例：新证据与范围变化
 
