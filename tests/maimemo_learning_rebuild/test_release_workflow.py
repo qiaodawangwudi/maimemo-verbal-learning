@@ -8,6 +8,9 @@ WORKFLOW_PATH = REPO_ROOT / ".github" / "workflows" / "maimemo-release.yml"
 QUALITY_WORKFLOW_PATH = (
     REPO_ROOT / ".github" / "workflows" / "learning-quality-gate.yml"
 )
+SNAPSHOT_WORKFLOW_PATH = (
+    REPO_ROOT / ".github" / "workflows" / "maimemo-empty-target-check.yml"
+)
 CODEOWNERS_PATH = REPO_ROOT / ".github" / "CODEOWNERS"
 
 
@@ -170,6 +173,7 @@ class ProtectedReleaseWorkflowTests(unittest.TestCase):
         }
         expected_paths = {
             "/.github/workflows/maimemo-release.yml",
+            "/.github/workflows/maimemo-empty-target-check.yml",
             "/skills/verbal-maimemo-cards/**",
             "/maimemo_learning_rebuild/__init__.py",
             "/.github/CODEOWNERS",
@@ -200,6 +204,27 @@ class ProtectedReleaseWorkflowTests(unittest.TestCase):
             "tests.maimemo_learning_rebuild.test_application_quality_gate",
             workflow,
         )
+
+    def test_empty_target_check_is_protected_read_only_and_discloses_no_ids(self):
+        self.assertTrue(SNAPSHOT_WORKFLOW_PATH.exists())
+        workflow = SNAPSHOT_WORKFLOW_PATH.read_text(encoding="utf-8")
+
+        self.assertRegex(workflow, r'(?ms)^"on":\s*$\n  push:\s*$\n    branches:\s*$\n      - main\s*$')
+        self.assertIn("environment: maimemo-final-release", workflow)
+        self.assertRegex(workflow, r"(?ms)^permissions:\s*$\n  contents: read\s*$")
+        self.assertEqual(1, workflow.count("secrets.MAIMEMO_TOKEN"))
+        self.assertIn("MAIMEMO_API_TOKEN: ${{ secrets.MAIMEMO_TOKEN }}", workflow)
+        self.assertIn("/open/api/v1/markji/decks?offset=0&limit=100", workflow)
+        self.assertIn("with_cards=true", workflow)
+        self.assertIn('EXPECTED_DECK_NAME = "公考成语积累辨析"', workflow)
+        self.assertIn('{"基本词义", "近义辨析", "场景应用"}', workflow)
+        self.assertIn("ROUTE_BINDING_HASH", workflow)
+        self.assertIn("chapter.get(\"card_ids\")", workflow)
+        self.assertIn("len(cards) == 0", workflow)
+        self.assertNotIn("actions/upload-artifact", workflow)
+        self.assertNotIn("GITHUB_STEP_SUMMARY", workflow)
+        self.assertNotRegex(workflow, r"mkjd_[A-Za-z0-9_.-]+")
+        self.assertNotRegex(workflow, r"mkjch_[A-Za-z0-9_.-]+")
 
 
 if __name__ == "__main__":

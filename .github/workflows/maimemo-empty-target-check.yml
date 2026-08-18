@@ -1,0 +1,130 @@
+name: Protected empty Maimemo target check
+
+"on":
+  push:
+    branches:
+      - main
+    paths:
+      - .github/workflows/maimemo-empty-target-check.yml
+
+permissions:
+  contents: read
+
+jobs:
+  verify-empty-target:
+    name: Verify the three target chapters are still empty
+    environment: maimemo-final-release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Read and verify target metadata without disclosing identifiers
+        shell: bash
+        env:
+          MAIMEMO_API_TOKEN: ${{ secrets.MAIMEMO_TOKEN }}
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import hashlib
+          import json
+          import os
+          import urllib.parse
+          import urllib.request
+
+          BASE_URL = "https://open.maimemo.com"
+          EXPECTED_DECK_NAME = "公考成语积累辨析"
+          EXPECTED_CHAPTER_NAMES = {"基本词义", "近义辨析", "场景应用"}
+          ROUTE_BINDING_HASH = "4b61b114f86f934d88bfa83c0c9992141752dbef549a0e467f67a8af64a25c6c"
+
+
+          def fetch(path, token):
+              request = urllib.request.Request(
+                  BASE_URL + path,
+                  headers={
+                      "Accept": "application/json",
+                      "Authorization": "Bearer " + token,
+                  },
+              )
+              with urllib.request.urlopen(request, timeout=60) as response:
+                  payload = json.loads(response.read().decode("utf-8-sig"))
+              if not isinstance(payload, dict) or payload.get("errors"):
+                  raise RuntimeError("Maimemo read response was invalid")
+              data = payload.get("data", payload)
+              if not isinstance(data, dict):
+                  raise RuntimeError("Maimemo read data was invalid")
+              return data
+
+
+          try:
+              token = os.environ["MAIMEMO_API_TOKEN"]
+              deck_data = fetch(
+                  "/open/api/v1/markji/decks?offset=0&limit=100", token
+              )
+              decks = deck_data.get("decks")
+              if not isinstance(decks, list):
+                  raise RuntimeError("deck list was absent")
+              matches = [
+                  deck
+                  for deck in decks
+                  if isinstance(deck, dict)
+                  and deck.get("name") == EXPECTED_DECK_NAME
+              ]
+              if len(matches) != 1 or not isinstance(matches[0].get("id"), str):
+                  raise RuntimeError("target deck identity was not unique")
+              deck_id = matches[0]["id"]
+              chapter_data = fetch(
+                  "/open/api/v1/markji/decks/"
+                  + urllib.parse.quote(deck_id, safe="")
+                  + "/chapters?with_cards=true",
+                  token,
+              )
+              chapters = chapter_data.get("chapters")
+              all_cards = chapter_data.get("cards", [])
+              if not isinstance(chapters, list) or not isinstance(all_cards, list):
+                  raise RuntimeError("chapter snapshot was invalid")
+              target_chapters = [
+                  chapter
+                  for chapter in chapters
+                  if isinstance(chapter, dict)
+                  and chapter.get("name") in EXPECTED_CHAPTER_NAMES
+              ]
+              if len(target_chapters) != 3 or {
+                  chapter.get("name") for chapter in target_chapters
+              } != EXPECTED_CHAPTER_NAMES:
+                  raise RuntimeError("target chapters were not exact")
+              if any(
+                  not isinstance(chapter.get("id"), str)
+                  or not isinstance(chapter.get("card_ids"), list)
+                  or chapter.get("card_ids")
+                  for chapter in target_chapters
+              ):
+                  raise RuntimeError("a target chapter was not empty")
+              target_ids = {chapter["id"] for chapter in target_chapters}
+              cards = [
+                  card
+                  for card in all_cards
+                  if isinstance(card, dict)
+                  and card.get("chapter_id") in target_ids
+              ]
+              if not len(cards) == 0:
+                  raise RuntimeError("target cards were returned outside chapter lists")
+              binding = {
+                  "deck_id": deck_id,
+                  "routes": {
+                      chapter["name"]: chapter["id"]
+                      for chapter in target_chapters
+                  },
+              }
+              canonical = json.dumps(
+                  binding,
+                  ensure_ascii=False,
+                  sort_keys=True,
+                  separators=(",", ":"),
+              ).encode("utf-8")
+              if hashlib.sha256(canonical).hexdigest() != ROUTE_BINDING_HASH:
+                  raise RuntimeError("target route binding changed")
+          except Exception:
+              raise SystemExit("protected empty-target check failed [REDACTED]") from None
+          finally:
+              token = ""
+
+          print("protected empty-target check passed")
+          PY
