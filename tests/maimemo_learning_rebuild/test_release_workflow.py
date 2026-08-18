@@ -226,6 +226,28 @@ class ProtectedReleaseWorkflowTests(unittest.TestCase):
         self.assertNotRegex(workflow, r"mkjd_[A-Za-z0-9_.-]+")
         self.assertNotRegex(workflow, r"mkjch_[A-Za-z0-9_.-]+")
 
+    def test_empty_target_check_reports_only_safe_failure_categories(self):
+        workflow = SNAPSHOT_WORKFLOW_PATH.read_text(encoding="utf-8")
+
+        expected = {
+            "TOKEN_MISSING",
+            "API_READ_FAILED",
+            "API_RESPONSE_CHANGED",
+            "DECK_NOT_UNIQUE",
+            "CHAPTERS_CHANGED",
+            "TARGET_NOT_EMPTY",
+            "ROUTE_BINDING_CHANGED",
+            "INTERNAL_ERROR",
+        }
+        self.assertEqual(
+            expected,
+            set(re.findall(r'ProbeFailure\("([A-Z_]+)"\)', workflow)),
+        )
+        self.assertIn("except ProbeFailure as error:", workflow)
+        self.assertIn('error.code', workflow)
+        self.assertIn('ProbeFailure("INTERNAL_ERROR")', workflow)
+        self.assertNotIn('str(error)', workflow)
+
 
 if __name__ == "__main__":
     unittest.main()
