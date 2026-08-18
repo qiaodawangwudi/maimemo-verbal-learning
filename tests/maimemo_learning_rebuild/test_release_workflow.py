@@ -174,6 +174,8 @@ class ProtectedReleaseWorkflowTests(unittest.TestCase):
         expected_paths = {
             "/.github/workflows/maimemo-release.yml",
             "/.github/workflows/maimemo-empty-target-check.yml",
+            "/.github/workflows/maimemo-direct-sync.yml",
+            "/release-inputs/**",
             "/skills/verbal-maimemo-cards/**",
             "/maimemo_learning_rebuild/__init__.py",
             "/.github/CODEOWNERS",
