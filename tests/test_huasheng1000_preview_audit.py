@@ -15,12 +15,15 @@ class Huasheng1000PreviewAuditTests(unittest.TestCase):
         self.assertEqual(data["source_inventory"]["target_terms"], 974)
         self.assertEqual(data["outputs"], {
             "basic_cards": 974,
-            "comparison_cards": 104,
+            "comparison_cards": 102,
             "application_cards": 974,
         })
         self.assertEqual(data["quality"]["status"], "passed")
         self.assertEqual(data["quality"]["application_contract_errors"], 0)
         self.assertEqual(data["quality"]["answer_hidden_review_errors"], 0)
+        self.assertGreater(data["quality"]["basic_cards_with_one_glance"], 700)
+        self.assertGreater(data["quality"]["basic_cards_with_useful_boundary"], 700)
+        self.assertTrue(data["quality"]["basic_preview_uses_previous_layered_format"])
         self.assertFalse(data["library_reconciliation"]["full_live_library_completeness_proven"])
         self.assertEqual(
             data["library_reconciliation"]["write_gate"],
@@ -34,3 +37,4 @@ class Huasheng1000PreviewAuditTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
