@@ -10,12 +10,15 @@
   },
   "outputs": {
     "basic_cards": 974,
-    "comparison_cards": 104,
+    "comparison_cards": 102,
     "application_cards": 974
   },
   "quality": {
     "semantic_records_ready": 974,
     "semantic_contract_errors": 0,
+    "basic_cards_with_one_glance": 765,
+    "basic_cards_with_useful_boundary": 829,
+    "basic_preview_uses_previous_layered_format": true,
     "comparison_group_errors": 0,
     "application_contract_errors": 0,
     "answer_hidden_application_reviews": 974,
@@ -30,12 +33,12 @@
     "write_gate": "blocked_pending_full_live_snapshot"
   },
   "private_local_artifact_sha256": {
-    "basic_preview_markdown": "cd14b5d7f92d1218baba83a11134116ce11947277388afefad94958a0991ef8d",
-    "comparison_preview_markdown": "e97f04deb26fc10fe90bc495519b22fc0d3143029ef3fb166fa525b31aa64efb",
-    "application_preview_markdown": "1262da02d6553d6b075231fb23df0fb94c6079113eb6d9e3b81066615c4d221e",
-    "combined_preview_json": "afa06ed73a4a6dca0141526602b47ad9e9fed8b06c2c78d5c39d6a7a7b3211db",
-    "application_blind_review_json": "fd51e90da5c7e4355597443f2e04a48db286c51d52f01634aa82bebbd36f831e",
-    "application_repository_report_json": "fdfe5da4f3d4b2a90d96447479026e13c52ef798031cdffaa9c1d816fa4998e6"
+    "basic_preview_markdown": "beb596ada0c194efa7777d1668d78c0145590c60cb4a70436650f49af6519d2d",
+    "comparison_preview_markdown": "78580f50e226e55eb73d7b957c14590d0f63aecd7c3c505003b98da8d6ed506c",
+    "application_preview_markdown": "a162b3a01d06441895a1a1e8b60fb7d0d1f459772f826c90204fe7c20c354c8d",
+    "combined_preview_json": "2cb1cd911be1f8b8c82cc67196195f67d57086f41aa49e0df246926236063f84",
+    "application_blind_review_json": "ee3e45cff26f1ab4971afb26ee551d041f263931a4b0dd50a17ba82e0a9797b3",
+    "application_repository_report_json": "f9e5cc6c6902016e8bd80b8a8b8550efc1a4e902c59434ea38665271feb15b81"
   },
   "privacy": {
     "raw_course_material_uploaded": false,
@@ -43,3 +46,4 @@
     "audit_contains_only_counts_hashes_and_nonsecret_status": true
   }
 }
+
