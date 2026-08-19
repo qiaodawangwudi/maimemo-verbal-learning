@@ -106,10 +106,10 @@ class LayeredRenderTests(unittest.TestCase):
         ordered_labels = [
             "【核心辨析】",
             "【词义】",
-            "【题干关键词】",
             "【一眼辨析】",
             "【多维判断】",
             "【易错边界】",
+            "【附加｜题干可圈出】",
         ]
         positions = [rendered.index(label) for label in ordered_labels]
         self.assertEqual(positions, sorted(positions))
@@ -119,6 +119,8 @@ class LayeredRenderTests(unittest.TestCase):
         self.assertIn("因噎废食 × 投鼠忌器", rendered)
         self.assertIn("【多维判断】", rendered)
         self.assertIn("对象边界", rendered)
+        self.assertNotIn("【题干关键词】", rendered)
+        self.assertIn("【附加｜题干可圈出】]先有问题或风险担忧；后有停止必要行动。", rendered)
         self.assertNotIn(record["comparison_edges"][0]["minimum_difference"], rendered)
         self.assertIn("【易错边界】", rendered)
         self.assertIn("【典型语境】", rendered)
@@ -275,6 +277,25 @@ class LayeredRenderTests(unittest.TestCase):
 
                 self.assertNotIn("【多维判断】", rendered)
                 self.assertNotIn("选择落点", rendered)
+
+    def test_question_cues_are_only_a_trailing_add_on(self):
+        rendered = render_base_card(
+            {
+                "term": "投鼠忌器",
+                "meaning": "想打击有害对象，又担心伤及与之关联的人或事物，因而不敢行动。",
+                "core_discrimination": "顾虑伤及关联对象 + 不敢行动或放弃行动",
+                "recognition_cues": ["牵连无辜", "有所顾忌"],
+                "comparison_edges": [],
+                "dimensions": [],
+                "misuse_boundary": "没有关联对象受牵连时，不使用投鼠忌器。",
+                "typical_contexts": [],
+            },
+            [],
+        )
+
+        self.assertNotIn("【题干关键词】", rendered)
+        self.assertIn("【附加｜题干可圈出】", rendered)
+        self.assertLess(rendered.index("【易错边界】"), rendered.index("【附加｜题干可圈出】"))
 
     def test_reviewed_selection_condition_is_shown_once_without_full_edge_echo(self):
         records = [

@@ -22,7 +22,9 @@ class Huasheng1000PreviewAuditTests(unittest.TestCase):
         self.assertEqual(data["quality"]["application_contract_errors"], 0)
         self.assertEqual(data["quality"]["answer_hidden_review_errors"], 0)
         self.assertGreater(data["quality"]["basic_cards_with_one_glance"], 700)
-        self.assertGreater(data["quality"]["basic_cards_with_useful_boundary"], 700)
+        self.assertGreater(data["quality"]["basic_cards_with_multidimensional_judgment"], 200)
+        self.assertTrue(data["quality"]["question_cues_are_trailing_add_ons"])
+        self.assertTrue(data["quality"]["zero_multidimension_when_evidence_exists_is_blocked"])
         self.assertTrue(data["quality"]["basic_preview_uses_previous_layered_format"])
         self.assertFalse(data["library_reconciliation"]["full_live_library_completeness_proven"])
         self.assertEqual(

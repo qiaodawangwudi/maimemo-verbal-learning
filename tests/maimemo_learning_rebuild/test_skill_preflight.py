@@ -38,7 +38,10 @@ class ReusableSkillPreflightTests(unittest.TestCase):
 
         for phrase in (
             "学习效果",
-            "核心辨析 -> 词义 -> 题干关键词",
+            "核心辨析 -> 词义 -> 一眼辨析 -> 多维判断",
+            "附加｜题干可圈出",
+            "不得替代",
+            "整批为零",
             "一个判断只出现一次",
             "一眼辨析",
             "多维判断",

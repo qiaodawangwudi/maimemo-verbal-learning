@@ -16,8 +16,12 @@
   "quality": {
     "semantic_records_ready": 974,
     "semantic_contract_errors": 0,
-    "basic_cards_with_one_glance": 765,
-    "basic_cards_with_useful_boundary": 829,
+    "basic_cards_with_one_glance": 760,
+    "basic_cards_with_useful_boundary": 573,
+    "basic_cards_with_multidimensional_judgment": 251,
+    "basic_cards_with_optional_question_cue_add_on": 116,
+    "question_cues_are_trailing_add_ons": true,
+    "zero_multidimension_when_evidence_exists_is_blocked": true,
     "basic_preview_uses_previous_layered_format": true,
     "comparison_group_errors": 0,
     "application_contract_errors": 0,
@@ -33,10 +37,10 @@
     "write_gate": "blocked_pending_full_live_snapshot"
   },
   "private_local_artifact_sha256": {
-    "basic_preview_markdown": "beb596ada0c194efa7777d1668d78c0145590c60cb4a70436650f49af6519d2d",
+    "basic_preview_markdown": "ed0c301cb8369889f8f772e236d266a7b4001006573264fccdd24bc1d978f6a7",
     "comparison_preview_markdown": "78580f50e226e55eb73d7b957c14590d0f63aecd7c3c505003b98da8d6ed506c",
     "application_preview_markdown": "a162b3a01d06441895a1a1e8b60fb7d0d1f459772f826c90204fe7c20c354c8d",
-    "combined_preview_json": "2cb1cd911be1f8b8c82cc67196195f67d57086f41aa49e0df246926236063f84",
+    "combined_preview_json": "15127f462fa8e6393813b697319c1dd94be4a63444285374cc36a7269f9bb6d1",
     "application_blind_review_json": "ee3e45cff26f1ab4971afb26ee551d041f263931a4b0dd50a17ba82e0a9797b3",
     "application_repository_report_json": "f9e5cc6c6902016e8bd80b8a8b8550efc1a4e902c59434ea38665271feb15b81"
   },
