@@ -38,6 +38,7 @@ REQUIRED_RUNTIME_MODULES = (
     "learning_quality",
     "dimension_review",
     "application_quality_gate",
+    "content_acceptance_v2",
     "release_manifest",
     "release_environment",
     "release_writer",

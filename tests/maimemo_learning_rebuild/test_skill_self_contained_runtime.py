@@ -44,6 +44,7 @@ class SelfContainedSkillTests(unittest.TestCase):
             "readback.py",
             "guard.py",
             "reconciliation.py",
+            "content_acceptance_v2.py",
         }
         present = {path.name for path in RUNTIME_PACKAGE.glob("*.py")}
         self.assertEqual(required_modules - present, set())
@@ -110,6 +111,7 @@ class SelfContainedSkillTests(unittest.TestCase):
             self.assertEqual(report["status"], "passed")
             self.assertEqual(report["runtime_origin"], "installed_skill")
             self.assertTrue(report["github_templates_ready"])
+            self.assertIn("content_acceptance_v2", report["runtime_modules"])
 
     def test_github_template_install_includes_the_runtime_it_executes(self):
         runner = SKILL_ROOT / "scripts" / "run_pipeline.py"
