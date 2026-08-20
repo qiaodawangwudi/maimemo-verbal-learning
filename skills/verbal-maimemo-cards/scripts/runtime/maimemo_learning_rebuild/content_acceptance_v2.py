@@ -25,10 +25,24 @@ _GENERIC_SCENARIO_OUTCOMES = {
 }
 _PLACEHOLDER_SCENARIO_MARKERS = ("所缺词语", "填入词语", "横线所在")
 _LEXICAL_SUFFIX_AFTER_BLANK = re.compile(r"____[剂]")
+_BOILERPLATE_BOUNDARY_MARKERS = (
+    "课程证据中未出现可直接替换的近义词",
+    "按本词核心语义判断",
+    "不能只因大意相近互换",
+)
 
 
 def _norm(value: object) -> str:
     return re.sub(r"[^0-9A-Za-z\u4e00-\u9fff]", "", str(value)).lower()
+
+
+def _review_frame(value: object, members: object = ()) -> str:
+    text = str(value)
+    for member in members if isinstance(members, list) else []:
+        text = text.replace(str(member), "<词>")
+    text = re.sub(r"“[^”]*”", "“<内容>”", text)
+    text = re.sub(r"\d+", "<数字>", text)
+    return _norm(text)
 
 
 def validate_semantic_review(records: object) -> list[str]:
@@ -75,6 +89,17 @@ def validate_semantic_review(records: object) -> list[str]:
                 errors.append(f"punctuation fragment in core slot: {term}:{slot}")
             if slot.strip() in _GENERIC_SLOTS:
                 errors.append(f"generic core slot: {term}:{slot}")
+            if slot.lstrip().startswith(("/", "\\")) or "课程" in slot or slot.count("“") != slot.count("”"):
+                errors.append(f"generation debris in core slot: {term}:{slot}")
+        normalized_core = _norm(joined)
+        normalized_meaning = _norm(meaning)
+        if len(normalized_core) >= 8 and (
+            normalized_core in normalized_meaning or normalized_meaning in normalized_core
+        ):
+            errors.append(f"core merely repeats meaning: {term}")
+        boundary = record.get("misuse_boundary")
+        if isinstance(boundary, str) and any(marker in boundary for marker in _BOILERPLATE_BOUNDARY_MARKERS):
+            errors.append(f"boilerplate misuse boundary: {term}")
         evidence = record.get("evidence")
         if not isinstance(evidence, list) or not evidence:
             errors.append(f"approved record lacks evidence: {term}")
@@ -94,6 +119,7 @@ def validate_comparison_review(groups: object) -> list[str]:
     if not isinstance(groups, list):
         return ["comparison review must be a list"]
     seen: set[str] = set()
+    adjudication_frames: Counter[str] = Counter()
     for index, group in enumerate(groups):
         if not isinstance(group, dict):
             errors.append(f"comparison group must be object: {index}")
@@ -173,6 +199,12 @@ def validate_comparison_review(groups: object) -> list[str]:
             for field in ("why_confusable", "why_closed"):
                 if not isinstance(adjudication.get(field), str) or len(_norm(adjudication.get(field))) < 8:
                     errors.append(f"closed-group adjudication {field} incomplete: {group_id}")
+                else:
+                    adjudication_frames[f"{field}:{_review_frame(adjudication[field], members)}"] += 1
+    if len(groups) >= 5 and adjudication_frames:
+        dominant = adjudication_frames.most_common(1)[0][1]
+        if dominant >= 5 and dominant / len(groups) >= 0.5:
+            errors.append("generated closed-group adjudication skeleton dominates batch")
     return errors
 
 
@@ -234,6 +266,8 @@ def validate_dimension_review_coverage(groups: object, review: object) -> list[s
         errors.append("dimension review must cover exact comparison groups")
     approved = 0
     insufficiency_reasons: list[str] = []
+    insufficiency_frames: list[str] = []
+    checked_axis_sets: list[tuple[str, ...]] = []
     for group_id, members in expected.items():
         entry = entries.get(group_id)
         if entry is None:
@@ -253,10 +287,13 @@ def validate_dimension_review_coverage(groups: object, review: object) -> list[s
                 not isinstance(axis, str) or len(_norm(axis)) < 2 for axis in axes
             ):
                 errors.append(f"checked candidate axes missing: {group_id}")
+            else:
+                checked_axis_sets.append(tuple(_norm(axis) for axis in axes))
             if not isinstance(reason, str) or len(_norm(reason)) < 8:
                 errors.append(f"dimension insufficiency reason incomplete: {group_id}")
             else:
                 insufficiency_reasons.append(_norm(reason))
+                insufficiency_frames.append(_review_frame(reason, members))
         else:
             errors.append(f"dimension disposition invalid: {group_id}")
             if not isinstance(entry.get("checked_candidate_axes"), list) or not entry.get(
@@ -269,6 +306,15 @@ def validate_dimension_review_coverage(groups: object, review: object) -> list[s
         dominant = Counter(insufficiency_reasons).most_common(1)[0][1]
         if dominant >= 3 and dominant / len(insufficiency_reasons) >= 0.5:
             errors.append("homogeneous dimension insufficiency reason dominates batch")
+    if len(insufficiency_frames) >= 4:
+        dominant_frame = Counter(insufficiency_frames).most_common(1)[0][1]
+        dominant_axes = Counter(checked_axis_sets).most_common(1)[0][1]
+        if (
+            dominant_frame >= 4
+            and dominant_frame / len(insufficiency_frames) >= 0.5
+            and dominant_axes / len(checked_axis_sets) >= 0.5
+        ):
+            errors.append("homogeneous dimension review frame and axis set dominate batch")
     return errors
 
 
@@ -278,7 +324,7 @@ def validate_card_learning_layers(content: object, card_type: str, identity: str
     if not isinstance(content, str):
         return [f"card content must be text: {identity}"]
     required = {
-        "basic": ["核心辨析", "基本词义"],
+        "basic": ["核心辨析", "基本词义", "一眼辨析"],
         "comparison": ["核心辨析", "基本词义", "一眼辨析", "怎么选"],
     }.get(card_type, [])
     positions: list[tuple[str, int]] = []
@@ -301,6 +347,18 @@ def validate_card_learning_layers(content: object, card_type: str, identity: str
             errors.append(f"learning layers out of order: {identity}:{layer}")
         if position >= 0:
             previous = position
+    if card_type == "comparison" and all(content.find(f"【{layer}】") >= 0 for layer in ("核心辨析", "基本词义", "怎么选")):
+        core_body = content[
+            content.find("【核心辨析】") + len("【核心辨析】") : content.find("【基本词义】")
+        ]
+        how_body = content[content.find("【怎么选】") + len("【怎么选】") :]
+        core_slots: list[str] = []
+        for line in core_body.splitlines():
+            payload = re.sub(r"^\s*\[T#B#[^\]]*\]", "", line).strip()
+            core_slots.extend(_norm(slot) for slot in payload.split("+") if len(_norm(slot)) >= 4)
+        normalized_how = _norm(how_body)
+        if len(core_slots) >= 2 and all(slot in normalized_how for slot in core_slots):
+            errors.append(f"how-to-choose repeats core slots: {identity}")
     return errors
 
 
@@ -377,6 +435,10 @@ def validate_application_authoring(applications: object, semantics: object) -> l
         rejection_dominant = max(rejection_skeletons.values(), default=0)
         if rejection_dominant >= 5 and rejection_dominant / max(1, sum(rejection_skeletons.values())) >= 0.25:
             errors.append("distractor explanation template dominates batch")
+        rejection_total = sum(rejection_skeletons.values())
+        minimum_frames = max(6, (rejection_total + 4) // 5)
+        if rejection_total >= 20 and len(rejection_skeletons) < minimum_frames:
+            errors.append("too few distractor explanation frames for batch")
     return errors
 
 
@@ -415,6 +477,19 @@ def validate_preview_bundle(
     errors.extend(validate_dimension_review_coverage(comparison_groups, dimension_groups))
     errors.extend(validate_dimension_novelty(dimension_groups, semantics))
     errors.extend(validate_application_authoring(applications, semantics))
+    grouped_terms = {
+        str(term)
+        for group in comparison_groups
+        if isinstance(group, dict) and isinstance(group.get("members"), list)
+        for term in group["members"]
+    }
+    application_terms = {
+        str(item.get("term")) for item in applications if isinstance(item, dict) and item.get("term")
+    }
+    if grouped_terms != set(semantics):
+        errors.append("approved terms missing comparison group and one-glance review")
+    if application_terms != set(semantics):
+        errors.append("approved terms missing application review")
 
     def exact_identity(items: object, field: str, expected: set[str], label: str) -> None:
         if not isinstance(items, list):
@@ -428,7 +503,7 @@ def validate_preview_bundle(
 
     exact_identity(bundle.get("basic_cards"), "term", set(semantics), "basic")
     exact_identity(bundle.get("comparison_cards"), "group_id", {str(group.get("group_id")) for group in comparison_groups}, "comparison")
-    exact_identity(bundle.get("application_cards"), "term", {str(item.get("term")) for item in applications}, "application")
+    exact_identity(bundle.get("application_cards"), "term", set(semantics), "application")
     for card in bundle.get("basic_cards", []) if isinstance(bundle.get("basic_cards"), list) else []:
         if isinstance(card, dict):
             errors.extend(validate_card_learning_layers(card.get("content"), "basic", str(card.get("term"))))

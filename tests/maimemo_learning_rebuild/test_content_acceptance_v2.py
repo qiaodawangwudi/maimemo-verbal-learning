@@ -26,6 +26,19 @@ def semantic(term="甲词", slots=None):
 
 
 class SemanticAcceptanceV2Tests(unittest.TestCase):
+    def test_rejects_boilerplate_boundaries_copied_meanings_and_generation_debris(self):
+        boilerplate = semantic("空泛词")
+        boilerplate["misuse_boundary"] = "课程证据中未出现可直接替换的近义词，按本词核心语义判断。"
+        copied = semantic("默默无闻", ["没有名声或不为人知", "常形容人工作奉献"])
+        copied["meaning"] = "没有名声或不为人知，常形容人、工作、奉献。"
+        debris = semantic("竭泽而渔", ["/杀鸡取卵重透支长远", "排干水捕鱼"])
+
+        errors = validate_semantic_review([boilerplate, copied, debris])
+
+        self.assertTrue(any("boilerplate misuse boundary" in error for error in errors))
+        self.assertTrue(any("core merely repeats meaning" in error for error in errors))
+        self.assertTrue(any("generation debris in core slot" in error for error in errors))
+
     def test_rejects_mechanical_fragments_and_unreviewed_auto_records(self):
         records = [
             semantic("好高骛远", ["目标", "不切实际、追求、高"]),
@@ -107,6 +120,39 @@ class ComparisonAcceptanceV2Tests(unittest.TestCase):
 
         self.assertTrue(any("closed-group adjudication" in error for error in errors))
 
+    def test_rejects_batch_generated_closed_group_adjudication_skeletons(self):
+        groups = []
+        for index in range(6):
+            group = self.valid_group()
+            left, right = f"甲词{index}", f"乙词{index}"
+            group["group_id"] = f"g{index}"
+            group["members"] = [left, right]
+            group["member_profiles"] = {
+                left: {"meaning": f"{left}表示主动处理。", "core_slots": ["外部主体进入", "主动参与过程"]},
+                right: {"meaning": f"{right}表示融入整体。", "core_slots": ["进入既有整体", "成为内部部分"]},
+            }
+            group["one_glance_edges"] = [{"left": left, "right": right, "difference": f"{left}：主动处理 vs {right}：融入整体"}]
+            group["selection_rules"] = [
+                {"condition": f"题干强调第{index}种主动处理", "choose": left},
+                {"condition": f"题干强调第{index}种融入整体", "choose": right},
+            ]
+            group["evidence_observations"] = {
+                left: {"observation": "主动处理", "source_group_id": "S1", "location": f"P{index}A", "quote": "甲词原文"},
+                right: {"observation": "融入整体", "source_group_id": "S1", "location": f"P{index}B", "quote": "乙词原文"},
+            }
+            group["closed_group_adjudication"] = {
+                "method": "manual_closed_group_review",
+                "relation": "same_slot_confusable",
+                "reviewed_members": [left, right],
+                "why_confusable": f"{left}和{right}都可能进入相近选词位置，但决定条件分别是“主动处理{index}”和“融入整体{index}”。",
+                "why_closed": f"本组只审{left}与{right}当前已批准义项；现有证据没有引入需要共同裁决的第三个成员。",
+            }
+            groups.append(group)
+
+        errors = validate_comparison_review(groups)
+
+        self.assertTrue(any("generated closed-group adjudication skeleton" in error for error in errors))
+
 
 class DimensionNoveltyV2Tests(unittest.TestCase):
     def test_rejects_dimension_that_splits_or_paraphrases_core(self):
@@ -145,6 +191,27 @@ class DimensionNoveltyV2Tests(unittest.TestCase):
 
         self.assertTrue(any("blanket dimension deletion" in error for error in errors))
         self.assertTrue(any("checked candidate axes" in error for error in errors))
+
+    def test_rejects_same_axis_set_and_reason_frame_with_swapped_pair_text(self):
+        groups = [{"group_id": f"g{index}", "members": [f"甲{index}", f"乙{index}"]} for index in range(6)]
+        review = []
+        for index, group in enumerate(groups):
+            review.append({
+                "group_id": group["group_id"],
+                "members": group["members"],
+                "disposition": "insufficient_dimensions" if index else "approved_dimensions",
+                "dimensions": ([{"axis": "对象", "judgments": {}}, {"axis": "结果", "judgments": {}}] if index == 0 else []),
+                "checked_candidate_axes": ["对象与范围", "程度与结果", "褒贬与语域", "搭配与句法"],
+                "insufficiency_reason": (
+                    "" if index == 0 else
+                    f"已逐项检查甲{index}与乙{index}的对象、程度、过程结果、褒贬、语域和搭配；"
+                    f"除“甲落点{index}／乙落点{index}”这一核心差别外，证据不足以形成两个独立新增轴。"
+                ),
+            })
+
+        errors = validate_dimension_review_coverage(groups, review)
+
+        self.assertTrue(any("homogeneous dimension review frame" in error for error in errors))
 
 
 class ApplicationAcceptanceV2Tests(unittest.TestCase):
@@ -252,6 +319,31 @@ class ApplicationAcceptanceV2Tests(unittest.TestCase):
 
         self.assertTrue(any("distractor explanation template dominates batch" in error for error in errors))
 
+    def test_rejects_round_robin_small_set_of_rejection_templates(self):
+        values = []
+        semantics = {}
+        frames = [
+            "题干给出的是“条件{index}”；{distractor}要求“另一条件”，这一条件没有出现。",
+            "若选{distractor}，应看到“另一条件”；现有语境只支持“条件{index}”。",
+            "本题判断点是“条件{index}”，与{distractor}所需的“另一条件”方向不同。",
+            "{distractor}关注“另一条件”；题干实际描述“条件{index}”，不能替换。",
+            "选择{distractor}必须满足“另一条件”；本题明确落在“条件{index}”。",
+        ]
+        for index in range(30):
+            term, distractor = f"词{index}", f"干扰词{index}"
+            item = self.valid_application()
+            item["term"] = item["answer"] = term
+            item["options"] = [term, distractor]
+            item["prompt"] = f"第{index}家机构处理真实业务并作出不同决定，横线处应填（　）。"
+            item["scenario_elements"] = {"subject": f"机构{index}", "event": "处理真实业务", "constraint": f"条件{index}", "outcome": "作出决定"}
+            item["distractor_rejections"] = {distractor: frames[index % len(frames)].format(index=index, distractor=distractor)}
+            semantics[term] = semantic(term, [f"具体条件{index}", f"具体行为{index}"])
+            values.append(item)
+
+        errors = validate_application_authoring(values, semantics)
+
+        self.assertTrue(any("too few distractor explanation frames" in error for error in errors))
+
 
 class CardLearningLayerAcceptanceV2Tests(unittest.TestCase):
     def test_rejects_comparison_card_without_core_and_how_to_choose_layers(self):
@@ -269,8 +361,44 @@ class CardLearningLayerAcceptanceV2Tests(unittest.TestCase):
         self.assertTrue(any("missing layer: 核心辨析" in error for error in errors))
         self.assertTrue(any("missing layer: 怎么选" in error for error in errors))
 
+    def test_rejects_how_to_choose_that_repeats_every_core_slot(self):
+        content = "\n".join([
+            "[T#B#【核心辨析】]",
+            "[T#B#甲词：]外部主体进入 + 主动参与过程",
+            "[T#B#乙词：]进入既有整体 + 成为内部部分",
+            "[T#B#【基本词义】]",
+            "[T#B#甲词：]甲词含义。",
+            "[T#B#乙词：]乙词含义。",
+            "[T#B#【一眼辨析】]甲词：主动干预 vs 乙词：融入整体",
+            "[T#B#【怎么选】]",
+            "[T#B#先圈对象，再圈落点：]外部主体进入与主动参与过程同时命中选甲词；进入既有整体与成为内部部分同时命中选乙词。",
+        ])
+
+        errors = validate_card_learning_layers(content, "comparison", "甲词 × 乙词")
+
+        self.assertTrue(any("how-to-choose repeats core slots" in error for error in errors))
+
 
 class PreviewBundleAcceptanceV2Tests(unittest.TestCase):
+    def test_preview_requires_application_and_one_glance_for_every_approved_term(self):
+        bundle = {
+            "schema_version": 2,
+            "status": "passed_reviewed_subset",
+            "basic_cards": [{"term": "甲词", "content": "【核心辨析】条件 + 行为\n【基本词义】可学习内容"}],
+            "comparison_cards": [],
+            "application_cards": [],
+            "source_review_hashes": {"semantic": "s", "comparison": "c", "dimension": "d", "application": "a"},
+        }
+        semantic_payload = {"semantic_review_hash": "s", "records": [semantic("甲词")]}
+        comparison_payload = {"comparison_review_hash": "c", "groups": []}
+        dimension_payload = {"dimension_review_hash": "d", "groups": []}
+        application_payload = {"application_review_hash": "a", "applications": []}
+
+        errors = validate_preview_bundle(bundle, semantic_payload, comparison_payload, dimension_payload, application_payload)
+
+        self.assertTrue(any("approved terms missing application review" in error for error in errors))
+        self.assertTrue(any("missing layer: 一眼辨析" in error for error in errors))
+
     def test_self_declared_pass_cannot_replace_bound_source_reviews(self):
         bundle = {
             "schema_version": 2,
@@ -287,16 +415,16 @@ class PreviewBundleAcceptanceV2Tests(unittest.TestCase):
         errors = validate_preview_bundle(bundle, semantic_payload, comparison_payload, dimension_payload, application_payload)
         self.assertTrue(any("source review hash mismatch" in error for error in errors))
 
-    def test_exact_reviewed_subset_is_accepted(self):
+    def test_empty_reviewed_subset_is_accepted(self):
         bundle = {
             "schema_version": 2,
             "status": "passed_reviewed_subset",
-            "basic_cards": [{"term": "甲词", "content": "【核心辨析】条件 + 行为\n【基本词义】可学习内容"}],
+            "basic_cards": [],
             "comparison_cards": [],
             "application_cards": [],
             "source_review_hashes": {"semantic": "s", "comparison": "c", "dimension": "d", "application": "a"},
         }
-        semantic_payload = {"semantic_review_hash": "s", "records": [semantic("甲词")]}
+        semantic_payload = {"semantic_review_hash": "s", "records": []}
         comparison_payload = {"comparison_review_hash": "c", "groups": []}
         dimension_payload = {"dimension_review_hash": "d", "groups": []}
         application_payload = {"application_review_hash": "a", "applications": []}
