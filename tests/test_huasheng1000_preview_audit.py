@@ -1,0 +1,49 @@
+import json
+import re
+import unittest
+from pathlib import Path
+
+
+ROOT = Path(__file__).resolve().parents[1]
+AUDIT = ROOT / "docs" / "reviews" / "huasheng1000-preview-audit.json"
+
+
+class Huasheng1000PreviewAuditTests(unittest.TestCase):
+    def test_preview_audit_is_complete_private_and_read_only(self):
+        data = json.loads(AUDIT.read_text(encoding="utf-8"))
+        self.assertEqual(data["scope"], "preview_only_no_maimemo_write")
+        self.assertEqual(data["source_inventory"]["target_terms"], 974)
+        self.assertEqual(data["outputs"], {
+            "basic_cards": 974,
+            "comparison_cards": 102,
+            "application_cards": 974,
+        })
+        self.assertEqual(data["quality"]["status"], "passed")
+        self.assertEqual(data["quality"]["application_contract_errors"], 0)
+        self.assertEqual(data["quality"]["answer_hidden_review_errors"], 0)
+        self.assertGreater(data["quality"]["basic_cards_with_one_glance"], 700)
+        self.assertEqual(data["quality"]["basic_cards_with_multidimensional_judgment"], 55)
+        self.assertEqual(data["quality"]["dimension_review_groups"], 102)
+        self.assertEqual(data["quality"]["approved_dimension_groups"], 25)
+        self.assertEqual(data["quality"]["insufficient_dimension_groups"], 77)
+        self.assertTrue(data["quality"]["dimension_review_required_before_render"])
+        self.assertTrue(data["quality"]["homogeneous_dimension_templates_are_blocked"])
+        self.assertTrue(data["quality"]["blanket_dimension_deletion_is_blocked"])
+        self.assertRegex(data["quality"]["dimension_review_hash"], re.compile(r"^[0-9a-f]{64}$"))
+        self.assertTrue(data["quality"]["question_cues_are_trailing_add_ons"])
+        self.assertTrue(data["quality"]["zero_multidimension_when_evidence_exists_is_blocked"])
+        self.assertTrue(data["quality"]["basic_preview_uses_previous_layered_format"])
+        self.assertFalse(data["library_reconciliation"]["full_live_library_completeness_proven"])
+        self.assertEqual(
+            data["library_reconciliation"]["write_gate"],
+            "blocked_pending_full_live_snapshot",
+        )
+        self.assertFalse(data["privacy"]["raw_course_material_uploaded"])
+        self.assertFalse(data["privacy"]["card_content_uploaded"])
+        for digest in data["private_local_artifact_sha256"].values():
+            self.assertRegex(digest, re.compile(r"^[0-9a-f]{64}$"))
+
+
+if __name__ == "__main__":
+    unittest.main()
+

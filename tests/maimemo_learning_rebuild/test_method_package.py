@@ -36,6 +36,17 @@ class MethodPackageBoundaryTests(unittest.TestCase):
         self.assertIn("证明无可复用卡后才允许新建", guide)
         self.assertNotIn("869", guide)
 
+    def test_skill_names_the_preview_failures_that_must_stop_generation(self):
+        skill = (ROOT / "skills" / "verbal-maimemo-cards" / "SKILL.md").read_text(
+            encoding="utf-8"
+        )
+
+        self.assertIn("比较组通过标签不能由比较组生成器自行填写", skill)
+        self.assertIn("场景要素必须记录真实事件", skill)
+        self.assertIn("横线所在句准确成立", skill)
+        self.assertIn("语法或词形直接泄露答案", skill)
+        self.assertIn("统一干扰项解释模板", skill)
+
 
 if __name__ == "__main__":
     unittest.main()

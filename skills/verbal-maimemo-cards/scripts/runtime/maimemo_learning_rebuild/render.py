@@ -164,8 +164,6 @@ def render_base_card(record: dict, group_refs: list[dict]) -> str:
         text = str(cue).strip()
         if _adds_information(text, seen + cues):
             cues.append(text)
-    if cues:
-        lines.extend(["", _line("【题干关键词】", "；".join(cues) + "。")])
     glances = []
     for edge in record.get("comparison_edges") or []:
         other = str(edge.get("other_term") or "").strip()
@@ -216,6 +214,11 @@ def render_base_card(record: dict, group_refs: list[dict]) -> str:
     if contexts:
         lines.extend(["", "[T#B,!d16056#【典型语境】]"])
         lines.extend(f"- {context}" for context in contexts)
+    if cues:
+        lines.extend([
+            "",
+            _line("【附加｜题干可圈出】", "；".join(cues) + "。"),
+        ])
     if group_refs:
         lines.extend(["", "[T#B,!d16056#【完整辨析】]"])
         for reference in group_refs:
