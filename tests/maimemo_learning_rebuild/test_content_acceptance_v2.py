@@ -3,7 +3,9 @@ import unittest
 
 from maimemo_learning_rebuild.content_acceptance_v2 import (
     validate_application_authoring,
+    validate_card_learning_layers,
     validate_comparison_review,
+    validate_dimension_review_coverage,
     validate_dimension_novelty,
     validate_preview_bundle,
     validate_semantic_review,
@@ -65,6 +67,13 @@ class ComparisonAcceptanceV2Tests(unittest.TestCase):
                 "甲词": {"observation": "外部主体进入并干预", "source_group_id": "S1", "location": "P1", "quote": "甲词原文"},
                 "乙词": {"observation": "成为整体内部部分", "source_group_id": "S1", "location": "P2", "quote": "乙词原文"},
             },
+            "closed_group_adjudication": {
+                "method": "manual_closed_group_review",
+                "relation": "same_slot_confusable",
+                "reviewed_members": ["甲词", "乙词"],
+                "why_confusable": "甲词和乙词都可能出现在主体进入某个进程的语境中。",
+                "why_closed": "本组只比较进入后是主动干预还是成为内部组成。",
+            },
         }
 
     def test_rejects_old_comparison_shape_without_teaching_layers(self):
@@ -90,6 +99,14 @@ class ComparisonAcceptanceV2Tests(unittest.TestCase):
         errors = validate_comparison_review([group])
         self.assertTrue(any("comparison observation is not locatable" in error for error in errors))
 
+    def test_rejects_self_declared_reciprocal_group_without_manual_closed_group_adjudication(self):
+        group = self.valid_group()
+        del group["closed_group_adjudication"]
+
+        errors = validate_comparison_review([group])
+
+        self.assertTrue(any("closed-group adjudication" in error for error in errors))
+
 
 class DimensionNoveltyV2Tests(unittest.TestCase):
     def test_rejects_dimension_that_splits_or_paraphrases_core(self):
@@ -108,6 +125,26 @@ class DimensionNoveltyV2Tests(unittest.TestCase):
         }]
         errors = validate_dimension_novelty(review, semantics)
         self.assertTrue(any("repeats core slot" in error for error in errors))
+
+    def test_rejects_blanket_dimension_deletion_with_identical_reasons(self):
+        groups = [
+            {"group_id": f"g{index}", "members": [f"甲{index}", f"乙{index}"]}
+            for index in range(3)
+        ]
+        review = [
+            {
+                "group_id": group["group_id"],
+                "members": group["members"],
+                "disposition": "not_shown",
+                "reason": "未发现两个以上可靠维度。",
+            }
+            for group in groups
+        ]
+
+        errors = validate_dimension_review_coverage(groups, review)
+
+        self.assertTrue(any("blanket dimension deletion" in error for error in errors))
+        self.assertTrue(any("checked candidate axes" in error for error in errors))
 
 
 class ApplicationAcceptanceV2Tests(unittest.TestCase):
@@ -178,6 +215,60 @@ class ApplicationAcceptanceV2Tests(unittest.TestCase):
         semantics = {"投鼠忌器": semantic("投鼠忌器", ["顾虑伤及关联对象", "不敢行动或放弃行动"])}
         self.assertEqual([], validate_application_authoring([item], semantics))
 
+    def test_rejects_placeholder_scenario_and_generic_outcome(self):
+        item = self.valid_application()
+        item["scenario_elements"] = {
+            "subject": "监管部门",
+            "event": "监管部门需要填入所缺词语",
+            "constraint": "关停会伤及已付款用户",
+            "outcome": "横线所在句准确成立",
+        }
+
+        errors = validate_application_authoring(
+            [item],
+            {"投鼠忌器": semantic("投鼠忌器", ["顾虑伤及关联对象", "不敢行动或放弃行动"])},
+        )
+
+        self.assertTrue(any("placeholder scenario" in error for error in errors))
+        self.assertTrue(any("generic scenario outcome" in error for error in errors))
+
+    def test_rejects_batch_dominated_by_generic_distractor_explanations(self):
+        values = []
+        semantics = {}
+        for index in range(12):
+            term = f"词{index}"
+            distractor = f"干扰词{index}"
+            item = self.valid_application()
+            item["term"] = item["answer"] = term
+            item["options"] = [term, distractor]
+            item["prompt"] = f"第{index}家机构处理一项真实业务时暂缓执行，横线处应填（　）。"
+            item["distractor_rejections"] = {
+                distractor: f"{distractor}适用于“另一种情况”，与本题情形不符。"
+            }
+            semantics[term] = semantic(term, ["特定顾虑", "暂缓行动"])
+            values.append(item)
+
+        errors = validate_application_authoring(values, semantics)
+
+        self.assertTrue(any("distractor explanation template dominates batch" in error for error in errors))
+
+
+class CardLearningLayerAcceptanceV2Tests(unittest.TestCase):
+    def test_rejects_comparison_card_without_core_and_how_to_choose_layers(self):
+        content = "\n".join(
+            [
+                "[T#B#【基本词义】]",
+                "[T#B#甲词：]甲词含义。",
+                "[T#B#乙词：]乙词含义。",
+                "[T#B#【一眼辨析】]甲词：主动干预 vs 乙词：融入整体",
+            ]
+        )
+
+        errors = validate_card_learning_layers(content, "comparison", "甲词 × 乙词")
+
+        self.assertTrue(any("missing layer: 核心辨析" in error for error in errors))
+        self.assertTrue(any("missing layer: 怎么选" in error for error in errors))
+
 
 class PreviewBundleAcceptanceV2Tests(unittest.TestCase):
     def test_self_declared_pass_cannot_replace_bound_source_reviews(self):
@@ -200,7 +291,7 @@ class PreviewBundleAcceptanceV2Tests(unittest.TestCase):
         bundle = {
             "schema_version": 2,
             "status": "passed_reviewed_subset",
-            "basic_cards": [{"term": "甲词", "content": "可学习内容"}],
+            "basic_cards": [{"term": "甲词", "content": "【核心辨析】条件 + 行为\n【基本词义】可学习内容"}],
             "comparison_cards": [],
             "application_cards": [],
             "source_review_hashes": {"semantic": "s", "comparison": "c", "dimension": "d", "application": "a"},

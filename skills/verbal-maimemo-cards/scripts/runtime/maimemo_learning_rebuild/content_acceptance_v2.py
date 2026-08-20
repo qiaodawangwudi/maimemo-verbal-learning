@@ -17,6 +17,14 @@ _META_PROMPT_PATTERNS = (
 )
 _BAD_SLOT_PUNCTUATION = re.compile(r"[、，,；;。.!！?？:：]")
 _GENERIC_SLOTS = {"目标", "对象", "事情", "事物", "情况", "状态", "某种语义", "具体语义"}
+_GENERIC_SCENARIO_OUTCOMES = {
+    "横线所在句准确成立",
+    "句子准确成立",
+    "表达准确",
+    "选择正确答案",
+}
+_PLACEHOLDER_SCENARIO_MARKERS = ("所缺词语", "填入词语", "横线所在")
+_LEXICAL_SUFFIX_AFTER_BLANK = re.compile(r"____[剂]")
 
 
 def _norm(value: object) -> str:
@@ -152,6 +160,19 @@ def validate_comparison_review(groups: object) -> list[str]:
                     for field in ("observation", "source_group_id", "location", "quote")
                 ):
                     errors.append(f"comparison observation is not locatable: {group_id}:{term}")
+        adjudication = group.get("closed_group_adjudication")
+        if not isinstance(adjudication, dict):
+            errors.append(f"closed-group adjudication missing: {group_id}")
+        else:
+            if adjudication.get("method") != "manual_closed_group_review":
+                errors.append(f"closed-group adjudication method invalid: {group_id}")
+            if adjudication.get("relation") not in {"near_synonym", "same_slot_confusable"}:
+                errors.append(f"closed-group adjudication relation invalid: {group_id}")
+            if adjudication.get("reviewed_members") != members:
+                errors.append(f"closed-group adjudication members mismatch: {group_id}")
+            for field in ("why_confusable", "why_closed"):
+                if not isinstance(adjudication.get(field), str) or len(_norm(adjudication.get(field))) < 8:
+                    errors.append(f"closed-group adjudication {field} incomplete: {group_id}")
     return errors
 
 
@@ -186,6 +207,103 @@ def validate_dimension_novelty(review: object, semantics: object) -> list[str]:
     return errors
 
 
+def validate_dimension_review_coverage(groups: object, review: object) -> list[str]:
+    """Validate that every comparison group received a substantive dimension decision."""
+
+    if not isinstance(groups, list) or not isinstance(review, list):
+        return ["dimension coverage inputs must be lists"]
+    errors: list[str] = []
+    expected = {
+        str(group.get("group_id")): [str(term) for term in group.get("members", [])]
+        for group in groups
+        if isinstance(group, dict) and group.get("group_id")
+    }
+    entries: dict[str, dict] = {}
+    for index, entry in enumerate(review):
+        if not isinstance(entry, dict):
+            errors.append(f"dimension review entry must be object: {index}")
+            continue
+        group_id = str(entry.get("group_id", ""))
+        if not group_id:
+            errors.append(f"dimension review group id missing: {index}")
+            continue
+        if group_id in entries:
+            errors.append(f"duplicate dimension review group: {group_id}")
+        entries[group_id] = entry
+    if set(entries) != set(expected):
+        errors.append("dimension review must cover exact comparison groups")
+    approved = 0
+    insufficiency_reasons: list[str] = []
+    for group_id, members in expected.items():
+        entry = entries.get(group_id)
+        if entry is None:
+            continue
+        if entry.get("members") != members:
+            errors.append(f"dimension review members mismatch: {group_id}")
+        disposition = entry.get("disposition")
+        if disposition == "approved_dimensions":
+            approved += 1
+            dimensions = entry.get("dimensions")
+            if not isinstance(dimensions, list) or len(dimensions) < 2:
+                errors.append(f"approved dimensions require at least two axes: {group_id}")
+        elif disposition == "insufficient_dimensions":
+            axes = entry.get("checked_candidate_axes")
+            reason = entry.get("insufficiency_reason")
+            if not isinstance(axes, list) or not axes or any(
+                not isinstance(axis, str) or len(_norm(axis)) < 2 for axis in axes
+            ):
+                errors.append(f"checked candidate axes missing: {group_id}")
+            if not isinstance(reason, str) or len(_norm(reason)) < 8:
+                errors.append(f"dimension insufficiency reason incomplete: {group_id}")
+            else:
+                insufficiency_reasons.append(_norm(reason))
+        else:
+            errors.append(f"dimension disposition invalid: {group_id}")
+            if not isinstance(entry.get("checked_candidate_axes"), list) or not entry.get(
+                "checked_candidate_axes"
+            ):
+                errors.append(f"checked candidate axes missing: {group_id}")
+    if expected and approved == 0:
+        errors.append("blanket dimension deletion is forbidden")
+    if len(insufficiency_reasons) >= 3:
+        dominant = Counter(insufficiency_reasons).most_common(1)[0][1]
+        if dominant >= 3 and dominant / len(insufficiency_reasons) >= 0.5:
+            errors.append("homogeneous dimension insufficiency reason dominates batch")
+    return errors
+
+
+def validate_card_learning_layers(content: object, card_type: str, identity: str) -> list[str]:
+    """Validate the learning-layer order required by the card method."""
+
+    if not isinstance(content, str):
+        return [f"card content must be text: {identity}"]
+    required = {
+        "basic": ["核心辨析", "基本词义"],
+        "comparison": ["核心辨析", "基本词义", "一眼辨析", "怎么选"],
+    }.get(card_type, [])
+    positions: list[tuple[str, int]] = []
+    errors: list[str] = []
+    for layer in required:
+        position = content.find(f"【{layer}】")
+        if position < 0:
+            errors.append(f"missing layer: {layer}: {identity}")
+        else:
+            positions.append((layer, position))
+    if len(positions) == len(required) and [position for _, position in positions] != sorted(
+        position for _, position in positions
+    ):
+        errors.append(f"learning layers out of order: {identity}")
+    optional_order = ["一眼辨析", "多维判断", "易错边界", "附加｜题干可圈出"]
+    previous = content.find("【基本词义】")
+    for layer in optional_order:
+        position = content.find(f"【{layer}】")
+        if position >= 0 and previous >= 0 and position < previous:
+            errors.append(f"learning layers out of order: {identity}:{layer}")
+        if position >= 0:
+            previous = position
+    return errors
+
+
 def _prompt_skeleton(prompt: str, terms: list[str]) -> str:
     value = prompt
     for term in terms:
@@ -200,6 +318,7 @@ def validate_application_authoring(applications: object, semantics: object) -> l
     if not isinstance(applications, list) or not isinstance(semantics, dict):
         return ["application authoring inputs must be list and object"]
     skeletons: Counter[str] = Counter()
+    rejection_skeletons: Counter[str] = Counter()
     for index, application in enumerate(applications):
         if not isinstance(application, dict):
             errors.append(f"application must be object: {index}")
@@ -216,6 +335,8 @@ def validate_application_authoring(applications: object, semantics: object) -> l
             prompt = str(prompt or "")
         if any(pattern in prompt for pattern in _META_PROMPT_PATTERNS):
             errors.append(f"meta definition prompt: {term}")
+        if _LEXICAL_SUFFIX_AFTER_BLANK.search(prompt):
+            errors.append(f"application blank leaks lexical form: {term}")
         if term in prompt:
             errors.append(f"application prompt leaks answer: {term}")
         for slot in semantics[term].get("core_slots", []):
@@ -229,17 +350,33 @@ def validate_application_authoring(applications: object, semantics: object) -> l
             not isinstance(value, str) or len(_norm(value)) < 2 for value in (elements or {}).values()
         ):
             errors.append(f"application scenario elements incomplete: {term}")
+        else:
+            event = str(elements.get("event", ""))
+            outcome = str(elements.get("outcome", ""))
+            if any(marker in event for marker in _PLACEHOLDER_SCENARIO_MARKERS):
+                errors.append(f"placeholder scenario event: {term}")
+            if outcome.strip() in _GENERIC_SCENARIO_OUTCOMES or "横线" in outcome:
+                errors.append(f"generic scenario outcome: {term}")
         rejections = application.get("distractor_rejections")
         expected_distractors = set(options) - {answer} if options else set()
         if not isinstance(rejections, dict) or set(rejections) != expected_distractors or any(
             not isinstance(value, str) or len(_norm(value)) < 8 for value in (rejections or {}).values()
         ):
             errors.append(f"application distractor review incomplete: {term}")
+        else:
+            for distractor, explanation in rejections.items():
+                value = str(explanation)
+                normalized = value.replace(str(distractor), "{term}")
+                normalized = re.sub(r"“[^”]*”", "“{condition}”", normalized)
+                rejection_skeletons[_norm(normalized)] += 1
         skeletons[_prompt_skeleton(prompt, options)] += 1
     if len(applications) >= 10:
         dominant = max(skeletons.values(), default=0)
         if dominant >= 5 and dominant / len(applications) >= 0.25:
             errors.append("application prompt skeleton dominates batch")
+        rejection_dominant = max(rejection_skeletons.values(), default=0)
+        if rejection_dominant >= 5 and rejection_dominant / max(1, sum(rejection_skeletons.values())) >= 0.25:
+            errors.append("distractor explanation template dominates batch")
     return errors
 
 
@@ -275,6 +412,7 @@ def validate_preview_bundle(
     errors.extend(validate_semantic_review(semantic_records))
     errors.extend(validate_comparison_review(comparison_groups))
     semantics = {record.get("term"): record for record in semantic_records if isinstance(record, dict) and record.get("status") == "approved"}
+    errors.extend(validate_dimension_review_coverage(comparison_groups, dimension_groups))
     errors.extend(validate_dimension_novelty(dimension_groups, semantics))
     errors.extend(validate_application_authoring(applications, semantics))
 
@@ -291,4 +429,14 @@ def validate_preview_bundle(
     exact_identity(bundle.get("basic_cards"), "term", set(semantics), "basic")
     exact_identity(bundle.get("comparison_cards"), "group_id", {str(group.get("group_id")) for group in comparison_groups}, "comparison")
     exact_identity(bundle.get("application_cards"), "term", {str(item.get("term")) for item in applications}, "application")
+    for card in bundle.get("basic_cards", []) if isinstance(bundle.get("basic_cards"), list) else []:
+        if isinstance(card, dict):
+            errors.extend(validate_card_learning_layers(card.get("content"), "basic", str(card.get("term"))))
+    for card in bundle.get("comparison_cards", []) if isinstance(bundle.get("comparison_cards"), list) else []:
+        if isinstance(card, dict):
+            errors.extend(
+                validate_card_learning_layers(
+                    card.get("content"), "comparison", str(card.get("group_id"))
+                )
+            )
     return errors
